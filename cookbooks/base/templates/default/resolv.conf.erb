@@ -1,0 +1,15 @@
+<%
+  @resolv.each do |k, v|
+    if v.is_a? Array
+      v.each do |vv|
+%>
+<%= k %> <%= vv %>
+<%
+      end
+    else
+%>
+<%= k %> <%= v %>
+<%
+    end
+  end
+%>
