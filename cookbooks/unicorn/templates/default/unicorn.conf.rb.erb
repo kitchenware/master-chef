@@ -1,0 +1,42 @@
+worker_processes 3
+
+working_directory "<%= @app_directory %>"
+
+listen "<%= @unicorn_socket %>", :backlog => 2048
+
+timeout 600
+
+preload_app true
+
+pid "<%= @pid_file %>"
+
+stderr_path "<%= @log_prefix %>.stderr.log"
+stdout_path "<%= @log_prefix %>.stdout.log"
+
+#Make REE use the copy on write GC
+if GC.respond_to?(:copy_on_write_friendly=)
+  GC.copy_on_write_friendly = true
+end
+
+before_fork do |server, worker|
+  old_pid = "<%= @pid_file %>.oldbin"
+  if File.exists?(old_pid) && server.pid != old_pid
+    begin
+      Process.kill("QUIT", File.read(old_pid).to_i)
+    rescue Errno::ENOENT, Errno::ESRCH
+      # someone else did our job for us
+    end
+  end
+  # the following is recomended for Rails + "preload_app true"
+  # as there's no need for the master process to hold a connection
+  if defined?(ActiveRecord::Base)
+    ActiveRecord::Base.connection.disconnect!
+  end
+end
+
+after_fork do |server, worker|
+  if defined?(ActiveRecord::Base)
+    ActiveRecord::Base.establish_connection
+  end
+end
+

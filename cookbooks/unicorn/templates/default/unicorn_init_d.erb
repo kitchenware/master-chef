@@ -1,0 +1,79 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          unicorn
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts unicorn web server
+# Description:       starts unicorn web server
+### END INIT INFO
+
+NAME="<%= @name %>"
+USER="<%= @user %>"
+DAEMON="/home/$USER/.rvm/bin/rvm-shell"
+APP_DIRECTORY="<%= @app_directory %>"
+PID_FILE="<%= @pid_file %>"
+CONFIG_FILE="<%= @config_file %>"
+UNICORN_CMD="<%= @unicorn_cmd %>"
+START_STOP_DAEMON="/sbin/start-stop-daemon"
+
+test -x $DAEMON || exit 0
+test -d "$APP_DIRECTORY" || exit 0
+test -f $CONFIG_FILE || exit 1
+
+CMD="cd $APP_DIRECTORY && source .rvmrc && bundle exec $UNICORN_CMD -E production -D -c $CONFIG_FILE"
+
+set -e
+
+. /lib/lsb/init-functions
+
+kill_unicorn() {
+  SIGNAL=$1
+
+	if [ ! "$PID_FILE" = "" ]; then
+		if [ -f $PID_FILE ]; then
+			kill $SIGNAL `cat $PID_FILE` || true
+		fi
+	fi
+}
+
+case "$1" in
+   start)
+	echo -n "Starting $NAME: "
+	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -- -c "$CMD" || exit 1
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $NAME: "
+	kill_unicorn
+	echo "$NAME."
+	;;
+  graceful_restart)
+	echo -n "Graceful restarting $DESC: "
+	kill_unicorn "-USR2"
+	echo "$NAME."
+	;;
+  restart)
+	echo -n "Restarting $NAME: "
+	kill_unicorn
+	sleep 1
+	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -- -c "$CMD" || exit 1
+	echo "$NAME."
+	;;
+	reopen_log)
+	echo -n "Repoen logs $NAME: "
+	kill_unicorn -USR1
+	echo "$NAME."
+	;;
+  status)
+	status_of_proc -p $PID_FILE $UNICORN_CMD $UNICORN_CMD && exit 0 || exit $?
+	;;
+  *)
+	echo "Usage: $NAME {start|stop|restart|status|graceful_restart|reopen_log}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
