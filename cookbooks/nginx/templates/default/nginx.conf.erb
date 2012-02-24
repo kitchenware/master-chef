@@ -1,0 +1,32 @@
+user www-data;
+
+worker_processes <%= node.nginx[:config][:worker_processes] || node.cpu.total %>;
+worker_rlimit_nofile 30000;
+
+error_log /var/log/nginx/error.log;
+
+pid /var/run/nginx.pid;
+
+events {
+  worker_connections <%= node.nginx[:config][:worker_connections] %>;
+  use epoll;
+}
+
+http {
+
+  sendfile on;
+  tcp_nopush on;
+  tcp_nodelay on;
+
+  access_log /var/log/nginx/access.log;
+
+  log_format main '$remote_addr - $host - [$time_local] ' '"$request" $status $body_bytes_sent $request_time "$http_referer" ' '"$http_user_agent"';
+
+  include /etc/nginx/mime.types;
+  
+  default_type application/octet-stream;
+
+  include /etc/nginx/conf.d/*.conf;
+  include /etc/nginx/sites-enabled/*;
+
+}
