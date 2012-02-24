@@ -46,9 +46,6 @@ config["repos"]["git"].each do |url|
   roles << role if File.exists? role
 end
 
-puts cookbooks.inspect
-puts roles.inspect
-
 log_level :info
 log_location STDOUT
 json_attribs json_file.path
