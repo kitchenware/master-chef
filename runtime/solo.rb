@@ -32,18 +32,29 @@ exec_local "mkdir -p #{git_cache_directory}"
 cookbooks = []
 roles = []
 
-config["repos"]["git"].each do |url|
-  name = File.basename(url)
-  target = File.join(git_cache_directory, name)
-  unless File.exists? target
-    puts "Cloning git repo #{url}"
-    exec_local "cd #{git_cache_directory} && git clone #{url} #{name}"
+if config["repos"]["git"]
+  config["repos"]["git"].each do |url|
+    name = File.basename(url)
+    target = File.join(git_cache_directory, name)
+    unless File.exists? target
+      puts "Cloning git repo #{url}"
+      exec_local "cd #{git_cache_directory} && git clone #{url} #{name}"
+    end
+    exec_local "cd #{target} && git pull > /dev/null"
+    cookbook = File.join(target, "cookbooks")
+    cookbooks << cookbook if File.exists? cookbook
+    role = File.join(target, "roles")
+    roles << role if File.exists? role
   end
-  exec_local "cd #{target} && git pull > /dev/null"
-  cookbook = File.join(target, "cookbooks")
-  cookbooks << cookbook if File.exists? cookbook
-  role = File.join(target, "roles")
-  roles << role if File.exists? role
+end
+
+if config["repos"]["local_path"]
+  config["repos"]["local_path"].each do |target|
+    cookbook = File.join(target, "cookbooks")
+    cookbooks << cookbook if File.exists? cookbook
+    role = File.join(target, "roles")
+    roles << role if File.exists? role
+  end
 end
 
 log_level :info
