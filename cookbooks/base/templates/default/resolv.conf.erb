@@ -1,7 +1,8 @@
 <%
-  @resolv.each do |k, v|
+  @resolv.keys.sort.each do |k|
+    v = @resolv[k]
     if v.is_a? Array
-      v.each do |vv|
+      v.sort.each do |vv|
 %>
 <%= k %> <%= vv %>
 <%
