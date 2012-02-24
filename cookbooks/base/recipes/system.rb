@@ -16,3 +16,5 @@ end
 include_recipe "base::bash"
 include_recipe "base::sshd"
 include_recipe "base::ntp"
+include_recipe "base::procps"
+include_recipe "base::disable_ipv6"
