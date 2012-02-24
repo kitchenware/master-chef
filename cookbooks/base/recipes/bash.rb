@@ -8,4 +8,14 @@ unless node[:no_bash_config]
     mode 0644
   end
 
+  if node[:bash_users]
+
+    node.bash_users.each do |user|
+      file "#{get_home user}/.bashrc" do
+        action :delete
+      end
+    end
+
+  end
+
 end
