@@ -12,12 +12,6 @@ json_file.close
 
 ENV['MASTER_CHEF_CONFIG'] = File.expand_path(config_file)
 
-puts "************************* Master chef solo SOLO *************************"
-puts "Hostname : #{`hostname`}"
-puts "Repos : #{config["repos"].inspect}"
-puts "Run list : #{run_list.inspect}"
-puts "******************************************************************************"
-
 def exec_local cmd
   begin
     abort "#{cmd} failed. Aborting..." unless system cmd
@@ -56,6 +50,14 @@ if config["repos"]["local_path"]
     roles << role if File.exists? role
   end
 end
+
+puts "************************* Master chef SOLO *************************"
+puts "Hostname : #{`hostname`}"
+puts "Repos : #{config["repos"].inspect}"
+puts "Run list : #{run_list.inspect}"
+puts "Cookbooks path : #{cookbooks.inspect}"
+puts "Roles path : #{roles.inspect}"
+puts "********************************************************************"
 
 log_level :info
 log_location STDOUT
