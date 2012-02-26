@@ -2,6 +2,7 @@ include_recipe "ruby"
 include_recipe "unicorn"
 include_recipe "capistrano"
 include_recipe "mysql"
+include_recipe "nginx"
 
 ruby_user node.redmine.user do
   install_rbenv true
@@ -53,4 +54,24 @@ end
 unicorn_app "redmine" do
   user node.redmine.user
   app_directory node.redmine.directory
+  code_for_initd "export RAILS_RELATIVE_URL_ROOT='/redmine'"
+end
+
+nginx_add_default_location "redmine" do
+  content <<-EOF
+
+  location /redmine {
+    try_files $uri $uri.html $uri/index.html @unicorn;
+  }
+
+  location @unicorn {
+    proxy_pass http://unicorn_upstream;
+    break;
+  }
+EOF
+  upstream <<-EOF
+upstream unicorn_upstream {
+  server 'unix:#{node.redmine.directory}/shared/unicorn.sock' fail_timeout=0;
+}
+  EOF
 end

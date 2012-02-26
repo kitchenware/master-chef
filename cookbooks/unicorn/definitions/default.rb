@@ -3,6 +3,7 @@ define :unicorn_app, {
   :unicorn_cmd => 'unicorn_rails',
   :app_directory => nil,
   :user => nil,
+  :code_for_initd => "",
 } do
 
   unicorn_app_params = params
@@ -27,6 +28,7 @@ define :unicorn_app, {
       :config_file => unicorn_config_file,
       :pid_file => unicorn_pid_file,
       :user => unicorn_app_params[:user],
+      :code_for_initd => unicorn_app_params[:code_for_initd]
     })
   end
 

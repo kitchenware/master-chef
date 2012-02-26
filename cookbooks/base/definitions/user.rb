@@ -13,7 +13,7 @@ define :base_user, {
 
   directory get_home(base_user_params[:name]) do
     owner base_user_params[:name]
-    mode 0700
+    mode 0755
   end
 
 end

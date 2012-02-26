@@ -33,6 +33,10 @@ if node.nginx[:deploy_default_config]
 
 end
 
+nginx_vhost "nginx:default_vhost" do
+  cookbook "nginx"
+end
+
 delayed_exec "Remove useless nginx vhost" do
   block do
     vhosts = find_resources_by_name_pattern(/^\/etc\/nginx\/sites-enabled\/.*\.conf$/).map{|r| r.name}

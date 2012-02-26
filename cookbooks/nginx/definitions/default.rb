@@ -7,7 +7,7 @@ define :nginx_vhost, {
   
   config = node[module_sym][vhost_sym]
   
-  nginx_listen = "listen #{process_listen(config[:listen])};\n"
+  nginx_listen = "listen #{config[:listen]};\n"
   nginx_listen += "server_name #{config[:virtual_host]};\n" if config[:virtual_host]
   basic_auth = config[:basic_auth]
   if basic_auth
@@ -33,3 +33,15 @@ define :nginx_vhost, {
   
 end
 
+define :nginx_add_default_location, {
+  :upstream => nil,
+  :content => nil,
+} do
+  nginx_add_default_location_params = params
+
+  raise "Please specify content with nginx_add_default_location" unless nginx_add_default_location_params[:content]
+
+  node.nginx.default_vhost.enabled = true
+  node.nginx.default_vhost.locations << nginx_add_default_location_params
+  
+end
