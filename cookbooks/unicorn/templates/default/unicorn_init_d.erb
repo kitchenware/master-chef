@@ -12,7 +12,7 @@
 
 NAME="<%= @name %>"
 USER="<%= @user %>"
-DAEMON="/home/$USER/.rvm/bin/rvm-shell"
+DAEMON="/bin/bash"
 APP_DIRECTORY="<%= @app_directory %>"
 PID_FILE="<%= @pid_file %>"
 CONFIG_FILE="<%= @config_file %>"
@@ -23,7 +23,8 @@ test -x $DAEMON || exit 0
 test -d "$APP_DIRECTORY" || exit 0
 test -f $CONFIG_FILE || exit 1
 
-CMD="cd $APP_DIRECTORY && source .rvmrc && bundle exec $UNICORN_CMD -E production -D -c $CONFIG_FILE"
+export HOME=`cat /etc/passwd | grep $USER | awk -F: '{print $6}'`
+CMD="cd $APP_DIRECTORY && export PATH=\"$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH\" && bundle exec $UNICORN_CMD -E production -D -c $CONFIG_FILE"
 
 set -e
 
@@ -42,7 +43,7 @@ kill_unicorn() {
 case "$1" in
    start)
 	echo -n "Starting $NAME: "
-	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -- -c "$CMD" || exit 1
+	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$CMD" || exit 1
 	echo "$NAME."
 	;;
   stop)
@@ -59,7 +60,7 @@ case "$1" in
 	echo -n "Restarting $NAME: "
 	kill_unicorn
 	sleep 1
-	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -- -c "$CMD" || exit 1
+	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$CMD" || exit 1
 	echo "$NAME."
 	;;
 	reopen_log)

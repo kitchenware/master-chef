@@ -3,7 +3,6 @@ define :unicorn_app, {
   :unicorn_cmd => 'unicorn_rails',
   :app_directory => nil,
   :user => nil,
-  :files_to_rotate => [],
 } do
 
   unicorn_app_params = params
@@ -47,32 +46,6 @@ define :unicorn_app, {
   service "unicorn" do
     supports :status => true, :restart => true, :reload => true, :graceful_restart => true
     action [ :enable, :start ]
-  end
-
-  monit_service "unicorn" do
-    cookbook "unicorn"
-    variables({:pid_file => unicorn_pid_file,
-        :app_directory => "#{unicorn_app_params[:app_directory]}/current"})
-  end
-
-  template "/etc/sudoers.d/#{unicorn_app_params[:user]}_monit" do
-    cookbook "unicorn"
-    source "sudoers.erb"
-    mode 0440
-    variables({:user => unicorn_app_params[:user],
-        :bin_file => "/usr/sbin/monit"})
-  end
-
-  logrotate_custom "unicorn" do
-    files (unicorn_app_params[:files_to_rotate] + ["#{unicorn_log_prefix}*.log"])
-    variables :user => unicorn_app_params[:user], :post_rotate => "[ -x /etc/init.d/unicorn ] && /etc/init.d/unicorn reopen_log"
-  end
-
-  if is_splunk_forwarder
-    splunk_app "unicorn" do
-      pattern "#{unicorn_log_prefix}*.log"
-      sourcetype "unicorn"
-    end
   end
 
 end
