@@ -17,7 +17,7 @@ define :unicorn_app, {
   unicorn_log_prefix = "#{unicorn_app_params[:app_directory]}/shared/log/unicorn"
   unicorn_socket_file = "unix:#{unicorn_app_params[:app_directory]}/shared/unicorn.sock"
 
-  template "/etc/init.d/unicorn" do
+  template "/etc/init.d/#{unicorn_app_params[:name]}" do
     cookbook 'unicorn'
     source 'unicorn_init_d.erb'
     mode 0755
@@ -45,7 +45,7 @@ define :unicorn_app, {
     })
   end
 
-  service "unicorn" do
+  service unicorn_app_params[:name] do
     supports :status => true, :restart => true, :reload => true, :graceful_restart => true
     action [ :enable, :start ]
   end

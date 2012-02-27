@@ -1,3 +1,7 @@
 default[:tomcat][:home] = "/opt/tomcat"
+default[:tomcat][:catalina_home] = "/opt/tomcat/apache-tomcat-6.0.35"
+default[:tomcat][:instances_base] = "/opt/tomcat/instances"
+default[:tomcat][:log_dir] = "/var/log/tomcat"
 default[:tomcat][:user] = "tomcat"
+default[:tomcat][:group] = "tomcat"
 default[:tomcat][:warp_file] = "apache-tomcat-6.0.35.warp"

@@ -1,12 +1,18 @@
 
 define :base_user, {
-  :home => nil
+  :home => nil,
+  :group => nil,
 } do
   base_user_params = params
+
+  if base_user_params[:group]
+    group base_user_params[:group]
+  end
 
   user base_user_params[:name] do
     shell "/bin/bash"
     home base_user_params[:home] if base_user_params[:home]
+    group base_user_params[:group] if base_user_params[:group]
   end
 
   if node[:bash_users]

@@ -54,23 +54,23 @@ end
 unicorn_app "redmine" do
   user node.redmine.user
   app_directory node.redmine.directory
-  code_for_initd "export RAILS_RELATIVE_URL_ROOT='/#{node.redmine.location}'"
+  code_for_initd "export RAILS_RELATIVE_URL_ROOT='#{node.redmine.location}'"
 end
 
 nginx_add_default_location "redmine" do
   content <<-EOF
 
-  location /#{node.redmine.location} {
-    try_files $uri $uri.html $uri/index.html @unicorn;
+  location #{node.redmine.location} {
+    try_files $uri $uri.html $uri/index.html @unicorn_redmine;
   }
 
-  location @unicorn {
-    proxy_pass http://unicorn_upstream;
+  location @unicorn_redmine {
+    proxy_pass http://unicorn_redmine_upstream;
     break;
   }
 EOF
   upstream <<-EOF
-upstream unicorn_upstream {
+upstream unicorn_redmine_upstream {
   server 'unix:#{node.redmine.directory}/shared/unicorn.sock' fail_timeout=0;
 }
   EOF

@@ -1,6 +1,7 @@
 
 package "vim"
 package "python-software-properties"
+package "unzip"
 
 bash "Use vim.basic as default editor" do
   user "root"
