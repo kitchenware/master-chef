@@ -1,7 +1,6 @@
 
-bash "add ppa nginx" do
-  code "add-apt-repository ppa:nginx/stable && apt-get update"
-  not_if "ls /etc/apt/sources.list.d | grep nginx"
+base_ppa "nginx" do
+  url "ppa:nginx/stable"
 end
 
 package "nginx" do
