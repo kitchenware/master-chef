@@ -11,7 +11,7 @@ tar_gz = "#{node.confluence.version}.tar.gz"
 build_dir = "#{node.confluence.build}/confluence-#{node.confluence.version}"
 bash "download confluence"  do
   user node.tomcat.user
-  code "cd #{node.confluence.build} && curl --location #{node.confluence.url} -o #{tar_gz} && tar xvzf #{tar_gz}"
+  code "cd #{node.confluence.build} && curl --location #{node.confluence.url} -o #{tar_gz} && tar xzf #{tar_gz}"
   not_if "[ -d #{build_dir} ]"
 end
 
