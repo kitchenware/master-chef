@@ -50,16 +50,11 @@ define :tomcat_instance, {
       })
   end
 
-  service "#{tomcat_instance_params[:name]}" do
-    supports :status => true, :restart => true, :reload => true, :graceful_restart => true
-    action [ :enable, :start ]
-  end
-
   template "#{catalina_base}/conf/env" do
     cookbook "tomcat"
     source "env.erb"
     variables :env => tomcat_instance_params[:env]
-    notifies :restart, resources(:service => tomcat_instance_params[:name])
+    # notifies :restart, resources(:service => tomcat_instance_params[:name])
   end 
 
   template "#{catalina_base}/conf/server.xml" do
@@ -67,7 +62,12 @@ define :tomcat_instance, {
     source "server.xml.erb"
     owner node.tomcat.user
     variables :connectors => tomcat_instance_params[:connectors], :control_port => tomcat_instance_params[:control_port]
-    notifies :restart, resources(:service => tomcat_instance_params[:name])
+    # notifies :restart, resources(:service => tomcat_instance_params[:name])
+  end
+
+  service "#{tomcat_instance_params[:name]}" do
+    supports :status => true, :restart => true, :reload => true, :graceful_restart => true
+    action [ :enable, :start ]
   end
 
   if tomcat_instance_params[:war_name] && tomcat_instance_params[:war_url]
