@@ -26,9 +26,9 @@ define :tomcat_instance, {
     end
   end
 
-  bash "copy config" do
+  bash "copy config #{catalina_base}/conf" do
     user node.tomcat.user
-    code "cp -r #{node.tomcat.catalina_home}/conf #{catalina_base}/conf"
+    code "cp -r #{node.tomcat.catalina_home}/conf #{catalina_base}/conf && rm #{catalina_base}/conf/server.xml"
     not_if "[ -d #{catalina_base}/conf ]"
   end
 

@@ -32,6 +32,11 @@ define :unicorn_app, {
     })
   end
 
+  service unicorn_app_params[:name] do
+    supports :status => true, :restart => true, :reload => true, :graceful_restart => true
+    action [ :enable, :start ]
+  end
+
   template unicorn_config_file do
     cookbook 'unicorn'
     source "unicorn.conf.rb.erb"
@@ -43,11 +48,7 @@ define :unicorn_app, {
       :log_prefix => unicorn_log_prefix,
       :pid_file => unicorn_pid_file
     })
-  end
-
-  service unicorn_app_params[:name] do
-    supports :status => true, :restart => true, :reload => true, :graceful_restart => true
-    action [ :enable, :start ]
+    notifies :restart, resources(:service => unicorn_app_params[:name])
   end
 
 end
