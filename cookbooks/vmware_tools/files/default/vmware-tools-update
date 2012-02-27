@@ -1,0 +1,41 @@
+#/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          vmware-tools-update
+# Required-Start:    $local_fs $syslog
+# Required-Stop:     $local_fs $syslog
+# Default-Start:     S
+# Default-Stop:      
+# Short-Description: Start daemon at boot time
+# Description:       Update VMWare tools
+### END INIT INFO
+
+VMWARE_FILE="/lib/modules/`uname -r`/misc/.vmware_installed"
+LOG_FILE=/var/log/vmware.log
+UDEV_FILE=/etc/udev/rules.d/70-persistent-net.rules
+
+if [ ! -e $VMWARE_FILE ]; then
+  echo "Try to update vmware tools at `date`" >> $LOG_FILE
+  vmware-config-tools.pl -d && touch $VMWARE_FILE
+  if [ "$?" != 0 ]; then
+    echo "Error while recompiling vmware tools at `date`" >> $LOG_FILE
+    exit 0
+  fi
+  update-rc.d -f vmware-tools remove
+  update-rc.d vmware-tools start 36 S 0 6 .
+  echo "VMWare tools updated, rebooting in 10 seconds at `date`" >> $LOG_FILE
+  (sleep 10 && reboot) &
+fi
+ifconfig eth0 > /dev/null 2>&1
+if [ "$?" != "0" ]; then
+  echo "No eth0 detected at `date`" >> $LOG_FILE
+  ifconfig eth1 || ifconfig eth2 || ifconfig eth3 > /dev/null 2>&1
+  if [ "$?" = "0" ]; then
+    echo "Eth1 or eth2 or eth3 present, reconfiguring udev at `date`" >> $LOG_FILE
+    sed -e 's/eth[123]/eth0/g' -i $UDEV_FILE
+    echo "Rebooting in 1 min at `date`" >> $LOG_FILE
+    echo "reboot" | at now + 1 min
+  else
+    echo "Eth1 not present, nothing to do at `date`" >> $LOG_FILE
+  fi
+fi
