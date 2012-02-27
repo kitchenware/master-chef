@@ -3,4 +3,4 @@ default[:confluence][:url] = "http://www.atlassian.com/software/confluence/downl
 default[:confluence][:root] = "/confluence"
 default[:confluence][:home] = "#{default[:confluence][:root]}/home"
 default[:confluence][:build] = "#{default[:confluence][:root]}/build"
-default[:confluence][:location] = "/co"
+default[:confluence][:location] = "/confluence"
