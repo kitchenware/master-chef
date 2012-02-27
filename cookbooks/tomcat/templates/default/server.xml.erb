@@ -68,7 +68,8 @@
     -->
     <% if @connectors["http"] %>
     <Connector protocol="HTTP/1.1"
-               <% @connectors["http"].each do |k, v| %>
+               <% @connectors["http"].keys.sort.each do |k| %>
+               <% v = @connectors["http"][k] %>
                <%= k %>="<%= v %>"
                <% end %>
                />
@@ -93,7 +94,8 @@
     <!-- Define an AJP 1.3 Connector on port 8009 -->
     <% if @connectors["ajp"] %>
     <Connector protocol="AJP/1.3"
-               <% @connectors["ajp"]["options"].each do |k, v| %>
+               <% @connectors["ajp"].keys.sort.each do |k| %>
+               <% v = @connectors["ajp"][k] %>
                <%= k %>="<%= v %>"
                <% end %>
                />
