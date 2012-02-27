@@ -54,13 +54,13 @@ end
 unicorn_app "redmine" do
   user node.redmine.user
   app_directory node.redmine.directory
-  code_for_initd "export RAILS_RELATIVE_URL_ROOT='/redmine'"
+  code_for_initd "export RAILS_RELATIVE_URL_ROOT='/#{node.redmine.location}'"
 end
 
 nginx_add_default_location "redmine" do
   content <<-EOF
 
-  location /redmine {
+  location /#{node.redmine.location} {
     try_files $uri $uri.html $uri/index.html @unicorn;
   }
 
