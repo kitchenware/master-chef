@@ -1,4 +1,5 @@
 include_recipe "tomcat"
+include_recipe "nginx"
 
 directory node.jenkins.home do
   owner node.tomcat.user
