@@ -23,8 +23,8 @@ if [ ! -e $VMWARE_FILE ]; then
   fi
   update-rc.d -f vmware-tools remove
   update-rc.d vmware-tools start 36 S 0 6 .
-  echo "VMWare tools updated, rebooting in 10 seconds at `date`" >> $LOG_FILE
-  (sleep 10 && reboot) &
+  echo "VMWare tools updated, rebooting in 1 minute at `date`" >> $LOG_FILE
+  echo "reboot" | at now + 1 min
 fi
 ifconfig eth0 > /dev/null 2>&1
 if [ "$?" != "0" ]; then
