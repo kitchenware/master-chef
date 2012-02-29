@@ -53,6 +53,7 @@ nginx_add_default_location "confluence" do
 
   location #{node.confluence.location} {
     proxy_pass http://tomcat_confluence_upstream;
+    proxy_read_timeout 600s;
     break;
   }
 
