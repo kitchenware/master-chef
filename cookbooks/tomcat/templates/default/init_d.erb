@@ -74,6 +74,8 @@ if [ ! -f $CATALINA_BASE/conf/server.xml ]; then
   exit 0
 fi
 
+export LD_LIBRARY_PATH=$CATALINA_HOME/lib:$LD_LIBRARY_PATH
+
 # Use the Java security manager? (yes/no)
 TOMCAT6_SECURITY=no
 
