@@ -4,3 +4,6 @@ default[:confluence][:root] = "/confluence"
 default[:confluence][:home] = "#{default[:confluence][:root]}/home"
 default[:confluence][:build] = "#{default[:confluence][:root]}/build"
 default[:confluence][:location] = "/confluence"
+default[:confluence][:env] = {
+  'JAVA_OPTS' => '-XX:MaxPermSize=256m -Xmx1024m -Xms256m'
+}

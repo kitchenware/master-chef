@@ -1,3 +1,4 @@
+include_recipe "mysql"
 include_recipe "tomcat"
 include_recipe "nginx"
 
@@ -36,7 +37,7 @@ end
 tomcat_instance "confluence" do
   env({
     'TOMCAT5_SECURITY' => 'no',
-   })
+   }.merge(node.confluence.env))
   connectors({
     "http" => {
       "port" => 8081,
