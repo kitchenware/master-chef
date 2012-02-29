@@ -69,6 +69,11 @@ CATALINA_HOME=<%= @catalina_home %>
 # Directory for per-instance configuration files and webapps
 CATALINA_BASE=<%= @catalina_base %>
 
+# check if tomcat already configured
+if [ ! -f $CATALINA_BASE/conf/server.xml ]; then
+  exit 0
+fi
+
 # Use the Java security manager? (yes/no)
 TOMCAT6_SECURITY=no
 
