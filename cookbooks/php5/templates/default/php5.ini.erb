@@ -341,7 +341,7 @@ safe_mode = <%= @safe_mode ? "On" : "Off" %>
 ; opening files. If you want to relax this to a GID compare,
 ; then turn on safe_mode_gid.
 ; http://php.net/safe-mode-gid
-safe_mode_gid = Off
+safe_mode_gid = <%= @safe_mode_gid ? "On" : "Off" %>
 
 ; When safe_mode is on, UID/GID checks are bypassed when
 ; including files from this directory and its subdirectories.

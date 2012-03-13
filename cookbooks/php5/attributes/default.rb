@@ -14,5 +14,6 @@ default[:php5][:php_ini] = {
   :safe_mode => false,
   :safe_mode_include_dir => "",
   :safe_mode_exec_dir => "",
+  :safe_mode_gid => false,
   :open_basedir => "",
 }
