@@ -25,6 +25,8 @@ if node[:ssh_keys]
     directory "#{home}/.ssh" do
       owner user
       mode 0700
+      action :nothing
+      notifies :create, "directory[#{home}/.ssh]", :delayed
     end
 
     template "#{home}/.ssh/authorized_keys" do
@@ -32,6 +34,8 @@ if node[:ssh_keys]
       mode 0700
       variables :keys => keys.uniq.sort
       source "authorized_keys.erb"
+      action :nothing
+      notifies :create, "template[#{home}/.ssh/authorized_keys]", :delayed
     end
 
   end
