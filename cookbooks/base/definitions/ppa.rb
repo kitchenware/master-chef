@@ -4,6 +4,8 @@ define :base_ppa, {
 } do
   base_ppa_params = params
 
+  raise "base_ppa command is only available on ubuntu" if node['platform'] != "ubuntu"
+  
   raise "Please specify url with base_ppa" unless base_ppa_params[:url]
 
   bash "ppa : #{base_ppa_params[:name]}" do
