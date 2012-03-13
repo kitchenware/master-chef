@@ -1,5 +1,6 @@
 define :capistrano_app, {
   :user => nil,
+  :group => nil,
   :without_cap => false,
 } do
 
@@ -20,6 +21,7 @@ define :capistrano_app, {
   directories.each do |dir|
     directory dir do
       owner capistrano_app_params[:user]
+      group capistrano_app_params[:group] if capistrano_app_params[:group]
     end
   end
 
