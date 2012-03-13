@@ -25,4 +25,9 @@ define :base_user, {
     mode 0755
   end
 
+  directory "#{user_home}/.ssh" do
+    owner base_user_params[:name]
+    mode 0700
+  end
+  
 end
