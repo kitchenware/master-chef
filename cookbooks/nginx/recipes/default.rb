@@ -1,10 +1,40 @@
+if node['platform'] == "ubuntu"
+  base_ppa "nginx" do
+     url "ppa:nginx/stable"
+  end
+end
 
-base_ppa "nginx" do
-  url "ppa:nginx/stable"
+if node['platform'] == "debian"
+
+  authorize_unauthenticated_packages
+
+  add_apt_repository "nginx" do
+    url "http://nginx.org/packages/debian/"
+    components ["nginx"]
+  end
+
+  directory "/etc/nginx/sites-enabled" do
+    recursive true
+  end
+end
+
+file "/etc/nginx/sites-enabled/default" do
+  action :nothing
+end
+
+file "/etc/nginx/sites-available/default" do
+  action :nothing
+end
+
+file "/etc/nginx/conf.d/default.conf" do
+  action :nothing
 end
 
 package "nginx" do
   version node.nginx[:nginx_version] if node.nginx[:nginx_version]
+  notifies :delete, resources(:file => "/etc/nginx/sites-enabled/default")
+  notifies :delete, resources(:file => "/etc/nginx/sites-available/default")
+  notifies :delete, resources(:file => "/etc/nginx/conf.d/default.conf")
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("nginx", "nginx:.*")
@@ -22,13 +52,7 @@ if node.nginx[:deploy_default_config]
     notifies :reload, resources(:service => "nginx")
   end
 
-  file "/etc/nginx/sites-enabled/default" do
-    action :delete
-  end
 
-  file "/etc/nginx/sites-available/default" do
-    action :delete
-  end
 
 end
 
@@ -47,4 +71,5 @@ delayed_exec "Remove useless nginx vhost" do
       end
     end
   end
+
 end

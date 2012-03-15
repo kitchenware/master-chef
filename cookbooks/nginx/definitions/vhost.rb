@@ -15,7 +15,7 @@ define :nginx_vhost, {
     nginx_listen += "auth_basic \"#{basic_auth[:realm]}\";\n"
     nginx_listen += "auth_basic_user_file /etc/nginx/#{basic_auth[:file]}.passwd;\n"
   end
-  
+
   template "/etc/nginx/sites-enabled/#{vhost_sym.to_s}.conf" do
     source "#{vhost_sym.to_s}.conf.erb"
     mode 0644

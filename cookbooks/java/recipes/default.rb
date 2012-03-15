@@ -1,5 +1,15 @@
-base_ppa "sun-java" do
-  url "ppa:sun-java-community-team/sun-java6"
+
+if node['platform'] == "ubuntu"
+  base_ppa "sun-java" do
+    url "ppa:sun-java-community-team/sun-java6"
+  end
+end
+
+if node['platform'] == "debian"
+  add_apt_repository "sun-java" do
+     url "http://ftp.ie.debian.org/debian"
+     components ["main", "non-free"]
+  end
 end
   
 bash "auto accept java license" do
