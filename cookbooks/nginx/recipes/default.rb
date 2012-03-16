@@ -52,12 +52,28 @@ if node.nginx[:deploy_default_config]
     notifies :reload, resources(:service => "nginx")
   end
 
+  directory node.nginx.default_root do
+    recursive true
+    owner "nginx"
+  end
 
+  if node.nginx[:locations] 
+    node.nginx.locations.keys.sort.each do |k|
+      directory "#{node.nginx.locations[k]["path"]}" do
+        owner node.nginx.locations[k]["owner"]
+        recursive true
+      end
 
+      link "#{node.nginx.default_root}#{k}" do
+        to node.nginx.locations[k]["path"]
+      end
+    end
+  end
 end
 
 nginx_vhost "nginx:default_vhost" do
   cookbook "nginx"
+  options :root => node.nginx.default_root
 end
 
 delayed_exec "Remove useless nginx vhost" do
