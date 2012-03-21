@@ -21,6 +21,7 @@ define :base_user, {
 
   user_home = base_user_params[:home] || get_home(base_user_params[:name])
   directory user_home do
+    recursive true
     owner base_user_params[:name]
     mode 0755
   end
