@@ -4,6 +4,6 @@ define :php5_module, {
 
   php5_module_params = params
 
-  package "php5-#{php5_module_params}"
+  package "php5-#{php5_module_params[:name]}"
 
 end
