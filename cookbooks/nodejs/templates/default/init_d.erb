@@ -15,7 +15,7 @@ NODE_VERSION_FILE="<%= @app_path %>/.node_version"
 SCRIPT="<%= @app_path %>/<%= @script %>"
 NAME="<%= @name %>"
 DESC="node"
-PID_FILE="<%= @pid_files_path %>/master.pid"
+PID_FILE="<%= @pid_files_path %>/<%= @pid_file_name %>.pid"
 START_STOP_DAEMON="/sbin/start-stop-daemon"
 
 test -f $NODE_VERSION_FILE || exit 0
@@ -36,7 +36,7 @@ umask 022
 
 [ -f /etc/default/<%= @name %> ] && . /etc/default/<%= @name %>
 
-NODE_OPTS="$NODE_OPTS --cluster_pidfiles=<%= @pid_files_path %>"
+NODE_OPTS="$NODE_OPTS <% if @cluster_mode %> --cluster_pidfiles=<%= @pid_files_path %> <% end %>"
 
 status_nodejs() {
   status_of_proc -p "$PID_FILE" "node" "$NAME"
@@ -53,9 +53,11 @@ kill_nodejs() {
 }
 
 start_nodejs() {
-  $START_STOP_DAEMON -b -c <%= @user %> --start --pidfile $PID_FILE --exec $DAEMON -- $SCRIPT $NODE_OPTS
+  $START_STOP_DAEMON -b -c <%= @user %> <% unless @cluster_mode %> -m <% end %> --start --pidfile $PID_FILE --exec $DAEMON -- $SCRIPT $NODE_OPTS
+  <% unless @cluster_mode %> chown <%= @user %> $PID_FILE <% end %>
   sleep 1
   status_nodejs
+
 }
 
 case "$1" in

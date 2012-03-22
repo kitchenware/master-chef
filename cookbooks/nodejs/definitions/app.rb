@@ -6,6 +6,8 @@ define :nodejs_app, {
   :script => nil,
   :opts => nil,
   :startup_code => "",
+  :cluster_mode => false,
+  :pid_file_name => "master",
 } do
 
   nodejs_app_params = params
@@ -42,6 +44,8 @@ define :nodejs_app, {
       :app_path => current_path,
       :user_home => get_home(nodejs_app_params[:user]),
       :startup_code => nodejs_app_params[:startup_code],
+      :pid_file_name => nodejs_app_params[:pid_file_name],
+      :cluster_mode => nodejs_app_params[:cluster_mode],
     })
   end
 
