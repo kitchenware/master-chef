@@ -1,4 +1,3 @@
-default[:php5][:modules] = []
 
 default[:php5][:php_ini] = {
   :max_execution_time => 30,
