@@ -26,6 +26,8 @@ nvm use `cat $NODE_VERSION_FILE`
 
 DAEMON=`which node`
 
+<%= @startup_code %>
+
 test -x $DAEMON || exit 0
 
 umask 022

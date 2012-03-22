@@ -5,6 +5,7 @@ define :nodejs_app, {
   :group => nil,
   :script => nil,
   :opts => nil,
+  :startup_code => "",
 } do
 
   nodejs_app_params = params
@@ -40,6 +41,7 @@ define :nodejs_app, {
       :pid_files_path => pid_files_path,
       :app_path => current_path,
       :user_home => get_home(nodejs_app_params[:user]),
+      :startup_code => nodejs_app_params[:startup_code],
     })
   end
 
