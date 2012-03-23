@@ -18,7 +18,7 @@ end
 template "/etc/collectd/collectd.conf" do
   mode 0644
   source "collectd.conf.erb"
-  notifies :reload, resources(:service => "collectd")
+  notifies :restart, resources(:service => "collectd")
 end
 
 node.collectd.default_plugins.each do |p|
