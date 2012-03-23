@@ -9,10 +9,15 @@ define :php5_apache2, {
     notifies :reload, resources(:service => "apache2")
   end
 
+  options = {}
+  php5_apache2_params[:options].each do |k, v|
+    options[k.is_a?(String) ? k : k.to_s] = v
+  end
+
   template "/etc/php5/apache2/php.ini" do
     cookbook "php5"
     source "php5.ini.erb"
-    variables node.php5.php_ini.to_hash.merge(php5_apache2_params[:options])
+    variables node.php5.php_ini.to_hash.merge(options)
     notifies :reload, resources(:service => "apache2")
   end
 
