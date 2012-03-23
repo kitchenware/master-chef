@@ -8,6 +8,7 @@ define :collectd_plugin, {
   template "/etc/collectd/collectd.d/#{collectd_plugin_params[:name]}.conf" do
     cookbook "collectd"
     source "plugin.conf.erb"
+    mode 0755
     variables :name => collectd_plugin_params[:name], :config => collectd_plugin_params[:config]
     notifies :reload, resources(:service => "collectd")
   end
