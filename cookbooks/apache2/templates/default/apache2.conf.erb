@@ -99,6 +99,7 @@ KeepAliveTimeout 15
     StartServers          <%= @mpm[:prefork][:start] %>
     MinSpareServers       <%= @mpm[:prefork][:min_spare] %>
     MaxSpareServers       <%= @mpm[:prefork][:max_spare] %>
+    ServerLimit           <%= @mpm[:prefork][:server_limit] %>
     MaxClients            <%= @mpm[:prefork][:max_clients] %>
     MaxRequestsPerChild   <%= @mpm[:prefork][:max_request_per_child] %>
 </IfModule>
