@@ -8,7 +8,7 @@ end
 if node['platform'] == "debian"
   add_apt_repository "sun-java" do
      url "http://ftp.ie.debian.org/debian"
-     components ["main", "non-free"]
+     components ["non-free"]
   end
 end
   
