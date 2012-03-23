@@ -8,3 +8,6 @@ default[:apache2][:mpm_config][:prefork] = {
   :max_clients => 256,
   :max_request_per_child => 20,
 }
+
+default[:apache2][:server_signature] = 'Off'
+default[:apache2][:tokens] = 'Prod'

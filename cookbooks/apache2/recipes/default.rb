@@ -10,12 +10,12 @@ service "apache2" do
 end
 
 template "/etc/apache2/apache2.conf" do
-  variables :mpm => node.apache2.mpm_config
+  variables :mpm => node.apache2.mpm_config, :server_signature => node.apache2.server_signature, :tokens => node.apache2.tokens
   source "apache2.conf.erb"
   notifies :reload, resources(:service => "apache2")
 end
 
-["/etc/apache2/sites-enabled/000-default", "/etc/apache2/sites-available/default", "/etc/apache2/sites-available/default-ssl"].each do |f|
+["/etc/apache2/sites-enabled/000-default", "/etc/apache2/sites-available/default", "/etc/apache2/sites-available/default-ssl", "/etc/apache2/conf.d/security"].each do |f|
   file f do
     action :delete
     notifies :reload, resources(:service => "apache2")

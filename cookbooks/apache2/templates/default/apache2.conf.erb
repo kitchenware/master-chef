@@ -89,6 +89,9 @@ KeepAliveTimeout 15
 ## Server-Pool Size Regulation (MPM specific)
 ## 
 
+ServerTokens <%= @tokens %>
+ServerSignature <%= @server_signature %>
+
 # prefork MPM
 # StartServers: number of server processes to start
 # MinSpareServers: minimum number of server processes which are kept spare
