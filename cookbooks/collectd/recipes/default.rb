@@ -25,3 +25,7 @@ node.collectd.default_plugins.each do |p|
   collectd_plugin p
 end
 
+collectd_plugin "syslog" do
+  config "LogLevel \"#{node.collectd.log_level}\""
+end
+
