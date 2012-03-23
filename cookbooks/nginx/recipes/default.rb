@@ -71,9 +71,13 @@ if node.nginx[:deploy_default_config]
   end
 end
 
-nginx_vhost "nginx:default_vhost" do
-  cookbook "nginx"
-  options :root => node.nginx.default_root
+if node.nginx.default_vhost.enabled
+
+  nginx_vhost "nginx:default_vhost" do
+    cookbook "nginx"
+    options :root => node.nginx.default_root
+  end
+
 end
 
 delayed_exec "Remove useless nginx vhost" do

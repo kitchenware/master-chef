@@ -2,7 +2,7 @@ define :nginx_vhost, {
   :options => {}
 } do
   nginx_vhost_params = params
-  
+
   module_sym, vhost_sym = nginx_vhost_params[:name].split(':').map{|s| s.to_sym}
   
   config = node[module_sym][vhost_sym]
