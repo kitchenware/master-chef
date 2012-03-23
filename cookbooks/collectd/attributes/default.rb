@@ -1,0 +1,1 @@
+default[:collectd][:default_plugins] = ["cpu", "df", "disk", "entropy", "interface", "irq", "memory", "processes", "swap", "users"]

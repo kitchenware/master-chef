@@ -1,0 +1,6 @@
+LoadPlugin "<%= @name %>"
+<% if @config %>
+<Plugin "<%= @name %>">
+  <%= @config %>
+</Plugin>
+<% end %>
