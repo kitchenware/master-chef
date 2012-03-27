@@ -10,7 +10,7 @@ service "apache2" do
 end
 
 template "/etc/apache2/apache2.conf" do
-  variables :mpm => node.apache2.mpm_config, :server_signature => node.apache2.server_signature, :tokens => node.apache2.tokens
+  variables :mpm => node.apache2.mpm_config, :tuning => node.apache2.tuning
   source "apache2.conf.erb"
   notifies :reload, resources(:service => "apache2")
 end

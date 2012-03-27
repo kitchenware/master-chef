@@ -9,5 +9,12 @@ default[:apache2][:mpm_config][:prefork] = {
   :max_request_per_child => 20,
 }
 
-default[:apache2][:server_signature] = 'Off'
-default[:apache2][:tokens] = 'Prod'
+default[:apache2][:tuning] =  {
+  :server_signature => 'Off',
+  :tokens => 'Prod',
+  :hostname_lookups => 'On',
+  :keepalive => 'On',
+  :keepalive_timeout => 15,
+  :max_keepalive_request => 100,
+  :timeout => 300,
+}
