@@ -65,7 +65,7 @@ template "/etc/init.d/carbon" do
 end
 
 service "carbon" do
-  supports :status => true, :restart => true
+  supports :status => true
   action [ :enable, :start ]
 end
 
