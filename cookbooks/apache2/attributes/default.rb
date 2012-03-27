@@ -17,4 +17,5 @@ default[:apache2][:tuning] =  {
   :keepalive_timeout => 15,
   :max_keepalive_request => 100,
   :timeout => 300,
+  :log_level => "info",
 }
