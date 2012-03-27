@@ -29,3 +29,16 @@ collectd_plugin "syslog" do
   config "LogLevel \"#{node.collectd.log_level}\""
 end
 
+delayed_exec "Remove collectd plugin" do
+  block do
+    plugins = find_resources_by_name_pattern(/^\/etc\/collectd\/collectd.d\/.*\.conf$/).map{|r| r.name}
+    Dir["/etc/collectd/collectd.d/*.conf"].each do |n|
+      unless plugins.include? n
+        Chef::Log.info "Removing plugin #{n}"
+        File.unlink n
+        notifies :restart, resources(:service => "collectd")
+      end
+    end
+  end
+
+end
