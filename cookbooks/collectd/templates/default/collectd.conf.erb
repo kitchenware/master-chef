@@ -1,3 +1,5 @@
 Hostname "<%= %x{cat /etc/hostname}.strip %>"
 
+Interval <%= @interval %>
+
 Include "/etc/collectd/collectd.d/*.conf"

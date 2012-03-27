@@ -75,6 +75,13 @@ template "/opt/graphite/conf/carbon.conf" do
   notifies :restart, resources(:service => "carbon")
 end
 
+template "/opt/graphite/conf/storage-schemas.conf" do
+  source "storage-schemas.conf.erb"
+  mode 0644
+  variables :default_retention => node.graphite.default_retention
+  notifies :restart, resources(:service => "carbon")
+end
+
 execute "install bucky" do
   command "cd /tmp && wget #{node.graphite.packages.bucky.url} && tar xvzf bucky-#{node.graphite.packages.bucky.version}.tar.gz && cd bucky-#{node.graphite.packages.bucky.version} && python setup.py install"
   not_if "[ -x /usr/local/bin/bucky ]"
