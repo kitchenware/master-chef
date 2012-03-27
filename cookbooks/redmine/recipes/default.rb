@@ -20,7 +20,7 @@ git "#{node.redmine.directory}/current" do
 end
 
 %w{Gemfile Gemfile.lock .rbenv-version .rbenv-gemsets .bundle-option}.each do |f|
-  cookbook_file "#{node.redmine.directory}/current/#{f}" do
+  template "#{node.redmine.directory}/current/#{f}" do
     owner node.redmine.user
     source f
     not_if "[ -f #{node.redmine.directory}/current/.redmine_ready ]"
