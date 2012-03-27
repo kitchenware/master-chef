@@ -15,4 +15,7 @@ define :apache2_enable_module, {
     not_if "[ -h /etc/apache2/mods-enabled/#{apache2_enable_module_params[:name]}.load ]"
   end
 
+  node.apache2[:modules_enabled] = [] unless node.apache2[:modules_enabled]
+  node.apache2[:modules_enabled] << apache2_enable_module_params[:name]
+
 end

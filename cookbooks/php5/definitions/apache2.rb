@@ -9,6 +9,8 @@ define :php5_apache2, {
     notifies :reload, resources(:service => "apache2")
   end
 
+  apache2_enable_module "php5"
+
   options = {}
   php5_apache2_params[:options].each do |k, v|
     options[k.is_a?(String) ? k : k.to_s] = v
