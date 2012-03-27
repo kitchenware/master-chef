@@ -1,9 +1,13 @@
 
 define :apache2_enable_module, {
-  
+  :install => false,
 } do
 
   apache2_enable_module_params = params
+
+  if apache2_enable_module_params[:install]
+    package "libapache2-mod-#{apache2_enable_module_params[:name]}"
+  end
 
   bash "enable apache2 module #{apache2_enable_module_params[:name]}" do
     code "a2enmod #{apache2_enable_module_params[:name]}"

@@ -1,0 +1,74 @@
+#! /bin/bash
+
+### BEGIN INIT INFO
+# Provides: bucky
+# Required-Start:
+# Required-Stop:
+# Default-Start:  2 3 4 5
+# Default-Stop:
+# Short-Description: bucky
+### END INIT INFO
+
+set -e
+
+NAME="bucky"
+DESC="bucky"
+PID_FILE="/var/run/bucky.pid"
+START_STOP_DAEMON="/sbin/start-stop-daemon"
+DAEMON="/usr/local/bin/bucky"
+CFG_FILE="/etc/bucky/bucky.conf"
+
+test -x $DAEMON || exit 0
+test -f $CFG_FILE || exit 0
+
+umask 022
+
+. /lib/lsb/init-functions
+
+status_bucky() {
+  status_of_proc -p "$PID_FILE" "bucky" "$NAME"
+}
+
+kill_bucky() {
+  SIGNAL=$1
+
+  if [ ! "$PID_FILE" = "" ]; then
+    if [ -f $PID_FILE ]; then
+      kill $SIGNAL `cat $PID_FILE` || true
+    fi
+  fi
+}
+
+start_bucky() {
+  $START_STOP_DAEMON -b -m  --start --pidfile $PID_FILE --exec $DAEMON -- $CFG_FILE
+  sleep 1
+  status_bucky
+}
+
+case "$1" in
+  start)
+    echo -n "Starting $DESC: "
+    start_bucky
+    echo "$NAME."
+    ;;
+  stop)
+    echo -n "Stopping $DESC: "
+    kill_bucky
+    echo "$NAME."
+    ;;
+  restart)
+    echo -n "Restarting $DESC: "
+    kill_bucky || true
+    sleep 1
+    start_bucky
+    echo "$NAME."
+    ;;
+  status)
+    status_bucky
+    ;;
+  *)
+    echo "Usage: /etc/init.d/bucky {start|stop|restart|reload|status}"
+    exit 1
+esac
+
+exit 0
