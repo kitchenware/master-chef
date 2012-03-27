@@ -7,6 +7,9 @@ package "python-setuptools"
 
 include_recipe "apache2"
 
+apache2_enable_module "alias"
+apache2_enable_module "authz_host"
+
 apache2_enable_module "python" do
   install true
 end
@@ -107,3 +110,8 @@ template "/etc/bucky/bucky.conf" do
   notifies :restart, resources(:service => "bucky")
 end
 
+template "/opt/graphite/webapp/graphite/settings.py" do
+  source "settings.py.erb"
+  mode 0644
+  notifies :restart, resources(:service => "apache2")
+end

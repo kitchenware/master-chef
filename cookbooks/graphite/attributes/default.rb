@@ -22,3 +22,5 @@ default[:graphite][:graphite] = {
 }
 
 default[:graphite][:default_retention] = "10s:1d"
+
+default[:graphite][:timezone] = "Europe/Paris"
