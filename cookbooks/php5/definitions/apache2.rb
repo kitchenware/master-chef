@@ -14,11 +14,23 @@ define :php5_apache2, {
     options[k.is_a?(String) ? k : k.to_s] = v
   end
 
+  config = node.php5.php_ini.to_hash.merge(options)
+
   template "/etc/php5/apache2/php.ini" do
     cookbook "php5"
     source "php5.ini.erb"
-    variables node.php5.php_ini.to_hash.merge(options)
+    variables config
     notifies :reload, resources(:service => "apache2")
+  end
+
+  if config["error_log"]
+
+    directory File.dirname(config["error_log"]) do
+      owner "www-data"
+      mode 0755
+      recursive true
+    end
+
   end
 
 end
