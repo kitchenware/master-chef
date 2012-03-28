@@ -54,7 +54,7 @@ if node.nginx[:deploy_default_config]
 
   directory node.nginx.default_root do
     recursive true
-    owner "nginx"
+    owner "www-data"
   end
 
   if node.nginx[:locations] 
