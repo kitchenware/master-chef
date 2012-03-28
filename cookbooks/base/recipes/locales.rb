@@ -5,9 +5,11 @@ if node.locales.configure
     action :nothing
   end
 
-  Dir["/var/lib/locales/supported.d"].each do |n|
-    p n
-    notifies :run, resources(:execute => "locale-gen"), :delayed
+  delayed_exec "Purge useless locales" do
+    Dir["/var/lib/locales/supported.d"].each do |n|
+      p n
+      notifies :run, resources(:execute => "locale-gen"), :delayed
+    end
   end
 
   template "/etc/locale.gen" do
