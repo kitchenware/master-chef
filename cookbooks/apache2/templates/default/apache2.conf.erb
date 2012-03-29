@@ -98,6 +98,8 @@ KeepAliveTimeout <%= @tuning[:keepalive_timeout] %>
 MaxKeepAliveRequests <%= @tuning[:max_keepalive_request] %>
 Timeout <%= @tuning[:timeout] %> 
 
+ListenBacklog <%= @tuning[:listen_backlog] %> 
+
 # prefork MPM
 # StartServers: number of server processes to start
 # MinSpareServers: minimum number of server processes which are kept spare
