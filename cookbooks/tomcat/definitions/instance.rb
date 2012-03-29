@@ -58,6 +58,8 @@ define :tomcat_instance, {
   template "#{catalina_base}/conf/env" do
     cookbook "tomcat"
     source "env.erb"
+    owner "tomcat"
+    mode 0644
     variables :env => tomcat_instance_params[:env]
     notifies :restart, resources(:service => tomcat_instance_params[:name])
   end 

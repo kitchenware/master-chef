@@ -26,21 +26,30 @@ PATH=/bin:/usr/bin:/sbin:/usr/sbin
 NAME="<%= @name %>"
 DESC="Tomcat instance"
 JVM_TMP=/tmp/tomcat6-tmp
+SUDO=`which sudo`
+
+if [ ! -x $SUDO ]; then
+  echo "Sudo must be installed"
+  exit 1
+fi
 
 if [ `id -u` -ne 0 ]; then
   echo "You need root privileges to run this script"
   exit 1
 fi
- 
+
+TO_BE_SOURCED=""
+
 # Make sure tomcat is started with system locale
 if [ -r /etc/default/locale ]; then
-  . /etc/default/locale
+  TO_BE_SOURCED="$TO_BE_SOURCED source \"/etc/default/locale\";"
   export LANG
 fi
 
 . /lib/lsb/init-functions
 
 if [ -r /etc/default/rcS ]; then
+  TO_BE_SOURCED="$TO_BE_SOURCED source \"/etc/default/rcS\";"
   . /etc/default/rcS
 fi
 
@@ -92,6 +101,7 @@ fi
 
 # overwrite settings from default file
 if [ -f "$CATALINA_BASE/conf/env" ]; then
+  TO_BE_SOURCED="$TO_BE_SOURCED source \"$CATALINA_BASE/conf/env\";"
   . "$CATALINA_BASE/conf/env"
 fi
 
@@ -129,7 +139,7 @@ catalina_sh() {
 
   # Define the command to run Tomcat's catalina.sh as a daemon
   # set -a tells sh to export assigned variables to spawned shells.
-  TOMCAT_SH="set -a; JAVA_HOME=\"$JAVA_HOME\"; source \"$DEFAULT\"; \
+  TOMCAT_SH="set -a; JAVA_HOME=\"$JAVA_HOME\"; $TO_BE_SOURCED source \"$DEFAULT\"; \
     CATALINA_HOME=\"$CATALINA_HOME\"; \
     CATALINA_BASE=\"$CATALINA_BASE\"; \
     JAVA_OPTS=\"$JAVA_OPTS\"; \
@@ -143,9 +153,9 @@ catalina_sh() {
   set +e
   touch "$CATALINA_PID" "$CATALINA_BASE"/logs/catalina.out
   chown $TOMCAT6_USER "$CATALINA_PID" "$CATALINA_BASE"/logs/catalina.out
-  start-stop-daemon --start -b -u "$TOMCAT6_USER" -g "$TOMCAT6_GROUP" \
-    -c "$TOMCAT6_USER" -d "$CATALINA_TMPDIR" -p "$CATALINA_PID" \
-    -x /bin/bash -- -c "$TOMCAT_SH"
+  start-stop-daemon --start -b -u "$TOMCAT6_USER"  -d "$CATALINA_TMPDIR" \
+    -p "$CATALINA_PID" -x $SUDO -- \
+    -u "$TOMCAT6_USER" /bin/bash -c "$TOMCAT_SH"
   status="$?"
   set +a -e
   return $status
