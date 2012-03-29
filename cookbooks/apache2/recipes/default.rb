@@ -15,7 +15,12 @@ template "/etc/apache2/apache2.conf" do
   notifies :reload, resources(:service => "apache2")
 end
 
-["/etc/apache2/sites-enabled/000-default", "/etc/apache2/sites-available/default", "/etc/apache2/sites-available/default-ssl", "/etc/apache2/conf.d/security"].each do |f|
+[
+  "/etc/apache2/sites-enabled/000-default",
+  "/etc/apache2/sites-available/default",
+  "/etc/apache2/sites-available/default-ssl",
+  "/etc/apache2/conf.d/security"
+  ].each do |f|
   file f do
     action :delete
     notifies :reload, resources(:service => "apache2")
