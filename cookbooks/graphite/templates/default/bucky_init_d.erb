@@ -40,7 +40,7 @@ kill_bucky() {
 }
 
 start_bucky() {
-  $START_STOP_DAEMON -b -m  --start --pidfile $PID_FILE --exec $DAEMON -- $CFG_FILE
+  $START_STOP_DAEMON -b -m --start --pidfile $PID_FILE --exec $DAEMON -- $CFG_FILE
   sleep 1
   status_bucky
 }
