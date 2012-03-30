@@ -1,3 +1,3 @@
 #!/bin/sh -e 
 
-cd /opt/graphite && ./bin/carbon-cache.py $*
+cd /opt/graphite && sudo -u www-data ./bin/carbon-cache.py $*
