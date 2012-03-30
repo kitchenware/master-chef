@@ -39,7 +39,7 @@ kill_<%= @name %>() {
 
   if [ ! "$PID_FILE" = "" ]; then
     if [ -f $PID_FILE ]; then
-      kill $SIGNAL `cat $PID_FILE` || true
+      pkill $SIGNAL -P `cat $PID_FILE` || true
     fi
   fi
 }
