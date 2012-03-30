@@ -94,14 +94,11 @@ directory "/etc/bucky" do
   mode 0755
 end
 
-template "/etc/init.d/bucky" do
-  source "bucky_init_d.erb"
-  mode 0755
-end
-
-service "bucky" do
-  supports :status => true, :restart => true
-  action [ :enable, :start ]
+basic_init_d "bucky" do
+  daemon "/usr/local/bin/bucky"
+  options "/etc/bucky/bucky.conf"
+  file_check "/etc/bucky/bucky.conf"
+  user "www-data"
 end
 
 template "/etc/bucky/bucky.conf" do
@@ -110,8 +107,3 @@ template "/etc/bucky/bucky.conf" do
   notifies :restart, resources(:service => "bucky")
 end
 
-template "/opt/graphite/webapp/graphite/settings.py" do
-  source "settings.py.erb"
-  mode 0644
-  notifies :restart, resources(:service => "apache2")
-end
