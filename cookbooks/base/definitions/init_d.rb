@@ -9,6 +9,7 @@ define :basic_init_d, {
   :executable_check => [],
   :auto_start => true,
   :working_directory => nil,
+  :log_file => nil,
 } do
   basic_init_d_params = params
 
@@ -19,6 +20,9 @@ define :basic_init_d, {
   start_options += " -b" if basic_init_d_params[:background]
   start_options += " -c #{basic_init_d_params[:user]}" if basic_init_d_params[:user]
   start_options += " -d #{basic_init_d_params[:working_directory]}" if basic_init_d_params[:working_directory]
+
+  end_of_command = ""
+  end_of_command = "2>&1 | tee #{basic_init_d_params[:log_file]}" if basic_init_d_params[:log_file]
   
   template "/etc/init.d/#{basic_init_d_params[:name]}" do
     cookbook "base"
@@ -32,6 +36,7 @@ define :basic_init_d, {
       :file_check => basic_init_d_params[:file_check],
       :executable_check => basic_init_d_params[:executable_check] + ["$DAEMON"],
       :start_options => start_options,
+      :end_of_command => end_of_command,
       })
   end
 
