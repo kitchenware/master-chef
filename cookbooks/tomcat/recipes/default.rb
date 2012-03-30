@@ -4,7 +4,6 @@ package "libapr1"
 
 base_user node.tomcat.user do
   home node.tomcat.home
-  group node.tomcat.group
 end
 
 bash "install tomcat via warp" do
