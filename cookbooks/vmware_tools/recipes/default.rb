@@ -1,5 +1,5 @@
 
-cookbook_file "/etc/init.d/vmware-tools-update" do
+template "/etc/init.d/vmware-tools-update" do
   source "vmware-tools-update"
   mode 0755
 end

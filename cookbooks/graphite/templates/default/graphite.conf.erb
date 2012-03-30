@@ -1,0 +1,31 @@
+
+WSGISocketPrefix <%= @wsgi_socket_prefix %>
+
+<VirtualHost <%= @listen %>>
+        DocumentRoot "<%= @graphite_directory %>/webapp"
+        ErrorLog <%= @graphite_directory %>/storage/log/webapp/error.log
+        CustomLog <%= @graphite_directory %>/storage/log/webapp/access.log common
+
+        WSGIDaemonProcess graphite processes=5 threads=5 display-name='%{GROUP}' inactivity-timeout=120
+        WSGIProcessGroup graphite
+        WSGIApplicationGroup %{GLOBAL}
+        WSGIImportScript <%= @graphite_directory %>/conf/graphite.wsgi process-group=graphite application-group=%{GLOBAL}
+
+        WSGIScriptAlias / <%= @graphite_directory %>/conf/graphite.wsgi 
+
+        Alias /content/ <%= @graphite_directory %>/webapp/content/
+        <Location "/content/">
+                SetHandler None
+        </Location>
+
+        Alias /media/ "@DJANGO_ROOT@/contrib/admin/media/"
+        <Location "/media/">
+                SetHandler None
+        </Location>
+
+        <Directory <%= @graphite_directory %>/conf/>
+                Order deny,allow
+                Allow from all
+        </Directory>
+
+</VirtualHost>

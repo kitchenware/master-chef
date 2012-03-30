@@ -162,6 +162,8 @@ Group ${APACHE_RUN_GROUP}
 # directive.
 #
 
+<% if @tuning[:enable_htaccess] %>
+
 AccessFileName .htaccess
 
 #
@@ -173,6 +175,8 @@ AccessFileName .htaccess
     Deny from all
     Satisfy all
 </Files>
+
+<% end %>
 
 #
 # DefaultType is the default MIME type the server will use for a document
@@ -209,7 +213,7 @@ ErrorLog ${APACHE_LOG_DIR}/error.log
 # Possible values include: debug, info, notice, warn, error, crit,
 # alert, emerg.
 #
-LogLevel warn
+LogLevel <%= @tuning[:log_level] %>
 
 # Include module configuration:
 Include mods-enabled/*.load

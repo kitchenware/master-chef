@@ -18,23 +18,9 @@ if node['platform'] == "debian"
   end
 end
 
-file "/etc/nginx/sites-enabled/default" do
-  action :nothing
-end
-
-file "/etc/nginx/sites-available/default" do
-  action :nothing
-end
-
-file "/etc/nginx/conf.d/default.conf" do
-  action :nothing
-end
 
 package "nginx" do
   version node.nginx[:nginx_version] if node.nginx[:nginx_version]
-  notifies :delete, resources(:file => "/etc/nginx/sites-enabled/default")
-  notifies :delete, resources(:file => "/etc/nginx/sites-available/default")
-  notifies :delete, resources(:file => "/etc/nginx/conf.d/default.conf")
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("nginx", "nginx:.*")
@@ -42,6 +28,18 @@ Chef::Config.exception_handlers << ServiceErrorHandler.new("nginx", "nginx:.*")
 service "nginx" do
   supports :status => true, :restart => true, :reload => true
   action [ :enable, :start ]
+end
+
+[
+  "/etc/nginx/sites-enabled/default",
+  "/etc/nginx/sites-available/default",
+  "/etc/nginx/conf.d/default.conf",
+  "/etc/nginx/conf.d/example_ssl.conf"
+  ].each do |f|
+  file f do
+    action :delete
+    notifies :reload, resources(:service => "nginx")
+  end
 end
 
 if node.nginx[:deploy_default_config]
@@ -54,7 +52,7 @@ if node.nginx[:deploy_default_config]
 
   directory node.nginx.default_root do
     recursive true
-    owner "nginx"
+    owner "www-data"
   end
 
   if node.nginx[:locations] 

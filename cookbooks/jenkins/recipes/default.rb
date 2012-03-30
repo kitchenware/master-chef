@@ -13,7 +13,9 @@ tomcat_instance "jenkins" do
   connectors({
     "http" => {
       "port" => 8080,
-      "address" => "127.0.0.1"},
+      "address" => "127.0.0.1",
+      "URIEncoding" => "UTF-8",
+      },
     })
   control_port 8005
   war_url "http://mirrors.jenkins-ci.org/war/latest/jenkins.war"

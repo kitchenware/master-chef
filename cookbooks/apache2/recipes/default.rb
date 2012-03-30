@@ -15,11 +15,20 @@ template "/etc/apache2/apache2.conf" do
   notifies :reload, resources(:service => "apache2")
 end
 
-["/etc/apache2/sites-enabled/000-default", "/etc/apache2/sites-available/default", "/etc/apache2/sites-available/default-ssl", "/etc/apache2/conf.d/security"].each do |f|
+[
+  "/etc/apache2/sites-enabled/000-default",
+  "/etc/apache2/sites-available/default",
+  "/etc/apache2/sites-available/default-ssl",
+  "/etc/apache2/conf.d/security"
+  ].each do |f|
   file f do
     action :delete
     notifies :reload, resources(:service => "apache2")
   end
+end
+
+node.apache2.modules.each do |m|
+  apache2_enable_module m
 end
 
 delayed_exec "Remove useless apache2 vhost" do
@@ -29,6 +38,20 @@ delayed_exec "Remove useless apache2 vhost" do
       unless vhosts.include? n
         Chef::Log.info "Removing vhost #{n}"
         File.unlink n
+        notifies :reload, resources(:service => "apache2")
+      end
+    end
+  end
+end
+
+delayed_exec "Remove useless apache2 modules" do
+  block do
+    modules = node.apache2[:modules_enabled] || []
+    Dir["/etc/apache2/mods-enabled/*.load"].each do |n|
+      name = n.match(/\/([^\/]+).load$/)[1]
+      unless modules.include? name
+        Chef::Log.info "Disabling module #{name}"
+        %x{a2dismod #{name}}
         notifies :reload, resources(:service => "apache2")
       end
     end

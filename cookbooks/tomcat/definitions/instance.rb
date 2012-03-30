@@ -46,7 +46,6 @@ define :tomcat_instance, {
       :catalina_home => node.tomcat.catalina_home,
       :name => tomcat_instance_params[:name],
       :user => node.tomcat.user,
-      :group => node.tomcat.group,
       })
   end
 
@@ -58,6 +57,8 @@ define :tomcat_instance, {
   template "#{catalina_base}/conf/env" do
     cookbook "tomcat"
     source "env.erb"
+    owner "tomcat"
+    mode 0644
     variables :env => tomcat_instance_params[:env]
     notifies :restart, resources(:service => tomcat_instance_params[:name])
   end 
