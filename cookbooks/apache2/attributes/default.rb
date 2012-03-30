@@ -22,4 +22,4 @@ default[:apache2][:tuning] =  {
   :listen_backlog => 511,
 }
 
-default[:apache2][:modules] = ["dir"]
+default[:apache2][:modules] = ["dir", "mime"]
