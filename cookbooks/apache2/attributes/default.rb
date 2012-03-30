@@ -22,4 +22,4 @@ default[:apache2][:tuning] =  {
   :listen_backlog => 511,
 }
 
-default[:apache2][:modules] = ["dir", "mime"]
+default[:apache2][:modules] = ["dir", "mime", "authz_user", "authn_file", "auth_basic"]

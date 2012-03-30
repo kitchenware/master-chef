@@ -2,6 +2,7 @@
 WSGISocketPrefix <%= @wsgi_socket_prefix %>
 
 <VirtualHost <%= @listen %>>
+
         DocumentRoot "<%= @graphite_directory %>/webapp"
         ErrorLog <%= @graphite_directory %>/storage/log/webapp/error.log
         CustomLog <%= @graphite_directory %>/storage/log/webapp/access.log common
@@ -21,6 +22,10 @@ WSGISocketPrefix <%= @wsgi_socket_prefix %>
         Alias /media/ "@DJANGO_ROOT@/contrib/admin/media/"
         <Location "/media/">
                 SetHandler None
+        </Location>
+        
+        <Location "/" >
+                <%= @basic_auth %>
         </Location>
 
         <Directory <%= @graphite_directory %>/conf/>
