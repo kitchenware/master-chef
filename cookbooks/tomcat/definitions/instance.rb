@@ -46,7 +46,6 @@ define :tomcat_instance, {
       :catalina_home => node.tomcat.catalina_home,
       :name => tomcat_instance_params[:name],
       :user => node.tomcat.user,
-      :group => node.tomcat.group,
       })
   end
 
