@@ -39,13 +39,13 @@ kill_<%= @name %>() {
 
   if [ ! "$PID_FILE" = "" ]; then
     if [ -f $PID_FILE ]; then
-      kill $SIGNAL `cat $PID_FILE` || true
+      pkill $SIGNAL -P `cat $PID_FILE` || true
     fi
   fi
 }
 
 start_<%= @name %>() {
-  $START_STOP_DAEMON <%= @start_options %>  --start --pidfile $PID_FILE --exec $DAEMON -- $OPTIONS
+  $START_STOP_DAEMON <%= @start_options %>  --start --pidfile $PID_FILE --exec /bin/sh -- -c "$DAEMON $OPTIONS <%= @end_of_command %>"
   sleep 1
   status_<%= @name %>
 }

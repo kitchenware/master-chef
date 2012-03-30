@@ -19,6 +19,7 @@ define :php5_apache2, {
   config = node.php5.php_ini.to_hash.merge(options)
 
   template "/etc/php5/apache2/php.ini" do
+    mode 0644
     cookbook "php5"
     source "php5.ini.erb"
     variables config

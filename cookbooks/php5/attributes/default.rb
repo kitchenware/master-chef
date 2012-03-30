@@ -11,9 +11,9 @@ default[:php5][:php_ini] = {
   :default_charset => "iso-8859-1",
   :default_mimetype => "text/html",
   :safe_mode => false,
-  :safe_mode_include_dir => "",
-  :safe_mode_exec_dir => "",
+  :safe_mode_include_dir => [],
+  :safe_mode_exec_dir => [],
   :safe_mode_gid => false,
-  :open_basedir => "",
+  :open_basedir => [],
   :error_log => "/var/log/php/error.log",
 }
