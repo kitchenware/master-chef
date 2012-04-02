@@ -8,7 +8,7 @@ define :apache2_vhost, {
   config = node[module_sym][vhost_sym]
 
   apache2_listen = config[:listen]
-  basic_auth = node.apache2.graphite[:basic_auth]
+  basic_auth = config[:basic_auth]
 
   apache2_description = ""
   if config[:domains] && config[:domains].size >= 1
@@ -22,6 +22,11 @@ define :apache2_vhost, {
 
   basic_auth_conf = ""
   if basic_auth
+
+    apache2_enable_module "authz_user"
+    apache2_enable_module "authn_file"
+    apache2_enable_module "auth_basic"
+    
     auth_name = basic_auth[:realm]
     p auth_name
     basic_auth_conf += "AuthType Basic\n"
