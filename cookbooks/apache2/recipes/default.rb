@@ -10,7 +10,21 @@ service "apache2" do
 end
 
 template "/etc/apache2/apache2.conf" do
-  variables :mpm => node.apache2.mpm_config, :tuning => node.apache2.tuning
+  if node.apache2.mpm_config.prefork == "auto"
+    mpm_auto = { 
+      :prefork => {
+        :start => node.cpu.total * 4,
+        :min_spare => node.cpu.total * 8,
+        :max_spare => node.cpu.total * 16,
+        :server_limit => node.cpu.total * 512,
+        :max_clients => node.cpu.total * 512,
+        :max_request_per_child => node.cpu.total * 1024,
+      }
+    }
+    variables :mpm => mpm_auto, :tuning => node.apache2.tuning
+  else 
+    variables :mpm => node.apache2.mpm_config, :tuning => node.apache2.tuning
+  end
   source "apache2.conf.erb"
   notifies :reload, resources(:service => "apache2")
 end
