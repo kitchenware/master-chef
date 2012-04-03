@@ -10,6 +10,7 @@ define :basic_init_d, {
   :auto_start => true,
   :working_directory => nil,
   :log_file => nil,
+  :pid_directory => "/var/run"
 } do
   basic_init_d_params = params
 
@@ -23,6 +24,9 @@ define :basic_init_d, {
 
   end_of_command = ""
   end_of_command = "2>&1 | tee #{basic_init_d_params[:log_file]}" if basic_init_d_params[:log_file]
+
+  post_start = ""
+  post_start += "chown #{basic_init_d_params[:user]} $PID_FILE" if basic_init_d_params[:make_pidfile] 
   
   template "/etc/init.d/#{basic_init_d_params[:name]}" do
     cookbook "base"
@@ -31,12 +35,13 @@ define :basic_init_d, {
     variables({
       :daemon => basic_init_d_params[:daemon],
       :name => basic_init_d_params[:name],
-      :pid_file => "/var/run/#{basic_init_d_params[:name]}.pid",
+      :pid_file => "#{basic_init_d_params[:pid_directory]}/#{basic_init_d_params[:name]}.pid",
       :options => basic_init_d_params[:options],
       :file_check => basic_init_d_params[:file_check],
       :executable_check => basic_init_d_params[:executable_check] + ["$DAEMON"],
       :start_options => start_options,
       :end_of_command => end_of_command,
+      :post_start => post_start,
       })
   end
 

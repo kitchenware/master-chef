@@ -48,6 +48,7 @@ start_<%= @name %>() {
   $START_STOP_DAEMON <%= @start_options %>  --start --pidfile $PID_FILE --exec /bin/sh -- -c "$DAEMON $OPTIONS <%= @end_of_command %>"
   sleep 1
   status_<%= @name %>
+  <%= @post_start %>
 }
 
 case "$1" in
