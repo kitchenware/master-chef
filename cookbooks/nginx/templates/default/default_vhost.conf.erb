@@ -20,6 +20,8 @@ server {
     <%= location[:content] %>
   <% end %>  
 
+  server_tokens <%= @server_tokens %>;
+
   error_page 401 403 /401.html;
 
   error_page 404 /404.html;

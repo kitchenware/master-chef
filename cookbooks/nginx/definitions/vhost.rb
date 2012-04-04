@@ -20,7 +20,7 @@ define :nginx_vhost, {
   template "/etc/nginx/sites-enabled/#{vhost_sym.to_s}.conf" do
     source "#{vhost_sym.to_s}.conf.erb"
     mode 0644
-    variables({:listen => nginx_listen, :config => node[module_sym][vhost_sym]}.merge(nginx_vhost_params[:options]))
+    variables({:listen => nginx_listen, :config => node[module_sym][vhost_sym], :server_tokens => 'Off'}.merge(nginx_vhost_params[:options]))
     notifies :reload, resources(:service => "nginx")
   end
 
