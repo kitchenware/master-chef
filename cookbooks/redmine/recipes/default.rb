@@ -19,6 +19,12 @@ git "#{node.redmine.directory}/current" do
   reference node.redmine.version
 end
 
+directory "#{node.redmine.directory}/current/files" do
+  owner node.redmine.user
+  group node.redmine.user
+  recursive true
+end
+
 %w{Gemfile Gemfile.lock .rbenv-version .rbenv-gemsets .bundle-option}.each do |f|
   template "#{node.redmine.directory}/current/#{f}" do
     owner node.redmine.user
