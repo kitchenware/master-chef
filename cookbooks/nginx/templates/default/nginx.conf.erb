@@ -1,6 +1,6 @@
 user www-data;
 
-worker_processes <%= node.nginx[:config][:worker_processes] || node.cpu.total %>;
+worker_processes <%= @worker_processes  %>;
 worker_rlimit_nofile 30000;
 
 error_log /var/log/nginx/error.log;

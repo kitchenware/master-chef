@@ -46,7 +46,8 @@ define :unicorn_app, {
       :app_directory => "#{unicorn_app_params[:app_directory]}/current",
       :unicorn_socket => unicorn_socket_file,
       :log_prefix => unicorn_log_prefix,
-      :pid_file => unicorn_pid_file
+      :pid_file => unicorn_pid_file,
+      :nb_workers => node.cpu.total,
     })
     notifies :restart, resources(:service => unicorn_app_params[:name])
   end

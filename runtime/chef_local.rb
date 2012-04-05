@@ -20,7 +20,6 @@ def exec_local cmd
 end
  
 ["../master-chef", localrolepath].each do |dir|
-  p dir
   exec_local "rsync --delete -avh --exclude=.git #{dir}/ #{user}@#{server}:/tmp/#{File.basename(dir)}/"
 end
 

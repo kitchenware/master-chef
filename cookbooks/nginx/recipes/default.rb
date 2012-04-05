@@ -45,6 +45,12 @@ end
 if node.nginx[:deploy_default_config]
 
   template "/etc/nginx/nginx.conf" do
+    if node.nginx[:config][:worker_processes]
+      nb_workers =  node.nginx[:config][:worker_processes]
+    else
+      nb_workers = node.cpu.total
+    end
+    variables :worker_processes => nb_workers
     source "nginx.conf.erb"
     mode 0644
     notifies :reload, resources(:service => "nginx")

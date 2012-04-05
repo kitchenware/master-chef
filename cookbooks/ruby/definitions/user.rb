@@ -16,7 +16,7 @@ define :ruby_user, {
   if ruby_user_params[:install_rbenv]
     bash "install rbenv" do
       user ruby_user_params[:name]
-      code "export HOME=#{get_home ruby_user_params[:name]} && cd $HOME && .warp/common/ruby/setup_rbenv.sh"
+      code "export HOME=#{get_home ruby_user_params[:name]} && cd $HOME && .warp/common/ruby/install_rbenv.sh"
       not_if "[ -d #{get_home ruby_user_params[:name]}/.rbenv ]"
     end
   end
