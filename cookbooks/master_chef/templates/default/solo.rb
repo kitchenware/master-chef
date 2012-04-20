@@ -20,6 +20,16 @@ def exec_local cmd
   end
 end
 
+def capture_local cmd
+  begin
+    result = %x{#{cmd}}
+    abort "#{cmd} failed. Aborting..." unless $? == 0
+    result
+  rescue
+    abort "#{cmd} failed. Aborting..."
+  end
+end
+
 git_cache_directory = ENV["GIT_CACHE_DIRECTORY"] || "/var/chef/cache/git_repos"
 exec_local "mkdir -p #{git_cache_directory}"
 
@@ -27,14 +37,30 @@ cookbooks = []
 roles = []
 
 if config["repos"]["git"]
+  git_tag_override_file = config_file + ".git_tag_override"
+  git_tag_override = {}
+  git_tag_override = JSON.load(File.read(git_tag_override_file)) if File.exists? git_tag_override_file
   config["repos"]["git"].each do |url|
     name = File.basename(url)
     target = File.join(git_cache_directory, name)
-    unless File.exists? target
-      puts "Cloning git repo #{url}"
-      exec_local "cd #{git_cache_directory} && git clone #{url} #{name} 2>&1"
+    if File.exists? target
+      verb = "Updating"
+      exec_local "cd #{target} && git fetch -q origin && git fetch --tags -q origin"
+    else
+      verb = "Cloning"
+      exec_local "cd #{git_cache_directory} && git clone -q #{url} #{name} && cd #{target} && git checkout -q -b deploy"
     end
-    exec_local "cd #{target} && git pull && echo `pwd` && git log -n1 | head -n1 | awk '{print $2}' 2>&1"
+    branch_target = git_tag_override[url] || "master"
+    sha = capture_local("cd #{target} && git show-ref").split("\n").find do |l|
+      l =~ /refs\/remotes\/origin\/#{branch_target}$/ || l =~ /refs\/tags\/#{branch_target}$/
+    end
+    if sha
+      sha = sha.split(" ")[0]
+    else
+      sha = branch_target
+    end
+    puts "#{verb} from #{url}, using branch #{branch_target}, commit #{sha}"
+    exec_local "cd #{target} && git reset -q --hard #{sha} && git clean -q -d -x -f"
     cookbook = File.join(target, "cookbooks")
     cookbooks << cookbook if File.exists? cookbook
     role = File.join(target, "roles")
