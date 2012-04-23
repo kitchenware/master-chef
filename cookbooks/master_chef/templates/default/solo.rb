@@ -38,6 +38,13 @@ roles = []
 
 if config["repos"]["git"]
   git_tag_override_file = config_file + ".git_tag_override"
+  if ENV["GIT_TAG_OVERRIDE"]
+    repos = {}
+    ENV["GIT_TAG_OVERRIDE"].split(",").each do |k|
+      repos[$1] = $2 if k =~ /^(.*)=(.*)$/
+    end
+    File.open(git_tag_override_file, "w") {|io| io.write(JSON.pretty_generate(repos))}
+  end
   git_tag_override = {}
   git_tag_override = JSON.load(File.read(git_tag_override_file)) if File.exists? git_tag_override_file
   config["repos"]["git"].each do |url|
