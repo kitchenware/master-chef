@@ -1,0 +1,12 @@
+{
+  "repos": {
+    "git": [
+      "git://github.com/octo-technology/master-chef.git"
+    ]
+  },
+  "run_list": [
+    "recipe[master_chef::chef_solo_scripts]"
+  ],
+  "node_config": {
+  }
+}
