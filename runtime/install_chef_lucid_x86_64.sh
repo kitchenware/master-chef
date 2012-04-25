@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# old line for sudoers (don't work in AWS ami)
+#sudo sed -i -e 's/%sudo ALL=(ALL) ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
+
 TARGET=$1
 
 KEY=`cat $HOME/.ssh/id_rsa.pub`
@@ -18,7 +21,8 @@ apt-get -y update
 apt-get -y install git-core curl 
 apt-get clean
 
-sed -i -e 's/%sudo ALL=(ALL) ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
+
+sudo echo "chef   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 sudo mkdir -p /home/chef/.ssh/
 sudo cp \$HOME/.ssh/authorized_keys /home/chef/.ssh/authorized_keys

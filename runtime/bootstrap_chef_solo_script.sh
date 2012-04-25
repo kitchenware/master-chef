@@ -1,5 +1,4 @@
 #!/bin/sh -e
-
 server=$1
 user="chef"
 
