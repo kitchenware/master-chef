@@ -11,7 +11,7 @@ WARP_ROOT="https://warp-repo.s3-eu-west-1.amazonaws.com"
 
 cat <<-EOF | ssh $TARGET sudo bash
 
-mkdir \$HOME/.ssh
+mkdir -p \$HOME/.ssh
 
 echo $KEY > \$HOME/.ssh/authorized_keys
 
