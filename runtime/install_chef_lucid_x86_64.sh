@@ -1,15 +1,12 @@
 #!/bin/bash
 
-# old line for sudoers (don't work in AWS ami)
-#sudo sed -i -e 's/%sudo ALL=(ALL) ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
-
 TARGET=$1
 
 KEY=`cat $HOME/.ssh/id_rsa.pub`
 WARP_FILE="ruby_lucid_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
 WARP_ROOT="https://warp-repo.s3-eu-west-1.amazonaws.com"
 
-cat <<-EOF | ssh $TARGET sudo bash
+cat <<-EOF | ssh $SSH_OPTS $TARGET sudo bash
 
 mkdir -p \$HOME/.ssh
 
