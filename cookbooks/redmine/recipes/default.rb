@@ -33,21 +33,12 @@ end
   end
 end
 
-redmine_password = PasswordGenerator.generate("/.redmine_password", 32)
-
-mysql_database "redmine" do
-  password redmine_password
-end
+mysql_database "redmine:database"
 
 template "#{node.redmine.directory}/current/config/database.yml" do
   owner node.redmine.user
   source "database.yml.erb"
-  variables :database => {
-    :host => 'localhost',
-    :name => 'redmine',
-    :username => 'redmine',
-    :password => redmine_password
-  }
+  variables :database => mysql_config("redmine:database")
 end
 
 ruby_rbenv_command "initialize redmine" do

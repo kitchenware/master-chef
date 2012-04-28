@@ -1,23 +1,33 @@
 
 define :mysql_database, {
-  :password => nil,
-  :username => nil
 } do
   mysql_database_params = params
 
-  mysql_database_params[:username] = mysql_database_params[:name] unless mysql_database_params[:username]
+  config = extract_config mysql_database_params[:name]
 
-  raise "Please specify password" unless mysql_database_params[:password]
+  if config[:host] == "localhost"
 
-  bash "create database #{mysql_database_params[:name]}" do
-    code <<-EOF
-    (
-    echo "CREATE USER #{mysql_database_params[:username]}@localhost IDENTIFIED BY \\"#{mysql_database_params[:password]}\\";"
-    echo "CREATE DATABASE IF NOT EXISTS #{mysql_database_params[:name]};"
-    echo "GRANT ALL PRIVILEGES ON #{mysql_database_params[:name]} . * TO  #{mysql_database_params[:username]}@localhost;"
-    ) | mysql
-    EOF
-    not_if "echo 'SHOW DATABASES' | mysql | grep #{mysql_database_params[:name]}"
+    if config[:password]
+      local_storage_store "mysql_password:#{config[:username]}", config[:password]
+    else
+      config[:password] = local_storage_read("mysql_password:#{config[:username]}") do
+        PasswordGenerator.generate 32
+      end
+    end
+
+    root_mysql_password = mysql_password "root"
+
+    bash "create database #{config[:database]}" do
+      code <<-EOF
+      (
+      echo "CREATE USER #{config[:username]}@localhost IDENTIFIED BY \\"#{config[:password]}\\";"
+      echo "CREATE DATABASE IF NOT EXISTS #{config[:database]};"
+      echo "GRANT ALL PRIVILEGES ON #{config[:database]} . * TO  #{config[:username]}@localhost;"
+      ) | mysql --user=root --password=#{root_mysql_password}
+      EOF
+      not_if "echo 'SHOW DATABASES' | mysql --user=root --password=#{root_mysql_password} | grep #{config[:database]}"
+    end
+
   end
 
 end
