@@ -19,3 +19,8 @@ default[:master_chef][:chef_solo_scripts] = {
   :log_file => "/tmp/last_chef_run_log",
   :config_file => "/etc/chef/local.json",
 }
+
+default[:local_storage] = {
+  :file => "/var/chef/local_storage.yml",
+  :owner => "root",
+}
