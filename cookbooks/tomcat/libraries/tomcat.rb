@@ -14,15 +14,21 @@ module TomcatHelper
     end
 
     if !config[:connectors] || config[:connectors].size == 0
-      http_port = local_storage_read "tomcat:http_port:#{instance_name}" do
-       allocate_tcp_port
-      end
       config[:connectors] = {
-        :http => {
-          :port => http_port,
-          :address => "127.0.0.1",
-        }
-      } 
+        :http => {}
+      }
+    end
+
+    if config[:connectors][:http]
+      unless config[:connectors][:http][:port]
+        http_port = local_storage_read "tomcat:http_port:#{instance_name}" do
+          addressllocate_tcp_port
+        end
+        config[:connectors][:http][:port] = http_port
+      end
+      unless config[:connectors][:http][:address]
+        config[:connectors][:http][:address] = "127.0.0.1"
+      end
     end
 
     config
