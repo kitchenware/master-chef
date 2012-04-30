@@ -5,22 +5,9 @@ directory node.jenkins.home do
   owner node.tomcat.user
 end
 
-tomcat_instance "jenkins" do
-  env({
-    'TOMCAT5_SECURITY' => 'no',
-    'JENKINS_HOME' => node.jenkins.home,
-  })
-  connectors({
-    "http" => {
-      "port" => 8080,
-      "address" => "127.0.0.1",
-      "URIEncoding" => "UTF-8",
-      },
-    })
-  control_port 8005
-  war_url "http://mirrors.jenkins-ci.org/war/latest/jenkins.war"
-  war_name "#{node.jenkins.location[1..-1]}"
-end
+tomcat_instance "jenkins:tomcat"
+
+tomcat_jenkins_http_port = tomcat_config("jenkins:tomcat")[:connectors][:http][:port]
 
 nginx_add_default_location "jenkins" do
   content <<-EOF
@@ -33,7 +20,7 @@ nginx_add_default_location "jenkins" do
 EOF
   upstream <<-EOF
   upstream tomcat_jenkins_upstream {
-  server 127.0.0.1:8080 fail_timeout=0;
+  server 127.0.0.1:#{tomcat_jenkins_http_port} fail_timeout=0;
 }
   EOF
 end
