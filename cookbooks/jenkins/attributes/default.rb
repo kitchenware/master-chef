@@ -1,4 +1,5 @@
 default[:jenkins][:home] = "/jenkins"
+default[:jenkins][:url] = "http://mirrors.jenkins-ci.org/war/latest/jenkins.war"
 default[:jenkins][:location] = "/jenkins"
 default[:jenkins][:tomcat] = {
   :name => 'jenkins',
