@@ -5,7 +5,10 @@ directory node.jenkins.home do
   owner node.tomcat.user
 end
 
-tomcat_instance "jenkins:tomcat"
+tomcat_instance "jenkins:tomcat" do
+  war_url node.jenkins.url
+  war_location node.jenkins.location
+end
 
 tomcat_jenkins_http_port = tomcat_config("jenkins:tomcat")[:connectors][:http][:port]
 
