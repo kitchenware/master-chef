@@ -5,8 +5,10 @@ include_recipe "nginx"
 node.sonar.zip_url.match /.+(sonar-\d+\.\d+).zip/
 sonar_file_name = $1
 
+sonar_password = PasswordGenerator.generate("/.sonar_password", 32)
+
 mysql_database "sonar" do
-  password "sonar"
+  password sonar_password
 end
 
 execute "install sonar home" do  
@@ -25,6 +27,7 @@ end
 
 template "/home/chef/#{sonar_file_name}/conf/sonar.properties" do
   mode 0644
+  variables :password => sonar_password
   source "sonar.properties.erb"
 end
 
