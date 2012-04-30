@@ -4,9 +4,8 @@ define :apache2_vhost, {
 } do
   apache2_vhost_params = params
 
-  module_sym, vhost_sym = apache2_vhost_params[:name].split(':').map{|s| s.to_sym}
-  config = node[module_sym][vhost_sym]
-
+  config, vhost_sym = extract_config_with_last apache2_vhost_params[:name]
+  
   apache2_listen = config[:listen]
   basic_auth = config[:basic_auth]
 

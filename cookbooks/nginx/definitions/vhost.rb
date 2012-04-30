@@ -3,10 +3,8 @@ define :nginx_vhost, {
 } do
   nginx_vhost_params = params
 
-  module_sym, vhost_sym = nginx_vhost_params[:name].split(':').map{|s| s.to_sym}
+  config, vhost_sym = extract_config_with_last nginx_vhost_params[:name]
   
-  config = node[module_sym][vhost_sym]
-
   nginx_listen = "listen #{config[:listen]};\n"
   nginx_listen += "server_name #{config[:virtual_host]};\n" if config[:virtual_host]
   basic_auth = config[:basic_auth]
@@ -20,7 +18,7 @@ define :nginx_vhost, {
   template "/etc/nginx/sites-enabled/#{vhost_sym.to_s}.conf" do
     source "#{vhost_sym.to_s}.conf.erb"
     mode 0644
-    variables({:listen => nginx_listen, :config => node[module_sym][vhost_sym], :server_tokens => 'Off'}.merge(nginx_vhost_params[:options]))
+    variables({:listen => nginx_listen, :config => config, :server_tokens => 'Off'}.merge(nginx_vhost_params[:options]))
     notifies :reload, resources(:service => "nginx")
   end
 
