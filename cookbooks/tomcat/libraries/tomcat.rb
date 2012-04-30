@@ -20,7 +20,7 @@ module TomcatHelper
       config[:connectors] = {
         :http => {
           :port => http_port,
-          :listen => "127.0.0.1",
+          :address => "127.0.0.1",
         }
       } 
     end
