@@ -19,7 +19,7 @@
      define subcomponents such as "Valves" at this level.
      Documentation at /docs/config/server.html
  -->
-<Server port="<%= @control_port %>" shutdown="SHUTDOWN">
+<Server port="<%= @config[:control_port] %>" shutdown="SHUTDOWN">
 
   <!--APR library loader. Documentation at /docs/apr.html -->
   <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
@@ -66,11 +66,11 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL HTTP/1.1 Connector on port 8080
     -->
-    <% if @connectors["http"] %>
+    <% if @config[:connectors][:http] %>
     <Connector protocol="HTTP/1.1"
-               <% @connectors["http"].keys.sort.each do |k| %>
-               <% v = @connectors["http"][k] %>
-               <%= k %>="<%= v %>"
+               <% @config[:connectors][:http].keys.sort_by{|x| x.to_s}.each do |k| %>
+               <% v = @config[:connectors][:http][k] %>
+               <%= k.to_s %>="<%= v %>"
                <% end %>
                />
     <% end %>
@@ -92,11 +92,11 @@
     -->
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
-    <% if @connectors["ajp"] %>
+    <% if @config[:connectors][:ajp] %>
     <Connector protocol="AJP/1.3"
-               <% @connectors["ajp"].keys.sort.each do |k| %>
-               <% v = @connectors["ajp"][k] %>
-               <%= k %>="<%= v %>"
+               <% @config[:connectors][:ajp].keys.sort_by{|x| x.to_s}.each do |k| %>
+               <% v = @config[:connectors][:ajp][k] %>
+               <%= k.to_s %>="<%= v %>"
                <% end %>
                />
     <% end %>

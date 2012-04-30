@@ -7,9 +7,7 @@ define :mysql_database, {
 
   if config[:host] == "localhost"
 
-    if config[:password]
-      local_storage_store "mysql_password:#{config[:username]}", config[:password]
-    else
+    unless
       config[:password] = local_storage_read("mysql_password:#{config[:username]}") do
         PasswordGenerator.generate 32
       end

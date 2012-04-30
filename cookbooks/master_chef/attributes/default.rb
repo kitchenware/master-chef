@@ -24,3 +24,5 @@ default[:local_storage] = {
   :file => "/var/chef/local_storage.yml",
   :owner => "root",
 }
+
+default[:tcp_port_manager][:range] = 18000..20000

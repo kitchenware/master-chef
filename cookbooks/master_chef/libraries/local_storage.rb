@@ -10,17 +10,25 @@ module LocalStorage
     end
     if block_given? && data.nil?
       data = yield
-      current = full_data
-      keys.each do |s|
-        if s != keys.last
-          current[s] = {} unless current[s]
-          current = current[s]
-        end
-      end
-      current[keys.last] = data
-      save_file full_data
+      local_storage_store key, data
     end
     data
+  end
+
+  def local_storage_store key, value
+    full_data = read_file
+    current = full_data
+    keys = key.split(':').map{|s| s.to_sym}
+    keys.each do |s|
+      if s != keys.last
+        current[s] = {} unless current[s]
+        current = current[s]
+      end
+    end
+    if current[keys.last] != value
+      current[keys.last] = value
+      save_file full_data
+    end
   end
 
   def extract_config_with_last key

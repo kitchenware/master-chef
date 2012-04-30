@@ -1,4 +1,4 @@
-module MysqlPassword
+module MysqlHelper
 
   def mysql_password user
     local_storage_read "mysql_password:#{user}"
@@ -13,13 +13,13 @@ module MysqlPassword
 end
 
 class Chef::Recipe
-  include MysqlPassword
+  include MysqlHelper
 end
 
 class Chef::Resource
-  include MysqlPassword
+  include MysqlHelper
 end
 
 class Chef::Provider
-  include MysqlPassword
+  include MysqlHelper
 end
