@@ -95,5 +95,4 @@ delayed_exec "Remove useless nginx vhost" do
       end
     end
   end
-
 end
