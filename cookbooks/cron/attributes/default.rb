@@ -1,0 +1,1 @@
+default[:cron][:auto_purge] = true
