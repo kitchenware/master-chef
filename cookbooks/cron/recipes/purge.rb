@@ -13,7 +13,3 @@ delayed_exec "Remove useless cron" do
     end
   end
 end
-
-cron_file "toto" do
-  content "my_toto file"
-end
