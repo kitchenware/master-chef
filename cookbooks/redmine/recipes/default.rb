@@ -15,7 +15,7 @@ end
 
 git "#{node.redmine.directory}/current" do
   user node.redmine.user
-  repository "git://github.com/edavis10/redmine.git"
+  repository node.redmine.git_url
   reference node.redmine.version
 end
 
