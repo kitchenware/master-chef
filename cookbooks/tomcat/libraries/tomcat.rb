@@ -22,7 +22,7 @@ module TomcatHelper
     if config[:connectors][:http]
       unless config[:connectors][:http][:port]
         http_port = local_storage_read "tomcat:http_port:#{instance_name}" do
-          addressllocate_tcp_port
+          allocate_tcp_port
         end
         config[:connectors][:http][:port] = http_port
       end
