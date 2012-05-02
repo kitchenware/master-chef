@@ -1,6 +1,12 @@
 
 if node.locales.configure
 
+  available_locales = %x{cat /usr/share/i18n/SUPPORTED | grep -v ^#}.split("\n")
+
+  node.locales.list.each do |l|
+    raise "Locale not found on system #{l}" unless available_locales.include? l
+  end
+  
   execute "locale-gen" do
     action :nothing
   end
@@ -20,6 +26,10 @@ if node.locales.configure
 
     link "/var/lib/locales/supported.d/link" do
       to "/etc/locale.gen"
+    end
+
+    node.locales.list.map{|x| x =~ /^(..)_/; $1}.uniq.each do |l|
+      package "language-pack-#{l}"
     end
 
   end
