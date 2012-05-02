@@ -82,8 +82,6 @@ if [ ! -f $CATALINA_BASE/conf/server.xml ]; then
   exit 0
 fi
 
-export LD_LIBRARY_PATH=$CATALINA_HOME/lib:$LD_LIBRARY_PATH
-
 # Use the Java security manager? (yes/no)
 TOMCAT6_SECURITY=no
 
@@ -145,6 +143,7 @@ catalina_sh() {
     CATALINA_PID=\"$CATALINA_PID\"; \
     CATALINA_TMPDIR=\"$CATALINA_TMPDIR\"; \
     LANG=\"$LANG\"; JSSE_HOME=\"$JSSE_HOME\"; \
+    LD_LIBRARY_PATH="$CATALINA_HOME/lib:$LD_LIBRARY_PATH"; \
     cd \"$CATALINA_BASE\"; \
     \"$CATALINA_SH\" $@"
 
