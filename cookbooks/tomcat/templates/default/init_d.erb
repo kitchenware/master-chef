@@ -43,14 +43,12 @@ TO_BE_SOURCED=""
 # Make sure tomcat is started with system locale
 if [ -r /etc/default/locale ]; then
   TO_BE_SOURCED="$TO_BE_SOURCED source \"/etc/default/locale\";"
-  export LANG
 fi
 
 . /lib/lsb/init-functions
 
 if [ -r /etc/default/rcS ]; then
   TO_BE_SOURCED="$TO_BE_SOURCED source \"/etc/default/rcS\";"
-  . /etc/default/rcS
 fi
 
 
@@ -142,7 +140,7 @@ catalina_sh() {
     JAVA_OPTS=\"$JAVA_OPTS\"; \
     CATALINA_PID=\"$CATALINA_PID\"; \
     CATALINA_TMPDIR=\"$CATALINA_TMPDIR\"; \
-    LANG=\"$LANG\"; JSSE_HOME=\"$JSSE_HOME\"; \
+    JSSE_HOME=\"$JSSE_HOME\"; \
     LD_LIBRARY_PATH="$CATALINA_HOME/lib:$LD_LIBRARY_PATH"; \
     cd \"$CATALINA_BASE\"; \
     \"$CATALINA_SH\" $@"
