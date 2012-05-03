@@ -11,6 +11,7 @@ define :cron_file, {
     source "cron_file.erb"
     mode 0644
     variables :content => cron_file_params[:content]
+    notifies :reload, resources(:service => "cron")
   end
 
 end
