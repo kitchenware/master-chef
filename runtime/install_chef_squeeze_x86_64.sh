@@ -13,7 +13,7 @@ mkdir -p \$HOME/.ssh
 echo $KEY > \$HOME/.ssh/authorized_keys
 
 apt-get -y update
-apt-get -y install git-core curl sudo
+apt-get -y install git-core curl sudo file lsb-release
 apt-get clean
 
 groupadd sudo
