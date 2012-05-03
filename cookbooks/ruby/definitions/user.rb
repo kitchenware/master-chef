@@ -21,6 +21,12 @@ define :ruby_user, {
     end
   end
 
+  template "#{get_home ruby_user_params[:name]}/.gemrc" do
+    owner ruby_user_params[:name]
+    source "gemrc.erb"
+    cookbook "ruby"
+  end
+
   if node[:warp]
 
     template "#{get_home ruby_user_params[:name]}/.warp_src" do
