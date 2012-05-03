@@ -1,0 +1,4 @@
+#!/bin/sh -e
+
+s3cmd put $1 s3://<%= @bucket %>
+s3cmd --acl-public setacl s3://<%= @bucket %>/`basename $1`
