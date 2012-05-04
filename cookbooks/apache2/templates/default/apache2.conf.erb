@@ -216,14 +216,14 @@ ErrorLog ${APACHE_LOG_DIR}/error.log
 LogLevel <%= @tuning[:log_level] %>
 
 # Include module configuration:
-Include mods-enabled/*.load
-Include mods-enabled/*.conf
+Include ${APACHE_CONFDIR}/mods-enabled/*.load
+Include ${APACHE_CONFDIR}/mods-enabled/*.conf
 
 # Include all the user configurations:
-Include httpd.conf
+Include ${APACHE_CONFDIR}/httpd.conf
 
 # Include ports listing
-Include ports.conf
+Include ${APACHE_CONFDIR}/ports.conf
 
 #
 # The following directives define some format nicknames for use with
@@ -240,7 +240,7 @@ LogFormat "%{User-agent}i" agent
 # see README.Debian for details.
 
 # Include generic snippets of statements
-Include conf.d/
+Include ${APACHE_CONFDIR}/conf.d/
 
 # Include the virtual host configurations:
-Include sites-enabled/
+Include ${APACHE_CONFDIR}/sites-enabled/

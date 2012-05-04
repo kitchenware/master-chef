@@ -29,6 +29,11 @@ template "/etc/apache2/apache2.conf" do
   notifies :reload, resources(:service => "apache2")
 end
 
+template "/etc/apache2/envvars" do
+  source "envvars.erb"
+  notifies :reload, resources(:service => "apache2")
+end
+
 [
   "/etc/apache2/sites-enabled/000-default",
   "/etc/apache2/sites-available/default",

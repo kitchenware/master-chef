@@ -1,6 +1,7 @@
 
 define :apache2_vhost, {
-  :options => {}
+  :options => {},
+  :cookbook => nil
 } do
   apache2_vhost_params = params
 
@@ -27,7 +28,6 @@ define :apache2_vhost, {
     apache2_enable_module "auth_basic"
     
     auth_name = basic_auth[:realm]
-    p auth_name
     basic_auth_conf += "AuthType Basic\n"
     basic_auth_conf += "AuthName #{auth_name}\n"
     basic_auth_conf += "AuthBasicProvider file\n"
@@ -36,6 +36,7 @@ define :apache2_vhost, {
   end
 
   template "/etc/apache2/sites-enabled/#{vhost_sym.to_s}.conf" do
+    cookbook apache2_vhost_params[:cookbook] if apache2_vhost_params[:cookbook]
     source "#{vhost_sym.to_s}.conf.erb"
     mode 0644
     variables({:listen => apache2_listen, :basic_auth => basic_auth_conf, :description => apache2_description, :config => config}.merge(apache2_vhost_params[:options]))
