@@ -19,3 +19,14 @@ end
 directory node.tomcat.log_dir do
   owner node.tomcat.user
 end
+
+if node.tomcat[:instances]
+
+  node.tomcat.instances.keys.each do |k|
+    node.tomcat.instances[k][:name] = k
+    tomcat_instance "tomcat:instances:#{k}" do
+      instance_name k
+    end
+  end
+
+end
