@@ -22,4 +22,8 @@ default[:apache2][:tuning] = {
   :listen_backlog => 511,
 }
 
+default[:apache2][:default_vhost] = {
+  :listen => '0.0.0.0:80',
+}
+
 default[:apache2][:modules] = ["dir", "mime"]
