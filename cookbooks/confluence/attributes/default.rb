@@ -8,7 +8,6 @@ default[:confluence][:tomcat] = {
   :name => 'confluence',
   :env => {
     'JAVA_OPTS' => '-XX:MaxPermSize=256m -Xmx1024m -Xms256m',
-    'TOMCAT5_SECURITY' => 'no',
   }
 }
 default[:confluence][:database] = {

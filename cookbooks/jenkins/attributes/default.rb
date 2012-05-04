@@ -9,7 +9,6 @@ default[:jenkins][:tomcat] = {
     }
   },
   :env => {
-    'TOMCAT5_SECURITY' => 'no',
     'JENKINS_HOME' => node.jenkins.home,
   }
 }
