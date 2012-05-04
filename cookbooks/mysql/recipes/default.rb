@@ -9,7 +9,7 @@ local_storage_read("mysql_password:root") do
   password
 end
 
-if node.mysql[:databases]
+if node[:mysql] && node.mysql[:databases]
 
   node.mysql.databases.keys.each do |k|
     node.mysql.databases[k][:database] = k
