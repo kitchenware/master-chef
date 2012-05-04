@@ -50,12 +50,16 @@ if config["repos"]["git"]
   config["repos"]["git"].each do |url|
     name = File.basename(url)
     target = File.join(git_cache_directory, name)
-    if File.exists? target
-      verb = "Updating"
-      exec_local "cd #{target} && git fetch -q origin && git fetch --tags -q origin"
+    if ENV["NO_UPDATE"]
+      verb = "Using local"
     else
-      verb = "Cloning"
-      exec_local "cd #{git_cache_directory} && git clone -q #{url} #{name} && cd #{target} && git checkout -q -b deploy"
+      if File.exists? target
+        verb = "Updating"
+        exec_local "cd #{target} && git fetch -q origin && git fetch --tags -q origin"
+      else
+        verb = "Cloning"
+        exec_local "cd #{git_cache_directory} && git clone -q #{url} #{name} && cd #{target} && git checkout -q -b deploy"
+      end
     end
     branch_target = git_tag_override[url] || "master"
     sha = capture_local("cd #{target} && git show-ref").split("\n").find do |l|
