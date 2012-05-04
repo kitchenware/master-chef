@@ -1,5 +1,5 @@
 
-raise "Unknown java version #{node.java.default_version}" unless node.java.versions.keys.include? node.java.default_version
+raise "Unknown java version #{node.java.default_version}, in #{node.java.versions.keys.join(" ")}" unless node.java.versions.keys.include? node.java.default_version
 
 include_recipe "java::java_#{node.java.default_version}"
 
