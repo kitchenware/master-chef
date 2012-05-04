@@ -8,5 +8,5 @@ bash "set default java version" do
   update-alternatives --set java /usr/lib/jvm/#{node.java.versions[node.java.default_version]}/bin/java &&
   update-alternatives --set javac /usr/lib/jvm/#{node.java.versions[node.java.default_version]}/bin/javac
   EOF
-  not_if "readlink /etc/alternatives/java | grep #{node.java.default_version}"
+  not_if "readlink /etc/alternatives/java | grep #{node.java.versions[node.java.default_version]}"
 end
