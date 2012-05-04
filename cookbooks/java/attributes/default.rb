@@ -1,2 +1,5 @@
 default[:java][:default_version] = "java-6-sun"
-default[:java][:versions] = Dir["#{File.dirname(__FILE__)}/../recipes/java_*.rb"].map{|x| File.basename(x) =~ /^java_(.*).rb$/; $1}
+default[:java][:versions] = {
+  "sun_java6" => "java-6-sun",
+  "oracle_java7" => "jdk1.7.0_04",
+}
