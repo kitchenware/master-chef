@@ -1,7 +1,6 @@
 
 package "apache2-mpm-#{node.apache2.mpm}"
 
-
 Chef::Config.exception_handlers << ServiceErrorHandler.new("apache2", ".*apache2.*")
 
 service "apache2" do
@@ -26,12 +25,12 @@ template "/etc/apache2/apache2.conf" do
     variables :mpm => node.apache2.mpm_config, :tuning => node.apache2.tuning
   end
   source "apache2.conf.erb"
-  notifies :reload, resources(:service => "apache2")
+  notifies :restart, resources(:service => "apache2")
 end
 
 template "/etc/apache2/envvars" do
   source "envvars.erb"
-  notifies :reload, resources(:service => "apache2")
+  notifies :restart, resources(:service => "apache2")
 end
 
 [
@@ -71,7 +70,7 @@ delayed_exec "Remove useless apache2 modules" do
       unless modules.include? name
         Chef::Log.info "Disabling module #{name}"
         %x{a2dismod #{name}}
-        notifies :reload, resources(:service => "apache2")
+        notifies :restart, resources(:service => "apache2")
       end
     end
   end
