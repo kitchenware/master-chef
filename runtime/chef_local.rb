@@ -5,6 +5,8 @@ require 'tempfile'
 
 abort "Syntax : chef_local.rb host [additionnal chef cookbooks & roles path]" if ARGV == 0
 
+Dir.chdir File.join(File.dirname(__FILE__), "..")
+
 server = ARGV[0]
 additionnal_path = ARGV[1]
 user = "chef"
