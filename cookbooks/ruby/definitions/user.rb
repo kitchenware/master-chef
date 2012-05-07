@@ -8,6 +8,11 @@ define :ruby_user, {
 
   base_user ruby_user_params[:name]
   
+  file "#{get_home ruby_user_params[:name]}/.bash_profile" do
+    owner ruby_user_params[:name]
+    action :create_if_missing
+  end
+
   git "#{get_home ruby_user_params[:name]}/.warp" do
     user ruby_user_params[:name]
     repository "git://github.com/bpaquet/warp.git"
