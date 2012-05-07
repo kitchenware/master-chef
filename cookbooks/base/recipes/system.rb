@@ -1,4 +1,5 @@
 
+include_recipe "base::apt_update"
 include_recipe "base::bash"
 include_recipe "base::editor"
 include_recipe "base::tools"
