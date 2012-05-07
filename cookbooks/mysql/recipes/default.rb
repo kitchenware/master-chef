@@ -11,6 +11,14 @@ execute "change mysql root password" do
   only_if "echo 'select 1;' | mysql --user=root --password= "
 end
 
+unless node.mysql[:keep_test]
+  execute "remove test mysql database" do
+    command "echo 'drop database test;' | mysql --user=root --password=#{root_mysql_password} "
+    only_if "echo 'show databases;' | mysql --user=root --password=#{root_mysql_password} | grep ^test$ "
+  end
+end
+
+
 if node[:mysql] && node.mysql[:databases]
 
   node.mysql.databases.keys.each do |k|
