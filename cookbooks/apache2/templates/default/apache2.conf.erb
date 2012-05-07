@@ -47,7 +47,7 @@
 #
 # Do NOT add a slash at the end of the directory path.
 #
-#ServerRoot "/etc/apache2"
+ServerRoot "<%= @server_root %>"
 
 #
 # The accept serialization lock file MUST BE STORED ON A LOCAL DISK.
@@ -206,7 +206,9 @@ HostnameLookups Off
 # logged here.  If you *do* define an error logfile for a <VirtualHost>
 # container, that host's errors will be logged there and not here.
 #
-ErrorLog ${APACHE_LOG_DIR}/error.log
+ErrorLog <%= @log_directory %>/error.log
+
+CustomLog <%= @log_directory %>/access.log vhost_combined
 
 #
 # LogLevel: Control the number of messages logged to the error_log.
@@ -216,14 +218,14 @@ ErrorLog ${APACHE_LOG_DIR}/error.log
 LogLevel <%= @tuning[:log_level] %>
 
 # Include module configuration:
-Include ${APACHE_CONFDIR}/mods-enabled/*.load
-Include ${APACHE_CONFDIR}/mods-enabled/*.conf
+Include mods-enabled/*.load
+Include mods-enabled/*.conf
 
 # Include all the user configurations:
-Include ${APACHE_CONFDIR}/httpd.conf
+Include httpd.conf
 
 # Include ports listing
-Include ${APACHE_CONFDIR}/ports.conf
+Include ports.conf
 
 #
 # The following directives define some format nicknames for use with
@@ -240,7 +242,7 @@ LogFormat "%{User-agent}i" agent
 # see README.Debian for details.
 
 # Include generic snippets of statements
-Include ${APACHE_CONFDIR}/conf.d/
+Include conf.d/
 
 # Include the virtual host configurations:
-Include ${APACHE_CONFDIR}/sites-enabled/
+Include sites-enabled/

@@ -22,6 +22,9 @@ default[:apache2][:tuning] = {
   :listen_backlog => 511,
 }
 
+default[:apache2][:server_root] = "/etc/apache2"
+default[:apache2][:log_directory] = "/var/log/apache2"
+
 default[:apache2][:default_vhost] = {
   :listen => '0.0.0.0:80',
 }

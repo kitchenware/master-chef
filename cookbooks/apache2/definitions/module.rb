@@ -12,7 +12,7 @@ define :apache2_enable_module, {
   bash "enable apache2 module #{apache2_enable_module_params[:name]}" do
     code "a2enmod #{apache2_enable_module_params[:name]}"
     notifies :restart, resources(:service => "apache2")
-    not_if "[ -h /etc/apache2/mods-enabled/#{apache2_enable_module_params[:name]}.load ]"
+    not_if "[ -h #{node.apache2.server_root}/mods-enabled/#{apache2_enable_module_params[:name]}.load ]"
   end
 
   node.apache2[:modules_enabled] = [] unless node.apache2[:modules_enabled]

@@ -38,7 +38,7 @@ execute "install graphite webapp" do
   not_if "[ -f /opt/graphite/bin/run-graphite-devel-server.py ]"
 end
 
-directory "/etc/apache2/wsgi" do
+directory "#{node.apache2.server_root}/wsgi" do
   owner "www-data"
   mode 0755
 end
@@ -59,7 +59,7 @@ execute "configure wsgi" do
 end
 
 apache2_vhost "graphite:graphite" do
-  options :graphite_directory => "/opt/graphite", :wsgi_socket_prefix => "/etc/apache2/wsgi"
+  options :graphite_directory => "/opt/graphite", :wsgi_socket_prefix => "#{node.apache2.server_root}/wsgi"
 end
 
 template "/etc/init.d/carbon" do

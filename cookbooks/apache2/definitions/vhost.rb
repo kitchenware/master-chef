@@ -31,11 +31,11 @@ define :apache2_vhost, {
     basic_auth_conf += "AuthType Basic\n"
     basic_auth_conf += "AuthName #{auth_name}\n"
     basic_auth_conf += "AuthBasicProvider file\n"
-    basic_auth_conf += "AuthUserFile /etc/apache2/#{basic_auth[:file]}.passwd\n"
+    basic_auth_conf += "AuthUserFile #{node.apache2.server_root}/#{basic_auth[:file]}.passwd\n"
     basic_auth_conf += "Require user graphite\n"
   end
 
-  template "/etc/apache2/sites-enabled/#{vhost_sym.to_s}.conf" do
+  template "#{node.apache2.server_root}/sites-enabled/#{vhost_sym.to_s}.conf" do
     cookbook apache2_vhost_params[:cookbook] if apache2_vhost_params[:cookbook]
     source "#{vhost_sym.to_s}.conf.erb"
     mode 0644
@@ -44,7 +44,7 @@ define :apache2_vhost, {
   end
 
   if basic_auth
-    template "/etc/apache2/#{basic_auth[:file]}.passwd" do
+    template "#{node.apache2.server_root}/#{basic_auth[:file]}.passwd" do
       cookbook basic_auth[:cookbook]
       source "#{basic_auth[:file]}.passwd.erb"
       mode 0644
