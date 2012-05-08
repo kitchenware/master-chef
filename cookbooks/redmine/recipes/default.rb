@@ -25,7 +25,7 @@ directory "#{node.redmine.directory}/current/files" do
   recursive true
 end
 
-%w{Gemfile Gemfile.lock .rbenv-version .rbenv-gemsets .bundle-option}.each do |f|
+%w{Gemfile.local Gemfile.lock .rbenv-version .rbenv-gemsets .bundle-option}.each do |f|
   template "#{node.redmine.directory}/current/#{f}" do
     owner node.redmine.user
     source f

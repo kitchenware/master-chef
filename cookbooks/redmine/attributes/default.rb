@@ -1,6 +1,6 @@
 default[:redmine][:user] = "redmine"
 default[:redmine][:directory] = "/home/redmine/redmine"
-default[:redmine][:version] = "1.3.1"
+default[:redmine][:version] = "1.4.1"
 default[:redmine][:git_url] = "git://github.com/edavis10/redmine.git"
 default[:redmine][:location] = "/redmine"
 default[:redmine][:database] = {
