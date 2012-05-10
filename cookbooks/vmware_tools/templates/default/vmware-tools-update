@@ -16,7 +16,7 @@ UDEV_FILE=/etc/udev/rules.d/70-persistent-net.rules
 
 if [ ! -e $VMWARE_FILE ]; then
   echo "Try to update vmware tools at `date`" >> $LOG_FILE
-  vmware-config-tools.pl -d && touch $VMWARE_FILE
+  vmware-config-tools.pl -d <%= @vmware_config_options %> && touch $VMWARE_FILE
   if [ "$?" != 0 ]; then
     echo "Error while recompiling vmware tools at `date`" >> $LOG_FILE
     exit 0
