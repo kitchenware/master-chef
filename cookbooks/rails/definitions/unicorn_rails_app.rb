@@ -5,7 +5,6 @@ define :unicorn_rails_app, {
   :mysql_database => nil,
   :mysql_adapter => 'mysql2',
   :location => '/',
-  :nginx_location => nil,
   :code_for_initd => "",
   :configure_nginx => true,
 } do
