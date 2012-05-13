@@ -15,7 +15,6 @@ define :capistrano_app, {
   if capistrano_app_params[:without_cap]
     directories << "#{capistrano_app_params[:name]}/shared/log" 
     directories << "#{capistrano_app_params[:name]}/shared/pids" 
-    directories << "#{capistrano_app_params[:name]}/current" 
   end
 
   directories.each do |dir|
