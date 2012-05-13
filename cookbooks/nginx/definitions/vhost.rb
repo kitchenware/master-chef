@@ -32,11 +32,5 @@ define :nginx_vhost, {
     end
 
   end
-
-  delayed_exec "restart nginx if needed" do
-    block do
-      %x{/etc/init.d/nginx status || /etc/init.d/nginx start}
-    end
-  end
   
 end

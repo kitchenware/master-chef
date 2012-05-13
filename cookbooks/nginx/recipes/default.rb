@@ -23,13 +23,6 @@ package "nginx" do
   version node.nginx[:nginx_version] if node.nginx[:nginx_version]
 end
 
-Chef::Config.exception_handlers << ServiceErrorHandler.new("nginx", "nginx:.*")
-
-service "nginx" do
-  supports :status => true, :restart => true, :reload => true
-  action [ :enable, :start ]
-end
-
 [
   "/etc/nginx/sites-enabled/default",
   "/etc/nginx/sites-available/default",
@@ -38,8 +31,14 @@ end
   ].each do |f|
   file f do
     action :delete
-    notifies :reload, resources(:service => "nginx")
   end
+end
+
+Chef::Config.exception_handlers << ServiceErrorHandler.new("nginx", "nginx:.*")
+
+service "nginx" do
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :start ]
 end
 
 if node.nginx[:deploy_default_config]
