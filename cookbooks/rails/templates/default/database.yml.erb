@@ -1,5 +1,5 @@
 production:
-  adapter: mysql2
+  adapter: <%= @database_adapter %>
   host: <%= @database[:host] %>
   database: <%= @database[:database] %>
   username: <%= @database[:username] %>
