@@ -4,7 +4,7 @@ TARGET=$1
 
 KEY=`cat $HOME/.ssh/id_rsa.pub`
 WARP_FILE="ruby_squeeze_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
-WARP_ROOT="https://warp-repo.s3-eu-west-1.amazonaws.com"
+WARP_ROOT="http://warp-repo.s3-eu-west-1.amazonaws.com"
 
 cat <<-EOF | ssh $SSH_OPTS $TARGET bash
 

@@ -1,4 +1,4 @@
-default[:warp][:warp_src] = "https://warp-repo.s3-eu-west-1.amazonaws.com"
+default[:warp][:warp_src] = "http://warp-repo.s3-eu-west-1.amazonaws.com"
 
 default[:locales] = {
   :configure => true,

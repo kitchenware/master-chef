@@ -1,5 +1,5 @@
 default[:confluence][:version] = "4.1.6"
-default[:confluence][:url] = "http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-#{default[:confluence][:version]}-war.tar.gz"
+default[:confluence][:url] = "http://downloads.atlassian.com/software/confluence/downloads/atlassian-confluence-#{default[:confluence][:version]}-war.tar.gz"
 default[:confluence][:path][:root_path] = "/confluence"
 default[:confluence][:path][:home] = "#{default[:confluence][:path][:root_path]}/home"
 default[:confluence][:path][:build] = "#{default[:confluence][:path][:root_path]}/build"
