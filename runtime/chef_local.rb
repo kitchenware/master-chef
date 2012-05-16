@@ -37,7 +37,9 @@ f = Tempfile.new 'local.json'
 f.write JSON.pretty_generate(json)
 f.close
 
+envs = "MASTER_CHEF_CONFIG=/tmp/local.json"
+envs += " http_proxy=http://#{ENV["PROXY"]}" if ENV["PROXY"]
 exec_local "scp #{f.path} #{user}@#{server}:/tmp/local.json"
-exec_local "ssh #{user}@#{server} MASTER_CHEF_CONFIG=/tmp/local.json /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb"
+exec_local "ssh #{user}@#{server} #{envs} /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb"
  
 
