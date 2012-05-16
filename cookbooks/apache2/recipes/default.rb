@@ -1,6 +1,18 @@
 
 package "apache2-mpm-#{node.apache2.mpm}"
 
+[
+  "#{node.apache2.server_root}/sites-enabled/000-default",
+  "#{node.apache2.server_root}/sites-available/default",
+  "#{node.apache2.server_root}/sites-available/default-ssl",
+  "#{node.apache2.server_root}/conf.d/security",
+  "#{node.apache2.server_root}/conf.d/other-vhosts-access-log"
+  ].each do |f|
+  file f do
+    action :delete
+  end
+end
+
 Chef::Config.exception_handlers << ServiceErrorHandler.new("apache2", ".*apache2.*")
 
 service "apache2" do
@@ -26,19 +38,6 @@ template "#{node.apache2.server_root}/apache2.conf" do
   end
   source "apache2.conf.erb"
   notifies :restart, resources(:service => "apache2")
-end
-
-[
-  "#{node.apache2.server_root}/sites-enabled/000-default",
-  "#{node.apache2.server_root}/sites-available/default",
-  "#{node.apache2.server_root}/sites-available/default-ssl",
-  "#{node.apache2.server_root}/conf.d/security",
-  "#{node.apache2.server_root}/conf.d/other-vhosts-access-log"
-  ].each do |f|
-  file f do
-    action :delete
-    notifies :reload, resources(:service => "apache2")
-  end
 end
 
 node.apache2.modules.each do |m|
