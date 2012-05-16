@@ -2,8 +2,6 @@ include_recipe "mysql"
 include_recipe "tomcat"
 include_recipe "nginx"
 
-sonar_file_name = "sonar-#{node.sonar.version}"
-
 mysql_database "sonar:database"
 
 db_config = mysql_config "sonar:database"
@@ -16,29 +14,25 @@ Chef::Log.info "User          : #{db_config[:username]}"
 Chef::Log.info "Password      : #{db_config[:password]}"
 Chef::Log.info "************************************************************"
 
-build_dir = "#{node.sonar.path.build}/sonar-#{node.sonar.version}"
+build_dir = "#{node.sonar.path.build}"
+sonar_file_name = "sonar-#{node.sonar.version}"
 
 directory "#{node.sonar.path.root_path}" do
   owner node.tomcat.user
   recursive true
 end
 
-directory "#{node.sonar.path.build}/#{sonar_file_name}" do
-  owner node.tomcat.user
-  recursive true
+execute "install sonar home" do  
+  command "cd #{build_dir} && wget #{node.sonar.zip_url} && unzip #{node.sonar.path.build}/#{sonar_file_name}.zip && rm -f #{build_dir}/#{sonar_file_name}.zip"
+  not_if "[ -d #{build_dir}/#{sonar_file_name}/war ]"
 end
 
 execute "change sonar home owner" do
   command "chown -R #{node.tomcat.user} #{node.sonar.path.build}/#{sonar_file_name}"
 end
 
-execute "install sonar home" do  
-  command "cd #{node.sonar.path.build} && wget #{node.sonar.zip_url} && unzip #{node.sonar.path.build}/#{sonar_file_name}.zip && rm -f #{node.sonar.path.build}/#{sonar_file_name}.zip"
-  not_if "[ -d #{node.sonar.path.build}/#{sonar_file_name} ]"
-end
-
-
-template "#{node.sonar.path.build}/#{sonar_file_name}/conf/sonar.properties" do
+puts "#{node.sonar.path.root_path}/#{sonar_file_name}"
+template "#{node.sonar.path.root_path}/#{sonar_file_name}/conf/sonar.properties" do
   mode 0644
   variables :password => db_config[:password]
   source "sonar.properties.erb"
@@ -71,4 +65,8 @@ EOF
   server 127.0.0.1:#{tomcat_sonar_http_port} fail_timeout=0;
 }
   EOF
+end
+
+service "nginx" do 
+  action :restart
 end
