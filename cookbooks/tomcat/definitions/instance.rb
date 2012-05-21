@@ -74,9 +74,9 @@ define :tomcat_instance, {
     package "curl"
     war_file = "#{tomcat_instance_params[:war_location][1..-1]}.war"
     war_full_file = "#{catalina_base}/webapps/#{war_file}"
-    user node.tomcat.user
     bash "install war from url #{config[:name]}" do
-      code "curl -s --location #{tomcat_instance_params[:war_url]} -o /tmp/#{war_file} && mv /tmp/#{war_file} #{war_full_file} && chown #{node.tomcat.user} #{war_full_file}"
+      user node.tomcat.user
+      code "curl -s --location #{tomcat_instance_params[:war_url]} -o /tmp/#{war_file} && mv /tmp/#{war_file} #{war_full_file}"
       not_if "[ -f #{war_full_file} ]"
     end
   end
