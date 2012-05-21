@@ -5,7 +5,7 @@ raise "File not found #{config_file}" unless File.exists? config_file
 
 config = JSON.load(File.read(config_file))
 
-run_list = ["recipe[master_chef::init]"] + config["run_list"]
+run_list = ["recipe[master_chef::init]"] + (ENV['OVERRIDE_RUN_LIST'] ? ENV['OVERRIDE_RUN_LIST'].split(",") : config["run_list"])
 json_file = Tempfile.new "chef_config"
 json_file.write JSON.dump({"run_list" => run_list})
 json_file.close
