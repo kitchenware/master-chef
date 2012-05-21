@@ -66,7 +66,3 @@ EOF
 }
   EOF
 end
-
-service "nginx" do 
-  action :restart
-end
