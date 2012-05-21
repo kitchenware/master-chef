@@ -1,0 +1,7 @@
+default[:jboss][:home] = "/opt/jboss"
+default[:jboss][:version] = "7.1.1.Final"
+default[:jboss][:jboss_home] = "/opt/jboss/jboss-as-#{default[:jboss][:version]}"
+default[:jboss][:instances_base] = "/opt/jboss/instances"
+default[:jboss][:log_dir] = "/var/log/jboss"
+default[:jboss][:user] = "jboss"
+default[:jboss][:zip_file] = "http://download.jboss.org/jbossas/7.1/jboss-as-#{default[:jboss][:version]}/jboss-as-#{default[:jboss][:version]}.zip"
