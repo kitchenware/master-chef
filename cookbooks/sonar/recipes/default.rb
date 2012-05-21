@@ -31,7 +31,6 @@ execute "change sonar home owner" do
   command "chown -R #{node.tomcat.user} #{node.sonar.path.build}/#{sonar_file_name}"
 end
 
-puts "#{node.sonar.path.root_path}/#{sonar_file_name}"
 template "#{node.sonar.path.root_path}/#{sonar_file_name}/conf/sonar.properties" do
   mode 0644
   variables :password => db_config[:password]
