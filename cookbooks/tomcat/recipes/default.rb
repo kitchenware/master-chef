@@ -16,6 +16,12 @@ directory "#{node.tomcat.instances_base}" do
   owner node.tomcat.user
 end
 
+["manager.xml", "host-manager.xml"].each do |f|
+  file "#{node.tomcat.catalina_home}/conf/Catalina/localhost/#{f}" do
+    action :delete
+  end
+end
+
 directory node.tomcat.log_dir do
   owner node.tomcat.user
 end
