@@ -1,17 +1,17 @@
 #!/bin/sh
 
 HOME="<%= @user_home %>"
-if [ "$LOG_FILE" = "" ]; then
-  LOG_FILE="<%= @status_file %>"
+if [ "$STATUS_FILE" = "" ]; then
+  STATUS_FILE="<%= @status_file %>"
 fi
 if [ "$LOG_FILE_CHEF" = "" ]; then
   LOG_FILE_CHEF="<%= @log_file %>"
 fi
-LOG_FILE_OWNER="<%= @user %>"
+FILE_OWNER="<%= @user %>"
 
 log() {
-  echo $1 | tee $LOG_FILE
-  chown $LOG_FILE_OWNER $LOG_FILE
+  echo $1 | tee $STATUS_FILE
+  chown $FILE_OWNER $STATUS_FILE
 }
 
 log "Starting chef at `date`"
@@ -24,6 +24,6 @@ log "Starting chef at `date`"
     log "Chef run FAILED at `date`"
   fi
 ) | tee $LOG_FILE_CHEF
-chown $LOG_FILE_OWNER $LOG_FILE_CHEF
+chown $FILE_OWNER $LOG_FILE_CHEF
 
-cat $LOG_FILE | grep ok > /dev/null
+cat $STATUS_FILE | grep ok > /dev/null
