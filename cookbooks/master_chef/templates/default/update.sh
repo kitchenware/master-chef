@@ -1,8 +1,12 @@
 #!/bin/sh
 
 HOME="<%= @user_home %>"
-LOG_FILE="<%= @status_file %>"
-LOG_FILE_CHEF="<%= @log_file %>"
+if [ "$LOG_FILE" = "" ]; then
+  LOG_FILE="<%= @status_file %>"
+fi
+if [ "$LOG_FILE_CHEF" = "" ]; then
+  LOG_FILE_CHEF="<%= @log_file %>"
+fi
 LOG_FILE_OWNER="<%= @user %>"
 
 log() {
