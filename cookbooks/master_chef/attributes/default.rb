@@ -15,8 +15,7 @@ end
 
 default[:master_chef][:chef_solo_scripts] = {
   :user => "chef",
-  :status_file => "/tmp/last_chef_run",
-  :log_file => "/tmp/last_chef_run_log",
+  :log_prefix => "/tmp/last_chef",
   :config_file => "/etc/chef/local.json",
 }
 

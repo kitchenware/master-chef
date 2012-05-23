@@ -1,12 +1,11 @@
 #!/bin/sh
 
 HOME="<%= @user_home %>"
-if [ "$STATUS_FILE" = "" ]; then
-  STATUS_FILE="<%= @status_file %>"
+if [ "$LOG_PREFIX" = "" ]; then
+  LOG_PREFIX="<%= @log_prefix %>"
 fi
-if [ "$LOG_FILE_CHEF" = "" ]; then
-  LOG_FILE_CHEF="<%= @log_file %>"
-fi
+STATUS_FILE="${LOG_PREFIX}_run"
+LOG_FILE="${LOG_PREFIX}_log"
 FILE_OWNER="<%= @user %>"
 
 log() {
@@ -23,7 +22,7 @@ log "Starting chef at `date`"
   else
     log "Chef run FAILED at `date`"
   fi
-) | tee $LOG_FILE_CHEF
-chown $FILE_OWNER $LOG_FILE_CHEF
+) | tee $LOG_FILE
 
+chown $FILE_OWNER $LOG_FILE
 cat $STATUS_FILE | grep ok > /dev/null

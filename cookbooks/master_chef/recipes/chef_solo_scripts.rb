@@ -6,8 +6,7 @@
     variables({
       :user => node.master_chef.chef_solo_scripts.user,
       :user_home => get_home(node.master_chef.chef_solo_scripts.user),
-      :status_file => node.master_chef.chef_solo_scripts.status_file,
-      :log_file => node.master_chef.chef_solo_scripts.log_file,
+      :log_prefix => node.master_chef.chef_solo_scripts.log_prefix,
       :config_file => node.master_chef.chef_solo_scripts.config_file,
     })
   end
