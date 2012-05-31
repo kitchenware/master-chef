@@ -12,8 +12,10 @@ define :php5_apache2, {
   apache2_enable_module "php5"
 
   options = {}
-  php5_apache2_params[:options].each do |k, v|
-    options[k.is_a?(String) ? k : k.to_s] = v
+  if php5_apache2_params[:options]
+    php5_apache2_params[:options].each do |k, v|
+      options[k.is_a?(String) ? k : k.to_s] = v
+    end
   end
 
   config = node.php5.php_ini.to_hash.merge(options)
