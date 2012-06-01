@@ -1,5 +1,4 @@
 
-
 define :ruby_user, {
   :install_rbenv => false
 } do
@@ -8,39 +7,19 @@ define :ruby_user, {
 
   base_user ruby_user_params[:name]
   
+  warp_install ruby_user_params[:name] do
+    rbenv ruby_user_params[:install_rbenv]
+  end
+  
   file "#{get_home ruby_user_params[:name]}/.bash_profile" do
     owner ruby_user_params[:name]
     action :create_if_missing
-  end
-
-  git "#{get_home ruby_user_params[:name]}/.warp" do
-    user ruby_user_params[:name]
-    repository "git://github.com/bpaquet/warp.git"
-  end
-
-  if ruby_user_params[:install_rbenv]
-    bash "install rbenv" do
-      user ruby_user_params[:name]
-      code "export HOME=#{get_home ruby_user_params[:name]} && cd $HOME && .warp/common/ruby/install_rbenv.sh"
-      not_if "[ -d #{get_home ruby_user_params[:name]}/.rbenv ]"
-    end
   end
 
   template "#{get_home ruby_user_params[:name]}/.gemrc" do
     owner ruby_user_params[:name]
     source "gemrc.erb"
     cookbook "ruby"
-  end
-
-  if node[:warp]
-
-    template "#{get_home ruby_user_params[:name]}/.warp_src" do
-      owner ruby_user_params[:name]
-      source "warp_src.erb"
-      cookbook "ruby"
-      variables :warp_src => node.warp[:warp_src]
-    end
-
   end
 
 end
