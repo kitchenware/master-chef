@@ -2,14 +2,16 @@
 define :tomcat_instance, {
   :war_url => nil,
   :war_location => nil,
+  :override => {},
 } do
 
   tomcat_instance_params = params
 
   config = tomcat_config tomcat_instance_params[:name]
 
-  instance_name = config[:name]
+  config = config.deep_merge tomcat_instance_params[:override]
 
+  instance_name = config[:name]
 
   catalina_base = "#{node.tomcat.instances_base}/#{config[:name]}"
   

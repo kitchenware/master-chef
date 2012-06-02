@@ -1,6 +1,7 @@
 default[:nexus][:location] = "/nexus"
 default[:nexus][:version] = "2.0.4"
 default[:nexus][:war_url] = "http://www.sonatype.org/downloads/nexus-#{default[:nexus][:version]}.war"
+default[:nexus][:path] = "/nexus"
 default[:nexus][:tomcat] = {
   :name => 'nexus',
   :env => {
