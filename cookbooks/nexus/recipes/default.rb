@@ -1,9 +1,6 @@
 include_recipe "tomcat"
 include_recipe "nginx"
 
-build_dir = "#{node.nexus.path.build}/nexus-#{node.nexus.version}"
-
-
 tomcat_instance "nexus:tomcat" do
   war_url "#{node.nexus.war_url}"
   war_location node.nexus.location
