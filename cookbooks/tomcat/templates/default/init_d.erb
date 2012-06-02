@@ -25,7 +25,7 @@ set -e
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 NAME="<%= @name %>"
 DESC="Tomcat instance"
-JVM_TMP=/tmp/tomcat6-tmp
+JVM_TMP=/tmp/tomcat6-tmp-<%= @name %>
 SUDO=`which sudo`
 
 if [ ! -x $SUDO ]; then
