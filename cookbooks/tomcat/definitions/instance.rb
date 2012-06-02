@@ -55,6 +55,8 @@ define :tomcat_instance, {
     action [ :enable, :start ]
   end
 
+  Chef::Config.exception_handlers << ServiceErrorHandler.new(config[:name], catalina_base)
+
   template "#{catalina_base}/conf/env" do
     cookbook "tomcat"
     source "env.erb"
