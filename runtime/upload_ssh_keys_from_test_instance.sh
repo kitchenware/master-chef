@@ -28,7 +28,7 @@ if [ "$?" != 0 ]; then
   exit 1
 fi
 
-cat $SSH_KEY | ssh chef@$TARGET 'cat > $HOME/.ssh/authorized_keys'
+cat $SSH_KEY | ssh -i $MAIN_KEY chef@$TARGET 'cat > $HOME/.ssh/authorized_keys'
 
 if [ "$?" != 0 ]; then
   echo "Error while uploading your key to $TARGET"
