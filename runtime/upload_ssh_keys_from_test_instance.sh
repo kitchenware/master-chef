@@ -19,6 +19,7 @@ if [ ! -f "$SSH_KEY" ]; then
 fi
 
 MAIN_KEY="`dirname $0`/../tests/ssh/id_rsa"
+chmod 0600 $MAIN_KEY
 
 ssh -o StrictHostKeyChecking=no -i $MAIN_KEY chef@$TARGET uname > /dev/null
 
