@@ -11,6 +11,8 @@ There is 3 AMI pre-configured with master-chef
 
 You can click on link above to create instance.
 
+Note : theses AMI are used for non regression tests on master-chef.
+
 ## Setup instance with your own SSH key
 
 Clone master chef :
