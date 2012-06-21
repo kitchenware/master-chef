@@ -1,6 +1,6 @@
 
-include_recipe "php5"
 include_recipe "apache2"
+include_recipe "php5"
 
 apache2_vhost "apache2:default_vhost" do
   options :document_root => "/var/www"
