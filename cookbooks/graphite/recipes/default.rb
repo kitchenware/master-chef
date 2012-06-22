@@ -107,3 +107,9 @@ template "/etc/bucky/bucky.conf" do
   notifies :restart, resources(:service => "bucky")
 end
 
+template "/opt/graphite/webapp/graphite/settings.py" do
+  source "settings.py.erb"
+  mode 0644
+  variables :timezone => node.graphite.timezone
+  notifies :restart, resources(:service => "apache2")
+end
