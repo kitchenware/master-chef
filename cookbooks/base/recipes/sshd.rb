@@ -34,4 +34,18 @@ unless node[:no_sshd_config]
     only_if "egrep 'PasswordAuthentication yes' /etc/ssh/sshd_config"
   end
 
+  if node[:ssh] && node.ssh[:max_startups]
+
+    bash "Configure sshd - max startups" do
+      user "root"
+      code <<-EOF
+      sed -i -e '/^MaxStartups.*/d' /etc/ssh/sshd_config
+      echo "MaxStartups #{node.ssh[:max_startups]}" >> /etc/ssh/sshd_config
+      /etc/init.d/ssh restart
+      EOF
+      not_if "egrep 'MaxStartups #{node.ssh[:max_startups]}' /etc/ssh/sshd_config"
+    end
+
+  end
+
 end
