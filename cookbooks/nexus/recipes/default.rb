@@ -21,6 +21,7 @@ nginx_add_default_location "nexus" do
   location #{node.nexus.location} {
     proxy_pass http://tomcat_nexus_upstream;
     proxy_read_timeout 600s;
+    client_max_body_size 99M;
     break;
   }
 
