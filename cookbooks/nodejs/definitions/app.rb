@@ -19,7 +19,7 @@ define :nodejs_app, {
   current_path = "#{nodejs_app_params[:capistrano_path]}/current"
   pid_files_path = "#{nodejs_app_params[:capistrano_path]}/shared/pids"
   log_path = "#{nodejs_app_params[:capistrano_path]}/shared/logs"
-  
+
   Chef::Config.exception_handlers << ServiceErrorHandler.new(nodejs_app_params[:name], ".*#{nodejs_app_params[:capistrano_path]}.*")
 
   [pid_files_path, log_path].each do |d|
