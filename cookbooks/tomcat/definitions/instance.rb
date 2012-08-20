@@ -14,7 +14,7 @@ define :tomcat_instance, {
   instance_name = config[:name]
 
   catalina_base = "#{node.tomcat.instances_base}/#{config[:name]}"
-  
+
   [
     "#{catalina_base}",
     "#{catalina_base}/temp",
@@ -37,7 +37,7 @@ define :tomcat_instance, {
     owner node.tomcat.user
     to "#{node.tomcat.log_dir}/#{config[:name]}"
   end
-  
+
   template "/etc/init.d/#{config[:name]}" do
     cookbook "tomcat"
     source "init_d.erb"
@@ -64,7 +64,7 @@ define :tomcat_instance, {
     mode 0644
     variables :config => config
     notifies :restart, resources(:service => config[:name])
-  end 
+  end
 
   template "#{catalina_base}/conf/server.xml" do
     cookbook "tomcat"

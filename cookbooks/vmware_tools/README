@@ -1,0 +1,3 @@
+This recipe install a new script in init.d to automatically
+- rename ethX to eth0 when copying a virtual machine
+- recompile vmware tools when upgrading kernel

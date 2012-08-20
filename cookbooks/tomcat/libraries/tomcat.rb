@@ -4,7 +4,7 @@ module TomcatHelper
     config = extract_config key
 
     instance_name = config[:name]
-    
+
     raise "Please specify name in tomcat config #{key}" unless instance_name
 
     unless config[:control_port]
