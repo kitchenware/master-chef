@@ -1,6 +1,13 @@
 include_recipe "tomcat"
 include_recipe "nginx"
 
+package "zlib1g-dev"
+package "build-essential"
+package "libxml2-dev"
+package "libxslt-dev"
+package "libsqlite3-dev"
+package "libssl-dev"
+
 directory node.jenkins.home do
   owner node.tomcat.user
 end
