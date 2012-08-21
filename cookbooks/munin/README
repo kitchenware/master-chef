@@ -1,0 +1,2 @@
+This recipe install munin, remove the automatic graph update every 5 minutes.
+Graphs can be manually updated by launching /etc/munin/graph.sh
