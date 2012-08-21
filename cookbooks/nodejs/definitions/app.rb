@@ -12,6 +12,9 @@ define :nodejs_app, {
   raise "You have to specify user in nodejs_app" unless nodejs_app_params[:user]
   raise "You have to specify script in nodejs_app" unless nodejs_app_params[:script]
 
+  include_recipe "capistrano"
+  include_recipe "warp"
+
   base_user nodejs_app_params[:user]
 
   directory ||= get_home(nodejs_app_params[:user])
