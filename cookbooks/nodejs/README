@@ -1,0 +1,9 @@
+This recipe contain two defintion
+- nodejs_app : setup a new nodejs app, which can be deployed with cap.
+
+To package a nodejs vesion with warp
+- install warp
+- install nvm : .warp/common/node/install_nvm.sh
+- compile your node version : nvm install vX.X.X
+- package your node version : .warp/packager/warp_node.sh X.X.X
+- deploy your warp package
