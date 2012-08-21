@@ -1,22 +1,6 @@
 include_recipe "tomcat"
 include_recipe "nginx"
 
-if node['platform'] == "ubuntu" 
-  package "zlib1g-dev"
-  package "build-essential"
-  package "libxml2-dev"
-  package "libxslt-dev"
-  package "libsqlite3-dev"
-  package "libssl-dev"
-  if %x{lsb_release -cs} == "precise"
-    package "libreadline-gplv2-dev"
-  else
-    package "libreadline5-dev"
-  end 
-end
-
-
-
 directory node.jenkins.home do
   owner node.tomcat.user
 end
