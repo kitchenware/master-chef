@@ -1,0 +1,13 @@
+This recipe contains a definition to install warp on a specified user :
+warp_install user_name
+
+You can ask to install rbenv or nvm :
+warp_install user_name do
+  rbenv true
+end
+
+warp_install user_name do
+  nvm true
+end
+
+

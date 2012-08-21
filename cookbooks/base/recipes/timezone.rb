@@ -17,7 +17,7 @@ if node.timezone =~ /^([^\/]+)\/([^\/]+)$/
     variables :timezone => node.timezone
   end
 
-else 
+else
   raise "Wrong timezone #{node.timezone}"
 end
 

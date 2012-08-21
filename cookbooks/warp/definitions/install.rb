@@ -11,7 +11,7 @@ define :warp_install, {
     reference node.warp[:reference]
     repository "git://github.com/bpaquet/warp.git"
   end
-  
+
   if node.warp[:warp_src]
 
     template "#{get_home warp_install_params[:name]}/.warp_src" do

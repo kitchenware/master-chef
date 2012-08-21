@@ -12,7 +12,7 @@ WSGISocketPrefix <%= @wsgi_socket_prefix %>
         WSGIApplicationGroup %{GLOBAL}
         WSGIImportScript <%= @graphite_directory %>/conf/graphite.wsgi process-group=graphite application-group=%{GLOBAL}
 
-        WSGIScriptAlias / <%= @graphite_directory %>/conf/graphite.wsgi 
+        WSGIScriptAlias / <%= @graphite_directory %>/conf/graphite.wsgi
 
         Alias /content/ <%= @graphite_directory %>/webapp/content/
         <Location "/content/">
@@ -23,7 +23,7 @@ WSGISocketPrefix <%= @wsgi_socket_prefix %>
         <Location "/media/">
                 SetHandler None
         </Location>
-        
+
         <Location "/" >
                 <%= @basic_auth %>
         </Location>

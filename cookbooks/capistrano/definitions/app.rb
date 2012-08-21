@@ -5,9 +5,9 @@ define :capistrano_app, {
 } do
 
   capistrano_app_params = params
-  
+
   raise "Please specify user for capsitrano_app" unless capistrano_app_params[:user]
-  
+
   directories = []
   directories << capistrano_app_params[:name]
   directories << "#{capistrano_app_params[:name]}/shared"
@@ -26,4 +26,4 @@ define :capistrano_app, {
     end
   end
 
-end 
+end

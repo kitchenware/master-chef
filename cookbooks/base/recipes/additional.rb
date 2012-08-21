@@ -15,5 +15,5 @@ if node[:additional_ppas]
       url v
     end
   end
-  
+
 end

@@ -30,7 +30,7 @@ end
 
 directory "#{build_dir}/edit-webapp/WEB-INF/classes"  do
   owner node.tomcat.user
-  recursive true  
+  recursive true
 end
 
 template "#{build_dir}/edit-webapp/WEB-INF/classes/confluence-init.properties" do

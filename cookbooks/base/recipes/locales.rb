@@ -6,7 +6,7 @@ if node.locales.configure
   node.locales.list.each do |l|
     raise "Locale not found on system #{l}" unless available_locales.include? l
   end
-  
+
   execute "locale-gen" do
     action :nothing
   end

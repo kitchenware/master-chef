@@ -33,7 +33,7 @@ if node[:ssh_keys]
       notifies :create, "directory[#{home}/.ssh]", :delayed
       notifies :create, "template[#{home}/.ssh/authorized_keys]", :delayed
     end
-    
+
     template "#{home}/.ssh/authorized_keys" do
       owner user
       mode 0700

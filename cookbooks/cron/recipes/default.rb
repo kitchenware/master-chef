@@ -7,5 +7,5 @@ end
 if node.cron.auto_purge
 
   include_recipe "cron::purge"
-  
+
 end
