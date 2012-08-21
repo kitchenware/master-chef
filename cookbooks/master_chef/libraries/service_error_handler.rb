@@ -1,11 +1,11 @@
 
 class ServiceErrorHandler < Chef::Handler
-  
+
   def initialize(service_name, pattern_for_process_kill)
     @service_name = service_name
     @pattern_for_process_kill = pattern_for_process_kill
   end
-  
+
   def report
     return unless exception.to_s =~ /service\[#{@service_name}\]/
     puts "Starting service error handler for #{@service_name}"

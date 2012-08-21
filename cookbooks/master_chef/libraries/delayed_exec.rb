@@ -18,7 +18,7 @@ class Chef
           @block
         end
       end
-      
+
     end
   end
 end
