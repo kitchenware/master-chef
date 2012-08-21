@@ -3,7 +3,6 @@ package "collectd-core" do
   options "--no-install-recommends"
 end
 
-
 Chef::Config.exception_handlers << ServiceErrorHandler.new("collectd", ".*collectd.*")
 
 service "collectd" do
@@ -22,12 +21,10 @@ template "/etc/collectd/collectd.conf" do
   notifies :restart, resources(:service => "collectd")
 end
 
-node.collectd.default_plugins.each do |p|
-  collectd_plugin p
-end
-
-collectd_plugin "syslog" do
-  config "LogLevel \"#{node.collectd.log_level}\""
+node.collectd.plugins.each do |name, config|
+  collectd_plugin name do
+    config config[:config] if config[:config]
+  end
 end
 
 delayed_exec "Remove collectd plugin" do
@@ -41,5 +38,4 @@ delayed_exec "Remove collectd plugin" do
       end
     end
   end
-
 end

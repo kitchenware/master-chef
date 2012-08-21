@@ -22,7 +22,7 @@ end
 
 template "#{node.apache2.server_root}/apache2.conf" do
   if node.apache2.mpm_config.prefork == "auto"
-    mpm_auto = { 
+    mpm_auto = {
       :prefork => {
         :start => node.cpu.total * 4,
         :min_spare => node.cpu.total * 8,
@@ -33,10 +33,11 @@ template "#{node.apache2.server_root}/apache2.conf" do
       }
     }
     variables :mpm => mpm_auto, :tuning => node.apache2.tuning, :server_root => node.apache2.server_root, :log_directory => node.apache2.log_directory
-  else 
+  else
     variables :mpm => node.apache2.mpm_config, :tuning => node.apache2.tuning, :server_root => node.apache2.server_root, :log_directory => node.apache2.log_directory
   end
   source "apache2.conf.erb"
+  mode 0644
   notifies :restart, resources(:service => "apache2")
 end
 

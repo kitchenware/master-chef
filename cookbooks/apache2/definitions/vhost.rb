@@ -6,7 +6,7 @@ define :apache2_vhost, {
   apache2_vhost_params = params
 
   config, vhost_sym = extract_config_with_last apache2_vhost_params[:name]
-  
+
   apache2_listen = config[:listen]
   basic_auth = config[:basic_auth]
 
@@ -26,7 +26,7 @@ define :apache2_vhost, {
     apache2_enable_module "authz_user"
     apache2_enable_module "authn_file"
     apache2_enable_module "auth_basic"
-    
+
     auth_name = basic_auth[:realm]
     basic_auth_conf += "AuthType Basic\n"
     basic_auth_conf += "AuthName #{auth_name}\n"
@@ -51,5 +51,5 @@ define :apache2_vhost, {
       notifies :reload, resources(:service => "apache2")
     end
   end
-  
+
 end
