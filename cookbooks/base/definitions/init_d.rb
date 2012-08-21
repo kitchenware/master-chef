@@ -27,7 +27,7 @@ define :basic_init_d, {
 
   post_start = ""
   post_start += "chown #{basic_init_d_params[:user]} $PID_FILE" if basic_init_d_params[:make_pidfile] 
-  
+
   template "/etc/init.d/#{basic_init_d_params[:name]}" do
     cookbook "base"
     source "basic_init_d.erb"

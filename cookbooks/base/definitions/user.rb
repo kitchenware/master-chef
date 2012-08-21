@@ -30,5 +30,5 @@ define :base_user, {
     owner base_user_params[:name]
     mode 0700
   end
-  
+
 end
