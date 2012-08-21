@@ -19,12 +19,12 @@ apache2_enable_module "wsgi" do
 end
 
 execute "install whisper" do
-  command "cd /tmp && wget #{node.graphite.packages.whisper.url} && tar xvzf whisper-#{node.graphite.packages.whisper.version}.tar.gz && cd whisper-#{node.graphite.packages.whisper.version} && python setup.py install"
+  command "cd /tmp && wget #{node.graphite.packages.whisper_url} -O whisper.tar.gz && tar xvzf whisper.tar.gz && cd #{File.basename(node.graphite.packages.whisper_url)[0..-8]} && python setup.py install"
   not_if "[ -f /usr/local/bin/whisper-info.py ]"
 end
 
 execute "install carbon" do
-  command "cd /tmp && wget #{node.graphite.packages.carbon.url} && tar xvzf carbon-#{node.graphite.packages.carbon.version}.tar.gz && cd carbon-#{node.graphite.packages.carbon.version} && python setup.py install"
+  command "cd /tmp && wget #{node.graphite.packages.carbon_url} -O carbon.tar.gz && tar xvzf carbon.tar.gz && cd #{File.basename(node.graphite.packages.carbon_url)[0..-8]} && python setup.py install"
   not_if "[ -f /opt/graphite/bin/carbon-cache.py ]"
 end
 
@@ -34,7 +34,7 @@ execute "configure carbon" do
 end
 
 execute "install graphite webapp" do
-  command "cd /tmp && wget #{node.graphite.packages.graphite_webapp.url} && tar xvzf graphite-web-#{node.graphite.packages.graphite_webapp.version}.tar.gz && cd graphite-web-#{node.graphite.packages.graphite_webapp.version} && python setup.py install"
+  command "cd /tmp && wget #{node.graphite.packages.graphite_web_url} -O graphite-web.tar.gz && tar xvzf graphite-web.tar.gz && cd #{File.basename(node.graphite.packages.graphite_web_url)[0..-8]} && python setup.py install"
   not_if "[ -f /opt/graphite/bin/run-graphite-devel-server.py ]"
 end
 
@@ -97,7 +97,7 @@ template "/opt/graphite/conf/storage-schemas.conf" do
 end
 
 execute "install bucky" do
-  command "cd /tmp && wget #{node.graphite.packages.bucky.url} && tar xvzf bucky-#{node.graphite.packages.bucky.version}.tar.gz && cd bucky-#{node.graphite.packages.bucky.version} && python setup.py install"
+  command "cd /tmp && wget #{node.graphite.packages.bucky_url} -O bucky.tar.gz && tar xvzf bucky.tar.gz && cd #{File.basename(node.graphite.packages.bucky_url)[0..-8]} && python setup.py install"
   not_if "[ -x /usr/local/bin/bucky ]"
 end
 
