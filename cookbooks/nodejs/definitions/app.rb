@@ -1,51 +1,59 @@
 
 define :nodejs_app, {
-  :capistrano_path => nil,
   :user => nil,
-  :group => nil,
   :script => nil,
+  :directory => nil,
   :opts => nil,
-  :startup_code => "",
-  :cluster_mode => false,
-  :pid_file_name => "master",
+  :node_env => "production",
 } do
 
   nodejs_app_params = params
 
-  [:capistrano_path, :user, :group, :script, :opts].each do |sym|
-    raise "You have to specify #{sym} in nodejs_app" unless nodejs_app_params[sym]
+  raise "You have to specify user in nodejs_app" unless nodejs_app_params[:user]
+  raise "You have to specify script in nodejs_app" unless nodejs_app_params[:script]
+
+  base_user nodejs_app_params[:user]
+
+  directory ||= get_home(nodejs_app_params[:user])
+
+  app_path = ::File.join(directory, nodejs_app_params[:name])
+  current_path = ::File.join(app_path, "current")
+  log_file = "#{app_path}/shared/log/#{nodejs_app_params[:name]}.log"
+
+  Chef::Config.exception_handlers << ServiceErrorHandler.new(nodejs_app_params[:name], ".*#{app_path}.*")
+
+  warp_install nodejs_app_params[:user] do
+    nvm true
   end
 
-  current_path = "#{nodejs_app_params[:capistrano_path]}/current"
-  pid_files_path = "#{nodejs_app_params[:capistrano_path]}/shared/pids"
-  log_path = "#{nodejs_app_params[:capistrano_path]}/shared/logs"
+  capistrano_app app_path do
+    user nodejs_app_params[:user]
+  end
 
-  Chef::Config.exception_handlers << ServiceErrorHandler.new(nodejs_app_params[:name], ".*#{nodejs_app_params[:capistrano_path]}.*")
-
-  [pid_files_path, log_path].each do |d|
-    directory d do
-      owner nodejs_app_params[:user]
-      group nodejs_app_params[:group]
-      mode "0755"
-      recursive true
-      action :create
-    end
+  template "#{app_path}/shared/run_node.sh" do
+    source "run_node.sh.erb"
+    cookbook "nodejs"
+    owner nodejs_app_params[:user]
+    variables({
+      :name => nodejs_app_params[:name],
+      :log_file => log_file,
+      :node_env => nodejs_app_params[:node_env],
+    })
+    mode 0755
   end
 
   template "/etc/init.d/#{nodejs_app_params[:name]}" do
     cookbook "nodejs"
-    source "init_d.erb"
+    source "init.d.erb"
     mode "0755"
     variables({
       :name => nodejs_app_params[:name],
       :script => nodejs_app_params[:script],
       :user => nodejs_app_params[:user],
-      :pid_files_path => pid_files_path,
-      :app_path => current_path,
       :user_home => get_home(nodejs_app_params[:user]),
-      :startup_code => nodejs_app_params[:startup_code],
-      :pid_file_name => nodejs_app_params[:pid_file_name],
-      :cluster_mode => nodejs_app_params[:cluster_mode],
+      :app_path => current_path,
+      :pid_file => "#{app_path}/shared/#{nodejs_app_params[:name]}.pid",
+      :runner => "#{app_path}/shared/run_node.sh"
     })
   end
 
@@ -58,12 +66,7 @@ define :nodejs_app, {
     cookbook "nodejs"
     source "default.erb"
     mode "0755"
-    variables(
-      :opts => [
-        "#{nodejs_app_params[:opts]}",
-        "--log_directory=#{log_path}"
-      ].join(" ")
-      )
+    variables :opts => nodejs_app_params[:opts]
     notifies :restart, resources(:service => nodejs_app_params[:name])
   end
 

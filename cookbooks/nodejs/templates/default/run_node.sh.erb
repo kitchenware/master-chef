@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+NODE_VERSION_FILE=".node_version"
+
+if [ ! -f $NODE_VERSION_FILE ]; then
+  echo "Please launch from a warped nodejs project directory"
+  exit 1
+fi
+
+[ -f /etc/default/<%= @name %> ] && . /etc/default/<%= @name %>
+
+NODE_OPTS="$NODE_OPTS --log_file <%= @log_file %>"
+
+export NODE_ENV=<%= @node_env %>
+
+. $HOME/.nvm/nvm.sh || true
+nvm use `cat $NODE_VERSION_FILE`
+
+exec node $* $NODE_OPTS

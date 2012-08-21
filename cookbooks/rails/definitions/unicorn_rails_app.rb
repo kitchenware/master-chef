@@ -25,7 +25,10 @@ define :unicorn_rails_app, {
 
   capistrano_app rails_app_directory do
     user unicorn_rails_app_params[:user]
-    without_cap true
+  end
+
+  directory "#{rails_app_directory}/shared/pids" do
+    owner unicorn_rails_app_params[:user]
   end
 
   if unicorn_rails_app_params[:mysql_database]
