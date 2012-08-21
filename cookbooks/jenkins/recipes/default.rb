@@ -7,6 +7,7 @@ package "libxml2-dev"
 package "libxslt-dev"
 package "libsqlite3-dev"
 package "libssl-dev"
+package "libreadline5-dev"
 
 directory node.jenkins.home do
   owner node.tomcat.user
