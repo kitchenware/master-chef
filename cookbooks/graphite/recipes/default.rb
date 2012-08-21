@@ -52,6 +52,10 @@ execute "change storage owner" do
   command "chown -R www-data /opt/graphite/storage"
   not_if "ls -al /opt/graphite/storage | grep www-data"
 end
+execute "change plugins owner" do
+  command "chown -R www-data /opt/graphite/lib/twisted/plugins"
+  not_if "ls -al /opt/graphite/lib/twisted/plugins | grep www-data"
+end
 
 execute "configure wsgi" do
   command "cd /opt/graphite/conf && cp graphite.wsgi.example graphite.wsgi"
@@ -75,6 +79,13 @@ end
 template "/opt/graphite/conf/carbon.conf" do
   source "carbon.conf.erb"
   mode 0644
+  notifies :restart, resources(:service => "carbon")
+end
+
+template "/opt/graphite/conf/storage-aggregation.conf" do
+  source "storage-schemas.conf.erb"
+  mode 0644
+  variables :default_retention => node.graphite.default_retention
   notifies :restart, resources(:service => "carbon")
 end
 
@@ -107,8 +118,8 @@ template "/etc/bucky/bucky.conf" do
   notifies :restart, resources(:service => "bucky")
 end
 
-template "/opt/graphite/webapp/graphite/settings.py" do
-  source "settings.py.erb"
+template "/opt/graphite/webapp/graphite/local_settings.py" do
+  source "local_settings.py.erb"
   mode 0644
   variables :timezone => node.graphite.timezone
   notifies :restart, resources(:service => "apache2")

@@ -54,7 +54,7 @@ MAX_UPDATES_PER_SECOND = 1000
 # database files to all get created and thus longer until the data becomes usable.
 # Setting this value high (like "inf" for infinity) will cause graphite to create
 # the files quickly but at the risk of slowing I/O down considerably for a while.
-MAX_CREATES_PER_MINUTE = 50
+MAX_CREATES_PER_MINUTE = 1000
 
 LINE_RECEIVER_INTERFACE = 127.0.0.1
 LINE_RECEIVER_PORT = 2003
@@ -63,7 +63,7 @@ LINE_RECEIVER_PORT = 2003
 # because it is very common to run multiple carbon daemons and managing
 # another (rarely used) port for every carbon instance is not fun.
 ENABLE_UDP_LISTENER = False
-UDP_RECEIVER_INTERFACE = 0.0.0.0
+UDP_RECEIVER_INTERFACE = 127.0.0.1
 UDP_RECEIVER_PORT = 2003
 
 PICKLE_RECEIVER_INTERFACE = 127.0.0.1
@@ -91,6 +91,30 @@ LOG_UPDATES = False
 # Set this option to True if you'd like to try this. Basically it will
 # shift the onus of buffering writes from the kernel into carbon's cache.
 WHISPER_AUTOFLUSH = False
+
+# By default new Whisper files are created pre-allocated with the data region
+# filled with zeros to prevent fragmentation and speed up contiguous reads and
+# writes (which are common). Enabling this option will cause Whisper to create
+# the file sparsely instead. Enabling this option may allow a large increase of
+# MAX_CREATES_PER_MINUTE but may have longer term performance implications
+# depending on the underlying storage configuration.
+# WHISPER_SPARSE_CREATE = False
+
+# Enabling this option will cause Whisper to lock each Whisper file it writes
+# to with an exclusive lock (LOCK_EX, see: man 2 flock). This is useful when
+# multiple carbon-cache daemons are writing to the same files
+# WHISPER_LOCK_WRITES = False
+
+# Set this to True to enable whitelisting and blacklisting of metrics in
+# CONF_DIR/whitelist and CONF_DIR/blacklist. If the whitelist is missing or
+# empty, all metrics will pass through
+# USE_WHITELIST = False
+
+# By default, carbon itself will log statistics (such as a count,
+# metricsReceived) with the top level prefix of 'carbon' at an interval of 60
+# seconds. Set CARBON_METRIC_INTERVAL to 0 to disable instrumentation
+# CARBON_METRIC_PREFIX = carbon
+# CARBON_METRIC_INTERVAL = 60
 
 # Enable AMQP if you want to receve metrics using an amqp broker
 # ENABLE_AMQP = False
@@ -129,13 +153,15 @@ WHISPER_AUTOFLUSH = False
 # Example: store everything
 # BIND_PATTERNS = #
 
-# To configure special settings for the 'foo' carbon-cache instance, uncomment this:
-#[cache:foo]
+# To configure special settings for the carbon-cache instance 'b', uncomment this:
+#[cache:b]
 #LINE_RECEIVER_PORT = 2103
 #PICKLE_RECEIVER_PORT = 2104
 #CACHE_QUERY_PORT = 7102
 # and any other settings you want to customize, defaults are inherited
 # from [carbon] section.
+# You can then specify the --instance=b option to manage this instance
+
 
 
 [relay]
@@ -167,6 +193,9 @@ REPLICATION_FACTOR = 1
 # Note that if the destinations are all carbon-caches then this should
 # exactly match the webapp's CARBONLINK_HOSTS setting in terms of
 # instances listed (order matters!).
+#
+# If using RELAY_METHOD = rules, all destinations used in relay-rules.conf
+# must be defined in this list
 DESTINATIONS = 127.0.0.1:2004
 
 # This defines the maximum "message size" between carbon daemons.
@@ -179,6 +208,17 @@ MAX_QUEUE_SIZE = 10000
 # default) then sockets over which metrics are received will temporarily stop accepting
 # data until the send queues fall below 80% MAX_QUEUE_SIZE.
 USE_FLOW_CONTROL = True
+
+# Set this to True to enable whitelisting and blacklisting of metrics in
+# CONF_DIR/whitelist and CONF_DIR/blacklist. If the whitelist is missing or
+# empty, all metrics will pass through
+# USE_WHITELIST = False
+
+# By default, carbon itself will log statistics (such as a count,
+# metricsReceived) with the top level prefix of 'carbon' at an interval of 60
+# seconds. Set CARBON_METRIC_INTERVAL to 0 to disable instrumentation
+# CARBON_METRIC_PREFIX = carbon
+# CARBON_METRIC_INTERVAL = 60
 
 
 [aggregator]
@@ -227,3 +267,14 @@ MAX_DATAPOINTS_PER_MESSAGE = 500
 # each metric. Aggregation only happens for datapoints that fall in
 # the past MAX_AGGREGATION_INTERVALS * intervalSize seconds.
 MAX_AGGREGATION_INTERVALS = 5
+
+# Set this to True to enable whitelisting and blacklisting of metrics in
+# CONF_DIR/whitelist and CONF_DIR/blacklist. If the whitelist is missing or
+# empty, all metrics will pass through
+# USE_WHITELIST = False
+
+# By default, carbon itself will log statistics (such as a count,
+# metricsReceived) with the top level prefix of 'carbon' at an interval of 60
+# seconds. Set CARBON_METRIC_INTERVAL to 0 to disable instrumentation
+# CARBON_METRIC_PREFIX = carbon
+# CARBON_METRIC_INTERVAL = 60
