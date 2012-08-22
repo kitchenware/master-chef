@@ -9,7 +9,7 @@ fi
 
 [ -f /etc/default/<%= @name %> ] && . /etc/default/<%= @name %>
 
-NODE_OPTS="$NODE_OPTS --log_file <%= @log_file %>"
+NODE_OPTS="$NODE_OPTS <%= @extended_options %>"
 
 export NODE_ENV=<%= @node_env %>
 

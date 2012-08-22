@@ -14,7 +14,7 @@ class ServiceErrorHandler < Chef::Handler
     all_resources.each do |r|
       notifs = r.delayed_notifications + r.immediate_notifications
       notifs.each do |n|
-        if n.resource.name == @service_name && [:restart, :reload, :delayed_restart].include?(n.action)
+        if n.resource.name == @service_name && [:restart, :reload, :delayed_restart].include?(n.action) && r.action != :nothing
           action = r.action.to_sym
           if action == :create
             puts "******** Find resource to deploy : #{r.name}, action #{action}"

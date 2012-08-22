@@ -4,6 +4,8 @@ define :nodejs_app, {
   :script => nil,
   :directory => nil,
   :opts => nil,
+  :file_check => [],
+  :add_log_param => true,
   :node_env => "production",
 } do
 
@@ -21,7 +23,8 @@ define :nodejs_app, {
 
   app_path = ::File.join(directory, nodejs_app_params[:name])
   current_path = ::File.join(app_path, "current")
-  log_file = "#{app_path}/shared/log/#{nodejs_app_params[:name]}.log"
+  extended_options = ""
+  extended_options += " --log_file #{app_path}/shared/log/#{nodejs_app_params[:name]}.log" if nodejs_app_params[:add_log_param]
 
   Chef::Config.exception_handlers << ServiceErrorHandler.new(nodejs_app_params[:name], ".*#{app_path}.*")
 
@@ -39,7 +42,7 @@ define :nodejs_app, {
     owner nodejs_app_params[:user]
     variables({
       :name => nodejs_app_params[:name],
-      :log_file => log_file,
+      :extended_options => extended_options,
       :node_env => nodejs_app_params[:node_env],
     })
     mode 0755
@@ -47,27 +50,12 @@ define :nodejs_app, {
 
   basic_init_d nodejs_app_params[:name] do
     daemon "#{app_path}/shared/run_node.sh"
-    file_check ["#{app_path}/current/#{nodejs_app_params[:script]}"]
+    file_check ["#{app_path}/current/#{nodejs_app_params[:script]}"] + nodejs_app_params[:file_check]
     options nodejs_app_params[:script]
     pid_directory "#{app_path}/shared"
     user nodejs_app_params[:user]
     working_directory "#{app_path}/current"
   end
-
-  # template "/etc/init.d/#{nodejs_app_params[:name]}" do
-  #   cookbook "nodejs"
-  #   source "init.d.erb"
-  #   mode "0755"
-  #   variables({
-  #     :name => nodejs_app_params[:name],
-  #     :script => nodejs_app_params[:script],
-  #     :user => nodejs_app_params[:user],
-  #     :user_home => get_home(nodejs_app_params[:user]),
-  #     :app_path => current_path,
-  #     :pid_file => "#{app_path}/shared/#{nodejs_app_params[:name]}.pid",
-  #     :runner => "#{app_path}/shared/run_node.sh"
-  #   })
-  # end
 
   service nodejs_app_params[:name] do
     supports :status => true, :restart => true, :reload => true
