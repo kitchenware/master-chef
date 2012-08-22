@@ -1,4 +1,5 @@
-Hostname "<%= %x{cat /etc/hostname}.strip %>"
+Hostname "<%= %x{hostname}.strip %>"
+FQDNLookup false
 
 Interval <%= @interval %>
 
