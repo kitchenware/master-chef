@@ -23,4 +23,5 @@ default[:graphite][:statsd] = {
   :git => 'git://github.com/etsy/statsd.git',
   :graphite_host => 'localhost',
   :graphite_port => '2003',
+  :flush_interval => 10,
 }
