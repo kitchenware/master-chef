@@ -4,12 +4,12 @@ nodejs_app "statsd" do
   user node.graphite.statsd.user
   script "stats.js"
   directory node.graphite.statsd.directory
-  file_check ["#{node.graphite.statsd.directory}/statsd/current/.node_version"]
-  opts "#{node.graphite.statsd.directory}/statsd/shared/statsd.conf"
+  file_check ["#{node.graphite.statsd.directory}/current/.node_version"]
+  opts "#{node.graphite.statsd.directory}/shared/statsd.conf"
   add_log_param false
 end
 
-template "#{node.graphite.statsd.directory}/statsd/shared/statsd.conf" do
+template "#{node.graphite.statsd.directory}/shared/statsd.conf" do
   owner node.graphite.statsd.user
   mode 0644
   source "statsd.conf.erb"
@@ -17,7 +17,7 @@ template "#{node.graphite.statsd.directory}/statsd/shared/statsd.conf" do
   notifies :restart, resources(:service => "statsd")
 end
 
-git_clone "#{node.graphite.statsd.directory}/statsd/current" do
+git_clone "#{node.graphite.statsd.directory}/current" do
   reference node.graphite.statsd.version
   repository node.graphite.statsd.git
   user node.graphite.statsd.user
@@ -25,12 +25,12 @@ end
 
 bash "install nodejs for statsd" do
   user node.graphite.statsd.user
-  code "export HOME=#{get_home node.graphite.statsd.user} && cd #{node.graphite.statsd.directory}/statsd/current && $HOME/.warp/client/node/install_node.sh"
+  code "export HOME=#{get_home node.graphite.statsd.user} && cd #{node.graphite.statsd.directory}/current && $HOME/.warp/client/node/install_node.sh"
   notifies :restart, resources(:service => "statsd")
   action :nothing
 end
 
-template "#{node.graphite.statsd.directory}/statsd/current/.node_version" do
+template "#{node.graphite.statsd.directory}/current/.node_version" do
   owner node.graphite.statsd.user
   mode 0644
   source "statsd_node_version.erb"
