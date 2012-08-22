@@ -62,6 +62,7 @@ define :unicorn_app, {
       content <<-EOF
 
   location #{unicorn_app_params[:location]} {
+    root #{unicorn_app_params[:app_directory]}/current/public;
     try_files $uri $uri.html $uri/index.html @unicorn_#{unicorn_app_params[:name]};
   }
 
@@ -75,6 +76,7 @@ define :unicorn_app, {
     server 'unix:#{unicorn_app_params[:app_directory]}/shared/unicorn.sock' fail_timeout=0;
   }
   EOF
+
     end
 
   end
