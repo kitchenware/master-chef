@@ -16,7 +16,7 @@ default[:graphite][:bucky][:url] = "http://pypi.python.org/packages/source/b/buc
 
 default[:graphite][:statsd] = {
   :user => 'statsd',
-  :directory => '/opt',
+  :directory => '/opt/statsd',
   :port => 8125,
   :version => 'v0.5.0',
   :node_version => '0.8.7',
