@@ -4,11 +4,11 @@ define :nginx_vhost, {
   nginx_vhost_params = params
 
   config, vhost_sym = extract_config_with_last nginx_vhost_params[:name]
-  
+
   nginx_listen = "listen #{config[:listen]};\n"
   nginx_listen += "server_name #{config[:virtual_host]};\n" if config[:virtual_host]
   basic_auth = config[:basic_auth]
-  
+
   if basic_auth
     nginx_listen += "\n"
     nginx_listen += "auth_basic \"#{basic_auth[:realm]}\";\n"
@@ -32,5 +32,5 @@ define :nginx_vhost, {
     end
 
   end
-  
+
 end

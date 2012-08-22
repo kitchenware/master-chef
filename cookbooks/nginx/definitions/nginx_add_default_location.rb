@@ -9,5 +9,5 @@ define :nginx_add_default_location, {
 
   node.nginx.default_vhost.enabled = true
   node.nginx.default_vhost.locations << nginx_add_default_location_params
-  
+
 end
