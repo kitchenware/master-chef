@@ -48,36 +48,13 @@ define :unicorn_rails_app, {
 
   initd = unicorn_rails_app_params[:code_for_initd]
   initd += "\nexport RAILS_RELATIVE_URL_ROOT='#{unicorn_rails_app_params[:location]}'" if unicorn_rails_app_params[:location] != "/"
-  
+
   unicorn_app unicorn_rails_app_params[:name] do
     user unicorn_rails_app_params[:user]
     app_directory rails_app_directory
     code_for_initd initd
-  end
-
-  if unicorn_rails_app_params[:configure_nginx]
-  
-    include_recipe "nginx"
-
-    nginx_add_default_location unicorn_rails_app_params[:name] do
-      content <<-EOF
-
-  location #{unicorn_rails_app_params[:location]} {
-    try_files $uri $uri.html $uri/index.html @unicorn_#{unicorn_rails_app_params[:name]};
-  }
-
-  location @unicorn_#{unicorn_rails_app_params[:name]} {
-    proxy_pass http://unicorn_#{unicorn_rails_app_params[:name]}_upstream;
-    break;
-  }
-  EOF
-      upstream <<-EOF
-  upstream unicorn_#{unicorn_rails_app_params[:name]}_upstream {
-    server 'unix:#{rails_app_directory}/shared/unicorn.sock' fail_timeout=0;
-  }
-  EOF
-    end
-
+    location unicorn_rails_app_params[:location]
+    configure_nginx unicorn_rails_app_params[:configure_nginx]
   end
 
   node[:unicorn_rails_app] = {} unless node[:unicorn_rails_app]

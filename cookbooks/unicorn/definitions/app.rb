@@ -4,6 +4,8 @@ define :unicorn_app, {
   :app_directory => nil,
   :user => nil,
   :code_for_initd => "",
+  :location => '/',
+  :configure_nginx => true,
 } do
 
   unicorn_app_params = params
@@ -50,6 +52,31 @@ define :unicorn_app, {
       :nb_workers => node.cpu.total,
     })
     notifies :restart, resources(:service => unicorn_app_params[:name])
+  end
+
+  if unicorn_app_params[:configure_nginx]
+
+    include_recipe "nginx"
+
+    nginx_add_default_location unicorn_app_params[:name] do
+      content <<-EOF
+
+  location #{unicorn_app_params[:location]} {
+    try_files $uri $uri.html $uri/index.html @unicorn_#{unicorn_app_params[:name]};
+  }
+
+  location @unicorn_#{unicorn_app_params[:name]} {
+    proxy_pass http://unicorn_#{unicorn_app_params[:name]}_upstream;
+    break;
+  }
+  EOF
+      upstream <<-EOF
+  upstream unicorn_#{unicorn_app_params[:name]}_upstream {
+    server 'unix:#{unicorn_app_params[:app_directory]}/shared/unicorn.sock' fail_timeout=0;
+  }
+  EOF
+    end
+
   end
 
 end
