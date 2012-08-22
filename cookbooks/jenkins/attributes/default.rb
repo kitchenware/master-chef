@@ -10,5 +10,6 @@ default[:jenkins][:tomcat] = {
   },
   :env => {
     'JENKINS_HOME' => node.jenkins.home,
+    'JAVA_OPTS' => '-XX:MaxPermSize=256m -Xmx512m -Xms128m',
   }
 }
