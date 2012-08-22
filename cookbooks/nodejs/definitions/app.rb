@@ -17,7 +17,7 @@ define :nodejs_app, {
 
   base_user nodejs_app_params[:user]
 
-  directory ||= get_home(nodejs_app_params[:user])
+  directory = nodejs_app_params[:directory] || get_home(nodejs_app_params[:user])
 
   app_path = ::File.join(directory, nodejs_app_params[:name])
   current_path = ::File.join(app_path, "current")
@@ -45,20 +45,29 @@ define :nodejs_app, {
     mode 0755
   end
 
-  template "/etc/init.d/#{nodejs_app_params[:name]}" do
-    cookbook "nodejs"
-    source "init.d.erb"
-    mode "0755"
-    variables({
-      :name => nodejs_app_params[:name],
-      :script => nodejs_app_params[:script],
-      :user => nodejs_app_params[:user],
-      :user_home => get_home(nodejs_app_params[:user]),
-      :app_path => current_path,
-      :pid_file => "#{app_path}/shared/#{nodejs_app_params[:name]}.pid",
-      :runner => "#{app_path}/shared/run_node.sh"
-    })
+  basic_init_d nodejs_app_params[:name] do
+    daemon "#{app_path}/shared/run_node.sh"
+    file_check ["#{app_path}/current/#{nodejs_app_params[:script]}"]
+    options nodejs_app_params[:script]
+    pid_directory "#{app_path}/shared"
+    user nodejs_app_params[:user]
+    working_directory "#{app_path}/current"
   end
+
+  # template "/etc/init.d/#{nodejs_app_params[:name]}" do
+  #   cookbook "nodejs"
+  #   source "init.d.erb"
+  #   mode "0755"
+  #   variables({
+  #     :name => nodejs_app_params[:name],
+  #     :script => nodejs_app_params[:script],
+  #     :user => nodejs_app_params[:user],
+  #     :user_home => get_home(nodejs_app_params[:user]),
+  #     :app_path => current_path,
+  #     :pid_file => "#{app_path}/shared/#{nodejs_app_params[:name]}.pid",
+  #     :runner => "#{app_path}/shared/run_node.sh"
+  #   })
+  # end
 
   service nodejs_app_params[:name] do
     supports :status => true, :restart => true, :reload => true
