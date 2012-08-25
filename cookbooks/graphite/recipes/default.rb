@@ -79,6 +79,7 @@ end
 template "/opt/graphite/conf/carbon.conf" do
   source "carbon.conf.erb"
   mode 0644
+  variables :carbon_receiver_port => node.graphite.carbon.port
   notifies :restart, resources(:service => "carbon")
 end
 

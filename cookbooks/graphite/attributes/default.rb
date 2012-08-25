@@ -12,7 +12,14 @@ default[:graphite][:default_retention] = "10s:1d"
 
 default[:graphite][:timezone] = "Europe/Paris"
 
-default[:graphite][:bucky][:url] = "http://pypi.python.org/packages/source/b/bucky/bucky-0.2.2.tar.gz"
+default[:graphite][:bucky] = {
+  :url => "http://pypi.python.org/packages/source/b/bucky/bucky-0.2.2.tar.gz",
+  :collectd_port => 25826,
+}
+
+default[:graphite][:carbon] = {
+  :port => 2003,
+}
 
 default[:graphite][:statsd] = {
   :user => 'statsd',

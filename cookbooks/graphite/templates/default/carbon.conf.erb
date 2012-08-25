@@ -57,14 +57,14 @@ MAX_UPDATES_PER_SECOND = 1000
 MAX_CREATES_PER_MINUTE = 1000
 
 LINE_RECEIVER_INTERFACE = 127.0.0.1
-LINE_RECEIVER_PORT = 2003
+LINE_RECEIVER_PORT = <%= @carbon_receiver_port %>
 
 # Set this to True to enable the UDP listener. By default this is off
 # because it is very common to run multiple carbon daemons and managing
 # another (rarely used) port for every carbon instance is not fun.
 ENABLE_UDP_LISTENER = False
 UDP_RECEIVER_INTERFACE = 127.0.0.1
-UDP_RECEIVER_PORT = 2003
+UDP_RECEIVER_PORT = <%= @carbon_receiver_port %>
 
 PICKLE_RECEIVER_INTERFACE = 127.0.0.1
 PICKLE_RECEIVER_PORT = 2004
