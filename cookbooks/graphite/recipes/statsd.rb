@@ -5,11 +5,11 @@ nodejs_app "statsd" do
   script "stats.js"
   directory node.graphite.statsd.directory
   file_check ["#{node.graphite.statsd.directory}/current/.node_version"]
-  opts "#{node.graphite.statsd.directory}/shared/statsd.conf"
+  opts "/etc/statsd.conf"
   add_log_param false
 end
 
-template "#{node.graphite.statsd.directory}/shared/statsd.conf" do
+template "/etc/statsd.conf" do
   owner node.graphite.statsd.user
   mode 0644
   source "statsd.conf.erb"
