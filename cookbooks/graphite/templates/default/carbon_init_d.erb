@@ -1,3 +1,12 @@
 #!/bin/sh -e
 
+### BEGIN INIT INFO
+# Provides: graphite
+# Required-Start:
+# Required-Stop:
+# Default-Start:  2 3 4 5
+# Default-Stop:
+# Short-Description: graphite
+### END INIT INFO
+
 cd /opt/graphite && sudo -u www-data ./bin/carbon-cache.py $*
