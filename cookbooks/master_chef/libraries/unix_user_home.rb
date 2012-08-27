@@ -20,3 +20,7 @@ end
 class Chef::Provider
   include UnixUserHome
 end
+
+class Chef::ResourceDefinition
+  include UnixUserHome
+end

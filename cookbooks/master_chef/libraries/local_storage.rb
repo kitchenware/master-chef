@@ -86,3 +86,7 @@ end
 class Chef::Provider
   include LocalStorage
 end
+
+class Chef::ResourceDefinition
+  include LocalStorage
+end

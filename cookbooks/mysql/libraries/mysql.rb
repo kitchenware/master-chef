@@ -23,3 +23,7 @@ end
 class Chef::Provider
   include MysqlHelper
 end
+
+class Chef::ResourceDefinition
+  include MysqlHelper
+end

@@ -47,3 +47,7 @@ end
 class Chef::Provider
   include TomcatHelper
 end
+
+class Chef::ResourceDefinition
+  include TomcatHelper
+end

@@ -23,3 +23,7 @@ end
 class Chef::Provider
   include TcpPortManager
 end
+
+class Chef::ResourceDefinition
+  include TcpPortManager
+end

@@ -17,3 +17,7 @@ end
 class Chef::Provider
   include RailsAppHelper
 end
+
+class Chef::ResourceDefinition
+  include RailsAppHelper
+end
