@@ -18,14 +18,14 @@ apache2_enable_module "wsgi" do
   install true
 end
 
-execute "install whisper" do
+execute_version "whisper" do
   command "cd /tmp && wget #{node.graphite.packages.whisper_url} -O whisper.tar.gz && tar xvzf whisper.tar.gz && cd #{File.basename(node.graphite.packages.whisper_url)[0..-8]} && python setup.py install"
-  not_if "[ -f /usr/local/bin/whisper-info.py ]"
+  version node.graphite.packages.whisper_url
 end
 
-execute "install carbon" do
+execute_version "carbon" do
   command "cd /tmp && wget #{node.graphite.packages.carbon_url} -O carbon.tar.gz && tar xvzf carbon.tar.gz && cd #{File.basename(node.graphite.packages.carbon_url)[0..-8]} && python setup.py install"
-  not_if "[ -f /opt/graphite/bin/carbon-cache.py ]"
+  version node.graphite.packages.carbon_url
 end
 
 execute "configure carbon" do
@@ -33,9 +33,9 @@ execute "configure carbon" do
   not_if "[ -f /opt/graphite/conf/carbon.conf ]"
 end
 
-execute "install graphite webapp" do
+execute_version "carbon_webapp" do
   command "cd /tmp && wget #{node.graphite.packages.graphite_web_url} -O graphite-web.tar.gz && tar xvzf graphite-web.tar.gz && cd #{File.basename(node.graphite.packages.graphite_web_url)[0..-8]} && python setup.py install"
-  not_if "[ -f /opt/graphite/bin/run-graphite-devel-server.py ]"
+  version node.graphite.packages.graphite_web_url
 end
 
 directory "#{node.apache2.server_root}/wsgi" do
@@ -52,6 +52,7 @@ execute "change storage owner" do
   command "chown -R www-data /opt/graphite/storage"
   not_if "ls -al /opt/graphite/storage | grep www-data"
 end
+
 execute "change plugins owner" do
   command "chown -R www-data /opt/graphite/lib/twisted/plugins"
   not_if "ls -al /opt/graphite/lib/twisted/plugins | grep www-data"

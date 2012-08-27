@@ -27,6 +27,7 @@ default[:master_chef][:chef_solo_scripts] = {
 default[:local_storage] = {
   :file => "/var/chef/local_storage.yml",
   :owner => "root",
+  :version_storage => "/var/chef/version_storage",
 }
 
 default[:tcp_port_manager][:range] = 18000..20000

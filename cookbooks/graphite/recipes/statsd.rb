@@ -23,17 +23,15 @@ git_clone "#{node.graphite.statsd.directory}/current" do
   user node.graphite.statsd.user
 end
 
-bash "install nodejs for statsd" do
-  user node.graphite.statsd.user
-  code "export HOME=#{get_home node.graphite.statsd.user} && cd #{node.graphite.statsd.directory}/current && $HOME/.warp/client/node/install_node.sh"
-  notifies :restart, resources(:service => "statsd")
-  action :nothing
-end
-
 template "#{node.graphite.statsd.directory}/current/.node_version" do
   owner node.graphite.statsd.user
   mode 0644
   source "statsd_node_version.erb"
-  variables :config => node.graphite.statsd.to_hash
-  notifies :run, resources(:bash => "install nodejs for statsd"), :immediately
+  variables :node_version => node.graphite.statsd.node_version
+end
+
+execute_version "nodejs version statsd" do
+  command "export HOME=#{get_home node.graphite.statsd.user} && cd #{node.graphite.statsd.directory}/current && $HOME/.warp/client/node/install_node.sh"
+  version node.graphite.statsd.node_version
+  notifies :restart, resources(:service => "statd")
 end

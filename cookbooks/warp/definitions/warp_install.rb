@@ -30,6 +30,7 @@ define :warp_install, {
       environment "HOME" => get_home(warp_install_params[:name])
       command "#{get_home warp_install_params[:name]}/.warp/common/node/install_nvm.sh"
     end
+
   end
 
   if warp_install_params[:rbenv]

@@ -1,9 +1,9 @@
 
 include_recipe "collectd"
 
-execute "install bucky" do
+execute_version "bucky" do
   command "cd /tmp && wget #{node.graphite.bucky.url} -O bucky.tar.gz && tar xvzf bucky.tar.gz && cd #{File.basename(node.graphite.bucky.url)[0..-8]} && python setup.py install"
-  not_if "[ -x /usr/local/bin/bucky ]"
+  version File.basename(node.graphite.bucky.url)
 end
 
 directory "/etc/bucky" do
