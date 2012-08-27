@@ -56,11 +56,6 @@ define :nodejs_app, {
     working_directory "#{directory}/current"
   end
 
-  service nodejs_app_params[:name] do
-    supports :status => true, :restart => true, :reload => true
-    action [ :enable, :start ]
-  end
-
   template "/etc/default/#{nodejs_app_params[:name]}" do
     cookbook "nodejs"
     source "default.erb"
