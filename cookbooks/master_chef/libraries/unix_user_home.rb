@@ -2,7 +2,9 @@
 module UnixUserHome
 
   def get_home user_name
-    dir = %x{cat /etc/passwd | grep "^#{user_name}:" | awk -F: '{print $6}'}.strip
+    u = find_resources_by_class_pattern(/^Chef::Resource::User/).find{|u| u.name == user_name}
+    dir = u  && u.home ? u.home : ""
+    dir = %x{cat /etc/passwd | grep "^#{user_name}:" | awk -F: '{print $6}'}.strip if dir.empty?
     dir = "/home/#{user_name}" if dir.empty?
     dir
   end
