@@ -5,6 +5,7 @@ define :nodejs_app, {
   :directory => nil,
   :opts => nil,
   :file_check => [],
+  :directory_check => [],
   :add_log_param => true,
   :node_env => "production",
 } do
@@ -50,6 +51,7 @@ define :nodejs_app, {
   basic_init_d nodejs_app_params[:name] do
     daemon "#{directory}/shared/run_node.sh"
     file_check ["#{directory}/current/#{nodejs_app_params[:script]}"] + nodejs_app_params[:file_check]
+    directory_check nodejs_app_params[:directory_check]
     options nodejs_app_params[:script]
     pid_directory "#{directory}/shared"
     user nodejs_app_params[:user]

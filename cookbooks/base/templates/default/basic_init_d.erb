@@ -26,6 +26,10 @@ test -f <%= f %> || exit 0
 test -x <%= f %> || exit 0
 <% end %>
 
+<% @directory_check.each do |f| %>
+test -d <%= f %> || exit 0
+<% end %>
+
 umask 022
 
 . /lib/lsb/init-functions

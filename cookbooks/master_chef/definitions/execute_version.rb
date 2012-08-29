@@ -3,6 +3,7 @@ define :execute_version, {
   :command => nil,
   :user => "root",
   :version => "",
+  :notifies => nil,
 } do
 
   execute_install_params = params
@@ -16,6 +17,7 @@ define :execute_version, {
   execute "install #{execute_install_params[:name]}" do
     command "rm -f #{installed_file} && su #{execute_install_params[:user]} -c '#{execute_install_params[:command]}' && echo #{execute_install_params[:version]} > #{installed_file}"
     not_if "[ -f #{installed_file} ] && [ \"`cat #{installed_file}`\" = \"#{execute_install_params[:version]}\" ]"
+    notifies execute_install_params[:notifies][0], execute_install_params[:notifies][1] if execute_install_params[:notifies]
   end
 
 end
