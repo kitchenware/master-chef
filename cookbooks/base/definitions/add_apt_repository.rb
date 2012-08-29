@@ -1,6 +1,7 @@
 
 define :add_apt_repository, {
   :url => nil,
+  :distrib => nil,
   :components => []
 } do
   add_apt_repository_params = params
@@ -12,9 +13,15 @@ define :add_apt_repository, {
     action :nothing
   end
 
+  add_apt_repository_params[:distrib] = %x{lsb_release -cs}.strip unless add_apt_repository_params[:distrib]
+
   template "/etc/apt/sources.list.d/#{add_apt_repository_params[:name]}.list" do
     cookbook "base"
-    variables :distrib => %x{lsb_release -cs}.strip, :components => add_apt_repository_params[:components], :url => add_apt_repository_params[:url]
+    variables({
+      :distrib => add_apt_repository_params[:distrib],
+      :components => add_apt_repository_params[:components],
+      :url => add_apt_repository_params[:url],
+    })
     source "repository.erb"
     mode 0644
     notifies :run, "bash[apt-get-update]", :immediately
