@@ -14,7 +14,7 @@ module FindResourceHelper
   def find_resources_by_class_pattern pattern
     @@resource_helper_run_context = run_context if run_context.class == Chef::RunContext
     @@resource_helper_run_context.resource_collection.select do |resource|
-      resource.class =~ pattern
+      resource.class.to_s =~ pattern
     end
   end
 
