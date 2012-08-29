@@ -33,5 +33,5 @@ end
 execute_version "nodejs version statsd" do
   command "export HOME=#{get_home node.graphite.statsd.user} && cd #{node.graphite.statsd.directory}/current && $HOME/.warp/client/node/install_node.sh"
   version node.graphite.statsd.node_version
-  notifies :restart, resources(:service => "statd")
+  notifies :restart, resources(:service => "statsd")
 end
