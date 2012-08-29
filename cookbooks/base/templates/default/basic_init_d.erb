@@ -48,6 +48,10 @@ kill_<%= @name %>() {
   fi
 }
 
+run_<%= @name %>() {
+  <%= @su_command %> $DAEMON $OPTIONS <%= @end_of_command %>"
+}
+
 start_<%= @name %>() {
   $START_STOP_DAEMON <%= @start_options %> --oknodo --start --pidfile $PID_FILE --exec /bin/sh -- -c "exec $DAEMON $OPTIONS <%= @end_of_command %>"
   sleep 1
@@ -56,6 +60,9 @@ start_<%= @name %>() {
 }
 
 case "$1" in
+  run)
+    run_<%= @name %>
+    ;;
   start)
     echo -n "Starting $DESC: "
     start_<%= @name %>
@@ -77,7 +84,7 @@ case "$1" in
     status_<%= @name %>
     ;;
   *)
-    echo "Usage: /etc/init.d/<%= @name %> {start|stop|restart|status}"
+    echo "Usage: /etc/init.d/<%= @name %> {start|stop|restart|status|run}"
     exit 1
 esac
 

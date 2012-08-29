@@ -23,6 +23,10 @@ define :basic_init_d, {
   start_options += " -c #{basic_init_d_params[:user]}" if basic_init_d_params[:user]
   start_options += " -d #{basic_init_d_params[:working_directory]}" if basic_init_d_params[:working_directory]
 
+  su_command = '"'
+  su_command += "cd #{basic_init_d_params[:working_directory]} &&" if basic_init_d_params[:working_directory]
+  su_command = "su #{basic_init_d_params[:user]} -c " + su_command if basic_init_d_params[:user]
+
   end_of_command = ""
   end_of_command = "2>&1 | tee #{basic_init_d_params[:log_file]}" if basic_init_d_params[:log_file]
 
@@ -44,6 +48,7 @@ define :basic_init_d, {
       :start_options => start_options,
       :end_of_command => end_of_command,
       :post_start => post_start,
+      :su_command => su_command,
       })
   end
 
