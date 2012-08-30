@@ -1,0 +1,8 @@
+How to package a jdk for warp
+* Download jdk
+* Extract it
+* Remove useless files (examples for Sun JDK 6 : src.zip, db, man ...)
+* Go to the jdk parent directory
+* Run
+** export JDK_NAME=<my_jdk_name>
+** $HOME/.warp/packager/warp_directory.sh $JDK_NAME absolute /usr/lib/jvm/$JDK_NAME ${JDK_NAME}_`arch`.warp
