@@ -56,6 +56,7 @@ define :nodejs_app, {
     pid_directory "#{directory}/shared"
     user nodejs_app_params[:user]
     working_directory "#{directory}/current"
+    vars_to_unset ["NVM_DIR"]
   end
 
   template "/etc/default/#{nodejs_app_params[:name]}" do

@@ -8,6 +8,7 @@ define :basic_init_d, {
   :file_check => [],
   :executable_check => [],
   :directory_check => [],
+  :vars_to_unset => [],
   :auto_start => true,
   :working_directory => nil,
   :log_file => nil,
@@ -49,6 +50,7 @@ define :basic_init_d, {
       :end_of_command => end_of_command,
       :post_start => post_start,
       :su_command => su_command,
+      :vars_to_unset => basic_init_d_params[:vars_to_unset],
       })
   end
 

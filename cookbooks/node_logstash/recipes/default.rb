@@ -4,13 +4,23 @@ include_recipe "libzmq"
 
 base_user node.node_logstash.user
 
+node.node_logstash.groups.each do |g|
+
+  group g do
+    action :manage
+    members [node.node_logstash.user]
+    append true
+  end
+
+end
+
 directory node.node_logstash.config_directory
 
 nodejs_app "logstash" do
   user node.node_logstash.user
   directory node.node_logstash.directory
   script "bin/node-logstash-agent"
-  opts "--config_dir #{node.node_logstash.config_directory}"
+  opts "--config_dir #{node.node_logstash.config_directory} --log_level #{node.node_logstash.log_level}"
   directory_check "#{node.node_logstash.directory}/current/node_modules"
 end
 
@@ -33,7 +43,7 @@ execute_version "install node-logstash dependencies" do
   notifies :restart, resources(:service => "logstash")
 end
 
-if node.node_logstash.configs
+if node.node_logstash[:configs]
 
   node.node_logstash.configs.each do |k, v|
     node_logstash_config k do

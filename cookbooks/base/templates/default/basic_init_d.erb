@@ -30,6 +30,10 @@ test -x <%= f %> || exit 0
 test -d <%= f %> || exit 0
 <% end %>
 
+<% @vars_to_unset.each do |v| %>
+unset <%= v %>
+<% end %>
+
 umask 022
 
 . /lib/lsb/init-functions
@@ -49,6 +53,7 @@ kill_<%= @name %>() {
 }
 
 run_<%= @name %>() {
+ echo "Running $NAME :"
   <%= @su_command %> $DAEMON $OPTIONS <%= @end_of_command %>"
 }
 

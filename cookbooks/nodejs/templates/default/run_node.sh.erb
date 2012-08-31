@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 NODE_VERSION_FILE=".node_version"
 
@@ -15,5 +15,9 @@ export NODE_ENV=<%= @node_env %>
 
 . $HOME/.nvm/nvm.sh || true
 nvm use `cat $NODE_VERSION_FILE`
+if [ "`which node | grep $NVM_DIR`" = "" ]; then
+  echo "Unable to load node version `cat $NODE_VERSION_FILE` in nvm"
+  exit 12
+fi
 
 exec node $* $NODE_OPTS
