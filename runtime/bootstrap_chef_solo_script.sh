@@ -1,6 +1,10 @@
 #!/bin/sh -e
+
 server=$1
-user="chef"
+
+if [ "$user" = "" ]; then
+  user="chef"
+fi
 
 ssh $user@$server sudo mkdir -p /etc/chef/
 current_folder=$(dirname $0)
