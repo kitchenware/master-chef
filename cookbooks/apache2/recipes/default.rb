@@ -6,14 +6,14 @@ package "apache2-mpm-#{node.apache2.mpm}"
   "#{node.apache2.server_root}/sites-available/default",
   "#{node.apache2.server_root}/sites-available/default-ssl",
   "#{node.apache2.server_root}/conf.d/security",
-  "#{node.apache2.server_root}/conf.d/other-vhosts-access-log"
+  "#{node.apache2.server_root}/conf.d/other-vhosts-access-log",
   ].each do |f|
   file f do
     action :delete
   end
 end
 
-Chef::Config.exception_handlers << ServiceErrorHandler.new("apache2", ".*apache2.*")
+Chef::Config.exception_handlers << ServiceErrorHandler.new("apache2", "\\/etc\\/apache2.*")
 
 service "apache2" do
   supports :status => true, :restart => true, :reload => true
@@ -38,6 +38,13 @@ template "#{node.apache2.server_root}/apache2.conf" do
   end
   source "apache2.conf.erb"
   mode 0644
+  notifies :restart, resources(:service => "apache2")
+end
+
+template "#{node.apache2.server_root}/ports.conf" do
+  source "ports.conf.erb"
+  mode 0644
+  variables :ports => Proc.new{node.apache2.ports == [] ? ["80"] : node.apache2.ports}
   notifies :restart, resources(:service => "apache2")
 end
 

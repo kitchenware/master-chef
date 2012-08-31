@@ -18,7 +18,6 @@ if node['platform'] == "debian"
   end
 end
 
-
 package "nginx" do
   version node.nginx[:nginx_version] if node.nginx[:nginx_version]
 end
@@ -60,7 +59,8 @@ if node.nginx[:deploy_default_config]
     owner "www-data"
   end
 
-  if node.nginx[:locations] 
+  if node.nginx[:locations]
+
     node.nginx.locations.keys.sort.each do |k|
       directory "#{node.nginx.locations[k]["path"]}" do
         owner node.nginx.locations[k]["owner"]
@@ -71,7 +71,9 @@ if node.nginx[:deploy_default_config]
         to node.nginx.locations[k]["path"]
       end
     end
+
   end
+
 end
 
 if node.nginx.default_vhost.enabled
@@ -79,6 +81,19 @@ if node.nginx.default_vhost.enabled
   nginx_vhost "nginx:default_vhost" do
     cookbook "nginx"
     options :root => node.nginx.default_root
+  end
+
+end
+
+if node.nginx[:proxy_locations]
+
+  node.nginx.proxy_locations.each do |k, v|
+
+    nginx_add_default_location k do
+      upstream v[:upstram]
+      content v[:content]
+    end
+
   end
 
 end

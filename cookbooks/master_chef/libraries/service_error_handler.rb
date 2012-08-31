@@ -18,7 +18,7 @@ class ServiceErrorHandler < Chef::Handler
           action = r.action.to_sym
           if action == :create
             puts "******** Find resource to deploy : #{r.name}, action #{action}"
-            r.run_action action
+            r.run_action action rescue puts "Unable to deploy #{r.name}"
           end
         end
       end

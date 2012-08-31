@@ -8,6 +8,12 @@ define :apache2_vhost, {
   config, vhost_sym = extract_config_with_last apache2_vhost_params[:name]
 
   apache2_listen = config[:listen]
+
+  if apache2_listen =~ /^.*:\d+/
+    node.apache2.ports = [] unless node.apache2[:ports]
+    node.apache2.ports << apache2_listen
+  end
+
   basic_auth = config[:basic_auth]
 
   apache2_description = ""
@@ -39,7 +45,12 @@ define :apache2_vhost, {
     cookbook apache2_vhost_params[:cookbook] if apache2_vhost_params[:cookbook]
     source "#{vhost_sym.to_s}.conf.erb"
     mode 0644
-    variables({:listen => apache2_listen, :basic_auth => basic_auth_conf, :description => apache2_description, :config => config}.merge(apache2_vhost_params[:options]))
+    variables({
+      :listen => apache2_listen,
+      :basic_auth => basic_auth_conf,
+      :description => apache2_description,
+      :config => config
+      }.merge(apache2_vhost_params[:options]))
     notifies :reload, resources(:service => "apache2")
   end
 
