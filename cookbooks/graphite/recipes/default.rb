@@ -85,9 +85,8 @@ template "/opt/graphite/conf/carbon.conf" do
 end
 
 template "/opt/graphite/conf/storage-aggregation.conf" do
-  source "storage-schemas.conf.erb"
+  source "storage-aggregation.conf.erb"
   mode 0644
-  variables :default_retention => node.graphite.default_retention
   notifies :restart, resources(:service => "carbon")
 end
 

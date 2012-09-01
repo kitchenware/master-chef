@@ -17,12 +17,10 @@ define :sudo_sudoers_file, {
     not_if "cat /etc/sudoers | grep '#includedir /etc/sudoers.d'"
   end
 
-  template "/etc/sudoers.d/#{sudo_sudoers_file_params[:name]}" do
-    cookbook "sudo"
-    source "sudoers.erb"
+  file "/etc/sudoers.d/#{sudo_sudoers_file_params[:name]}" do
     owner "root"
     mode 0440
-    variables :content => sudo_sudoers_file_params[:content]
+    content sudo_sudoers_file_params[:content]
   end
 
 end

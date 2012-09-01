@@ -59,11 +59,9 @@ define :nodejs_app, {
     vars_to_unset ["NVM_DIR"]
   end
 
-  template "/etc/default/#{nodejs_app_params[:name]}" do
-    cookbook "nodejs"
-    source "default.erb"
+  file "/etc/default/#{nodejs_app_params[:name]}" do
     mode "0755"
-    variables :opts => nodejs_app_params[:opts]
+    content "NODE_OPTS=\"#{nodejs_app_params[:opts]}\""
     notifies :restart, resources(:service => nodejs_app_params[:name])
   end
 

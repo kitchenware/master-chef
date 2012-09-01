@@ -16,10 +16,9 @@ define :ruby_user, {
     action :create_if_missing
   end
 
-  template "#{get_home ruby_user_params[:name]}/.gemrc" do
+  file "#{get_home ruby_user_params[:name]}/.gemrc" do
     owner ruby_user_params[:name]
-    source "gemrc.erb"
-    cookbook "ruby"
+    content "gem: --no-ri --no-rdoc"
   end
 
 end

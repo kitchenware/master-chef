@@ -33,10 +33,9 @@ directory "#{build_dir}/edit-webapp/WEB-INF/classes"  do
   recursive true
 end
 
-template "#{build_dir}/edit-webapp/WEB-INF/classes/confluence-init.properties" do
+file "#{build_dir}/edit-webapp/WEB-INF/classes/confluence-init.properties" do
   owner node.tomcat.user
-  source "confluence-init.properties.erb"
-  variables :home => node.confluence.path.home
+  content "confluence.home=#{node.confluence.path.home}"
 end
 
 war_file = "#{build_dir}/dist/confluence-#{node.confluence.version}.war"

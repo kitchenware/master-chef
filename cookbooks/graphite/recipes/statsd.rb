@@ -23,11 +23,10 @@ git_clone "#{node.graphite.statsd.directory}/current" do
   user node.graphite.statsd.user
 end
 
-template "#{node.graphite.statsd.directory}/current/.node_version" do
+file "#{node.graphite.statsd.directory}/current/.node_version" do
   owner node.graphite.statsd.user
   mode 0644
-  source "statsd_node_version.erb"
-  variables :node_version => node.graphite.statsd.node_version
+  content node.graphite.statsd.node_version
 end
 
 execute_version "nodejs version statsd" do

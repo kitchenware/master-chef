@@ -5,11 +5,9 @@ define :node_logstash_config, {
 
   node_logstash_config_params = params
 
-  template "#{node.node_logstash.config_directory}/#{node_logstash_config_params[:name]}" do
+  file "#{node.node_logstash.config_directory}/#{node_logstash_config_params[:name]}" do
     mode 0644
-    source "config.erb"
-    cookbook "node_logstash"
-    variables :urls => node_logstash_config_params[:urls]
+    content node_logstash_config_params[:urls].join("\n")
     notifies :restart, resources(:service => "logstash")
   end
 

@@ -34,16 +34,14 @@ if node.locales.configure
 
   end
 
-  template "/etc/locale.gen" do
-    variables :locales => node.locales.list
-    source "locale.gen.erb"
+  file "/etc/locale.gen" do
+    content node.locales.list.join("\n")
     mode 0644
     notifies :run, resources(:execute => "locale-gen"), :delayed
   end
 
-  template "/etc/default/locale" do
-    variables :locale => node.locales.default_locale
-    source "locale.erb"
+  file "/etc/default/locale" do
+    content "LANG=#{node.locales.default_locale}"
     mode 0644
   end
 

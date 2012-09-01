@@ -11,10 +11,9 @@ if node.timezone =~ /^([^\/]+)\/([^\/]+)$/
     to target
   end
 
-  template "/etc/timezone" do
-    source "timezone.erb"
+  file "/etc/timezone" do
+    content node.timezone
     mode 0644
-    variables :timezone => node.timezone
   end
 
 else

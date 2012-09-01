@@ -6,11 +6,9 @@ define :cron_file, {
 
   raise "Please specify content with cron_file" unless cron_file_params[:content]
 
-  template "/etc/cron.d/#{cron_file_params[:name]}" do
-    cookbook "cron"
-    source "cron_file.erb"
+  file "/etc/cron.d/#{cron_file_params[:name]}" do
+    content cron_file_params[:content]
     mode 0644
-    variables :content => cron_file_params[:content]
     notifies :restart, resources(:service => "cron")
   end
 
