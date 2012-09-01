@@ -7,7 +7,7 @@ Chef::Config.exception_handlers << ServiceErrorHandler.new("collectd", ".*collec
 
 service "collectd" do
   supports :status => true, :reload => true, :restart => true
-  action [ :enable, :start ]
+  action auto_compute_action
 end
 
 directory "/etc/collectd/collectd.d" do

@@ -44,7 +44,7 @@ end
 
 service "jboss" do
   supports :status => true, :restart => true, :reload => true
-  action [ :enable, :start ]
+  action auto_compute_action
 end
 
 nginx_add_default_location "jboss" do

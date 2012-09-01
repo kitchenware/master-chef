@@ -36,7 +36,7 @@ define :unicorn_app, {
 
   service unicorn_app_params[:name] do
     supports :status => true, :restart => true, :reload => true, :graceful_restart => true
-    action [ :enable, :start ]
+    action auto_compute_action
   end
 
   template unicorn_config_file do

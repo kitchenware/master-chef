@@ -74,7 +74,7 @@ end
 
 service "carbon" do
   supports :status => true
-  action [ :enable, :start ]
+  action auto_compute_action
 end
 
 template "/opt/graphite/conf/carbon.conf" do

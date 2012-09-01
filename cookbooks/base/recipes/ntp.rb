@@ -6,7 +6,7 @@ if node[:ntp_servers]
 
   service "ntp" do
     supports :status => true, :reload => true, :restart => true
-    action [ :enable, :start ]
+    action auto_compute_action
   end
 
   template "/etc/ntp.conf" do

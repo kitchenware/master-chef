@@ -37,7 +37,7 @@ Chef::Config.exception_handlers << ServiceErrorHandler.new("nginx", "nginx:.*")
 
 service "nginx" do
   supports :status => true, :restart => true, :reload => true
-  action [ :enable, :start ]
+  action auto_compute_action
 end
 
 if node.nginx[:deploy_default_config]
