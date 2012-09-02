@@ -8,7 +8,7 @@ end
 
 bash "install tomcat via warp" do
   user node.tomcat.user
-  code "cd #{node.tomcat.home} && wget #{node.warp.warp_src}/#{node.tomcat.warp_file} && sh #{node.tomcat.warp_file} && rm #{node.tomcat.warp_file}"
+  code "cd #{node.tomcat.home} && curl --location #{node.warp.warp_src}/#{node.tomcat.warp_file} -o #{node.tomcat.warp_file} && sh #{node.tomcat.warp_file} && rm #{node.tomcat.warp_file}"
   not_if "[ -d #{node.tomcat.catalina_home} ]"
 end
 

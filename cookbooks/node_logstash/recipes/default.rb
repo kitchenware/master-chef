@@ -30,10 +30,9 @@ git_clone "#{node.node_logstash.directory}/current" do
   user node.node_logstash.user
 end
 
-template "#{node.node_logstash.directory}/current/.node_version" do
+file "#{node.node_logstash.directory}/current/.node_version" do
   owner node.node_logstash.user
-  source "node_version.erb"
-  variables :node_version => node.node_logstash.node_version
+  content node.node_logstash.node_version
 end
 
 execute_version "install node-logstash dependencies" do

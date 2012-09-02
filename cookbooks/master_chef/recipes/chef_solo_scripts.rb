@@ -11,3 +11,8 @@
     })
   end
 end
+
+package "unzip"
+package "bzip2"
+package "curl"
+package "git-core"

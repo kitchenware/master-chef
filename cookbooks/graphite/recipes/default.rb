@@ -19,12 +19,12 @@ apache2_enable_module "wsgi" do
 end
 
 execute_version "whisper" do
-  command "cd /tmp && wget #{node.graphite.packages.whisper_url} -O whisper.tar.gz && tar xvzf whisper.tar.gz && cd #{File.basename(node.graphite.packages.whisper_url)[0..-8]} && python setup.py install"
+  command "cd /tmp && curl --location #{node.graphite.packages.whisper_url} -o whisper.tar.gz && tar xvzf whisper.tar.gz && cd #{File.basename(node.graphite.packages.whisper_url)[0..-8]} && python setup.py install"
   version node.graphite.packages.whisper_url
 end
 
 execute_version "carbon" do
-  command "cd /tmp && wget #{node.graphite.packages.carbon_url} -O carbon.tar.gz && tar xvzf carbon.tar.gz && cd #{File.basename(node.graphite.packages.carbon_url)[0..-8]} && python setup.py install"
+  command "cd /tmp && curl --location #{node.graphite.packages.carbon_url} -o carbon.tar.gz && tar xvzf carbon.tar.gz && cd #{File.basename(node.graphite.packages.carbon_url)[0..-8]} && python setup.py install"
   version node.graphite.packages.carbon_url
 end
 
@@ -34,7 +34,7 @@ execute "configure carbon" do
 end
 
 execute_version "carbon_webapp" do
-  command "cd /tmp && wget #{node.graphite.packages.graphite_web_url} -O graphite-web.tar.gz && tar xvzf graphite-web.tar.gz && cd #{File.basename(node.graphite.packages.graphite_web_url)[0..-8]} && python setup.py install"
+  command "cd /tmp && curl --location #{node.graphite.packages.graphite_web_url} -o graphite-web.tar.gz && tar xvzf graphite-web.tar.gz && cd #{File.basename(node.graphite.packages.graphite_web_url)[0..-8]} && python setup.py install"
   version node.graphite.packages.graphite_web_url
 end
 

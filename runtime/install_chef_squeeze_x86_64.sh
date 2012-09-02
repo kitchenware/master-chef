@@ -13,7 +13,7 @@ mkdir -p \$HOME/.ssh
 echo $KEY > \$HOME/.ssh/authorized_keys
 
 apt-get -y update
-apt-get -y install git-core curl sudo file lsb-release
+apt-get -y install git-core curl bzip2 sudo file lsb-release
 apt-get clean
 
 groupadd sudo
@@ -28,7 +28,7 @@ sudo chown -R chef /home/chef/.ssh
 
 EOF
 
-HOST=`echo $TARGET | cut -d'@' -f2` 
+HOST=`echo $TARGET | cut -d'@' -f2`
 cat <<-EOF | ssh chef@$HOST
 
 [ -f $WARP_FILE ] || wget "$WARP_ROOT/$WARP_FILE"

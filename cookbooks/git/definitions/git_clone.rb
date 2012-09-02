@@ -11,6 +11,10 @@ define :git_clone, {
   raise "Please specify user for using git_clone" unless git_clone_params[:user]
   raise "Please specify repository for using git_clone" unless git_clone_params[:repository]
 
+  if node.git.auto_use_http_for_github && ENV['http_proxy'] && git_clone_params[:repository] =~ /^git:\/\/(github.com.*)/
+    git_clone_params[:repository] = "http://#{$1}"
+  end
+
   bash "git clone #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
     code "git clone #{git_clone_params[:repository]} #{git_clone_params[:name]}"

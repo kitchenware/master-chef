@@ -22,8 +22,8 @@ directory "#{node.sonar.path.root_path}" do
   recursive true
 end
 
-execute "install sonar home" do  
-  command "cd #{build_dir} && wget #{node.sonar.zip_url} && unzip #{node.sonar.path.build}/#{sonar_file_name}.zip && rm -f #{build_dir}/#{sonar_file_name}.zip"
+execute "install sonar home" do
+  command "cd #{build_dir} && curl --location #{node.sonar.zip_url} -o #{sonar_file_name}.zip && unzip #{node.sonar.path.build}/#{sonar_file_name}.zip && rm -f #{build_dir}/#{sonar_file_name}.zip"
   not_if "[ -d #{build_dir}/#{sonar_file_name}/war ]"
 end
 

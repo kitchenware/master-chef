@@ -2,7 +2,6 @@
 include_recipe "base::apt_update"
 include_recipe "base::bash"
 include_recipe "base::editor"
-include_recipe "base::tools"
 include_recipe "base::sshd"
 include_recipe "base::ntp"
 include_recipe "base::timezone"

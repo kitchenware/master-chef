@@ -9,7 +9,7 @@ end
 
 app_directory = unicorn_rails_app_path "redmine"
 
-git "#{app_directory}/current" do
+git_clone "#{app_directory}/current" do
   user node.redmine.user
   repository node.redmine.git_url
   reference node.redmine.version

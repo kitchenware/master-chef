@@ -7,7 +7,7 @@ end
 
 bash "install jboss with official zip" do
   user node.jboss.user
-  code "cd #{node.jboss.home} && wget #{node.jboss.zip_file} && unzip jboss-as-#{node.jboss.version}.zip && rm jboss-as-#{node.jboss.version}.zip"
+  code "cd #{node.jboss.home} && curl --location #{node.jboss.zip_file} -o && unzip jboss-as-#{node.jboss.version}.zip && jboss-as-#{node.jboss.version}.zip && rm jboss-as-#{node.jboss.version}.zip"
   not_if "[ -d #{node.jboss.jboss_home} ]"
 end
 
