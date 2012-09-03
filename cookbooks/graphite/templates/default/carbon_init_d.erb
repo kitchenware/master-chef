@@ -9,4 +9,4 @@
 # Short-Description: graphite
 ### END INIT INFO
 
-cd /opt/graphite && sudo -u www-data ./bin/carbon-cache.py $*
+cd <%= @graphite_directory %> && sudo -u www-data ./bin/carbon-cache.py $*

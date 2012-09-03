@@ -1,7 +1,12 @@
-default[:graphite][:packages] = {
-  :whisper_url => "https://launchpad.net/graphite/0.9/0.9.10/+download/whisper-0.9.10.tar.gz",
-  :carbon_url => "https://launchpad.net/graphite/0.9/0.9.10/+download/carbon-0.9.10.tar.gz",
-  :graphite_web_url => "https://launchpad.net/graphite/0.9/0.9.10/+download/graphite-web-0.9.10.tar.gz",
+default[:graphite] = {
+  :git => {
+    :whisper => "git://github.com/graphite-project/whisper.git",
+    :carbon => "git://github.com/graphite-project/carbon.git",
+    :web_app => "git://github.com/graphite-project/graphite-web.git",
+    :version => "0.9.10",
+  },
+  :directory => '/opt/graphite',
+  :directory_install => '/opt/graphite/install',
 }
 
 default[:graphite][:graphite] = {
