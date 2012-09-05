@@ -9,7 +9,7 @@ override_config = {:env => {"PLEXUS_NEXUS_WORK" => node.nexus.path}}
 
 tomcat_instance "nexus:tomcat" do
   override override_config
-  war_url "#{node.nexus.war_url}"
+  war_url node.nexus.war_url
   war_location node.nexus.location
 end
 
