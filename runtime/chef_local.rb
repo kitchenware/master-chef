@@ -29,10 +29,14 @@ exec_local "scp #{user}@#{server}:/etc/chef/local.json /tmp/"
 
 json = ::JSON.parse(File.read(File.join("/tmp/", "local.json")))
 json["repos"] = {:local_path => []};
+
 ["../master-chef", additionnal_path].each do |dir|
-  exec_local "rsync --delete -avh --exclude=.git #{dir}/ #{user}@#{server}:/tmp/#{File.basename(dir)}/" if dir
-  json["repos"][:local_path].push("/tmp/#{File.basename(dir)}")
+  if dir
+    exec_local "rsync --delete -avh --exclude=.git #{dir}/ #{user}@#{server}:/tmp/#{File.basename(dir)}/"
+    json["repos"][:local_path].push("/tmp/#{File.basename(dir)}")
+  end
 end
+
 f = Tempfile.new 'local.json'
 f.write JSON.pretty_generate(json)
 f.close
@@ -41,5 +45,3 @@ envs = "MASTER_CHEF_CONFIG=/tmp/local.json"
 envs += " http_proxy=http://#{ENV["PROXY"]}" if ENV["PROXY"]
 exec_local "scp #{f.path} #{user}@#{server}:/tmp/local.json"
 exec_local "ssh #{user}@#{server} #{envs} /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb"
-
-
