@@ -10,3 +10,20 @@ if node.php5[:modules]
   end
 
 end
+
+if node.php5[:pear] || node.php5[:pear_modules]
+
+    package "php-pear"
+
+end
+
+if node.php5[:pear_modules]
+
+  node.php5.pear_modules.each do |m|
+
+    php5_pear_module m
+
+  end
+
+end
+
