@@ -1,7 +1,7 @@
 class Chef::Provider::Service
 
-  def action_delayed_start
-    @new_resource.notifies :start, @new_resource.resources(:service => @new_resource.name)
+  def action_delayed_restart
+    @new_resource.notifies :restart, @new_resource.resources(:service => @new_resource.name)
     @new_resource.updated_by_last_action true
   end
 
@@ -13,7 +13,7 @@ class Chef::Resource::Service
 
   def initialize(name, run_context=nil)
     initialize_old(name, run_context)
-    @allowed_actions.push(:delayed_start)
+    @allowed_actions.push(:delayed_restart)
   end
 
 end
@@ -23,7 +23,7 @@ module ServiceHelper
   @@service_before_start = Dir.entries('/etc/init.d').reject{|x| x == '.' || x == '..'}
 
   def auto_compute_action
-    @@service_before_start.include?(self.name) ? [:enable, :delayed_start] : [:enable, :stop, :delayed_start]
+    @@service_before_start.include?(self.name) ? [:enable, :delayed_restart] : [:enable, :stop, :delayed_restart]
   end
 
 end
