@@ -27,3 +27,13 @@ if node.php5[:pear_modules]
 
 end
 
+if node.php5[:pear_channels]
+
+  node.php5.pear_channels.each do |m|
+
+    php5_pear_channel m
+
+  end
+
+end
+
