@@ -13,7 +13,14 @@ end
 
 if node.php5[:pear] || node.php5[:pear_modules] || node.php5[:pear_channels]
 
-    package "php-pear"
+  bash "pear upgrade" do
+    code "pear upgrade pear"
+    action :nothing
+  end
+
+  package "php-pear" do
+    notifies :run, "bash[pear upgrade]", :immediately
+  end
 
 end
 
