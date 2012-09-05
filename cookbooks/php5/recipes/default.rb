@@ -11,21 +11,12 @@ if node.php5[:modules]
 
 end
 
-if node.php5[:pear] || node.php5[:pear_modules]
+if node.php5[:pear] || node.php5[:pear_modules] || node.php5[:pear_channels]
 
     package "php-pear"
 
 end
 
-if node.php5[:pear_modules]
-
-  node.php5.pear_modules.each do |m|
-
-    php5_pear_module m
-
-  end
-
-end
 
 if node.php5[:pear_channels]
 
@@ -37,3 +28,13 @@ if node.php5[:pear_channels]
 
 end
 
+
+if node.php5[:pear_modules]
+
+  node.php5.pear_modules.each do |m|
+
+    php5_pear_module m
+
+  end
+
+end
