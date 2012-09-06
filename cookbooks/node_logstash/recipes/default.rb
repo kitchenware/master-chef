@@ -43,11 +43,31 @@ execute_version "install node-logstash dependencies" do
 end
 
 if node.node_logstash[:configs]
-
   node.node_logstash.configs.each do |k, v|
     node_logstash_config k do
       urls v
     end
   end
+end
 
+if node.node_logstash[:monitor_files]
+  node.node_logstash.monitor_files.each do |k, v|
+    node_logstash_files k do
+      files v['files']
+      log_type v['type'] if v['type']
+    end
+  end
+end
+
+delayed_exec "Remove useless logstash config files" do
+  block do
+    confs = find_resources_by_name_pattern(/^\/etc\/logstash.d\/.*$/).map{|r| r.name}
+    Dir["/etc/logstash.d/*"].each do |n|
+      unless confs.include? n
+        Chef::Log.info "Removing config files #{n}"
+        File.unlink n
+        notifies :restart, resources(:service => "logstash")
+      end
+    end
+  end
 end
