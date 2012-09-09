@@ -2,6 +2,12 @@
 
   <%= @description %>
 
+<% if @basic_auth %>
+  <Location />
+  <%= @basic_auth %>
+  </Location>
+<% end %>
+
   DocumentRoot <%= @document_root %>
 
 </VirtualHost>

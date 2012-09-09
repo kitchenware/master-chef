@@ -38,7 +38,7 @@ define :apache2_vhost, {
     basic_auth_conf += "AuthName #{auth_name}\n"
     basic_auth_conf += "AuthBasicProvider file\n"
     basic_auth_conf += "AuthUserFile #{node.apache2.server_root}/#{basic_auth[:file]}.passwd\n"
-    basic_auth_conf += "Require user graphite\n"
+    basic_auth_conf += "Require valid-user\n"
   end
 
   template "#{node.apache2.server_root}/sites-enabled/#{vhost_sym.to_s}.conf" do
