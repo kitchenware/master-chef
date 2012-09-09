@@ -8,7 +8,7 @@ define :node_logstash_files, {
 
   config_content = node_logstash_files_params[:files].map do |f|
     s = "input://file://#{f}"
-    s += "&type=#{node_logstash_files_params[:log_type]}" if node_logstash_files_params[:log_type]
+    s += "?type=#{node_logstash_files_params[:log_type]}" if node_logstash_files_params[:log_type]
     s
   end
 
