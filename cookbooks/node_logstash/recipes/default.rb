@@ -16,11 +16,14 @@ end
 
 directory node.node_logstash.config_directory
 
+patterns_directories = ""
+patterns_directories = "--patterns_directories #{node.node_logstash.patterns_directories.join(',')}" if node.node_logstash.patterns_directories.length > 0
+
 nodejs_app "logstash" do
   user node.node_logstash.user
   directory node.node_logstash.directory
   script "bin/node-logstash-agent"
-  opts "--config_dir #{node.node_logstash.config_directory} --log_level #{node.node_logstash.log_level}"
+  opts "--config_dir #{node.node_logstash.config_directory} --log_level #{node.node_logstash.log_level} #{patterns_directories}"
   directory_check "#{node.node_logstash.directory}/current/node_modules"
 end
 

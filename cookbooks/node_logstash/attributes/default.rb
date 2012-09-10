@@ -7,6 +7,7 @@ default[:node_logstash] = {
   :version => 'c21c19aaf9f7d5b2ebb8e2bc9f5cf3582652f38d',
   :node_version => '0.8.7',
   :log_level => 'debug',
+  :patterns_directories => [],
 }
 
 default[:elasticsearch] = {
