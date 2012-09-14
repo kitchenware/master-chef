@@ -30,3 +30,7 @@ template "#{node.elasticsearch.directory}/config/elasticsearch.yml" do
   variables :config => node.elasticsearch.to_hash
   notifies :restart, resources(:service => "elasticsearch")
 end
+
+limits_d "elastic" do
+  content "#{node.elasticsearch.user} - nofile 65000"
+end

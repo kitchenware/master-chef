@@ -11,7 +11,7 @@ default[:node_logstash] = {
 }
 
 default[:elasticsearch] = {
-  :user => 'elasticsearch',
+  :user => 'elastic',
   :url => 'https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.9.tar.gz',
   :directory => '/opt/elasticsearch',
   :options => '',
