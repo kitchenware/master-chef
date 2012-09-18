@@ -21,7 +21,7 @@ define :git_clone, {
     not_if "[ -d #{git_clone_params[:name]} ]"
   end
 
-  bash "update git clone of #{git_clone_params[:repository]}" do
+  bash "update git clone of #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
     code "cd #{git_clone_params[:name]} && git checkout master && git pull && git checkout #{git_clone_params[:reference]}"
     not_if "cd #{git_clone_params[:name]} && git log -n1 --decorate | head -n 1 | grep #{git_clone_params[:reference]}"
