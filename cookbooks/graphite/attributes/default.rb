@@ -13,7 +13,12 @@ default[:graphite][:graphite] = {
   :listen => "0.0.0.0:80"
 }
 
-default[:graphite][:default_retention] = "10s:1d"
+default[:graphite][:storages] = {
+  :default => {
+    :pattern => '.*',
+    :retention => '10s:1d',
+  }
+}
 
 default[:graphite][:timezone] = "Europe/Paris"
 

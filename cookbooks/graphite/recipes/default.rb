@@ -100,7 +100,7 @@ end
 template "#{node.graphite.directory}/conf/storage-schemas.conf" do
   source "storage-schemas.conf.erb"
   mode 0644
-  variables :default_retention => node.graphite.default_retention
+  variables :configs => node.graphite.storages
   notifies :restart, resources(:service => "carbon")
 end
 

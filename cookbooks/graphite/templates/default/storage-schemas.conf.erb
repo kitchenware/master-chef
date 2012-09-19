@@ -8,6 +8,8 @@
 pattern = ^carbon\.
 retentions = 60:90d
 
-[default]
-pattern = .*
-retentions = <%= @default_retention %>
+<% @configs.each do |k, v| %>
+[<%= k %>]
+pattern = <%= v[:pattern] %>
+retentions = <%= v[:retention] %>
+<% end %>
