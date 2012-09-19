@@ -1,5 +1,7 @@
 include_recipe "nodejs"
 
+Chef::Config.exception_handlers << ServiceErrorHandler.new("statsd", "\\/etc\\/statsd.conf")
+
 nodejs_app "statsd" do
   user node.graphite.statsd.user
   script "stats.js"

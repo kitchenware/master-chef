@@ -10,6 +10,8 @@ directory "/etc/bucky" do
   mode 0755
 end
 
+Chef::Config.exception_handlers << ServiceErrorHandler.new("bucky", "\\/etc\\/bucky\\/.*")
+
 basic_init_d "bucky" do
   daemon "/usr/local/bin/bucky"
   options "/etc/bucky/bucky.conf"

@@ -77,6 +77,8 @@ template "/etc/init.d/carbon" do
   variables :graphite_directory => node.graphite.directory
 end
 
+Chef::Config.exception_handlers << ServiceErrorHandler.new("carbon", "\\/opt\\/graphite\\/conf\\/.*")
+
 service "carbon" do
   supports :status => true
   action auto_compute_action
