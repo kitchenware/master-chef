@@ -3,6 +3,7 @@ define :git_clone, {
   :reference => nil,
   :user => nil,
   :repository => nil,
+  :notifies => nil,
 } do
 
   git_clone_params = params
@@ -19,12 +20,14 @@ define :git_clone, {
     user git_clone_params[:user]
     code "git clone #{git_clone_params[:repository]} #{git_clone_params[:name]}"
     not_if "[ -d #{git_clone_params[:name]} ]"
+    notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
 
   bash "update git clone of #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
-    code "cd #{git_clone_params[:name]} && git checkout master && git pull && git checkout #{git_clone_params[:reference]}"
+    code "cd #{git_clone_params[:name]} && git reset --hard -q && git clean -q -x -d -f && git checkout master && git pull && git checkout #{git_clone_params[:reference]}"
     not_if "cd #{git_clone_params[:name]} && git log -n1 --decorate | head -n 1 | grep #{git_clone_params[:reference]}"
+    notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
 
 end

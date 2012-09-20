@@ -31,6 +31,7 @@ git_clone "#{node.node_logstash.directory}/current" do
   reference node.node_logstash.version
   repository node.node_logstash.git
   user node.node_logstash.user
+  notifies :restart, resources(:service => "logstash")
 end
 
 file "#{node.node_logstash.directory}/current/.node_version" do

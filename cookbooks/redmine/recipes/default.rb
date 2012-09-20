@@ -13,6 +13,7 @@ git_clone "#{app_directory}/current" do
   user node.redmine.user
   repository node.redmine.git_url
   reference node.redmine.version
+  notifies :restart, resources(:service => "redmine")
 end
 
 directory "#{app_directory}/current/files" do

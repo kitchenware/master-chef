@@ -18,6 +18,7 @@ git_clone "#{node.kibana.directory}/current" do
   user node.kibana.user
   reference node.kibana.version
   repository node.kibana.git
+  notifies :restart, resources(:service => "kibana")
 end
 
 deployed_files = %w{Gemfile Gemfile.lock .rbenv-version .rbenv-gemsets}

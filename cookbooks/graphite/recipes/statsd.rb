@@ -23,6 +23,7 @@ git_clone "#{node.graphite.statsd.directory}/current" do
   reference node.graphite.statsd.version
   repository node.graphite.statsd.git
   user node.graphite.statsd.user
+  notifies :restart, resources(:service => "statsd")
 end
 
 file "#{node.graphite.statsd.directory}/current/.node_version" do
