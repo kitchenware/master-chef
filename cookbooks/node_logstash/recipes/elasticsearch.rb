@@ -20,6 +20,7 @@ execute_version "install elasticsearch" do
     "chown -R #{node.elasticsearch.user} #{node.elasticsearch.directory}"
   )
   version node.elasticsearch.url
+  file_storage "#{node.elasticsearch.directory}/.elasticsearch_ready"
   notifies :restart, resources(:service => "elasticsearch")
 end
 

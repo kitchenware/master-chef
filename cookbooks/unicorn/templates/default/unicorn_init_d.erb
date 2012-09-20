@@ -65,7 +65,7 @@ case "$1" in
 	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$CMD" || exit 1
 	echo "$NAME."
 	;;
-	reopen_log)
+  reopen_log)
 	echo -n "Repoen logs $NAME: "
 	kill_unicorn -USR1
 	echo "$NAME."

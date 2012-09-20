@@ -1,6 +1,7 @@
 
 define :execute_version, {
   :command => nil,
+  :file_storage => nil,
   :user => "root",
   :version => "",
   :notifies => nil,
@@ -8,15 +9,13 @@ define :execute_version, {
 
   execute_version_params = params
 
-  raise "Please specify command with execute_version" unless execute_version_params[:command]
-
-  directory node.local_storage.version_storage
-
-  installed_file = "#{node.local_storage.version_storage}/#{execute_version_params[:name].gsub(/ /, '_')}"
+  [:command, :file_storage].each do |s|
+    raise "Please specify #{s} with execute_version" unless execute_version_params[s]
+  end
 
   execute "install #{execute_version_params[:name]}" do
-    command "rm -f #{installed_file} && su #{execute_version_params[:user]} -c '#{execute_version_params[:command]}' && echo #{execute_version_params[:version]} > #{installed_file}"
-    not_if "[ -f #{installed_file} ] && [ \"`cat #{installed_file}`\" = \"#{execute_version_params[:version]}\" ]"
+    command "rm -f #{execute_version_params[:file_storage]} && su #{execute_version_params[:user]} -c '#{execute_version_params[:command]}' && echo #{execute_version_params[:version]} > #{execute_version_params[:file_storage]}"
+    not_if "[ -f #{execute_version_params[:file_storage]} ] && [ \"`cat #{execute_version_params[:file_storage]}`\" = \"#{execute_version_params[:version]}\" ]"
     notifies execute_version_params[:notifies][0], execute_version_params[:notifies][1] if execute_version_params[:notifies]
   end
 

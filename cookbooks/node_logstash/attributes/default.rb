@@ -21,6 +21,9 @@ default[:elasticsearch] = {
 }
 
 default[:kibana] = {
+  :user => 'kibana',
   :git => 'git://github.com/rashidkpc/Kibana.git',
-  :version => '376676cf33e5a2ce932604e1159a00db0ad17dda',
+  :version => '90a3e0f56c650844be6503c99f262e1d7ab1c262',
+  :directory => '/opt/kibana',
+  :location => '/',
 }

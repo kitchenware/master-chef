@@ -33,6 +33,7 @@ end
   execute_version "install_#{app}" do
     command "cd #{node.graphite.directory_install}/#{app} && python setup.py install"
     version "#{app}_#{node.graphite.git.version}"
+    file_storage "#{node.graphite.directory}/.#{app}"
   end
 
 end

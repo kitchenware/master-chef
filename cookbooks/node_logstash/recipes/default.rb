@@ -42,6 +42,7 @@ execute_version "install node-logstash dependencies" do
   user node.node_logstash.user
   command "export HOME=#{get_home node.node_logstash.user} && cd #{node.node_logstash.directory}/current && rm -rf node_modules && $HOME/.warp/client/node/install.sh"
   version node.node_logstash.node_version + '_' + node.node_logstash.version
+  file_storage "#{node.node_logstash.directory}/current/.npm_ready"
   notifies :restart, resources(:service => "logstash")
 end
 

@@ -27,10 +27,6 @@ define :unicorn_rails_app, {
     user unicorn_rails_app_params[:user]
   end
 
-  directory "#{rails_app_directory}/shared/pids" do
-    owner unicorn_rails_app_params[:user]
-  end
-
   if unicorn_rails_app_params[:mysql_database]
 
     include_recipe "mysql"
@@ -50,6 +46,7 @@ define :unicorn_rails_app, {
   initd += "\nexport RAILS_RELATIVE_URL_ROOT='#{unicorn_rails_app_params[:location]}'" if unicorn_rails_app_params[:location] != "/"
 
   unicorn_app unicorn_rails_app_params[:name] do
+    unicorn_cmd 'unicorn_rails'
     user unicorn_rails_app_params[:user]
     app_directory rails_app_directory
     code_for_initd initd

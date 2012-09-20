@@ -25,17 +25,25 @@ link "#{app_directory}/current/config/database.yml" do
   to "#{app_directory}/shared/database.yml"
 end
 
-%w{Gemfile.local Gemfile.lock .rbenv-version .rbenv-gemsets .bundle-option}.each do |f|
-  template "#{app_directory}/current/#{f}" do
+deployed_files = %w{Gemfile.local Gemfile.lock .rbenv-version .rbenv-gemsets .bundle-option}
+
+directory "#{app_directory}/shared/files" do
+  owner node.redmine.user
+end
+
+deployed_files.each do |f|
+  template "#{app_directory}/shared/files/#{f}" do
     owner node.redmine.user
     source f
-    not_if "[ -f #{app_directory}/current/.redmine_ready ]"
   end
 end
+
+cp_command = deployed_files.map{|f| "cp #{app_directory}/shared/files/#{f} #{app_directory}/current/#{f}"}.join(' && ')
 
 ruby_rbenv_command "initialize redmine" do
   user node.redmine.user
   directory "#{app_directory}/current"
-  code "rm -f .warped && rbenv warp install && rake generate_session_store && RAILS_ENV=production rake db:migrate && touch .redmine_ready"
-  file_check "#{app_directory}/current/.redmine_ready"
+  code "rm -f .warped && #{cp_command} && rbenv warp install && rake generate_session_store && RAILS_ENV=production rake db:migrate"
+  file_storage "#{app_directory}/current/.redmine_ready"
+  version node.redmine.version
 end
