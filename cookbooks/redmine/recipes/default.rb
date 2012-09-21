@@ -1,13 +1,11 @@
 
 include_recipe "rails"
 
-unicorn_rails_app "redmine" do
+app_directory = unicorn_rails_app "redmine" do
   user node.redmine.user
   location node.redmine.location
   mysql_database "redmine:database"
 end
-
-app_directory = unicorn_rails_app_path "redmine"
 
 git_clone "#{app_directory}/current" do
   user node.redmine.user

@@ -6,6 +6,7 @@ define :unicorn_app, {
   :code_for_initd => "",
   :location => '/',
   :configure_nginx => true,
+  :pid_file => 'shared/unicorn.pid'
 } do
 
   unicorn_app_params = params
@@ -18,7 +19,7 @@ define :unicorn_app, {
     user unicorn_app_params[:user]
   end
 
-  unicorn_pid_file = "#{unicorn_app_params[:app_directory]}/shared/unicorn.pid"
+  unicorn_pid_file = "#{unicorn_app_params[:app_directory]}/#{unicorn_app_params[:pid_file]}"
   unicorn_config_file = "#{unicorn_app_params[:app_directory]}/shared/unicorn.conf.rb"
   unicorn_log_prefix = "#{unicorn_app_params[:app_directory]}/shared/log/unicorn"
   unicorn_socket_file = "unix:#{unicorn_app_params[:app_directory]}/shared/unicorn.sock"

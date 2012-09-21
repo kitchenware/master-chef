@@ -23,8 +23,21 @@ define :unicorn_rails_app, {
     install_rbenv true
   end
 
-  capistrano_app rails_app_directory do
+  initd = unicorn_rails_app_params[:code_for_initd]
+  initd += "\nexport RAILS_RELATIVE_URL_ROOT='#{unicorn_rails_app_params[:location]}'" if unicorn_rails_app_params[:location] != "/"
+
+  unicorn_app unicorn_rails_app_params[:name] do
+    unicorn_cmd 'unicorn_rails'
     user unicorn_rails_app_params[:user]
+    app_directory rails_app_directory
+    code_for_initd initd
+    location unicorn_rails_app_params[:location]
+    configure_nginx unicorn_rails_app_params[:configure_nginx]
+    pid_file "shared/pids/unicorn.pids"
+  end
+
+  directory "#{rails_app_directory}/shared/pids" do
+    owner unicorn_rails_app_params[:user]
   end
 
   if unicorn_rails_app_params[:mysql_database]
@@ -42,20 +55,7 @@ define :unicorn_rails_app, {
 
   end
 
-  initd = unicorn_rails_app_params[:code_for_initd]
-  initd += "\nexport RAILS_RELATIVE_URL_ROOT='#{unicorn_rails_app_params[:location]}'" if unicorn_rails_app_params[:location] != "/"
-
-  unicorn_app unicorn_rails_app_params[:name] do
-    unicorn_cmd 'unicorn_rails'
-    user unicorn_rails_app_params[:user]
-    app_directory rails_app_directory
-    code_for_initd initd
-    location unicorn_rails_app_params[:location]
-    configure_nginx unicorn_rails_app_params[:configure_nginx]
-  end
-
-  node[:unicorn_rails_app] = {} unless node[:unicorn_rails_app]
-  node[:unicorn_rails_app][unicorn_rails_app_params[:name]] = rails_app_directory
+  rails_app_directory
 
 end
 
