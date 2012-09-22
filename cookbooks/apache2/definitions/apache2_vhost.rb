@@ -35,10 +35,37 @@ define :apache2_vhost, {
 
     auth_name = basic_auth[:realm]
     basic_auth_conf += "AuthType Basic\n"
-    basic_auth_conf += "AuthName #{auth_name}\n"
+    basic_auth_conf += "AuthName \"#{auth_name}\"\n"
     basic_auth_conf += "AuthBasicProvider file\n"
-    basic_auth_conf += "AuthUserFile #{node.apache2.server_root}/#{basic_auth[:file]}.passwd\n"
     basic_auth_conf += "Require valid-user\n"
+
+    if basic_auth[:file]
+      basic_auth_conf += "AuthUserFile #{node.apache2.server_root}/#{basic_auth[:file]}.passwd\n"
+
+      template "#{node.apache2.server_root}/#{basic_auth[:file]}.passwd" do
+        cookbook basic_auth[:cookbook]
+        source "#{basic_auth[:file]}.passwd.erb"
+        mode 0644
+        notifies :reload, resources(:service => "apache2")
+      end
+    end
+
+    if basic_auth[:users]
+      basic_auth_conf += "AuthUserFile #{node.apache2.server_root}/#{vhost_sym}.passwd\n"
+
+      passwd = ""
+      basic_auth[:users].each do |k, v|
+        passwd += "#{k}:#{v.crypt('salt')}\n"
+      end
+
+      file "#{node.apache2.server_root}/#{vhost_sym}.passwd" do
+        content passwd
+        mode 0644
+        notifies :reload, resources(:service => :apache2)
+      end
+
+    end
+
   end
 
   template "#{node.apache2.server_root}/sites-enabled/#{vhost_sym.to_s}.conf" do
@@ -52,15 +79,6 @@ define :apache2_vhost, {
       :config => config
       }.merge(apache2_vhost_params[:options]))
     notifies :reload, resources(:service => "apache2")
-  end
-
-  if basic_auth
-    template "#{node.apache2.server_root}/#{basic_auth[:file]}.passwd" do
-      cookbook basic_auth[:cookbook]
-      source "#{basic_auth[:file]}.passwd.erb"
-      mode 0644
-      notifies :reload, resources(:service => "apache2")
-    end
   end
 
 end
