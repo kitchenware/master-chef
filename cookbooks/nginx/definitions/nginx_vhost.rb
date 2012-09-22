@@ -12,7 +12,34 @@ define :nginx_vhost, {
   if basic_auth
     nginx_listen += "\n"
     nginx_listen += "auth_basic \"#{basic_auth[:realm]}\";\n"
-    nginx_listen += "auth_basic_user_file /etc/nginx/#{basic_auth[:file]}.passwd;\n"
+
+    if basic_auth[:file]
+      nginx_listen += "auth_basic_user_file /etc/nginx/#{basic_auth[:file]}.passwd;\n"
+
+      template "/etc/nginx/#{basic_auth[:file]}.passwd" do
+        cookbook basic_auth[:cookbook]
+        source "#{basic_auth[:file]}.passwd.erb"
+        mode 0644
+        notifies :reload, resources(:service => "nginx")
+      end
+    end
+
+    if basic_auth[:users]
+      nginx_listen += "auth_basic_user_file /etc/nginx/#{vhost_sym}.passwd;\n"
+
+      passwd = ""
+      basic_auth[:users].each do |k, v|
+        passwd += "#{k}:#{v.crypt('salt')}\n"
+      end
+
+      file "/etc/nginx/#{vhost_sym}.passwd" do
+        content passwd
+        mode 0644
+        notifies :reload, resources(:service => :nginx)
+      end
+
+    end
+
   end
 
   template "/etc/nginx/sites-enabled/#{vhost_sym.to_s}.conf" do
@@ -20,17 +47,6 @@ define :nginx_vhost, {
     mode 0644
     variables({:listen => nginx_listen, :config => config, :server_tokens => 'Off'}.merge(nginx_vhost_params[:options]))
     notifies :reload, resources(:service => "nginx")
-  end
-
-  if basic_auth
-
-    template "/etc/nginx/#{basic_auth[:file]}.passwd" do
-      cookbook basic_auth[:cookbook]
-      source "#{basic_auth[:file]}.passwd.erb"
-      mode 0644
-      notifies :reload, resources(:service => "nginx")
-    end
-
   end
 
 end
