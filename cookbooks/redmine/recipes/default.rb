@@ -24,6 +24,16 @@ link "#{app_directory}/current/config/database.yml" do
   to "#{app_directory}/shared/database.yml"
 end
 
+template "#{app_directory}/shared/configuration.yml" do
+    variables :config => node.redmine.config
+    source 'configuration.yml.erb'
+    mode 0755
+end
+
+link "#{app_directory}/current/config/configuration.yml" do
+  to "#{app_directory}/shared/database.yml"
+end
+
 deployed_files = %w{Gemfile.local Gemfile.lock .rbenv-version .rbenv-gemsets .bundle-option}
 
 directory "#{app_directory}/shared/files" do
