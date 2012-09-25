@@ -25,7 +25,7 @@ link "#{app_directory}/current/config/database.yml" do
 end
 
 template "#{app_directory}/shared/configuration.yml" do
-    variables :config => node.redmine.config
+    variables :config => node.redmine
     source 'configuration.yml.erb'
     mode 0755
 end
