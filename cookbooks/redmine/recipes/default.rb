@@ -31,7 +31,7 @@ template "#{app_directory}/shared/configuration.yml" do
 end
 
 link "#{app_directory}/current/config/configuration.yml" do
-  to "#{app_directory}/shared/database.yml"
+  to "#{app_directory}/shared/configuration.yml"
 end
 
 deployed_files = %w{Gemfile.local Gemfile.lock .rbenv-version .rbenv-gemsets .bundle-option}
