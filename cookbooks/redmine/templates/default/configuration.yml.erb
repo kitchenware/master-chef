@@ -44,7 +44,7 @@ production:
     email_delivery:
       delivery_method: :smtp
       smtp_settings:
-        address: <%= @config[:smtp_ip] || "127.0.0.1" %>
+        address: "<%= @config[:smtp_ip] || "127.0.0.1" %>"
         port: 25
         domain: <%= @config[:smtp_domain] || "" %>
         authentication: :none
