@@ -12,7 +12,8 @@ define :basic_init_d, {
   :auto_start => true,
   :working_directory => nil,
   :log_file => nil,
-  :pid_directory => "/var/run"
+  :pid_directory => "/var/run",
+  :code => '',
 } do
   basic_init_d_params = params
 
@@ -51,6 +52,7 @@ define :basic_init_d, {
       :post_start => post_start,
       :su_command => su_command,
       :vars_to_unset => basic_init_d_params[:vars_to_unset],
+      :code => basic_init_d_params[:code],
       })
   end
 

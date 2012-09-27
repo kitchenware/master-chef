@@ -8,6 +8,7 @@ basic_init_d "elasticsearch" do
   user node.elasticsearch.user
   directory_check node.elasticsearch.directory
   options "-f " + node.elasticsearch.options
+  code "ulimit -n 65000"
 end
 
 execute_version "install elasticsearch" do
@@ -32,6 +33,3 @@ template "#{node.elasticsearch.directory}/config/elasticsearch.yml" do
   notifies :restart, resources(:service => "elasticsearch")
 end
 
-limits_d "elastic" do
-  content "#{node.elasticsearch.user} - nofile 65000"
-end
