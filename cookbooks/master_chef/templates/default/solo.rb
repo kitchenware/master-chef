@@ -96,7 +96,7 @@ puts "Cookbooks path : #{cookbooks.inspect}"
 puts "Roles path : #{roles.inspect}"
 puts "********************************************************************"
 
-log_level :info
+log_level (ENV['CHEF_LOG_LEVEL'] || 'info').to_sym
 log_location STDOUT
 json_attribs json_file.path
 cookbook_path cookbooks
