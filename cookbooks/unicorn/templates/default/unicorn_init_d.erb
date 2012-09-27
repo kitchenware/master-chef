@@ -26,7 +26,7 @@ test -f "$CONFIG_FILE" || exit 0
 <%= @code_for_initd %>
 
 export HOME=`cat /etc/passwd | grep $USER | awk -F: '{print $6}'`
-CMD="cd $APP_DIRECTORY && export PATH=\"$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH\" && bundle exec $UNICORN_CMD -E production -D -c $CONFIG_FILE"
+CMD="cd $APP_DIRECTORY && export HOME=$HOME && export PATH=\"$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH\" && bundle exec $UNICORN_CMD -E production -D -c $CONFIG_FILE"
 
 set -e
 
