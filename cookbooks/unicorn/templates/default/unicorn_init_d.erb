@@ -25,7 +25,6 @@ test -f "$CONFIG_FILE" || exit 0
 
 <%= @code_for_initd %>
 
-cd $TMPDIR
 USER_HOME=`cat /etc/passwd | grep $USER | awk -F: '{print $6}'`
 CMD="cd $APP_DIRECTORY && export HOME=$USER_HOME && export PATH=\"$USER_HOME/.rbenv/bin:$USER_HOME/.rbenv/shims:$PATH\" && bundle exec $UNICORN_CMD -E production -D -c $CONFIG_FILE"
 
@@ -46,7 +45,7 @@ kill_unicorn() {
 case "$1" in
    start)
 	echo -n "Starting $NAME: "
-	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$CMD" || exit 1
+	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -d $USER_HOME -p $PID_FILE -- -c "$CMD" || exit 1
 	echo "$NAME."
 	;;
   stop)
