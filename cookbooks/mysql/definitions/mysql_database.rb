@@ -28,4 +28,14 @@ define :mysql_database, {
 
   end
 
+  if config[:mysql_wrapper]
+
+    file config[:mysql_wrapper][:file] do
+      content "#!/bin/sh -e\nmysql --user=#{config[:username]} --password=#{config[:password]} --host=#{config[:host]} #{config[:database]} $*"
+      mode 0700
+      owner config[:mysql_wrapper][:owner]
+    end
+
+  end
+
 end
