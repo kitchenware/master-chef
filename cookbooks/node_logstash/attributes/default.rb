@@ -13,7 +13,7 @@ default[:node_logstash] = {
 default[:kibana] = {
   :user => 'kibana',
   :git => 'git://github.com/rashidkpc/Kibana.git',
-  :version => '90a3e0f56c650844be6503c99f262e1d7ab1c262',
+  :version => 'aa964a564f956e836eb8343013ba47e1c972c73b',
   :directory => '/opt/kibana',
   :location => '/',
 }
