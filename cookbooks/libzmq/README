@@ -1,0 +1,4 @@
+To package jzmq, use ./configure --prefix=/opt/jzmq
+After install warp it :
+* Find dependencies : $HOME/.warp/common/find_dependencies.sh /opt/jzmq/
+* Warp $HOME/.warp/packager/warp_directory.sh /opt/jzmq/ absolute /opt/jzmq/ jzmq_6f28d8c0eb848580199b6c261ebf0cbe0e208161_`lsb_release -cs`_`arch`.warp <dependencies>
