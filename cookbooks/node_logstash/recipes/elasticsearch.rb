@@ -3,12 +3,29 @@ include_recipe "java"
 
 base_user node.elasticsearch.user
 
+optional_config = ""
+init_d_code = "ulimit -n 65000\n"
+
+if node.elasticsearch.transport_zmq.enable
+
+  include_recipe "libzmq::jzmq"
+
+  optional_config += <<-EOF
+zeromq.router.bind: #{node.elasticsearch.transport_zmq.listen}
+zeromq.workers.threads: 2
+zeromq.workers.bind: inproc://es_zeromq_workers
+EOF
+
+  init_d_code += "export export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{node.libzmq.jzmq.directory}/lib"
+
+end
+
 basic_init_d "elasticsearch" do
   daemon "#{node.elasticsearch.directory}/bin/elasticsearch"
   user node.elasticsearch.user
   directory_check node.elasticsearch.directory
   options "-f " + node.elasticsearch.options
-  code "ulimit -n 65000"
+  code init_d_code
 end
 
 execute_version "install elasticsearch" do
@@ -29,7 +46,17 @@ template "#{node.elasticsearch.directory}/config/elasticsearch.yml" do
   owner node.elasticsearch.user
   source "elasticsearch.yml.erb"
   mode 0644
-  variables :config => node.elasticsearch.to_hash
+  variables :config => node.elasticsearch.to_hash, :optional_config => optional_config
   notifies :restart, resources(:service => "elasticsearch")
 end
 
+if node.elasticsearch.transport_zmq.enable
+
+  execute_version "install transport zmq" do
+    command "cd #{node.elasticsearch.directory} && bin/plugin -install #{node.elasticsearch.transport_zmq.plugin_url} && rm plugins/transport-zeromq/jzmq-1.0.0.jar && ln -s /opt/jzmq/share/java/zmq.jar plugins/transport-zeromq/jzmq-1.0.0.jar"
+    file_storage "#{node.elasticsearch.directory}/.zmq_transport"
+    version node.elasticsearch.url + node.elasticsearch.transport_zmq.plugin_url
+    notifies :restart, resources(:service => "elasticsearch")
+  end
+
+end

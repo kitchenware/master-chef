@@ -17,7 +17,12 @@ default[:elasticsearch] = {
   :options => '',
   :host => '127.0.0.1',
   :http_port => 9200,
-  :tco_port => 9300,
+  :tcp_port => 9300,
+  :transport_zmq => {
+    :enable => true,
+    :listen => "tcp://127.0.0.1:9700",
+    :plugin_url => "bpaquet/transport-zeromq/0.0.4-SNAPSHOT",
+  }
 }
 
 default[:kibana] = {
