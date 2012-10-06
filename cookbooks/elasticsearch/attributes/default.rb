@@ -1,7 +1,7 @@
 
 default[:elasticsearch] = {
   :user => 'elastic',
-  :url => 'http://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.9.tar.gz',
+  :url => 'http://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.10.tar.gz',
   :directory => '/opt/elasticsearch',
   :options => '',
   :host => '127.0.0.1',
@@ -10,6 +10,6 @@ default[:elasticsearch] = {
   :transport_zmq => {
     :enable => true,
     :listen => "tcp://127.0.0.1:9700",
-    :url => "http://github.com/downloads/bpaquet/transport-zeromq/transport-zeromq-0.0.4-SNAPSHOT.zip",
+    :url => "http://github.com/downloads/bpaquet/transport-zeromq/transport-zeromq-0.0.4.1-SNAPSHOT.zip",
   }
 }

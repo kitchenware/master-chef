@@ -11,9 +11,7 @@ if node.elasticsearch.transport_zmq.enable
   include_recipe "libzmq::jzmq"
 
   optional_config += <<-EOF
-zeromq.router.bind: #{node.elasticsearch.transport_zmq.listen}
-zeromq.workers.threads: 2
-zeromq.workers.bind: inproc://es_zeromq_workers
+zeromq.bind: #{node.elasticsearch.transport_zmq.listen}
 EOF
 
   init_d_code += "export export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{node.libzmq.jzmq.directory}/lib"
@@ -53,7 +51,7 @@ end
 if node.elasticsearch.transport_zmq.enable
 
   execute_version "install transport zmq" do
-    command "cd #{node.elasticsearch.directory} && curl --location #{node.elasticsearch.transport_zmq.url} -o /tmp/plugin_file.zip && mkdir -p plugins/transport-zeromq && cd plugins/transport-zeromq && unzip /tmp/plugin_file.zip && rm jzmq-1.0.0.jar && ln -s /opt/jzmq/share/java/zmq.jar jzmq-1.0.0.jar"
+    command "cd #{node.elasticsearch.directory} && curl --location #{node.elasticsearch.transport_zmq.url} -o /tmp/plugin_file.zip && rm -rf plugins/transport-zeromq &&  mkdir -p plugins/transport-zeromq && cd plugins/transport-zeromq && unzip /tmp/plugin_file.zip && rm jzmq-1.0.0.jar && ln -s /opt/jzmq/share/java/zmq.jar jzmq-1.0.0.jar"
     file_storage "#{node.elasticsearch.directory}/.zmq_transport"
     version node.elasticsearch.url + node.elasticsearch.transport_zmq.url
     notifies :restart, resources(:service => "elasticsearch")
