@@ -29,6 +29,7 @@ end
 execute_version "install elasticsearch" do
   command(
     "cd /tmp && " +
+    "([ ! -x /etc/init.d/elasticsearch ] || /etc/init.d/elasticsearch stop) && " +
     "rm -rf #{node.elasticsearch.directory} && " +
     "curl --location #{node.elasticsearch.url} -o #{File.basename(node.elasticsearch.url)} && " +
     "tar xvzf #{File.basename(node.elasticsearch.url)} && " +
