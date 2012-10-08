@@ -4,7 +4,7 @@ default[:node_logstash] = {
   :directory => '/opt/logstash',
   :config_directory => '/etc/logstash.d',
   :git => 'git://github.com/bpaquet/node-logstash.git',
-  :version => '332ebfd60803ac56c23ba9afe9b191fca70f0b04',
+  :version => '86900175577237176598d9451d4433c32c8c4b44',
   :node_version => '0.8.7',
   :log_level => 'debug',
   :patterns_directories => [],
@@ -13,7 +13,7 @@ default[:node_logstash] = {
 default[:kibana] = {
   :user => 'kibana',
   :git => 'git://github.com/rashidkpc/Kibana.git',
-  :version => 'aa964a564f956e836eb8343013ba47e1c972c73b',
+  :version => '0ae15cf849de3c42982f409903a40d1648918926',
   :directory => '/opt/kibana',
   :location => '/',
 }
