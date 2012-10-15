@@ -95,6 +95,7 @@ end
 template "#{node.graphite.directory}/conf/storage-aggregation.conf" do
   source "storage-aggregation.conf.erb"
   mode 0644
+  variables :default_xFilesFactor => node.graphite.xFilesFactor
   notifies :restart, resources(:service => "carbon")
 end
 

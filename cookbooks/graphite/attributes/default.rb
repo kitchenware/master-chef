@@ -20,6 +20,8 @@ default[:graphite][:storages] = {
   }
 }
 
+default[:graphite][:xFilesFactor] = 0.5
+
 default[:graphite][:timezone] = "Europe/Paris"
 
 default[:graphite][:bucky] = {
