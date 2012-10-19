@@ -11,7 +11,6 @@ unicorn_app 'kibana' do
   user node.kibana.user
   location node.kibana.location
   app_directory node.kibana.directory
-  code_for_initd 'unset http_proxy'
 end
 
 git_clone "#{node.kibana.directory}/current" do
