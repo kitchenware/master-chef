@@ -3,10 +3,6 @@ package "libicu44"
 
 package "redis-server"
 
-include_recipe "mysql"
-
-mysql_database "gitlab:database"
-
 include_recipe "rails"
 
 unicorn_rails_app "gitlab" do
@@ -21,6 +17,10 @@ group "git" do
   members [node.gitlab.gitlab.user]
   append true
 end
+
+include_recipe "mysql"
+
+mysql_database "gitlab:database"
 
 template "#{node.gitlab.gitlab.path}/shared/resque.sh" do
   source "resque.sh.erb"
@@ -47,7 +47,7 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
   owner node.gitlab.gitlab.user
   source "gitlab.yml.erb"
   variables({
-    :repositories => "#{get_home node.gitlab.gitolite.user}/repositories",
+    :repositories => node.gitlab.gitolite.repositories,
     :hooks => "#{get_home node.gitlab.gitolite.user}/.gitolite/hooks",
     :hostname => node.gitlab.hostname,
     :https => node.gitlab.https,
@@ -85,7 +85,12 @@ end
 
 execute_version "move repositories" do
   user "root"
-  command "mv #{get_home node.gitlab.gitolite.user}/repositories #{node.gitlab.gitolite.repositories} && ln -s #{node.gitlab.gitolite.repositories} #{get_home node.gitlab.gitolite.user}/repositories"
+  command <<-EOF
+mv #{get_home node.gitlab.gitolite.user}/repositories #{node.gitlab.gitolite.repositories} &&
+ln -s #{node.gitlab.gitolite.repositories} #{get_home node.gitlab.gitolite.user}/repositories &&
+chmod -R 770 #{node.gitlab.gitolite.repositories} &&
+chown -R #{node.gitlab.gitolite.user}:#{node.gitlab.gitolite.user} #{node.gitlab.gitolite.repositories}
+EOF
   file_storage "#{node.gitlab.gitolite.repositories}/.installed"
 end
 

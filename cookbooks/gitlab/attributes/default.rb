@@ -13,7 +13,7 @@ default[:gitlab][:https] = true
 
 default[:gitlab][:gitlab] = {
   :url => "git://github.com/gitlabhq/gitlabhq.git",
-  :reference => "stable",
+  :reference => "b2df61d85ab295a9ba4585f667537a9afc3efc6a",
   :path => "/opt/gitlab",
   :user => "gitlab",
 }
@@ -23,4 +23,7 @@ default[:gitlab][:database] = {
   :database => "gitlab",
   :username => "gitlab",
   :adapter => "mysql2",
+  :mysql_wrapper => {
+    :file => default[:gitlab][:gitlab][:path] + "/shared/mysql.sh",
+  }
 }
