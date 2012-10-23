@@ -16,6 +16,12 @@ unicorn_rails_app "gitlab" do
   mysql_database "gitlab:database"
 end
 
+group "git" do
+  action :manage
+  members [node.gitlab.gitlab.user]
+  append true
+end
+
 template "#{node.gitlab.gitlab.path}/shared/resque.sh" do
   source "resque.sh.erb"
   mode 0755
