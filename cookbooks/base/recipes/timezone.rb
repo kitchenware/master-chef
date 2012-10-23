@@ -5,7 +5,7 @@ if node.timezone =~ /^([^\/]+)\/([^\/]+)$/
 
   target = "/usr/share/zoneinfo/#{zone}/#{city}"
 
-  raise "No locatime file found for #{node.timezone}" unless File.exist? target
+  raise "No locatime file found for #{zone} : #{city}" unless File.exist? target
 
   link "/etc/localtime" do
     to target
