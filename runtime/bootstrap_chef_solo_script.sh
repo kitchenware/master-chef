@@ -18,4 +18,4 @@ ssh $user@$server sudo mv /tmp/rbenv_sudo_chef.sh /etc/chef/rbenv_sudo_chef.sh
 scp ${current_folder}/default.json $user@$server:/tmp/default.json
 ssh $user@$server sudo mv /tmp/default.json /etc/chef/local.json
 ssh $user@$server sudo chmod +x /etc/chef/rbenv_sudo_chef.sh
-ssh $user@$server MASTER_CHEF_CONFIG=/etc/chef/local.json /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb
+ssh $user@$server $PROXY MASTER_CHEF_CONFIG=/etc/chef/local.json /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb
