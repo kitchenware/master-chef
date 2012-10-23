@@ -9,6 +9,24 @@ define :nginx_vhost, {
   nginx_listen += "server_name #{config[:virtual_host]};\n" if config[:virtual_host]
   basic_auth = config[:basic_auth]
 
+  ssl = config[:ssl]
+
+  if ssl
+    nginx_listen += "ssl on;\n";
+    nginx_listen += "ssl_certificate /etc/nginx/#{vhost_sym}.crt;\n"
+    nginx_listen += "ssl_certificate_key /etc/nginx/#{vhost_sym}.key;\n"
+
+    %w{key crt}.each do |ext|
+      template "/etc/nginx/#{vhost_sym}.#{ext}" do
+        cookbook ssl[:cookbook]
+        source ssl[ext.to_sym]
+        mode 0600
+        owner "www-data"
+      end
+    end
+
+  end
+
   if basic_auth
     nginx_listen += "\n"
     nginx_listen += "auth_basic \"#{basic_auth[:realm]}\";\n"
