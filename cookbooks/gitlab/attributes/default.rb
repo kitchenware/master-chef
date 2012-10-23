@@ -9,7 +9,8 @@ default[:gitlab][:gitolite] = {
 
 default[:gitlab][:location] = "/"
 default[:gitlab][:hostname] = %x{hostname}.strip
-default[:gitlab][:https] = true
+default[:gitlab][:https] = false
+default[:gitlab][:port] = 80
 
 default[:gitlab][:gitlab] = {
   :url => "git://github.com/gitlabhq/gitlabhq.git",

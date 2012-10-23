@@ -50,6 +50,7 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
     :repositories => node.gitlab.gitolite.repositories,
     :hooks => "#{get_home node.gitlab.gitolite.user}/.gitolite/hooks",
     :hostname => node.gitlab.hostname,
+    :port => node.gitlab.port,
     :https => node.gitlab.https,
   })
   notifies :restart, resources(:service => "gitlab")
