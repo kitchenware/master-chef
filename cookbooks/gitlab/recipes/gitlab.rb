@@ -107,7 +107,7 @@ cp_command = deployed_files.map{|f| "cp #{node.gitlab.gitlab.path}/shared/files/
 ruby_rbenv_command "initialize gitlab" do
   user node.gitlab.gitlab.user
   directory "#{node.gitlab.gitlab.path}/current"
-  code "rm -f .warped && #{cp_command} && rbenv warp install && RAILS_ENV=production rake db:migrate gitlab:app:setup"
+  code "rm -f .warped && #{cp_command} && rbenv warp install && rm -rf log && ln -s #{node.gitlab.gitlab.path}/shared/log . && RAILS_ENV=production rake db:migrate gitlab:app:setup"
   file_storage "#{node.gitlab.gitlab.path}/current/.gitlab_ready"
   version node.gitlab.gitlab.reference
 end
