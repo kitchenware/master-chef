@@ -138,3 +138,13 @@ bash "update gitolite rc" do
   code "sed -i 's/0077/0007/g' #{get_home node.gitlab.gitolite.user}/.gitolite.rc && sed -i \"s/\\(GIT_CONFIG_KEYS\\s*=>*\\s*\\).\\{2\\}/\\1\\\"\\.\\*\\\"/g\" #{get_home node.gitlab.gitolite.user}/.gitolite.rc"
   not_if "grep GIT_CONFIG_KEYS #{get_home node.gitlab.gitolite.user}/.gitolite.rc | grep '\\.\\*'"
 end
+
+# charlock_holmes does not support moving after install
+# following commands allow to user system magic file
+file "#{get_home node.gitlab.gitlab.user}/.magic" do
+  owner node.gitlab.gitlab.user
+end
+
+link "#{get_home node.gitlab.gitlab.user}/.magic.mgc" do
+  to "/usr/share/file/magic.mgc"
+end
