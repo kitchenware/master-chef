@@ -11,6 +11,7 @@ default[:gitlab][:location] = "/"
 default[:gitlab][:hostname] = %x{hostname}.strip
 default[:gitlab][:https] = false
 default[:gitlab][:port] = 80
+default[:gitlab][:mail_from] = "notify@localhost"
 
 default[:gitlab][:gitlab] = {
   :url => "git://github.com/gitlabhq/gitlabhq.git",
