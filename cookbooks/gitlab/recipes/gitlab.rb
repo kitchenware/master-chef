@@ -119,12 +119,19 @@ end
 
 cp_command = deployed_files.map{|f| "cp #{node.gitlab.gitlab.path}/shared/files/#{f} #{node.gitlab.gitlab.path}/current/#{f}"}.join(' && ')
 
+ruby_rbenv_command "gitlab db:migrate" do
+  user node.gitlab.gitlab.user
+  directory "#{node.gitlab.gitlab.path}/current"
+  code "rm -f .warped && #{cp_command} && rbenv warp install && rm -rf log && ln -s #{node.gitlab.gitlab.path}/shared/log . && RAILS_ENV=production rake db:migrate"
+  version node.gitlab.gitlab.reference
+end
+
 ruby_rbenv_command "initialize gitlab" do
   user node.gitlab.gitlab.user
   directory "#{node.gitlab.gitlab.path}/current"
-  code "rm -f .warped && #{cp_command} && rbenv warp install && rm -rf log && ln -s #{node.gitlab.gitlab.path}/shared/log . && RAILS_ENV=production rake db:migrate gitlab:app:setup"
-  file_storage "#{node.gitlab.gitlab.path}/current/.gitlab_ready"
-  version node.gitlab.gitlab.reference
+  code "RAILS_ENV=production rake gitlab:app:setup"
+  file_storage "#{node.gitlab.gitlab.path}/shared/.initialized"
+  version 1
 end
 
 execute_version "install gitlab hook" do

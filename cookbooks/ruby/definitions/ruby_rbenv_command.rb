@@ -5,6 +5,7 @@ define :ruby_rbenv_command, {
   :code => nil,
   :file_check => nil,
   :version => nil,
+  :file_storage => nil,
 } do
   ruby_rbenv_command_params = params
 
@@ -24,10 +25,12 @@ define :ruby_rbenv_command, {
     cmd << "touch #{ruby_rbenv_command_params[:file_check]}"
   end
 
+  storage = ruby_rbenv_command_params[:file_storage] || "#{ruby_rbenv_command_params[:directory]}/.rbenv_#{ruby_rbenv_command_params[:name].gsub(/ /, '_')}"
+
   execute_version "rbenv command : #{ruby_rbenv_command_params[:name]}" do
     user ruby_rbenv_command_params[:user]
     command cmd.join(" && ")
-    file_storage "#{ruby_rbenv_command_params[:directory]}/.rbenv_#{ruby_rbenv_command_params[:name].gsub(/ /, '_')}"
+    file_storage storage
   end
 
 end
