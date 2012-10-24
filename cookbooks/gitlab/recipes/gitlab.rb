@@ -1,5 +1,13 @@
 
-package "libicu44"
+if node.platform == "debian"
+  package "libicu44"
+elsif node.platform == "ubuntu" && node.lsb.codename == "lucid"
+  package "libicu42"
+elsif node.platform == "ubuntu" && node.lsb.codename == "precise"
+  package "libicu48"
+else
+  raise "libicu version is not defined for this distro"
+end
 
 package "redis-server"
 
@@ -125,9 +133,8 @@ execute_version "install gitlab hook" do
   version node.gitlab.gitlab.reference
 end
 
-execute_version "update gitolite rc" do
+bash "update gitolite rc" do
   user node.gitlab.gitolite.user
-  command "sed -i 's/0077/0007/g' #{get_home node.gitlab.gitolite.user}/.gitolite.rc && sed -i \"s/\\(GIT_CONFIG_KEYS\\s*=>*\\s*\\).\\{2\\}/\\1\\\"\\.\\*\\\"/g\" #{get_home node.gitlab.gitolite.user}/.gitolite.rc"
-  file_storage "#{get_home node.gitlab.gitolite.user}/.gitolite_rc_updated"
-  version node.gitlab.gitlab.reference
+  code "sed -i 's/0077/0007/g' #{get_home node.gitlab.gitolite.user}/.gitolite.rc && sed -i \"s/\\(GIT_CONFIG_KEYS\\s*=>*\\s*\\).\\{2\\}/\\1\\\"\\.\\*\\\"/g\" #{get_home node.gitlab.gitolite.user}/.gitolite.rc"
+  not_if "grep GIT_CONFIG_KEYS #{get_home node.gitlab.gitolite.user}/.gitolite.rc | grep '\\.\\*'"
 end
