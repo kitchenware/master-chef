@@ -14,7 +14,7 @@ default[:gitlab][:port] = 80
 
 default[:gitlab][:gitlab] = {
   :url => "git://github.com/gitlabhq/gitlabhq.git",
-  :reference => "b2df61d85ab295a9ba4585f667537a9afc3efc6a",
+  :reference => "v3.0.3",
   :path => "/opt/gitlab",
   :user => "gitlab",
 }
