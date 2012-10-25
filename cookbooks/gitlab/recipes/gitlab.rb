@@ -147,6 +147,15 @@ bash "update gitolite rc" do
   not_if "grep GIT_CONFIG_KEYS #{get_home node.gitlab.gitolite.user}/.gitolite.rc | grep '\\.\\*'"
 end
 
+file "#{get_home node.gitlab.gitlab.user}/.gitconfig" do
+  owner node.gitlab.gitlab.user
+  content <<-EOF
+[user]
+  name = Gitlab
+  email = #{node.gitlab.mail_from}
+  EOF
+end
+
 # charlock_holmes does not support moving after install
 # following commands allow to user system magic file
 file "#{get_home node.gitlab.gitlab.user}/.magic" do
