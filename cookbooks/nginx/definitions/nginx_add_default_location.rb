@@ -7,7 +7,7 @@ define :nginx_add_default_location, {
 
   raise "Please specify content with nginx_add_default_location" unless nginx_add_default_location_params[:content]
 
-  node.nginx.default_vhost.enabled = true
-  node.nginx.default_vhost.locations << nginx_add_default_location_params
+  node.set[:nginx][:default_vhost][:enabled] = true
+  node.set[:nginx][:default_vhost][:locations] = node.nginx.default_vhost.locations + [nginx_add_default_location_params]
 
 end
