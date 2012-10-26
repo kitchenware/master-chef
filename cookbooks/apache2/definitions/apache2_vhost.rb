@@ -10,8 +10,8 @@ define :apache2_vhost, {
   apache2_listen = config[:listen]
 
   if apache2_listen =~ /^.*:\d+/
-    node.apache2.ports = [] unless node.apache2[:ports]
-    node.apache2.ports << apache2_listen
+    node.set[:apache2][:ports] = [] unless node.apache2[:ports]
+    node.set[:apache2][:ports] = node.set[:apache2][:ports] + [apache2_listen]
   end
 
   basic_auth = config[:basic_auth]
