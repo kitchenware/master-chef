@@ -56,3 +56,4 @@ ruby_rbenv_command "initialize redmine" do
   file_storage "#{app_directory}/current/.redmine_ready"
   version node.redmine.version
 end
+
