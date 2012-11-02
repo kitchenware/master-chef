@@ -26,6 +26,8 @@ basic_init_d "elasticsearch" do
   code init_d_code
 end
 
+Chef::Config.exception_handlers << ServiceErrorHandler.new("elasticsearch", ".*elasticsearch.*")
+
 execute_version "install elasticsearch" do
   command(
     "cd /tmp && " +
