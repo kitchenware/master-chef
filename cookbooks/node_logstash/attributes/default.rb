@@ -16,4 +16,12 @@ default[:kibana] = {
   :version => 'be41ddc6e10c9ce6835c293246f6b0969305754f',
   :directory => '/opt/kibana',
   :location => '/',
+  :config => {
+    :result_per_page => 100,
+    :timezone => 'user',
+    :time_format => 'mm/dd HH:MM:ss',
+    :analyze_limit => 10000,
+    :default_operator => 'OR',
+    :elasticsearch => 'localhost:9200',
+  }
 }

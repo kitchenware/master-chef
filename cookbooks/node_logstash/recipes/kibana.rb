@@ -13,6 +13,8 @@ unicorn_app 'kibana' do
   app_directory node.kibana.directory
 end
 
+Chef::Config.exception_handlers << ServiceErrorHandler.new("kibana", ".*kibana.*")
+
 git_clone "#{node.kibana.directory}/current" do
   user node.kibana.user
   reference node.kibana.version
@@ -40,4 +42,14 @@ ruby_rbenv_command "initialize kibana" do
   directory "#{node.kibana.directory}/current"
   code "rm -f .warped && #{cp_command} && rbenv warp install"
   version node.kibana.version
+end
+
+elasticsearch_servers = node.kibana.config.elasticsearch
+elasticsearch_servers = [elasticsearch_servers] if elasticsearch_servers.is_a? String
+
+template "#{node.kibana.directory}/current/KibanaConfig.rb" do
+  owner node.kibana.user
+  source "kibana/KibanaConfig.rb.erb"
+  variables({:elasticsearch_servers => elasticsearch_servers}.merge(node.kibana.config))
+  notifies :restart, resources(:service => "kibana")
 end
