@@ -1,0 +1,5 @@
+[program:resque] 
+command = sudo -u <%= @user %> <%= @command %>
+numprocs = <%= @numprocs %>
+autostart = <%= @autostart %>
+process_name = resque%(process_num)s
