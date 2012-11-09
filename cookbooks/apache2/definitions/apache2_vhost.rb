@@ -1,7 +1,6 @@
 
 define :apache2_vhost, {
   :options => {},
-  :cookbook => nil
 } do
   apache2_vhost_params = params
 
@@ -69,8 +68,8 @@ define :apache2_vhost, {
   end
 
   template "#{node.apache2.server_root}/sites-enabled/#{vhost_sym.to_s}.conf" do
-    cookbook apache2_vhost_params[:cookbook] if apache2_vhost_params[:cookbook]
-    source "#{vhost_sym.to_s}.conf.erb"
+    cookbook apache2_vhost_params[:options][:cookbook] if apache2_vhost_params[:options][:cookbook]
+    source apache2_vhost_params[:options][:source] || "#{vhost_sym.to_s}.conf.erb"
     mode 0644
     variables({
       :listen => apache2_listen,
