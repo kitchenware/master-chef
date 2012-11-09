@@ -26,6 +26,6 @@ define :resque_worker, {
 			notifies :restart, resources(:service => "supervisor")
 		end
 
-
-
+		"supervisor"
+		
 	end

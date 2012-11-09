@@ -33,10 +33,10 @@ mysql_database "gitlab:database"
 template "#{node.gitlab.gitlab.path}/shared/resque.sh" do
    source "resque.sh.erb"
    mode 0755
-   variables :app_directory => "#{node.gitlab.gitlab.path}/current", :pid_file => '/var/run/gitlab-resque.pid'
+   variables :app_directory => "#{node.gitlab.gitlab.path}/current"
 end
 
-resque_worker "resque_with_god" do
+worker_service_name = resque_worker "gitlab_resque" do
   command "#{node.gitlab.gitlab.path}/shared/resque.sh"
   nb_workers 3
   user node.gitlab.gitlab.user  
@@ -47,6 +47,7 @@ git_clone "#{node.gitlab.gitlab.path}/current" do
   reference node.gitlab.gitlab.reference
   user node.gitlab.gitlab.user
   notifies :restart, resources(:service => "gitlab")
+  notifies :restart, resources(:service => worker_service_name)
 end
 
 template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
@@ -61,6 +62,7 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
     :mail_from => node.gitlab.mail_from,
   })
   notifies :restart, resources(:service => "gitlab")
+  notifies :restart, resources(:service => worker_service_name)
 end
 
 link "#{node.gitlab.gitlab.path}/current/config/database.yml" do
