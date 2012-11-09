@@ -9,7 +9,7 @@ else
   raise "libicu version is not defined for this distro"
 end
 
-package "redis-server"
+include_recipe "redis"
 
 include_recipe "rails"
 
@@ -31,16 +31,15 @@ include_recipe "mysql"
 mysql_database "gitlab:database"
 
 template "#{node.gitlab.gitlab.path}/shared/resque.sh" do
-  source "resque.sh.erb"
-  mode 0755
-  variables :app_directory => "#{node.gitlab.gitlab.path}/current", :pid_file => '/var/run/gitlab-resque.pid'
+   source "resque.sh.erb"
+   mode 0755
+   variables :app_directory => "#{node.gitlab.gitlab.path}/current", :pid_file => '/var/run/gitlab-resque.pid'
 end
 
-basic_init_d "gitlab-resque" do
-  daemon "#{node.gitlab.gitlab.path}/shared/resque.sh"
-  user node.gitlab.gitlab.user
-  app_directory node.gitlab.gitlab.path
-  directory_check "#{node.gitlab.gitlab.path}/current"
+resque_worker "resque_with_god" do
+  command "#{node.gitlab.gitlab.path}/shared/resque.sh"
+  nb_workers 3
+  user node.gitlab.gitlab.user  
 end
 
 git_clone "#{node.gitlab.gitlab.path}/current" do
@@ -48,7 +47,6 @@ git_clone "#{node.gitlab.gitlab.path}/current" do
   reference node.gitlab.gitlab.reference
   user node.gitlab.gitlab.user
   notifies :restart, resources(:service => "gitlab")
-  notifies :restart, resources(:service => "gitlab-resque")
 end
 
 template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
@@ -63,7 +61,6 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
     :mail_from => node.gitlab.mail_from,
   })
   notifies :restart, resources(:service => "gitlab")
-  notifies :restart, resources(:service => "gitlab-resque")
 end
 
 link "#{node.gitlab.gitlab.path}/current/config/database.yml" do
