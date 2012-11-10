@@ -9,8 +9,6 @@ else
   raise "libicu version is not defined for this distro"
 end
 
-include_recipe "redis"
-
 include_recipe "rails"
 
 unicorn_rails_app "gitlab" do
@@ -18,6 +16,10 @@ unicorn_rails_app "gitlab" do
   app_directory node.gitlab.gitlab.path
   location node.gitlab.location
   mysql_database "gitlab:database"
+  resque_workers({
+    :queues => 'post_receive,mailer,system_hook',
+    :workers => 3,
+  })
 end
 
 group "git" do
@@ -30,24 +32,12 @@ include_recipe "mysql"
 
 mysql_database "gitlab:database"
 
-template "#{node.gitlab.gitlab.path}/shared/resque.sh" do
-   source "resque.sh.erb"
-   mode 0755
-   variables :app_directory => "#{node.gitlab.gitlab.path}/current"
-end
-
-worker_service_name = resque_worker "gitlab_resque" do
-  command "#{node.gitlab.gitlab.path}/shared/resque.sh"
-  nb_workers 3
-  user node.gitlab.gitlab.user  
-end
-
 git_clone "#{node.gitlab.gitlab.path}/current" do
   repository node.gitlab.gitlab.url
   reference node.gitlab.gitlab.reference
   user node.gitlab.gitlab.user
   notifies :restart, resources(:service => "gitlab")
-  notifies :restart, resources(:service => worker_service_name)
+  notifies :restart, resources(:service => node.rails.resque_service_name)
 end
 
 template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
@@ -62,7 +52,7 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
     :mail_from => node.gitlab.mail_from,
   })
   notifies :restart, resources(:service => "gitlab")
-  notifies :restart, resources(:service => worker_service_name)
+  notifies :restart, resources(:service => node.rails.resque_service_name)
 end
 
 link "#{node.gitlab.gitlab.path}/current/config/database.yml" do

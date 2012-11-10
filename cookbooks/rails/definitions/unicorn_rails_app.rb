@@ -7,6 +7,7 @@ define :unicorn_rails_app, {
   :location => '/',
   :code_for_initd => "",
   :configure_nginx => true,
+  :resque_workers => nil,
 } do
   unicorn_rails_app_params = params
 
@@ -51,6 +52,17 @@ define :unicorn_rails_app, {
       source "database.yml.erb"
       cookbook "rails"
       variables :database => mysql_config(unicorn_rails_app_params[:mysql_database]), :database_adapter => unicorn_rails_app_params[:mysql_adapter]
+    end
+
+  end
+
+  if unicorn_rails_app_params[:resque_workers]
+
+    resque_worker "#{unicorn_rails_app_params[:name]}_resque" do
+      user unicorn_rails_app_params[:user]
+      workers unicorn_rails_app_params[:resque_workers][:workers]
+      queues unicorn_rails_app_params[:resque_workers][:queues]
+      app_directory rails_app_directory
     end
 
   end

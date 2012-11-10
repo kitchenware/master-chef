@@ -1,8 +1,0 @@
-#!/bin/sh -e
-
-cd <%= @app_directory %>
-
-export PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH
-
-QUEUE=post_receive,mailer,system_hook RAILS_ENV=production exec bundle exec rake environment resque:work
-

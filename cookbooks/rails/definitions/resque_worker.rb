@@ -1,31 +1,33 @@
 define :resque_worker, {
-	:command => nil,
-	:nb_workers => nil,
+	:workers => nil,
 	:user => nil,
-	:autostart => true,
+	:app_directory => nil,
+	:queues => nil,
 	} do
-		resque_worker_params = params
-		
-		package "supervisor"
 
-		service "supervisor" do
-			supports :status => true
-			action auto_compute_action
-		end
+	resque_worker_params = params
 
-		template "/etc/supervisor/conf.d/resque.conf" do
-			mode 0644
-			cookbook "rails"
-			source "resque.conf.erb"
-			variables({
-				:command => resque_worker_params[:command],
-				:numprocs => resque_worker_params[:nb_workers],
-				:user => resque_worker_params[:user],
-				:autostart => resque_worker_params[:autostart],
-				})
-			notifies :restart, resources(:service => "supervisor")
-		end
+	[:workers, :user, :app_directory, :queues].each do |s|
+    raise "Please specify #{s} with resque_worker" unless resque_worker_params[s]
+  end
 
-		"supervisor"
-		
-	end
+	include_recipe "supervisor"
+
+  include_recipe "redis"
+
+  supervisor_worker resque_worker_params[:name] do
+    command "#{resque_worker_params[:app_directory]}/shared/resque.sh"
+    workers resque_worker_params[:workers]
+    user resque_worker_params[:user]
+  end
+
+	template "#{resque_worker_params[:app_directory]}/shared/resque.sh" do
+    cookbook "rails"
+    source "resque.sh.erb"
+    mode 0755
+    owner resque_worker_params[:user]
+    variables :app_directory => "#{resque_worker_params[:app_directory]}/current", :queues => resque_worker_params[:queues]
+    notifies :restart, resources(:service => "supervisor")
+  end
+
+end
