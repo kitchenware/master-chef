@@ -6,6 +6,7 @@ define :ruby_rbenv_command, {
   :file_check => nil,
   :version => nil,
   :file_storage => nil,
+  :notifies => nil,
 } do
   ruby_rbenv_command_params = params
 
@@ -31,6 +32,7 @@ define :ruby_rbenv_command, {
     user ruby_rbenv_command_params[:user]
     command cmd.join(" && ")
     file_storage storage
+    notifies ruby_rbenv_command_params[:notifies][0], ruby_rbenv_command_params[:notifies][1] if ruby_rbenv_command_params[:notifies]
   end
 
 end

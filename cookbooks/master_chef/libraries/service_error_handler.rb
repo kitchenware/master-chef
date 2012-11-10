@@ -14,11 +14,15 @@ class ServiceErrorHandler < Chef::Handler
     all_resources.each do |r|
       notifs = r.delayed_notifications + r.immediate_notifications
       notifs.each do |n|
-        if n.resource.name == @service_name && [:restart, :reload, :delayed_restart].include?(n.action) && r.action != :nothing
+        if n.resource.name == @service_name && [:restart, :reload, :delayed_restart].include?(n.action)
           action = r.action.to_sym
-          if action == :create
+          unless action == :nothing
             puts "******** Find resource to deploy : #{r.name}, action #{action}"
-            r.run_action action rescue puts "Unable to deploy #{r.name}"
+            begin
+              r.run_action action
+            rescue Exception => e
+              puts "Unable to run resource #{r.name} : ", e
+            end
           end
         end
       end
