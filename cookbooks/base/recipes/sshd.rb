@@ -44,7 +44,7 @@ unless node[:no_sshd_config]
     not_if "egrep 'UseDNS #{use_dns_value}' /etc/ssh/sshd_config"
   end
 
-  bash "Configure sshd - client alive interval " do
+  bash "Configure sshd - client alive interval" do
     user "root"
     code <<-EOF
     sed -i -e '/^ClientAliveInterval.*/d' /etc/ssh/sshd_config
