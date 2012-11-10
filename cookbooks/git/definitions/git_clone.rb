@@ -29,7 +29,7 @@ define :git_clone, {
 
   bash "update git clone of #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
-    code "cd #{git_clone_params[:name]} && git reset --hard -q && git clean #{clean_options} && git checkout master && git pull && git checkout #{git_clone_params[:reference]}"
+    code "cd #{git_clone_params[:name]} && git reset --hard -q && git clean #{clean_options} && git checkout HEAD && git pull && git checkout #{git_clone_params[:reference]}"
     not_if "cd #{git_clone_params[:name]} && git log -n1 --decorate | head -n 1 | grep #{git_clone_params[:reference]}"
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
