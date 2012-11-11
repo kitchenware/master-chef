@@ -3,3 +3,5 @@ command = sudo -H -u <%= @user %> <%= @command %>
 numprocs = <%= @numprocs %>
 autostart = <%= @autostart %>
 process_name = <%= @name %>_%(process_num)s
+stdout_logfile = <%= @log_dir %>/<%= @name %>_%(process_num)s_stdout.log
+stderr_logfile = <%= @log_dir %>/<%= @name %>_%(process_num)s_stderr.log

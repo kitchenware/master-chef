@@ -1,0 +1,1 @@
+default[:supervisor][:log_dir] = "/var/log/supervisor"

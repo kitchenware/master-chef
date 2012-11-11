@@ -18,8 +18,15 @@ define :supervisor_worker, {
       :user => supervisor_worker_params[:user],
       :autostart => supervisor_worker_params[:autostart],
       :name => supervisor_worker_params[:name],
+      :log_dir => node.supervisor.log_dir,
       })
     notifies :restart, resources(:service => "supervisor")
+  end
+
+  sudo_sudoers_file "supervisor_#{supervisor_worker_params[:name]}" do
+    content <<-EOF
+#{supervisor_worker_params[:user]} ALL = (root) NOPASSWD: /usr/bin/supervisorctl restart #{supervisor_worker_params[:name]}*
+EOF
   end
 
 end

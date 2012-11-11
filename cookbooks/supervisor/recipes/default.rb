@@ -1,10 +1,14 @@
 
+include_recipe "sudo"
+
 package "supervisor"
 
 service "supervisor" do
   supports :status => true
   action auto_compute_action
 end
+
+Chef::Config.exception_handlers << ServiceErrorHandler.new("supervisor", ".*supervisord.*")
 
 delayed_exec "Remove useless supervisor config" do
   block do
