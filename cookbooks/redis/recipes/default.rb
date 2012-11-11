@@ -5,14 +5,10 @@ service "redis-server" do
 	action [ :enable, :start ]
 end
 
-template "/etc/redis/redis.conf" do 
+template "/etc/redis/redis.conf" do
 	source "redis.conf.erb"
 	owner "redis"
-	variables(
-		:bind_address => node[:redis][:bind_address],
-		:port => node[:redis][:port],
-		:appendonly => node[:redis][:appendonly]
-		)	
+	variables node.redis
 	notifies :restart, resources(:service => "redis-server")
 end
 
