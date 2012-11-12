@@ -30,4 +30,13 @@ define :resque_worker, {
     notifies :restart, resources(:service => "supervisor")
   end
 
+
+  template "#{resque_worker_params[:app_directory]}/shared/resque_restart.sh" do
+    cookbook "rails"
+    source "resque_restart.sh.erb"
+    mode 0755
+    owner resque_worker_params[:user]
+    variables :name => resque_worker_params[:name]
+  end
+
 end
