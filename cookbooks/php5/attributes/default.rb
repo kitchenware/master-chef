@@ -1,4 +1,3 @@
-
 default[:php5][:php_ini] = {
   :max_execution_time => 30,
   :max_input_time => 60,
@@ -16,4 +15,10 @@ default[:php5][:php_ini] = {
   :safe_mode_gid => false,
   :open_basedir => [],
   :error_log => "/var/log/php/error.log",
+}
+
+default[:php5][:apc] = {
+  :listen => "127.0.0.1:2323",
+  :document_root => "/var/www/apc",
+  :apc_shm_size => 30,
 }
