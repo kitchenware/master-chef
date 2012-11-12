@@ -30,7 +30,10 @@ shift
 
 echo "$HOSTNAME" > /etc/hostname
 hostname $HOSTNAME
-./regen_ssh.sh
+
+if [ "$NO_REGEN_SSH" = "" ]; then
+  ./regen_ssh.sh
+fi
 
 cat <<EOF | sed -e "s/##IP##/$IP/g" | sed -e "s/##NETMASK##/$NETMASK/g" | sed -e "s/##GATEWAY##/$GATEWAY/g" > /etc/network/interfaces
 # This file describes the network interfaces available on your system
