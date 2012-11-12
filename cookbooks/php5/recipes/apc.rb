@@ -4,7 +4,7 @@ include_recipe "php5"
 
 package "php-apc"
 
-apache2_vhost "apc" do
+apache2_vhost "php5:apc" do
 	 options :document_root => "#{node.php5.apc.document_root}"  
 end
 
