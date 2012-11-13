@@ -17,8 +17,13 @@ default[:php5][:php_ini] = {
   :error_log => "/var/log/php/error.log",
 }
 
+
 default[:php5][:apc] = {
-  :listen => "127.0.0.1:2323",
-  :document_root => "/var/www/apc",
-  :apc_shm_size => 30,
+  :apc_shm_size => 30, 
 }
+
+default[:php5][:apc_vhost] = {
+  :listen => "127.0.0.1:2323",
+  :document_root => "/opt/apc",
+}
+

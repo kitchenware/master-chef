@@ -9,3 +9,21 @@ localhost:2323/apc.php which give apc stats
 localhost:2323/apc_clear_cache.php which allow to reset the cache content
 
 To proceed theses pages a curl is launched locally (with cap or handly)
+
+APC Require php5/apache2 activated so you should have a json like this 
+{
+  "repos": {
+    "git": [
+      "http://github.com/octo-technology/master-chef.git",
+      "git@other_git_server:other_git_repo.git"
+    ]
+  },
+  "run_list": [
+    "recipe[master_chef::chef_solo_scripts]",
+    "recipe[base::system]",
+    "recipe[php5::apache2]",
+    "recipe[php5::apc]"
+  ],
+  "node_config": {
+  }
+}
