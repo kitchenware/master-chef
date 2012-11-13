@@ -28,6 +28,9 @@ GATEWAY=$1
 check_not_empty $GATEWAY
 shift
 
+DNS=$1
+shift
+
 echo "$HOSTNAME" > /etc/hostname
 hostname $HOSTNAME
 
@@ -45,12 +48,15 @@ iface lo inet loopback
 
 # The primary network interface
 auto eth0
-#iface eth0 inet dhcp 
+#iface eth0 inet dhcp
 iface eth0 inet static
   address ##IP##
   netmask ##NETMASK##
   gateway ##GATEWAY##
-
 EOF
+
+if [ "$DNS " != "" ]; then
+  echo "  dns-nameservers $DNS" >> /etc/network/interfaces
+fi
 
 echo "Done."
