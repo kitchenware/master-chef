@@ -7,13 +7,10 @@ end
 template "/etc/php5/conf.d/apc.ini" do
   owner "root"
   mode 0644
-  if node['platform'] == 'debian'
-    variables :shm_size => "#{node.php5.apc.apc_shm_size}"
-  else
-    variables :shm_size => "#{node.php5.apc.apc_shm_size}M"
-  end
+  variables :config => node.php5.apc
   source "apc.ini.erb"
-  notifies :reload, resources(:service => "apache2")
+  notifies :reload, resources(:service => "apache2") if find_resources_by_name_pattern(/^apache2$/).size > 0
+  notifies :reload, resources(:service => "php5-fpm") if find_resources_by_name_pattern(/^php5-fpm$/).size > 0
 end
 
 directory "#{node.php5.apc_vhost.document_root}" do

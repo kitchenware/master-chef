@@ -19,7 +19,7 @@ default[:php5][:php_ini] = {
 
 
 default[:php5][:apc] = {
-  :apc_shm_size => 30, 
+  :shm_size => 30,
 }
 
 default[:php5][:apc_vhost] = {
