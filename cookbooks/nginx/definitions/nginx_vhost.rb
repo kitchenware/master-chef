@@ -27,12 +27,13 @@ define :nginx_vhost, {
 
   end
 
+  auth = ""
   if basic_auth
-    nginx_listen += "\n"
-    nginx_listen += "auth_basic \"#{basic_auth[:realm]}\";\n"
+    auth += "\n"
+    auth += "auth_basic \"#{basic_auth[:realm]}\";\n"
 
     if basic_auth[:file]
-      nginx_listen += "auth_basic_user_file /etc/nginx/#{basic_auth[:file]}.passwd;\n"
+      auth += "auth_basic_user_file /etc/nginx/#{basic_auth[:file]}.passwd;\n"
 
       template "/etc/nginx/#{basic_auth[:file]}.passwd" do
         cookbook basic_auth[:cookbook]
@@ -43,7 +44,7 @@ define :nginx_vhost, {
     end
 
     if basic_auth[:users]
-      nginx_listen += "auth_basic_user_file /etc/nginx/#{vhost_sym}.passwd;\n"
+      auth += "auth_basic_user_file /etc/nginx/#{vhost_sym}.passwd;\n"
 
       passwd = ""
       basic_auth[:users].each do |k, v|
@@ -63,7 +64,7 @@ define :nginx_vhost, {
   template "/etc/nginx/sites-enabled/#{vhost_sym.to_s}.conf" do
     source nginx_vhost_params[:options][:source] || "#{vhost_sym.to_s}.conf.erb"
     mode 0644
-    variables({:listen => nginx_listen, :config => config, :server_tokens => 'Off'}.merge(nginx_vhost_params[:options]))
+    variables({:listen => nginx_listen + auth, :listen_no_auth => nginx_listen, :config => config, :server_tokens => 'Off'}.merge(nginx_vhost_params[:options]))
     notifies :reload, resources(:service => "nginx")
   end
 
