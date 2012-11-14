@@ -18,11 +18,11 @@
 
 dc_eximconfig_configtype='satellite'
 dc_other_hostnames='<%= node.name %>.<%= node.exim4.domain%>'
-dc_local_interfaces='127.0.0.1'
+dc_local_interfaces='<%= node.exim4.interfaces.join(';') %>'
 dc_readhost='<%= node.name %>.<%= node.exim4.domain%>'
 dc_relay_domains=''
 dc_minimaldns='false'
-dc_relay_nets=''
+dc_relay_nets='<%= node.exim4.relay_nets.join(';') %>'
 dc_smarthost='<%= node.exim4.smarthost %>'
 CFILEMODE='644'
 dc_use_split_config='false'
