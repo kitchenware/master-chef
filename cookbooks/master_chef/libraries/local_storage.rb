@@ -31,6 +31,17 @@ module LocalStorage
     end
   end
 
+  def local_storage_store_memory key, value
+    current = node.set
+    keys = key.split(':').map{|s| s.to_sym}
+    keys.each do |s|
+      if s != keys.last
+        current = current[s]
+      end
+    end
+    current[keys.last] = value
+  end
+
   def extract_config_with_last key
     current = node
     keys = key.split(':').map{|s| s.to_sym}

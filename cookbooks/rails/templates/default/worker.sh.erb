@@ -4,5 +4,9 @@ cd <%= @app_directory %>
 
 export PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH
 
-QUEUE="<%= @queues %>" RAILS_ENV=production exec bundle exec rake environment resque:work
+<% @env.each do |k, v| %>
+export <%= k %>='<%= v %>'
+<% end %>
+
+exec <%= @command %>
 

@@ -15,12 +15,15 @@ define :mysql_database, {
 
     root_mysql_password = mysql_password "root"
 
+    suffix = ""
+    suffix = "@localhost" if node.mysql.bind_address == "127.0.0.1"
+
     bash "create database #{config[:database]}" do
       code <<-EOF
       (
-      echo "CREATE USER #{config[:username]}@localhost IDENTIFIED BY \\"#{config[:password]}\\";"
+      echo "CREATE USER #{config[:username]}#{suffix} IDENTIFIED BY \\"#{config[:password]}\\";"
       echo "CREATE DATABASE IF NOT EXISTS #{config[:database]};"
-      echo "GRANT ALL PRIVILEGES ON #{config[:database]} . * TO  #{config[:username]}@localhost;"
+      echo "GRANT ALL PRIVILEGES ON #{config[:database]} . * TO  #{config[:username]}#{suffix};"
       ) | mysql --user=root --password=#{root_mysql_password}
       EOF
       not_if "echo 'SHOW DATABASES' | mysql --user=root --password=#{root_mysql_password} | grep #{config[:database]}"
@@ -28,7 +31,7 @@ define :mysql_database, {
 
   end
 
-  if config[:mysql_wrapper]
+  if config[:mysql_wrapper] && ! find_resources_by_name(File.dirname(config[:mysql_wrapper][:file])).empty?
 
     file config[:mysql_wrapper][:file] do
       content "#!/bin/sh -e\nmysql --user=#{config[:username]} --password=#{config[:password]} --host=#{config[:host]} #{config[:database]} $*"

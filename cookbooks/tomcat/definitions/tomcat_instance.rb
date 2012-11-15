@@ -84,4 +84,6 @@ define :tomcat_instance, {
     end
   end
 
+  catalina_base
+
 end

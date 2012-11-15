@@ -24,8 +24,8 @@ default[:gitlab][:database] = {
   :host => "localhost",
   :database => "gitlab",
   :username => "gitlab",
-  :adapter => "mysql2",
   :mysql_wrapper => {
     :file => default[:gitlab][:gitlab][:path] + "/shared/mysql.sh",
+    :owner => "gitlab"
   }
 }

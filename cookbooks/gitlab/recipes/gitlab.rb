@@ -9,17 +9,25 @@ else
   raise "libicu version is not defined for this distro"
 end
 
+include_recipe "redis"
+
+include_recipe "mysql::server"
+
 include_recipe "rails"
 
-unicorn_rails_app "gitlab" do
+rails_app "gitlab" do
   user node.gitlab.gitlab.user
   app_directory node.gitlab.gitlab.path
-  location node.gitlab.location
   mysql_database "gitlab:database"
-  resque_workers({
-    :queues => 'post_receive,mailer,system_hook',
-    :workers => 3,
-  })
+end
+
+unicorn_rails_app "gitlab" do
+  location node.gitlab.location
+end
+
+rails_resque_worker "gitlab" do
+  queues 'post_receive,mailer,system_hook'
+  workers 2
 end
 
 group "git" do
@@ -27,10 +35,6 @@ group "git" do
   members [node.gitlab.gitlab.user]
   append true
 end
-
-include_recipe "mysql"
-
-mysql_database "gitlab:database"
 
 git_clone "#{node.gitlab.gitlab.path}/current" do
   repository node.gitlab.gitlab.url
