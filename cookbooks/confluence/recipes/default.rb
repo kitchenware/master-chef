@@ -1,4 +1,4 @@
-include_recipe "mysql"
+include_recipe "mysql::server"
 include_recipe "tomcat"
 include_recipe "nginx"
 
