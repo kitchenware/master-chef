@@ -1,5 +1,6 @@
 
 define :unicorn_rails_app, {
+  :rails_app => nil,
   :location => '/',
   :code_for_initd => "",
   :configure_nginx => true,
@@ -8,7 +9,7 @@ define :unicorn_rails_app, {
 
   include_recipe "unicorn"
 
-  app_config = node.deployed_rails_apps[unicorn_rails_app_params[:name]]
+  app_config = node.deployed_rails_apps[unicorn_rails_app_params[:rails_app] || unicorn_rails_app_params[:name]]
 
   initd = unicorn_rails_app_params[:code_for_initd]
   initd += "\nexport RAILS_RELATIVE_URL_ROOT='#{unicorn_rails_app_params[:location]}'" if unicorn_rails_app_params[:location] != "/"

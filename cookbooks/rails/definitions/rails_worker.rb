@@ -1,4 +1,5 @@
 define :rails_worker, {
+  :rails_app => nil,
 	:workers => nil,
   :command => 'bundle exec rake environment resque:work',
 	:env => {},
@@ -6,7 +7,7 @@ define :rails_worker, {
 
 	rails_worker_params = params
 
-  app_config = node.deployed_rails_apps[rails_worker_params[:name]]
+  app_config = node.deployed_rails_apps[rails_worker_params[:rails_app] || rails_worker_params[:name]]
 
 	[:workers, :command].each do |s|
     raise "Please specify #{s} with rails_worker" unless rails_worker_params[s]
@@ -45,6 +46,7 @@ define :rails_worker, {
 end
 
 define :rails_resque_worker, {
+  :rails_app => nil,
   :workers => nil,
   :queues => '*',
   } do
@@ -52,6 +54,7 @@ define :rails_resque_worker, {
   rails_resque_worker_params = params
 
   rails_worker rails_resque_worker_params[:name] do
+    rails_app rails_resque_worker_params[:rails_app]
     command 'bundle exec rake environment resque:work'
     env({'QUEUES' => rails_resque_worker_params[:queues]})
     workers rails_resque_worker_params[:workers]

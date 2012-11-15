@@ -26,6 +26,7 @@ unicorn_rails_app "gitlab" do
 end
 
 rails_resque_worker "gitlab_resque" do
+  rails_app "gitlab"
   queues 'post_receive,mailer,system_hook'
   workers 2
 end
