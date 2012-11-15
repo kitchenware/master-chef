@@ -25,7 +25,7 @@ unicorn_rails_app "gitlab" do
   location node.gitlab.location
 end
 
-rails_resque_worker "gitlab" do
+rails_resque_worker "gitlab_resque" do
   queues 'post_receive,mailer,system_hook'
   workers 2
 end
