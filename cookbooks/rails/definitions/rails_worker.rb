@@ -7,7 +7,9 @@ define :rails_worker, {
 
 	rails_worker_params = params
 
-  app_config = node.deployed_rails_apps[rails_worker_params[:rails_app] || rails_worker_params[:name]]
+  rails_app = rails_worker_params[:rails_app] || rails_worker_params[:name]
+  app_config = node.deployed_rails_apps[rails_app]
+  raise "Rails app #{rails_app} not found" unless app_config
 
 	[:workers, :command].each do |s|
     raise "Please specify #{s} with rails_worker" unless rails_worker_params[s]

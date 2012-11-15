@@ -9,7 +9,9 @@ define :unicorn_rails_app, {
 
   include_recipe "unicorn"
 
-  app_config = node.deployed_rails_apps[unicorn_rails_app_params[:rails_app] || unicorn_rails_app_params[:name]]
+  rails_app = unicorn_rails_app_params[:rails_app] || unicorn_rails_app_params[:name]
+  app_config = node.deployed_rails_apps[rails_app]
+  raise "Rails app #{rails_app} not found" unless app_config
 
   initd = unicorn_rails_app_params[:code_for_initd]
   initd += "\nexport RAILS_RELATIVE_URL_ROOT='#{unicorn_rails_app_params[:location]}'" if unicorn_rails_app_params[:location] != "/"
