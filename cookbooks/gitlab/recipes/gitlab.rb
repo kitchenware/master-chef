@@ -31,10 +31,8 @@ rails_resque_worker "gitlab_resque" do
   workers 2
 end
 
-group "git" do
-  action :manage
-  members [node.gitlab.gitlab.user]
-  append true
+add_user_in_group node.gitlab.gitlab.user do
+  group "git"
 end
 
 git_clone "#{node.gitlab.gitlab.path}/current" do
