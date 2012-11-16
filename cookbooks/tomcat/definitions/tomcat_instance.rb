@@ -2,6 +2,7 @@
 define :tomcat_instance, {
   :war_url => nil,
   :war_location => nil,
+  :xml_config_file => nil,
   :override => {},
 } do
 
@@ -82,6 +83,23 @@ define :tomcat_instance, {
       code "curl --location #{tomcat_instance_params[:war_url]} -o /tmp/#{war_file} && mv /tmp/#{war_file} #{war_full_file}"
       not_if "[ -f #{war_full_file} ]"
     end
+  end
+
+  if tomcat_instance_params[:xml_config_file]
+
+    directory "#{catalina_base}/conf/Catalina/localhost" do
+      recursive true
+      owner node.tomcat.user
+    end
+
+    template "#{catalina_base}/conf/Catalina/localhost/#{tomcat_instance_params[:xml_config_file][:name]}" do
+      cookbook tomcat_instance_params[:xml_config_file][:cookbook] if tomcat_instance_params[:xml_config_file][:cookbook]
+      source tomcat_instance_params[:xml_config_file][:source] if tomcat_instance_params[:xml_config_file][:source]
+      user node.tomcat.user
+      variables tomcat_instance_params[:xml_config_file][:variables] if tomcat_instance_params[:xml_config_file][:variables]
+      notifies :restart, resources(:service => config[:name])
+    end
+
   end
 
   catalina_base
