@@ -26,8 +26,6 @@ define :mysql_database, {
     end
     command += ") | mysql --user=root --password=#{root_mysql_password}"
 
-    puts command
-
     bash "create database #{config[:database]}" do
       code command
       not_if "echo 'SHOW DATABASES' | mysql --user=root --password=#{root_mysql_password} | grep #{config[:database]}"
