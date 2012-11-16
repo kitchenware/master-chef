@@ -15,17 +15,21 @@ define :mysql_database, {
 
     root_mysql_password = mysql_password "root"
 
-    suffix = ""
-    suffix = "@localhost" if node.mysql.bind_address == "127.0.0.1"
+    users = ["#{config[:username]}@localhost"]
+    users << config[:username] unless node.mysql.bind_address == "127.0.0.1"
+
+    command = "(\n"
+    command += " echo \"CREATE DATABASE IF NOT EXISTS #{config[:database]};\"\n"
+    users.each do |u|
+      command += "echo \"CREATE USER #{u} IDENTIFIED BY \\\"#{config[:password]}\\\";\"\n"
+      command += "echo \"GRANT ALL PRIVILEGES ON #{config[:database]} . * TO  #{u};\"\n";
+    end
+    command += ") | mysql --user=root --password=#{root_mysql_password}"
+
+    puts command
 
     bash "create database #{config[:database]}" do
-      code <<-EOF
-      (
-      echo "CREATE USER #{config[:username]}#{suffix} IDENTIFIED BY \\"#{config[:password]}\\";"
-      echo "CREATE DATABASE IF NOT EXISTS #{config[:database]};"
-      echo "GRANT ALL PRIVILEGES ON #{config[:database]} . * TO  #{config[:username]}#{suffix};"
-      ) | mysql --user=root --password=#{root_mysql_password}
-      EOF
+      code command
       not_if "echo 'SHOW DATABASES' | mysql --user=root --password=#{root_mysql_password} | grep #{config[:database]}"
     end
 
