@@ -73,6 +73,8 @@ define :unicorn_app, {
 
   location @unicorn_#{unicorn_app_params[:name]} {
     proxy_pass http://unicorn_#{unicorn_app_params[:name]}_upstream;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     break;
   }
   EOF
