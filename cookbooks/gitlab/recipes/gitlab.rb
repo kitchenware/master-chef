@@ -1,12 +1,10 @@
 
-if node.platform == "debian"
+if node.lsb.codename == "squeeze"
   package "libicu44"
-elsif node.platform == "ubuntu" && node.lsb.codename == "lucid"
+elsif node.lsb.codename == "lucid"
   package "libicu42"
-elsif node.platform == "ubuntu" && node.lsb.codename == "precise"
-  package "libicu48"
 else
-  raise "libicu version is not defined for this distro"
+  package "libicu48"
 end
 
 include_recipe "redis"

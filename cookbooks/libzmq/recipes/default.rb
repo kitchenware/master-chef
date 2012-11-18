@@ -1,4 +1,4 @@
-if node['platform'] == "ubuntu"
+if node.lsb.codename == "lucid"
 
   base_ppa "pgm" do
     url "ppa:chris-lea/libpgm"
@@ -10,7 +10,7 @@ if node['platform'] == "ubuntu"
 
 end
 
-if node['platform'] == 'debian'
+if node.lsb.codename == "squeeze"
 
   add_apt_repository "squeeze-backports" do
     url "http://backports.debian.org/debian-backports"

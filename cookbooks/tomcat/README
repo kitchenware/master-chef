@@ -1,3 +1,14 @@
 This recipe install a tomcat instance, via a warp package
 
-TODO : how to package a tomcat instance with apr
+* Install dependencies : aptitude install libapr1-dev libssl-dev
+* Download apache tomcat
+* Extract apache tomcat
+* cd bin, tar xvzf tomcat-native.tar.gz
+* cd tomcat-native-1.1.22-src/jni/native
+* ./configure --prefix=$HOME/apache-tomcat-6.0.35 --with-apr=/usr/bin/apr-1-config --with-java-home=/usr/lib/jvm/jdk1.6.0_35/ --with-ssl=yes
+* make install
+* libs are now installed in tomcat / lib directory
+* purge tomcat
+** rm -rf bin/tomcat-native-1.1.22-src
+** rm -rf work/* webapps/* temp/* logs/*
+* package tomcat : .warp/packager/warp_directory.sh apache-tomcat-6.0.35 current apache-tomcat-6.0.35 apache-tomcat-6.0.35_`lsb_release -cs`_`arch`.warp `.warp/common/find_dependencies.sh apache-tomcat-6.0.35`

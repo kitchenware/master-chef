@@ -48,6 +48,13 @@ directory "#{node.apache2.server_root}/wsgi" do
   mode 0755
 end
 
+template "#{node.graphite.directory}/webapp/graphite/local_settings.py" do
+  source "local_settings.py.erb"
+  mode 0644
+  variables :timezone => node.graphite.timezone, :db_file => "#{node.graphite.directory}/storage/graphite.db"
+  notifies :restart, resources(:service => "apache2")
+end
+
 execute "create db" do
   command "cd #{node.graphite.directory}/webapp/graphite && python manage.py syncdb --noinput"
   not_if "[ -f #{node.graphite.directory}/storage/graphite.db ]"
@@ -106,9 +113,3 @@ template "#{node.graphite.directory}/conf/storage-schemas.conf" do
   notifies :restart, resources(:service => "carbon")
 end
 
-template "#{node.graphite.directory}/webapp/graphite/local_settings.py" do
-  source "local_settings.py.erb"
-  mode 0644
-  variables :timezone => node.graphite.timezone
-  notifies :restart, resources(:service => "apache2")
-end

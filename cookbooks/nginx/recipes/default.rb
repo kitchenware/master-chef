@@ -1,10 +1,12 @@
 if node['platform'] == "ubuntu"
+
   base_ppa "nginx" do
      url "ppa:nginx/stable"
   end
+
 end
 
-if node['platform'] == "debian"
+if node.lsb.codename == "squeeze"
 
   authorize_unauthenticated_packages
 
@@ -16,6 +18,7 @@ if node['platform'] == "debian"
   directory "/etc/nginx/sites-enabled" do
     recursive true
   end
+
 end
 
 package "nginx" do

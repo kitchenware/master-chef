@@ -30,4 +30,4 @@ default[:apache2][:default_vhost] = {
   :document_root => '/var/www',
 }
 
-default[:apache2][:modules] = ["dir", "mime"]
+default[:apache2][:modules] = ["dir", "mime", "authz_host", "alias"]

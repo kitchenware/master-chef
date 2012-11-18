@@ -29,7 +29,7 @@ end
 if node.tomcat[:instances]
 
   node.tomcat.instances.keys.each do |k|
-    node.tomcat.instances[k][:name] = k
+    node.set[:tomcat][:instances][k][:name] = k
     tomcat_instance "tomcat:instances:#{k}" do
       instance_name k
     end

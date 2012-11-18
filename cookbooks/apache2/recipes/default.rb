@@ -6,6 +6,7 @@ package "apache2-mpm-#{node.apache2.mpm}"
   "#{node.apache2.server_root}/sites-available/default",
   "#{node.apache2.server_root}/sites-available/default-ssl",
   "#{node.apache2.server_root}/conf.d/security",
+  "#{node.apache2.server_root}/httpd.conf",
   "#{node.apache2.server_root}/conf.d/other-vhosts-access-log",
   ].each do |f|
   file f do
