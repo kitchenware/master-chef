@@ -3,12 +3,16 @@ config_file = ENV['MASTER_CHEF_CONFIG']
 raise "Please specify config file with env var MASTER_CHEF_CONFIG" unless config_file
 raise "File not found #{config_file}" unless File.exists? config_file
 
+require 'tempfile'
+
 config = JSON.load(File.read(config_file))
 
 run_list = ["recipe[master_chef::init]"] + (ENV['OVERRIDE_RUN_LIST'] ? ENV['OVERRIDE_RUN_LIST'].split(",") : config["run_list"])
-json_file = Tempfile.new "chef_config"
-json_file.write JSON.dump({"run_list" => run_list})
-json_file.close
+json_file = File.join(Dir::tmpdir, "chef_#{Process.pid}_#{Time.now.to_i}")
+File.open(json_file, 'w') {|io| io.write JSON.dump({"run_list" => run_list})}
+Kernel.at_exit do
+  File.unlink json_file
+end
 
 ENV['MASTER_CHEF_CONFIG'] = File.expand_path(config_file)
 
@@ -98,6 +102,6 @@ puts "********************************************************************"
 
 log_level (ENV['CHEF_LOG_LEVEL'] || 'info').to_sym
 log_location STDOUT
-json_attribs json_file.path
+json_attribs json_file
 cookbook_path cookbooks
 role_path roles
