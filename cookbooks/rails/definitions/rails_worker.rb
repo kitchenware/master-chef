@@ -51,13 +51,14 @@ define :rails_resque_worker, {
   :rails_app => nil,
   :workers => nil,
   :queues => '*',
+  :command => 'resque:work',
   } do
 
   rails_resque_worker_params = params
 
   rails_worker rails_resque_worker_params[:name] do
     rails_app rails_resque_worker_params[:rails_app]
-    command 'bundle exec rake environment resque:work'
+    command "bundle exec rake environment #{rails_resque_worker_params[:command]}"
     env({'QUEUES' => rails_resque_worker_params[:queues]})
     workers rails_resque_worker_params[:workers]
   end
