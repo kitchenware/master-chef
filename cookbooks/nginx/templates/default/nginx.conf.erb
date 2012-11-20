@@ -23,7 +23,9 @@ http {
   log_format main '$remote_addr - $host - [$time_local] ' '"$request" $status $body_bytes_sent $request_time "$http_referer" ' '"$http_user_agent"';
 
   include /etc/nginx/mime.types;
-  
+
+  client_max_body_size <%= node.nginx[:config][:max_upload_size] %>;
+
   default_type application/octet-stream;
 
   include /etc/nginx/conf.d/*.conf;

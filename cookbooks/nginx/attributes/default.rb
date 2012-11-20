@@ -8,4 +8,5 @@ default[:nginx][:default_vhost] = {
 }
 default[:nginx][:config] = {
   :worker_connections => 100000,
+  :max_upload_size => '50m',
 }
