@@ -21,7 +21,7 @@ if node.lsb.codename == "squeeze"
 
 end
 
-package "nginx" do
+package node.nginx.package_name do
   version node.nginx[:nginx_version] if node.nginx[:nginx_version]
 end
 
