@@ -3,6 +3,7 @@ define :rails_worker, {
 	:workers => nil,
   :command => 'bundle exec rake environment resque:work',
 	:env => {},
+  :extended_path => nil,
 	} do
 
 	rails_worker_params = params
@@ -32,6 +33,7 @@ define :rails_worker, {
       :app_directory => "#{app_config[:app_directory]}/current",
       :command => rails_worker_params[:command],
       :env => rails_worker_params[:env].merge({'RAILS_ENV' => 'production'}),
+      :extended_path => rails_worker_params[:extended_path]
     })
     notifies :restart, resources(:service => "supervisor")
   end
@@ -52,6 +54,7 @@ define :rails_resque_worker, {
   :workers => nil,
   :queues => '*',
   :command => 'resque:work',
+  :extended_path => nil,
   } do
 
   rails_resque_worker_params = params
@@ -61,6 +64,7 @@ define :rails_resque_worker, {
     command "bundle exec rake environment #{rails_resque_worker_params[:command]}"
     env({'QUEUES' => rails_resque_worker_params[:queues]})
     workers rails_resque_worker_params[:workers]
+    extended_path rails_resque_worker_params[:extended_path]
   end
 
 end

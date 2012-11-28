@@ -4,6 +4,10 @@ cd <%= @app_directory %>
 
 export PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH
 
+<% if @extended_path %>
+  export PATH=<%= @extended_path %>:$PATH
+<% end %>
+
 <% @env.keys.each do |k| %>
 export <%= k %>='<%= @env[k] %>'
 <% end %>
