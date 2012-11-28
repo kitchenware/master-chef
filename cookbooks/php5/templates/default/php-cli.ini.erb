@@ -317,7 +317,7 @@ unserialize_callback_func =
 ; When floats & doubles are serialized store serialize_precision significant
 ; digits after the floating point. The default value ensures that when floats
 ; are decoded with unserialize, the data will remain the same.
-serialize_precision = 100
+serialize_precision = 17
 
 ; This directive allows you to enable and disable warnings which PHP will issue
 ; if you pass a value by reference at function call time. Passing values by
@@ -335,25 +335,25 @@ allow_call_time_pass_reference = Off
 
 ; Safe Mode
 ; http://php.net/safe-mode
-safe_mode = <%= @safe_mode ? "On" : "Off" %>
+safe_mode = Off
 
 ; By default, Safe Mode does a UID compare check when
 ; opening files. If you want to relax this to a GID compare,
 ; then turn on safe_mode_gid.
 ; http://php.net/safe-mode-gid
-safe_mode_gid = <%= @safe_mode_gid ? "On" : "Off" %>
+safe_mode_gid = Off
 
 ; When safe_mode is on, UID/GID checks are bypassed when
 ; including files from this directory and its subdirectories.
 ; (directory must also be in include_path or full path must
 ; be used when including)
 ; http://php.net/safe-mode-include-dir
-safe_mode_include_dir = <%= @safe_mode_include_dir.join(":") %>
+safe_mode_include_dir =
 
 ; When safe_mode is on, only executables located in the safe_mode_exec_dir
 ; will be allowed to be executed via the exec family of functions.
 ; http://php.net/safe-mode-exec-dir
-safe_mode_exec_dir = <%= @safe_mode_exec_dir.join(":") %>
+safe_mode_exec_dir =
 
 ; Setting certain environment variables may be a potential security breach.
 ; This directive contains a comma-delimited list of prefixes.  In Safe Mode,
@@ -376,7 +376,7 @@ safe_mode_protected_env_vars = LD_LIBRARY_PATH
 ; or per-virtualhost web server configuration file. This directive is
 ; *NOT* affected by whether Safe Mode is turned On or Off.
 ; http://php.net/open-basedir
-open_basedir = <%= @open_basedir.join(":") %>
+;open_basedir =
 
 ; This directive allows you to disable certain functions for security reasons.
 ; It receives a comma-delimited list of function names. This directive is
@@ -419,6 +419,10 @@ disable_classes =
 ; http://php.net/realpath-cache-ttl
 ;realpath_cache_ttl = 120
 
+; Enables or disables the circular reference collector.
+; http://php.net/zend.enable-gc
+zend.enable_gc = On
+
 ;;;;;;;;;;;;;;;;;
 ; Miscellaneous ;
 ;;;;;;;;;;;;;;;;;
@@ -437,7 +441,7 @@ expose_php = On
 ; Maximum execution time of each script, in seconds
 ; http://php.net/max-execution-time
 ; Note: This directive is hardcoded to 0 for the CLI SAPI
-max_execution_time = <%= @max_execution_time %>
+max_execution_time = 30
 
 ; Maximum amount of time each script may spend parsing request data. It's a good
 ; idea to limit this time on productions servers in order to eliminate unexpectedly
@@ -447,7 +451,7 @@ max_execution_time = <%= @max_execution_time %>
 ; Development Value: 60 (60 seconds)
 ; Production Value: 60 (60 seconds)
 ; http://php.net/max-input-time
-max_input_time = <%= @max_input_time %>
+max_input_time = 60
 
 ; Maximum input variable nesting level
 ; http://php.net/max-input-nesting-level
@@ -458,7 +462,7 @@ max_input_time = <%= @max_input_time %>
 
 ; Maximum amount of memory a script may consume (128MB)
 ; http://php.net/memory-limit
-memory_limit = <%= @memory_limit %>
+memory_limit = -1
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Error handling and logging ;
@@ -531,7 +535,7 @@ error_reporting = E_ALL & ~E_DEPRECATED
 ; Development Value: On
 ; Production Value: Off
 ; http://php.net/display-errors
-display_errors = <%= @display_errors ? "On" : "Off" %>
+display_errors = Off
 
 ; The display of errors which occur during PHP's startup sequence are handled
 ; separately from display_errors. PHP's default behavior is to suppress those
@@ -624,21 +628,26 @@ html_errors = Off
 ; this setting blank.
 ; http://php.net/error-prepend-string
 ; Example:
-;error_prepend_string = "<font color=#ff0000>"
+;error_prepend_string = "<span style='color: #ff0000'>"
 
 ; String to output after an error message. PHP's default behavior is to leave
 ; this setting blank.
 ; http://php.net/error-append-string
 ; Example:
-;error_append_string = "</font>"
+;error_append_string = "</span>"
 
 ; Log errors to specified file. PHP's default behavior is to leave this value
 ; empty.
 ; http://php.net/error-log
 ; Example:
-error_log = <%= @error_log %>
+;error_log = php_errors.log
 ; Log errors to syslog (Event Log on NT, not valid in Windows 95).
 ;error_log = syslog
+
+;windows.show_crt_warning
+; Default value: 0
+; Development value: 0
+; Production value: 0
 
 ;;;;;;;;;;;;;;;;;
 ; Data Handling ;
@@ -728,7 +737,7 @@ auto_globals_jit = On
 
 ; Maximum size of POST data that PHP will accept.
 ; http://php.net/post-max-size
-post_max_size = <%= @post_max_size %>
+post_max_size = 8M
 
 ; Magic quotes are a preprocessing feature of PHP where PHP will attempt to
 ; escape any character sequences in GET, POST, COOKIE and ENV data which might
@@ -744,7 +753,7 @@ post_max_size = <%= @post_max_size %>
 ; Development Value: Off
 ; Production Value: Off
 ; http://php.net/magic-quotes-gpc
-magic_quotes_gpc = <%= @magic_quotes_gpc ? "On" : "Off" %>
+magic_quotes_gpc = Off
 
 ; Magic quotes for runtime-generated data, e.g. data from SQL, from exec(), etc.
 ; http://php.net/magic-quotes-runtime
@@ -768,11 +777,11 @@ auto_append_file =
 ;
 ; PHP's built-in default is text/html
 ; http://php.net/default-mimetype
-default_mimetype = <%= @default_mimetype %>
+default_mimetype = "text/html"
 
 ; PHP's default character set is set to empty.
 ; http://php.net/default-charset
-default_charset = <%= @default_charset %>
+;default_charset = "iso-8859-1"
 
 ; Always populate the $HTTP_RAW_POST_DATA variable. PHP's default behavior is
 ; to disable this feature.
@@ -879,10 +888,10 @@ file_uploads = On
 
 ; Maximum allowed size for uploaded files.
 ; http://php.net/upload-max-filesize
-upload_max_filesize = <%= @upload_max_filesize %>
+upload_max_filesize = 2M
 
 ; Maximum number of files that can be uploaded via a single request
-max_file_uploads = <%= @max_file_uploads %>
+max_file_uploads = 20
 
 ;;;;;;;;;;;;;;;;;;
 ; Fopen wrappers ;
@@ -940,7 +949,6 @@ default_socket_timeout = 60
 ;
 ; If you only provide the name of the extension, PHP will look for it in its
 ; default extension directory.
-;
 
 ;;;;;;;;;;;;;;;;;;;
 ; Module Settings ;
@@ -1057,7 +1065,8 @@ smtp_port = 25
 ; Add X-PHP-Originating-Script: that will include uid of the script followed by the filename
 mail.add_x_header = On
 
-; Log all mail() calls including the full path of the script, line #, to address and headers
+; The path to a log file that will log all mail() calls. Log entries include
+; the full path of the script, line number, To address and headers.
 ;mail.log =
 
 [SQL]
@@ -1250,12 +1259,12 @@ mysqli.default_pw =
 mysqli.reconnect = Off
 
 [mysqlnd]
-; Enable / Disable collection of general statstics by mysqlnd which can be
+; Enable / Disable collection of general statistics by mysqlnd which can be
 ; used to tune and monitor MySQL operations.
 ; http://php.net/mysqlnd.collect_statistics
 mysqlnd.collect_statistics = On
 
-; Enable / Disable collection of memory usage statstics by mysqlnd which can be
+; Enable / Disable collection of memory usage statistics by mysqlnd which can be
 ; used to tune and monitor MySQL operations.
 ; http://php.net/mysqlnd.collect_memory_statistics
 mysqlnd.collect_memory_statistics = Off
@@ -1322,7 +1331,7 @@ mysqlnd.collect_memory_statistics = Off
 ; http://php.net/oci8.old-oci-close-semantics
 ;oci8.old_oci_close_semantics = Off
 
-[PostgresSQL]
+[PostgreSQL]
 ; Allow or prevent persistent links.
 ; http://php.net/pgsql.allow-persistent
 pgsql.allow_persistent = On
@@ -1511,7 +1520,7 @@ session.gc_maxlifetime = 1440
 ;       collection through a shell script, cron entry, or some other method.
 ;       For example, the following script would is the equivalent of
 ;       setting session.gc_maxlifetime to 1440 (1440 seconds = 24 minutes):
-;          cd /path/to/sessions; find -cmin +24 | xargs rm
+;          find /path/to/sessions -cmin +24 | xargs rm
 
 ; PHP 4.2 and less have an undocumented feature/bug that allows you to
 ; to initialize a session variable in the global scope, even when register_globals
@@ -1657,7 +1666,7 @@ mssql.secure_connection = Off
 ;mssql.max_procs = -1
 
 ; Specify client character set.
-; If empty or not set the client charset from freetds.comf is used
+; If empty or not set the client charset from freetds.conf is used
 ; This is only used when compiled with FreeTDS
 ;mssql.charset = "ISO-8859-1"
 
@@ -1849,6 +1858,12 @@ ldap.max_links = -1
 
 [dba]
 ;dba.default_handler=
+
+[xsl]
+; Write operations from within XSLT are disabled by default.
+; XSL_SECPREF_CREATE_DIRECTORY | XSL_SECPREF_WRITE_NETWORK | XSL_SECPREF_WRITE_FILE = 44
+; Set it to 0 to allow all operations
+;xsl.security_prefs = 44
 
 ; Local Variables:
 ; tab-width: 4
