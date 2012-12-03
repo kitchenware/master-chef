@@ -28,6 +28,14 @@ define :php5_apache2, {
     notifies :reload, resources(:service => "apache2")
   end
 
+  template "/etc/php5/cli/php.ini" do
+    mode 0644
+    cookbook "php5"
+    source "php-cli.ini.erb"
+    variables config
+    notifies :reload, resources(:service => "apache2")
+  end
+
   if config["error_log"]
 
     directory File.dirname(config["error_log"]) do
