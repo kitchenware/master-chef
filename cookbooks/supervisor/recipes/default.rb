@@ -21,7 +21,7 @@ end
 
 
 service "supervisor" do
-  supports :status => true
+  supports :status => true, :restart => true
   action auto_compute_action
 end
 
