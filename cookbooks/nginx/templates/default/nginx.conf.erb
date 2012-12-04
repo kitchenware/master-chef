@@ -31,4 +31,13 @@ http {
   include /etc/nginx/conf.d/*.conf;
   include /etc/nginx/sites-enabled/*;
 
+<% if node.nginx[:config][:server_names_hash_bucket_size] %>
+  server_names_hash_bucket_size <%= node.nginx[:config][:server_names_hash_bucket_size] %>;
+<% end %>
+<% if node.nginx[:config][:types_hash_max_size] %>
+  types_hash_max_size <%= node.nginx[:config][:types_hash_max_size] %>;
+<% end %>
+<% if node.nginx[:config][:types_hash_bucket_size] %>
+  types_hash_bucket_size <%= node.nginx[:config][:types_hash_bucket_size] %>;
+<% end %>
 }

@@ -8,7 +8,7 @@ export PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH
   export PATH=<%= @extended_path %>:$PATH
 <% end %>
 
-<% @env.keys.each do |k| %>
+<% @env.keys.sort.each do |k| %>
 export <%= k %>='<%= @env[k] %>'
 <% end %>
 

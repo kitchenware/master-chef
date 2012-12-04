@@ -6,6 +6,10 @@ if [ "$user" = "" ]; then
   user="chef"
 fi
 
+if [ "$PROXY" != "" ]; then
+  PROXY="http_proxy=$PROXY https_proxy=$PROXY"
+fi
+
 ssh $user@$server sudo mkdir -p /etc/chef/
 current_folder=$(dirname $0)
 
