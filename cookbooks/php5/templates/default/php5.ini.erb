@@ -317,7 +317,7 @@ unserialize_callback_func =
 ; When floats & doubles are serialized store serialize_precision significant
 ; digits after the floating point. The default value ensures that when floats
 ; are decoded with unserialize, the data will remain the same.
-serialize_precision = 100
+serialize_precision = 17
 
 ; This directive allows you to enable and disable warnings which PHP will issue
 ; if you pass a value by reference at function call time. Passing values by
@@ -377,12 +377,11 @@ safe_mode_protected_env_vars = LD_LIBRARY_PATH
 ; *NOT* affected by whether Safe Mode is turned On or Off.
 ; http://php.net/open-basedir
 open_basedir = <%= @open_basedir.join(":") %>
-
 ; This directive allows you to disable certain functions for security reasons.
 ; It receives a comma-delimited list of function names. This directive is
 ; *NOT* affected by whether Safe Mode is turned On or Off.
 ; http://php.net/disable-functions
-disable_functions =
+disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,
 
 ; This directive allows you to disable certain classes for security reasons.
 ; It receives a comma-delimited list of class names. This directive is
@@ -418,6 +417,10 @@ disable_classes =
 ; value.
 ; http://php.net/realpath-cache-ttl
 ;realpath_cache_ttl = 120
+
+; Enables or disables the circular reference collector.
+; http://php.net/zend.enable-gc
+zend.enable_gc = On
 
 ;;;;;;;;;;;;;;;;;
 ; Miscellaneous ;
@@ -624,21 +627,27 @@ html_errors = Off
 ; this setting blank.
 ; http://php.net/error-prepend-string
 ; Example:
-;error_prepend_string = "<font color=#ff0000>"
+;error_prepend_string = "<span style='color: #ff0000'>"
 
 ; String to output after an error message. PHP's default behavior is to leave
 ; this setting blank.
 ; http://php.net/error-append-string
 ; Example:
-;error_append_string = "</font>"
+;error_append_string = "</span>"
 
 ; Log errors to specified file. PHP's default behavior is to leave this value
 ; empty.
 ; http://php.net/error-log
 ; Example:
+;error_log = php_errors.log
 error_log = <%= @error_log %>
 ; Log errors to syslog (Event Log on NT, not valid in Windows 95).
 ;error_log = syslog
+
+;windows.show_crt_warning
+; Default value: 0
+; Development value: 0
+; Production value: 0
 
 ;;;;;;;;;;;;;;;;;
 ; Data Handling ;
@@ -940,7 +949,6 @@ default_socket_timeout = 60
 ;
 ; If you only provide the name of the extension, PHP will look for it in its
 ; default extension directory.
-;
 
 ;;;;;;;;;;;;;;;;;;;
 ; Module Settings ;
@@ -1057,7 +1065,8 @@ smtp_port = 25
 ; Add X-PHP-Originating-Script: that will include uid of the script followed by the filename
 mail.add_x_header = On
 
-; Log all mail() calls including the full path of the script, line #, to address and headers
+; The path to a log file that will log all mail() calls. Log entries include
+; the full path of the script, line number, To address and headers.
 ;mail.log =
 
 [SQL]
@@ -1250,12 +1259,12 @@ mysqli.default_pw =
 mysqli.reconnect = Off
 
 [mysqlnd]
-; Enable / Disable collection of general statstics by mysqlnd which can be
+; Enable / Disable collection of general statistics by mysqlnd which can be
 ; used to tune and monitor MySQL operations.
 ; http://php.net/mysqlnd.collect_statistics
 mysqlnd.collect_statistics = On
 
-; Enable / Disable collection of memory usage statstics by mysqlnd which can be
+; Enable / Disable collection of memory usage statistics by mysqlnd which can be
 ; used to tune and monitor MySQL operations.
 ; http://php.net/mysqlnd.collect_memory_statistics
 mysqlnd.collect_memory_statistics = Off
@@ -1322,7 +1331,7 @@ mysqlnd.collect_memory_statistics = Off
 ; http://php.net/oci8.old-oci-close-semantics
 ;oci8.old_oci_close_semantics = Off
 
-[PostgresSQL]
+[PostgreSQL]
 ; Allow or prevent persistent links.
 ; http://php.net/pgsql.allow-persistent
 pgsql.allow_persistent = On
@@ -1511,7 +1520,7 @@ session.gc_maxlifetime = 1440
 ;       collection through a shell script, cron entry, or some other method.
 ;       For example, the following script would is the equivalent of
 ;       setting session.gc_maxlifetime to 1440 (1440 seconds = 24 minutes):
-;          cd /path/to/sessions; find -cmin +24 | xargs rm
+;          find /path/to/sessions -cmin +24 | xargs rm
 
 ; PHP 4.2 and less have an undocumented feature/bug that allows you to
 ; to initialize a session variable in the global scope, even when register_globals
@@ -1657,7 +1666,7 @@ mssql.secure_connection = Off
 ;mssql.max_procs = -1
 
 ; Specify client character set.
-; If empty or not set the client charset from freetds.comf is used
+; If empty or not set the client charset from freetds.conf is used
 ; This is only used when compiled with FreeTDS
 ;mssql.charset = "ISO-8859-1"
 
@@ -1849,6 +1858,12 @@ ldap.max_links = -1
 
 [dba]
 ;dba.default_handler=
+
+[xsl]
+; Write operations from within XSLT are disabled by default.
+; XSL_SECPREF_CREATE_DIRECTORY | XSL_SECPREF_WRITE_NETWORK | XSL_SECPREF_WRITE_FILE = 44
+; Set it to 0 to allow all operations
+;xsl.security_prefs = 44
 
 ; Local Variables:
 ; tab-width: 4
