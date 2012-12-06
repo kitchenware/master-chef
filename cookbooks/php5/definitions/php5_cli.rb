@@ -1,9 +1,9 @@
- 
+
 define :php5_cli, {
 	:options => {}
 	} do
 
-		php5_cli_param = params
+	php5_cli_param = params
 
 		options = {}
 		if php5_cli_param[:options]
