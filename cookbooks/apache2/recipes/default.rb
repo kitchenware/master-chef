@@ -45,7 +45,7 @@ end
 template "#{node.apache2.server_root}/ports.conf" do
   source "ports.conf.erb"
   mode 0644
-  variables :ports => Proc.new{node.apache2.ports == [] ? ["80"] : node.apache2.ports}
+  variables :ports => Proc.new{node.apache2[:ports] ? node.apache2.ports : ["80"]}
   notifies :restart, resources(:service => "apache2")
 end
 
