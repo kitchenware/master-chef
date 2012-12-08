@@ -24,9 +24,9 @@ define :git_clone, {
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
 
-  bash "git clone #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
+  bash "create branch #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
-    code "git checkout -q -b deploy"
+    code "cd #{git_clone_params[:name]} && git checkout -q -b deploy"
     not_if "cd #{git_clone_params[:name]} && git branch | grep deploy"
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
