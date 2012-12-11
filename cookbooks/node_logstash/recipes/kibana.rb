@@ -1,6 +1,6 @@
 
 ruby_user node.kibana.user do
-    install_rbenv true
+  install_rbenv true
 end
 
 capistrano_app node.kibana.directory do
