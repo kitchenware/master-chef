@@ -2,8 +2,12 @@
 include_recipe "apache2"
 include_recipe "php5"
 
-apache2_vhost "apache2:default_vhost" do
-  options :cookbook => "apache2"
+if node.apache2.default_vhost.enable
+  
+  apache2_vhost "apache2:default_vhost" do
+    options :cookbook => "apache2"
+  end
+  
 end
 
 php5_apache2 "php5" do

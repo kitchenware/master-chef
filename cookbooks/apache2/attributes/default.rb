@@ -28,6 +28,7 @@ default[:apache2][:log_directory] = "/var/log/apache2"
 default[:apache2][:default_vhost] = {
   :listen => '0.0.0.0:80',
   :document_root => '/var/www',
+  :enable => true,
 }
 
 default[:apache2][:modules] = ["dir", "mime", "authz_host", "alias"]
