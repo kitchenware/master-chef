@@ -1,7 +1,21 @@
 
-package "s3cmd"
+if node.platform == "centos"
 
-package "build-essential"
+  add_yum_repository "http://s3tools.org/repo/RHEL_6/s3tools.repo"
+
+  ["make", "gcc", "gcc-c++"].each do |p|
+    package p
+  end
+
+end
+
+if node.platform == "debian" || node.platform == "ubuntu"
+  
+  package "build-essential"
+
+end
+
+package "s3cmd"
 
 include_recipe "java"
 
