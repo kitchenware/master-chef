@@ -30,4 +30,4 @@ log "Starting chef at `date`"
 ) | tee $LOG_FILE
 
 chown $FILE_OWNER $LOG_FILE
-cat $STATUS_FILE | grep ok > /dev/null
+cat $STATUS_FILE | grep OK > /dev/null
