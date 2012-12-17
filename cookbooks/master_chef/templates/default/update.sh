@@ -23,7 +23,7 @@ log "Starting chef at `date`"
 (
   REPOS_STATUS_FILE=$REPOS_STATUS_FILE MASTER_CHEF_CONFIG=$MASTER_CHEF_CONFIG /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb
   if [ "$?" = 0 ]; then
-    log "Chef run ok at `date`"
+    log "Chef run OK at `date`"
   else
     log "Chef run FAILED at `date`"
   fi
