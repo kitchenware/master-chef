@@ -1,11 +1,16 @@
 #!/bin/sh
 
+if [ "$MASTER_CHEF_CONFIG" = "" ]; then
+  MASTER_CHEF_CONFIG="<%= @config_file %>"
+fi
+
 HOME="<%= @user_home %>"
 if [ "$LOG_PREFIX" = "" ]; then
   LOG_PREFIX="<%= @log_prefix %>"
 fi
 STATUS_FILE="${LOG_PREFIX}_run"
 LOG_FILE="${LOG_PREFIX}_log"
+REPOS_STATUS_FILE="${LOG_PREFIX}_repos.json"
 FILE_OWNER="<%= @user %>"
 
 log() {
@@ -16,7 +21,7 @@ log() {
 log "Starting chef at `date`"
 
 (
-  MASTER_CHEF_CONFIG="<%= @config_file %>" /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb
+  REPOS_STATUS_FILE=$REPOS_STATUS_FILE MASTER_CHEF_CONFIG=$MASTER_CHEF_CONFIG /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb
   if [ "$?" = 0 ]; then
     log "Chef run ok at `date`"
   else

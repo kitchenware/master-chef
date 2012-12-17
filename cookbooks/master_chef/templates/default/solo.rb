@@ -40,6 +40,8 @@ exec_local "mkdir -p #{git_cache_directory}"
 cookbooks = []
 roles = []
 
+folders = {}
+
 if config["repos"]["git"]
   git_tag_override_file = config_file + ".git_tag_override"
   if ENV["GIT_TAG_OVERRIDE"]
@@ -76,6 +78,7 @@ if config["repos"]["git"]
     end
     puts "#{verb} from #{url}, using branch #{branch_target}, commit #{sha}"
     exec_local "cd #{target} && git reset -q --hard #{sha} && git clean -q -d -x -f"
+    folders[url] = sha
     cookbook = File.join(target, "cookbooks")
     cookbooks << cookbook if File.exists? cookbook
     role = File.join(target, "roles")
@@ -85,11 +88,17 @@ end
 
 if config["repos"]["local_path"]
   config["repos"]["local_path"].each do |target|
+    folders[target] = "local"
+    puts "Using folder #{target}"
     cookbook = File.join(target, "cookbooks")
     cookbooks << cookbook if File.exists? cookbook
     role = File.join(target, "roles")
     roles << role if File.exists? role
   end
+end
+
+if ENV['REPOS_STATUS_FILE']
+  File.open(ENV['REPOS_STATUS_FILE'], 'w') {|io| io.write(JSON.dump(folders))}
 end
 
 puts "************************* Master chef SOLO *************************"
