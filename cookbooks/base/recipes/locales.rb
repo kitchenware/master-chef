@@ -11,7 +11,7 @@ if node.locales.configure
     action :nothing
   end
 
-  if node['platform'] == "ubuntu"
+  if node.platform == "ubuntu"
 
     delayed_exec "Purge useless locales" do
       block do
