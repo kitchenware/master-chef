@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+EXEC=mysql
+
+if [ "$MYSQL_DUMP" != "" ]; then
+  EXEC=mysqldump
+fi
+
+$EXEC --user=<%= @config[:username] %> --password=<%= @config[:password] %> --host=<%= @config[:host] %> <%= @config[:database] %> $*

@@ -35,8 +35,10 @@ define :mysql_database, {
 
   if config[:mysql_wrapper] && ! find_resources_by_name(File.dirname(config[:mysql_wrapper][:file])).empty?
 
-    file config[:mysql_wrapper][:file] do
-      content "#!/bin/sh -e\nmysql --user=#{config[:username]} --password=#{config[:password]} --host=#{config[:host]} #{config[:database]} $*"
+    template config[:mysql_wrapper][:file] do
+      cookbook "mysql"
+      source "mysql.sh.erb"
+      variables :config => config
       mode 0700
       owner config[:mysql_wrapper][:owner]
     end
