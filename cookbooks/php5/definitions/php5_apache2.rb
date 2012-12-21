@@ -28,6 +28,14 @@ define :php5_apache2, {
     notifies :reload, resources(:service => "apache2")
   end
 
+  apache2_enable_module "setenvif"
+
+  file "/etc/apache2/conf.d/https_php" do
+    content "SetEnvIf X-Forwarded-Proto https HTTPS=on"
+    mode 0644
+    notifies :reload, resources(:service => "apache2")
+  end
+
   if config["error_log"]
 
     directory File.dirname(config["error_log"]) do
