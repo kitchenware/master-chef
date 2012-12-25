@@ -1,8 +1,10 @@
 
 default[:elasticsearch] = {
   :user => 'elastic',
-  :url => 'http://cloud.github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.10.tar.gz',
+  :url => 'http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.20.1.tar.gz',
   :directory => '/opt/elasticsearch',
+  :directory_data => '/opt/elasticsearch_data',
+  :java_opts => '',
   :options => '',
   :host => '127.0.0.1',
   :http_port => 9200,
@@ -10,6 +12,6 @@ default[:elasticsearch] = {
   :transport_zmq => {
     :enable => true,
     :listen => 'tcp://127.0.0.1:9700',
-    :url => 'http://cloud.github.com/downloads/bpaquet/transport-zeromq/transport-zeromq-0.0.4.1-SNAPSHOT.zip',
+    :url => 'http://warp-repo.s3-eu-west-1.amazonaws.com/transport-zeromq-0.0.5.zip',
   }
 }

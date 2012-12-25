@@ -147,10 +147,11 @@
 # path.data: /path/to/data
 #
 # Can optionally include more than one location, causing data to be striped across
-# the locations (à la RAID 0) on a file level, favouring locations with most free
+# the locations (a la RAID 0) on a file level, favouring locations with most free
 # space on creation. For example:
 #
 # path.data: /path/to/data1,/path/to/data2
+path.data: <%= @config['directory_data'] %>
 
 # Path to temporary files:
 #
@@ -338,7 +339,6 @@ gateway.expected_nodes: 1
 
 # Shard level query and fetch threshold logging.
 
-#index.search.slowlog.level: TRACE
 #index.search.slowlog.threshold.query.warn: 10s
 #index.search.slowlog.threshold.query.info: 5s
 #index.search.slowlog.threshold.query.debug: 2s
@@ -349,6 +349,11 @@ gateway.expected_nodes: 1
 #index.search.slowlog.threshold.fetch.debug: 500ms
 #index.search.slowlog.threshold.fetch.trace: 200ms
 
+#index.indexing.slowlog.threshold.index.warn: 10s
+#index.indexing.slowlog.threshold.index.info: 5s
+#index.indexing.slowlog.threshold.index.debug: 2s
+#index.indexing.slowlog.threshold.index.trace: 500ms
+
 ################################## GC Logging ################################
 
 #monitor.jvm.gc.ParNew.warn: 1000ms
@@ -358,5 +363,7 @@ gateway.expected_nodes: 1
 #monitor.jvm.gc.ConcurrentMarkSweep.warn: 10s
 #monitor.jvm.gc.ConcurrentMarkSweep.info: 5s
 #monitor.jvm.gc.ConcurrentMarkSweep.debug: 2s
+
+################################## Optionnal config ################################
 
 <%= @optional_config %>

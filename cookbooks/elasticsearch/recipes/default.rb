@@ -4,7 +4,7 @@ include_recipe "java"
 base_user node.elasticsearch.user
 
 optional_config = ""
-init_d_code = "ulimit -n 65000\n"
+init_d_code = "ulimit -n 65000\nexport JAVA_OPTS=\"#{node.elasticsearch.java_opts}\"\n"
 
 if node.elasticsearch.transport_zmq.enable
 
@@ -14,8 +14,13 @@ if node.elasticsearch.transport_zmq.enable
 zeromq.bind: #{node.elasticsearch.transport_zmq.listen}
 EOF
 
-  init_d_code += "export export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{node.libzmq.jzmq.directory}/lib"
+  init_d_code += "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:#{node.libzmq.jzmq.directory}/lib"
 
+end
+
+directory node.elasticsearch.directory_data do
+  owner node.elasticsearch.user
+  recursive true
 end
 
 basic_init_d "elasticsearch" do
