@@ -35,7 +35,7 @@ define :git_clone, {
   clean_options += " -x" if git_clone_params[:clean_ignore]
 
   sha = git_clone_params[:reference]
-  sha = "`git ls-remote #{git_clone_params[:repository]} #{sha} | head -n 1 | awk '{print $1}'`" unless sha =~ /^[0-9a-f]{40}$/
+  sha = "`git ls-remote #{git_clone_params[:repository]} '#{sha}' '#{sha}^{}' | tail -n 1 | awk '{print $1}'`" unless sha =~ /^[0-9a-f]{40}$/
 
   bash "update git clone of #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
