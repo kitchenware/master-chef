@@ -26,11 +26,12 @@ define :ruby_rbenv_command, {
     cmd << "touch #{ruby_rbenv_command_params[:file_check]}"
   end
 
-  storage = ruby_rbenv_command_params[:file_storage] || "#{ruby_rbenv_command_params[:directory]}/.rbenv_#{ruby_rbenv_command_params[:name].gsub(/ /, '_')}"
+  storage = ruby_rbenv_command_params[:file_storage] || "#{ruby_rbenv_command_params[:directory]}/.rbenv_#{ruby_rbenv_command_params[:name].gsub(/ /, '_').gsub(/:/, '_')}"
 
   execute_version "rbenv command : #{ruby_rbenv_command_params[:name]}" do
     user ruby_rbenv_command_params[:user]
     command cmd.join(" && ")
+    version ruby_rbenv_command_params[:version]
     file_storage storage
     notifies ruby_rbenv_command_params[:notifies][0], ruby_rbenv_command_params[:notifies][1] if ruby_rbenv_command_params[:notifies]
   end
