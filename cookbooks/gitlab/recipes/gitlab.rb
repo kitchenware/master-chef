@@ -7,8 +7,6 @@ else
   package "libicu48"
 end
 
-package "python2.7"
-
 package "mailutils"
 
 include_recipe "redis"
