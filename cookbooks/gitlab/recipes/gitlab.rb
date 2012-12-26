@@ -7,6 +7,10 @@ else
   package "libicu48"
 end
 
+package "python2.7"
+
+package "mailutils"
+
 include_recipe "redis"
 
 include_recipe "mysql::server"
@@ -17,6 +21,10 @@ rails_app "gitlab" do
   user node.gitlab.gitlab.user
   app_directory node.gitlab.gitlab.path
   mysql_database "gitlab:database"
+end
+
+directory "#{node.gitlab.gitlab.path}/shared/tmp" do
+  owner node.gitlab.gitlab.user
 end
 
 unicorn_rails_app "gitlab" do
@@ -30,7 +38,7 @@ rails_resque_worker "gitlab_resque" do
 end
 
 add_user_in_group node.gitlab.gitlab.user do
-  group "git"
+  group node.gitlab.gitolite.user
 end
 
 git_clone "#{node.gitlab.gitlab.path}/current" do
@@ -70,10 +78,20 @@ bash "create ssh key for gitlab user" do
   not_if "[ -f #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa ]"
 end
 
-bash "allow localhost connection for gitlab user" do
+execute_version "allow localhost connection for gitlab user" do
   user node.gitlab.gitlab.user
-  code "ssh -o StrictHostKeyChecking=no git@localhost echo toto || true"
-  not_if "[ -f #{get_home node.gitlab.gitlab.user}/.ssh/know_hosts ]"
+  command "ssh -o StrictHostKeyChecking=no git@localhost echo toto || true"
+  file_storage "#{get_home node.gitlab.gitlab.user}/.localhost_key_accepted"
+  version 1
+end
+
+file "#{get_home node.gitlab.gitlab.user}/.gitconfig" do
+  owner node.gitlab.gitlab.user
+  content <<-EOF
+[user]
+  name = Gitlab
+  email = #{node.gitlab.mail_from}
+  EOF
 end
 
 execute_version "configure gitolite for gitlab" do
@@ -87,11 +105,15 @@ execute_version "move repositories" do
   user "root"
   command <<-EOF
 mv #{get_home node.gitlab.gitolite.user}/repositories #{node.gitlab.gitolite.repositories} &&
-ln -s #{node.gitlab.gitolite.repositories} #{get_home node.gitlab.gitolite.user}/repositories &&
-chmod -R 770 #{node.gitlab.gitolite.repositories} &&
-chown -R #{node.gitlab.gitolite.user}:#{node.gitlab.gitolite.user} #{node.gitlab.gitolite.repositories}
+ln -s #{node.gitlab.gitolite.repositories} #{get_home node.gitlab.gitolite.user}/repositories
 EOF
   file_storage "#{node.gitlab.gitolite.repositories}/.installed"
+end
+
+directory_recurse_chmod node.gitlab.gitolite.repositories do
+  chmod 'ug+rwXs,o-rwx'
+  owner node.gitlab.gitolite.user
+  group node.gitlab.gitolite.user
 end
 
 deployed_files = %w{.bundle-option .rbenv-version .rbenv-gemsets}
@@ -107,12 +129,21 @@ deployed_files.each do |f|
   end
 end
 
-cp_command = deployed_files.map{|f| "cp #{node.gitlab.gitlab.path}/shared/files/#{f} #{node.gitlab.gitlab.path}/current/#{f}"}.join(' && ')
+cp_command = deployed_files.map{|f| "cp #{node.gitlab.gitlab.path}/shared/files/#{f} #{node.gitlab.gitlab.path}/current/#{f}"}.join(" &&\n")
 
 ruby_rbenv_command "gitlab db:migrate" do
   user node.gitlab.gitlab.user
   directory "#{node.gitlab.gitlab.path}/current"
-  code "rm -f .warped && #{cp_command} && rbenv warp install && rm -rf log && ln -s #{node.gitlab.gitlab.path}/shared/log . && RAILS_ENV=production rake db:migrate"
+  code <<-EOF
+rm -f .warped &&
+#{cp_command} &&
+rbenv warp install &&
+rm -rf log &&
+ln -s #{node.gitlab.gitlab.path}/shared/log . &&
+rm -rf tmp &&
+ln -s #{node.gitlab.gitlab.path}/shared/tmp . &&
+RAILS_ENV=production rake db:migrate
+EOF
   version node.gitlab.gitlab.reference
 end
 
@@ -125,25 +156,10 @@ ruby_rbenv_command "initialize gitlab" do
 end
 
 execute_version "install gitlab hook" do
-  user "root"
+  user node.gitlab.gitolite.user
   command "cp #{node.gitlab.gitlab.path}/current/lib/hooks/post-receive #{get_home node.gitlab.gitolite.user}/.gitolite/hooks/common/post-receive && chown #{node.gitlab.gitolite.user}:#{node.gitlab.gitolite.user} #{get_home node.gitlab.gitolite.user}/.gitolite/hooks/common/post-receive"
   file_storage "#{node.gitlab.gitlab.path}/current/.gitlab_hook"
   version node.gitlab.gitlab.reference
-end
-
-bash "update gitolite rc" do
-  user node.gitlab.gitolite.user
-  code "sed -i 's/0077/0007/g' #{get_home node.gitlab.gitolite.user}/.gitolite.rc && sed -i \"s/\\(GIT_CONFIG_KEYS\\s*=>*\\s*\\).\\{2\\}/\\1\\\"\\.\\*\\\"/g\" #{get_home node.gitlab.gitolite.user}/.gitolite.rc"
-  not_if "grep GIT_CONFIG_KEYS #{get_home node.gitlab.gitolite.user}/.gitolite.rc | grep '\\.\\*'"
-end
-
-file "#{get_home node.gitlab.gitlab.user}/.gitconfig" do
-  owner node.gitlab.gitlab.user
-  content <<-EOF
-[user]
-  name = Gitlab
-  email = #{node.gitlab.mail_from}
-  EOF
 end
 
 # charlock_holmes does not support moving after install

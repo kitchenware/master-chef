@@ -1,7 +1,7 @@
 
 default[:gitlab][:gitolite] = {
   :url => "git://github.com/gitlabhq/gitolite.git",
-  :reference => "gl-v304",
+  :reference => "gl-v320",
   :path => "/opt/gitolite",
   :repositories => "/opt/repositories",
   :user => "git",
@@ -15,7 +15,7 @@ default[:gitlab][:mail_from] = "notify@localhost"
 
 default[:gitlab][:gitlab] = {
   :url => "git://github.com/gitlabhq/gitlabhq.git",
-  :reference => "v3.0.3",
+  :reference => "4-0-stable",
   :path => "/opt/gitlab",
   :user => "gitlab",
 }
