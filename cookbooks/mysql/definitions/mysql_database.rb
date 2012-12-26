@@ -27,7 +27,7 @@ define :mysql_database, {
     c += ") | mysql --user=root --password=#{root_mysql_password}"
 
     execute "create database #{config[:database]}" do
-      code c
+      command c
       not_if "echo 'SHOW DATABASES' | mysql --user=root --password=#{root_mysql_password} | grep #{config[:database]}"
     end
 
