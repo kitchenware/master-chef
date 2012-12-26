@@ -42,10 +42,11 @@ target_war = tomcat_instance "confluence:tomcat" do
   war_location node.confluence.location
 end
 
-bash "build confluence" do
+execute_version "build confluence" do
   user node.tomcat.user
-  code "cd #{build_dir} && sh build.sh clean && sh build.sh && cp dist/confluence-#{node.confluence.version}.war #{target_war}"
-  not_if "[ -f #{war_file} ]"
+  command "cd #{build_dir} && sh build.sh clean && sh build.sh && cp dist/confluence-#{node.confluence.version}.war #{target_war}"
+  version node.confluence.url
+  file_storage "#{build_dir}/.confluence_build"
 end
 
 tomcat_confluence_http_port = tomcat_config("confluence:tomcat")[:connectors][:http][:port]
