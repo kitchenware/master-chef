@@ -15,6 +15,7 @@ default[:php5][:php_ini] = {
   :safe_mode_gid => false,
   :open_basedir => [],
   :error_log => "/var/log/php/error.log",
+  :disable_ini_set => true,
 }
 
 default[:php5][:cli_php_ini] = {
@@ -34,6 +35,7 @@ default[:php5][:cli_php_ini] = {
   :safe_mode_gid => false,
   :open_basedir => [],
   :error_log => "/var/log/php/error.log",
+  :disable_ini_set => true,
 }
 
 
