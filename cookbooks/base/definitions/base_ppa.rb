@@ -18,7 +18,7 @@ define :base_ppa, {
   execute "ppa : #{base_ppa_params[:name]}" do
     command "add-apt-repository #{base_ppa_params[:url]} && apt-get update"
     not_if "ls /etc/apt/sources.list.d | grep #{base_ppa_params[:name]}"
-    notifies :run, "bash[apt-get-update]", :immediately
+    notifies :run, "execute[apt-get-update]", :immediately
   end
 
 end
