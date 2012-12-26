@@ -4,40 +4,42 @@ include_recipe "nginx"
 
 mysql_database "sonar:database"
 
-db_config = mysql_config "sonar:database"
-
-build_dir = "#{node.sonar.path.build}"
-sonar_file_name = "sonar-#{node.sonar.version}"
-
-directory "#{node.sonar.path.root_path}" do
+directory node.sonar.path do
   owner node.tomcat.user
   recursive true
 end
 
-execute "install sonar home" do
-  command "cd #{build_dir} && curl --location #{node.sonar.zip_url} -o #{sonar_file_name}.zip && unzip #{node.sonar.path.build}/#{sonar_file_name}.zip && rm -f #{build_dir}/#{sonar_file_name}.zip"
-  not_if "[ -d #{build_dir}/#{sonar_file_name}/war ]"
-end
-
-directory "#{node.sonar.path.build}/#{sonar_file_name}" do
-  owner node.tomcat.user
-  mode '0755'
-end
-
-template "#{node.sonar.path.root_path}/#{sonar_file_name}/conf/sonar.properties" do
-  mode '0644'
-  variables :password => db_config[:password]
-  source "sonar.properties.erb"
+target_war = tomcat_instance "sonar:tomcat" do
+  war_location node.sonar.location
 end
 
 execute "build sonar war" do
-  command "cd #{node.sonar.path.build}/sonar-#{node.sonar.version}/war && sh build-war.sh"
-  not_if "[ -f #{node.sonar.path.build}/sonar-#{node.sonar.version}/war/sonar.war ]"
+  user node.tomcat.user
+  command "cd #{node.sonar.path}/sonar/war && sh build-war.sh && cp sonar.war #{target_war}"
+  action :nothing
 end
 
-tomcat_instance "sonar:tomcat" do
-  war_url "file://#{node.sonar.path.build}/#{sonar_file_name}/war/sonar.war"
-  war_location node.sonar.location
+execute_version "download sonar" do
+  user node.tomcat.user
+  command <<-EOF
+cd #{node.sonar.path} &&
+rm -rf * &&
+curl --location #{node.sonar.zip_url} -o sonar.zip &&
+unzip sonar.zip &&
+mv sonar-#{node.sonar.version} sonar &&
+rm -f sonar.zip
+EOF
+  version node.sonar.zip_url
+  file_storage "#{node.sonar.path}/.sonar_download"
+  notifies :run, resources(:execute => "build sonar war"), :immediately
+end
+
+template "#{node.sonar.path}/sonar/conf/sonar.properties" do
+  owner node.tomcat.user
+  mode '0644'
+  variables :db_config => mysql_config("sonar:database")
+  source "sonar.properties.erb"
+  notifies :run, resources(:execute => "build sonar war"), :immediately
 end
 
 tomcat_sonar_http_port = tomcat_config("sonar:tomcat")[:connectors][:http][:port]

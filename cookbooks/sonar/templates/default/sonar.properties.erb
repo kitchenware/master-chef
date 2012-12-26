@@ -35,8 +35,8 @@
 #----- Credentials
 # Permissions to create tables and indexes must be granted to JDBC user.
 # The schema must be created first.
-sonar.jdbc.username:                       sonar
-sonar.jdbc.password:                       <%= @password %>
+sonar.jdbc.username:                       <%= @db_config[:username] %>
+sonar.jdbc.password:                       <%= @db_config[:password] %>
 
 #----- Embedded database Derby
 # Note : it does not accept connections from remote hosts, so the
@@ -58,7 +58,7 @@ sonar.jdbc.password:                       <%= @password %>
 
 #----- MySQL 5.x/6.x
 # Comment the embedded database and uncomment the following line to use MySQL
-sonar.jdbc.url:                            jdbc:mysql://localhost:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true
+sonar.jdbc.url:                            jdbc:mysql://<%= @db_config[:host] %>:3306/<%= @db_config[:database] %>?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true
 
 # Optional properties
 sonar.jdbc.driverClassName:                com.mysql.jdbc.Driver

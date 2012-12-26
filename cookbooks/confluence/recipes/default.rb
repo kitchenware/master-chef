@@ -38,16 +38,14 @@ file "#{build_dir}/edit-webapp/WEB-INF/classes/confluence-init.properties" do
   content "confluence.home=#{node.confluence.path.home}"
 end
 
-war_file = "#{build_dir}/dist/confluence-#{node.confluence.version}.war"
-bash "build confluence" do
-  user node.tomcat.user
-  code "cd #{build_dir} && sh build.sh clean && sh build.sh"
-  not_if "[ -f #{war_file} ]"
+target_war = tomcat_instance "confluence:tomcat" do
+  war_location node.confluence.location
 end
 
-tomcat_instance "confluence:tomcat" do
-  war_url "file://#{war_file}"
-  war_location node.confluence.location
+bash "build confluence" do
+  user node.tomcat.user
+  code "cd #{build_dir} && sh build.sh clean && sh build.sh && cp dist/confluence-#{node.confluence.version}.war #{target_war}"
+  not_if "[ -f #{war_file} ]"
 end
 
 tomcat_confluence_http_port = tomcat_config("confluence:tomcat")[:connectors][:http][:port]

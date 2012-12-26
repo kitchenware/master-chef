@@ -76,13 +76,14 @@ define :tomcat_instance, {
   end
 
   if tomcat_instance_params[:war_location] && tomcat_instance_params[:war_url]
-    war_file = "#{tomcat_instance_params[:war_location][1..-1]}.war"
-    war_full_file = "#{catalina_base}/webapps/#{war_file}"
-    bash "install war from url #{config[:name]}" do
+
+     execute_version "install war from #{tomcat_instance_params[:war_url]}" do
       user node.tomcat.user
-      code "curl --location #{tomcat_instance_params[:war_url]} -o /tmp/#{war_file} && mv /tmp/#{war_file} #{war_full_file}"
-      not_if "[ -f #{war_full_file} ]"
+      command "curl -s -L #{tomcat_instance_params[:war_url]} -o #{catalina_base}/webapps/#{tomcat_instance_params[:war_location]}.war"
+      version tomcat_instance_params[:war_url]
+      file_storage "#{catalina_base}/.war_version"
     end
+
   end
 
   if tomcat_instance_params[:xml_config_file]
@@ -102,6 +103,6 @@ define :tomcat_instance, {
 
   end
 
-  catalina_base
+  "#{catalina_base}/webapps#{tomcat_instance_params[:war_location]}.war"
 
 end
