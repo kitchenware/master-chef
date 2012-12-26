@@ -110,7 +110,7 @@ EOF
   file_storage "#{node.gitlab.gitolite.repositories}/.installed"
 end
 
-directory_recurse_chmod node.gitlab.gitolite.repositories do
+directory_recurse_chmod_chown node.gitlab.gitolite.repositories do
   chmod 'ug+rwXs,o-rwx'
   owner node.gitlab.gitolite.user
   group node.gitlab.gitolite.user

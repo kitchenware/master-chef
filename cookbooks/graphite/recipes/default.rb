@@ -60,14 +60,12 @@ execute "create db" do
   not_if "[ -f #{node.graphite.directory}/storage/graphite.db ]"
 end
 
-execute "change storage owner" do
-  command "chown -R www-data #{node.graphite.directory}/storage"
-  not_if "ls -al #{node.graphite.directory}/storage | grep www-data"
+directory_recurse_chmod_chown "#{node.graphite.directory}/storage" do
+  owner "www-data"
 end
 
-execute "change plugins owner" do
-  command "chown -R www-data #{node.graphite.directory}/lib/twisted/plugins"
-  not_if "ls -al#{node.graphite.directory}/lib/twisted/plugins | grep www-data"
+directory_recurse_chmod_chown "#{node.graphite.directory}/lib/twisted/plugins" do
+  owner "www-data"
 end
 
 execute "configure wsgi" do
