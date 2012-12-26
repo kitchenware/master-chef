@@ -9,8 +9,8 @@ define :apache2_enable_module, {
     package "libapache2-mod-#{apache2_enable_module_params[:name]}"
   end
 
-  bash "enable apache2 module #{apache2_enable_module_params[:name]}" do
-    code "a2enmod #{apache2_enable_module_params[:name]}"
+  execute "enable apache2 module #{apache2_enable_module_params[:name]}" do
+    command "a2enmod #{apache2_enable_module_params[:name]}"
     notifies :restart, resources(:service => "apache2")
     not_if "[ -h #{node.apache2.server_root}/mods-enabled/#{apache2_enable_module_params[:name]}.load ]"
   end

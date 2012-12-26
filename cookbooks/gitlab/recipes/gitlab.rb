@@ -72,9 +72,9 @@ link "#{node.gitlab.gitlab.path}/current/config/gitlab.yml" do
   to "#{node.gitlab.gitlab.path}/shared/gitlab.yml"
 end
 
-bash "create ssh key for gitlab user" do
+execute "create ssh key for gitlab user" do
   user node.gitlab.gitlab.user
-  code "ssh-keygen -t rsa -f #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa -N '' -b 2048 && cp #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa.pub /tmp/gitlab.pub"
+  command "ssh-keygen -t rsa -f #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa -N '' -b 2048 && cp #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa.pub /tmp/gitlab.pub"
   not_if "[ -f #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa ]"
 end
 

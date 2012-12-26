@@ -10,13 +10,13 @@ define :base_ppa, {
 
   package "python-software-properties"
 
-  bash "apt-get-update" do
-    code "apt-get update"
+  execute "apt-get-update" do
+    command "apt-get update"
     action :nothing
   end
 
-  bash "ppa : #{base_ppa_params[:name]}" do
-    code "add-apt-repository #{base_ppa_params[:url]} && apt-get update"
+  execute "ppa : #{base_ppa_params[:name]}" do
+    command "add-apt-repository #{base_ppa_params[:url]} && apt-get update"
     not_if "ls /etc/apt/sources.list.d | grep #{base_ppa_params[:name]}"
     notifies :run, "bash[apt-get-update]", :immediately
   end

@@ -8,8 +8,8 @@ define :limits_d, {
 
   if node['platform'] == 'debian'
 
-    bash "active limits in pam common-session" do
-      code 'echo -e "session required pam_limits.so" >> /etc/pam.d/common-session'
+    execute "active limits in pam common-session" do
+      command 'echo -e "session required pam_limits.so" >> /etc/pam.d/common-session'
       not_if 'grep pam_limits.so /etc/pam.d/common-session'
     end
 

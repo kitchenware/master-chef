@@ -3,8 +3,8 @@ raise "Unknown java version #{node.java.default_version}, in #{node.java.version
 
 include_recipe "java::java_#{node.java.default_version}"
 
-bash "set default java version" do
-  code <<-EOF
+execute "set default java version" do
+  command <<-EOF
   update-alternatives --set java /usr/lib/jvm/#{node.java.versions[node.java.default_version]}/bin/java &&
   update-alternatives --set javac /usr/lib/jvm/#{node.java.versions[node.java.default_version]}/bin/javac
   EOF

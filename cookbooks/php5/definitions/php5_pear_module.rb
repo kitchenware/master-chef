@@ -4,8 +4,8 @@ define :php5_pear_module, {
 
   php5_pear_module_params = params
 
-  bash "install pear module #{php5_pear_module_params[:name]}" do
-    code "pear install #{php5_pear_module_params[:name]}"
+  execute "install pear module #{php5_pear_module_params[:name]}" do
+    command "pear install #{php5_pear_module_params[:name]}"
     not_if "pear list-files #{php5_pear_module_params[:name]} > /dev/null"
   end
 

@@ -22,9 +22,9 @@ Chef::Log.info "************************************************************"
 
 tar_gz = "#{node.confluence.version}.tar.gz"
 build_dir = "#{node.confluence.path.build}/confluence-#{node.confluence.version}"
-bash "download confluence"  do
+execute "download confluence"  do
   user node.tomcat.user
-  code "cd #{node.confluence.path.build} && curl --location #{node.confluence.url} -o #{tar_gz} && tar xzf #{tar_gz}"
+  command "cd #{node.confluence.path.build} && curl --location #{node.confluence.url} -o #{tar_gz} && tar xzf #{tar_gz}"
   not_if "[ -d #{build_dir} ]"
 end
 

@@ -10,8 +10,8 @@ define :add_apt_repository, {
 
   raise "Please specify component (such as non-free) name of the deb repository" unless add_apt_repository_params[:components]
 
-  bash "apt-get-update" do
-    code "apt-get update"
+  execute "apt-get-update" do
+    command "apt-get update"
     action :nothing
   end
 

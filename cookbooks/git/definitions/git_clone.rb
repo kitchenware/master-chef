@@ -17,16 +17,16 @@ define :git_clone, {
     git_clone_params[:repository] = "http://#{$1}"
   end
 
-  bash "git clone #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
+  execute "git clone #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
-    code "git clone #{git_clone_params[:repository]} #{git_clone_params[:name]}"
+    command "git clone #{git_clone_params[:repository]} #{git_clone_params[:name]}"
     not_if "[ -d #{git_clone_params[:name]}/.git ]"
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
 
-  bash "create branch #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
+  execute "create branch #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
-    code "cd #{git_clone_params[:name]} && git checkout -q -b deploy"
+    command "cd #{git_clone_params[:name]} && git checkout -q -b deploy"
     not_if "cd #{git_clone_params[:name]} && git branch | grep deploy"
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
@@ -37,9 +37,9 @@ define :git_clone, {
   sha = git_clone_params[:reference]
   sha = "`git ls-remote #{git_clone_params[:repository]} '#{sha}' '#{sha}^{}' | tail -n 1 | awk '{print $1}'`" unless sha =~ /^[0-9a-f]{40}$/
 
-  bash "update git clone of #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
+  execute "update git clone of #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
-    code "cd #{git_clone_params[:name]} && git fetch -q origin && git fetch --tags -q origin && git reset -q --hard #{sha} && git clean #{clean_options}"
+    command "cd #{git_clone_params[:name]} && git fetch -q origin && git fetch --tags -q origin && git reset -q --hard #{sha} && git clean #{clean_options}"
     not_if "cd #{git_clone_params[:name]} && git log -n1 --decorate | head -n 1 | grep #{sha}"
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end

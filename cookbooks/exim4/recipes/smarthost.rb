@@ -8,16 +8,16 @@ end
 
 if node.exim4.smarthost =~ /localhost/
 
-  bash "add self = send to exim4.conf.template" do
-    code "sed -i '/^smarthost/ a   self=send' /etc/exim4/exim4.conf.template "
+  execute "add self = send to exim4.conf.template" do
+    command "sed -i '/^smarthost/ a   self=send' /etc/exim4/exim4.conf.template "
     not_if "cat /etc/exim4/exim4.conf.template  | grep -A5 '^smarthost:' | grep self"
     notifies :restart, resources(:service => "exim4")
   end
 
 else
 
-  bash "remove self = send to exim4.conf.template" do
-    code "sed -i '/^self/d' /etc/exim4/exim4.conf.template "
+  execute "remove self = send to exim4.conf.template" do
+    command "sed -i '/^self/d' /etc/exim4/exim4.conf.template "
     only_if "cat /etc/exim4/exim4.conf.template  | grep -A5 '^smarthost:' | grep self"
     notifies :restart, resources(:service => "exim4")
   end

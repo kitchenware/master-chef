@@ -18,16 +18,16 @@ define :mysql_database, {
     users = ["#{config[:username]}@localhost"]
     users << config[:username] unless node.mysql.bind_address == "127.0.0.1"
 
-    command = "(\n"
-    command += " echo \"CREATE DATABASE IF NOT EXISTS #{config[:database]};\"\n"
+    c = "(\n"
+    c += " echo \"CREATE DATABASE IF NOT EXISTS #{config[:database]};\"\n"
     users.each do |u|
-      command += "echo \"CREATE USER #{u} IDENTIFIED BY \\\"#{config[:password]}\\\";\"\n"
-      command += "echo \"GRANT ALL PRIVILEGES ON #{config[:database]} . * TO  #{u};\"\n";
+      c += "echo \"CREATE USER #{u} IDENTIFIED BY \\\"#{config[:password]}\\\";\"\n"
+      c += "echo \"GRANT ALL PRIVILEGES ON #{config[:database]} . * TO  #{u};\"\n";
     end
-    command += ") | mysql --user=root --password=#{root_mysql_password}"
+    c += ") | mysql --user=root --password=#{root_mysql_password}"
 
-    bash "create database #{config[:database]}" do
-      code command
+    execute "create database #{config[:database]}" do
+      code c
       not_if "echo 'SHOW DATABASES' | mysql --user=root --password=#{root_mysql_password} | grep #{config[:database]}"
     end
 

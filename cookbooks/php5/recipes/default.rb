@@ -13,8 +13,8 @@ end
 
 if node.php5[:pear] || node.php5[:pear_modules] || node.php5[:pear_channels]
 
-  bash "pear upgrade" do
-    code "pear upgrade pear"
+  execute "pear upgrade" do
+    command "pear upgrade pear"
     action :nothing
   end
 

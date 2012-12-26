@@ -5,8 +5,8 @@ base_user node.jboss.user do
   home node.jboss.home
 end
 
-bash "install jboss with official zip" do
-  user node.jboss.user
+execute "install jboss with official zip" do
+  command node.jboss.user
   code "cd #{node.jboss.home} && curl --location #{node.jboss.zip_file} -o && unzip jboss-as-#{node.jboss.version}.zip && jboss-as-#{node.jboss.version}.zip && rm jboss-as-#{node.jboss.version}.zip"
   not_if "[ -d #{node.jboss.jboss_home} ]"
 end
