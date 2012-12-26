@@ -21,23 +21,23 @@ directory node.jboss.log_dir do
 end
 
 template "#{node.jboss.jboss_home}/standalone/configuration/standalone.xml" do 
-  mode 0644
+  mode '0644'
   source "standalone.xml"
 end
 
 template "#{node.jboss.jboss_home}/standalone/configuration/mgmt-users.properties" do 
-  mode 0644
+  mode '0644'
   source "mgmt-users.properties"
 end
 
 template "/etc/init.d/jboss" do
-  mode 0755
+  mode '0755'
   variables :jboss_home => node.jboss.jboss_home
   source "jboss-as-standalone.sh.erb"
 end
 
 template "/etc/jboss-as/jboss-as.conf" do
-  mode 0644
+  mode '0644'
   variables :log_dir => node.jboss.log_dir
   source "jboss-as.conf.erb"
 end

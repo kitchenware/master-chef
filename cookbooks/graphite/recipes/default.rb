@@ -45,12 +45,12 @@ end
 
 directory "#{node.apache2.server_root}/wsgi" do
   owner "www-data"
-  mode 0755
+  mode '0755'
 end
 
 template "#{node.graphite.directory}/webapp/graphite/local_settings.py" do
   source "local_settings.py.erb"
-  mode 0644
+  mode '0644'
   variables :timezone => node.graphite.timezone, :db_file => "#{node.graphite.directory}/storage/graphite.db"
   notifies :restart, resources(:service => "apache2")
 end
@@ -81,7 +81,7 @@ end
 
 template "/etc/init.d/carbon" do
   source "carbon_init_d.erb"
-  mode 0755
+  mode '0755'
   variables :graphite_directory => node.graphite.directory
 end
 
@@ -94,21 +94,21 @@ end
 
 template "#{node.graphite.directory}/conf/carbon.conf" do
   source "carbon.conf.erb"
-  mode 0644
+  mode '0644'
   variables :carbon_receiver_port => node.graphite.carbon.port
   notifies :restart, resources(:service => "carbon")
 end
 
 template "#{node.graphite.directory}/conf/storage-aggregation.conf" do
   source "storage-aggregation.conf.erb"
-  mode 0644
+  mode '0644'
   variables :default_xFilesFactor => node.graphite.xFilesFactor
   notifies :restart, resources(:service => "carbon")
 end
 
 template "#{node.graphite.directory}/conf/storage-schemas.conf" do
   source "storage-schemas.conf.erb"
-  mode 0644
+  mode '0644'
   variables :configs => node.graphite.storages
   notifies :restart, resources(:service => "carbon")
 end

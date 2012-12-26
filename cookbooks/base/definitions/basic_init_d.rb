@@ -38,7 +38,7 @@ define :basic_init_d, {
   template "/etc/init.d/#{basic_init_d_params[:name]}" do
     cookbook "base"
     source "basic_init_d.erb"
-    mode 0755
+    mode '0755'
     variables({
       :daemon => basic_init_d_params[:daemon],
       :name => basic_init_d_params[:name],

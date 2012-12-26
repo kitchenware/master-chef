@@ -19,12 +19,13 @@ execute "install sonar home" do
   not_if "[ -d #{build_dir}/#{sonar_file_name}/war ]"
 end
 
-execute "change sonar home owner" do
-  command "chown -R #{node.tomcat.user} #{node.sonar.path.build}/#{sonar_file_name}"
+directory "#{node.sonar.path.build}/#{sonar_file_name}" do
+  owner node.tomcat.user
+  mode '0755'
 end
 
 template "#{node.sonar.path.root_path}/#{sonar_file_name}/conf/sonar.properties" do
-  mode 0644
+  mode '0644'
   variables :password => db_config[:password]
   source "sonar.properties.erb"
 end

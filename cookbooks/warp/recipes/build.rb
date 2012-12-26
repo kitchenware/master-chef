@@ -29,7 +29,7 @@ end
 
 template "#{get_home "build"}/upload.sh" do
   owner "build"
-  mode 0755
+  mode '0755'
   source "upload.sh.erb"
   variables :bucket => "warp-repo"
 end

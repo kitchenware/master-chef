@@ -51,7 +51,7 @@ end
 template "#{node.elasticsearch.directory}/config/elasticsearch.yml" do
   owner node.elasticsearch.user
   source "elasticsearch.yml.erb"
-  mode 0644
+  mode '0644'
   variables :config => node.elasticsearch.to_hash, :optional_config => optional_config
   notifies :restart, resources(:service => "elasticsearch")
 end

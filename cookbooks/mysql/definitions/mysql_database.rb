@@ -39,7 +39,7 @@ define :mysql_database, {
       cookbook "mysql"
       source "mysql.sh.erb"
       variables :config => config
-      mode 0700
+      mode '0700'
       owner config[:mysql_wrapper][:owner]
     end
 

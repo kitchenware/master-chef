@@ -15,7 +15,7 @@ define :php5_cli, {
 		config = node.php5.cli_php_ini.to_hash.merge(options)
 
 		template "/etc/php5/cli/php.ini" do
-			mode 0644
+			mode '0644'
 			cookbook "php5"
 			source "php5.ini.erb"
 			variables config

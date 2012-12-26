@@ -33,7 +33,7 @@ end
 template "#{node.redmine.directory}/shared/configuration.yml" do
     variables :config => node.redmine
     source 'configuration.yml.erb'
-    mode 0755
+    mode '0755'
 end
 
 link "#{node.redmine.directory}/current/config/configuration.yml" do

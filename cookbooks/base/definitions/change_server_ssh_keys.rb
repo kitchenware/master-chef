@@ -11,7 +11,7 @@ define :change_server_ssh_keys, {
 
   ["ssh_host_dsa_key", "ssh_host_rsa_key"].each do |f|
     template "/etc/ssh/#{f}" do
-      mode 0600
+      mode '0600'
       source f
       cookbook change_server_ssh_keys_params[:name]
       notifies :restart, resources(:service => "ssh")
@@ -20,7 +20,7 @@ define :change_server_ssh_keys, {
 
   ["ssh_host_dsa_key.pub", "ssh_host_rsa_key.pub"].each do |f|
     template "/etc/ssh/#{f}" do
-      mode 0644
+      mode '0644'
       source f
       cookbook change_server_ssh_keys_params[:name]
       notifies :restart, resources(:service => "ssh")

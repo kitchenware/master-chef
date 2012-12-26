@@ -8,7 +8,7 @@ execute_version "bucky" do
 end
 
 directory "/etc/bucky" do
-  mode 0755
+  mode '0755'
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("bucky", "\\/etc\\/bucky\\/.*")
@@ -22,7 +22,7 @@ end
 
 template "/etc/bucky/bucky.conf" do
   source "bucky.conf.erb"
-  mode 0644
+  mode '0644'
   variables :bucky_port => node.graphite.bucky.collectd_port
   notifies :restart, resources(:service => "bucky")
 end

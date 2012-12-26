@@ -23,12 +23,12 @@ define :base_user, {
   directory user_home do
     recursive true
     owner base_user_params[:name]
-    mode 0755
+    mode '0755'
   end
 
   directory "#{user_home}/.ssh" do
     owner base_user_params[:name]
-    mode 0700
+    mode '0700'
   end
 
 end

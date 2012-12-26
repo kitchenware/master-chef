@@ -8,7 +8,7 @@ if node.platform == "debian" || node.platform == "ubuntu"
 
   template "/etc/init.d/supervisor" do
     source "init_d"
-    mode 0755
+    mode '0755'
   end
 
 end
@@ -16,7 +16,7 @@ end
 template "/etc/default/supervisor" do
   source "supervisor.erb"
   variables :dodtime => Proc.new { find_resources_by_name_pattern(/^\/etc\/supervisor\/conf.d\/.*\.conf$/).length * node.supervisor.restart_delay_by_job }
-  mode 0644
+  mode '0644'
 end
 
 

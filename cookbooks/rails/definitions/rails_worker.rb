@@ -27,7 +27,7 @@ define :rails_worker, {
 	template "#{app_config[:app_directory]}/shared/worker_#{rails_worker_params[:name]}.sh" do
     cookbook "rails"
     source "worker.sh.erb"
-    mode 0755
+    mode '0755'
     owner app_config[:user]
     variables({
       :app_directory => "#{app_config[:app_directory]}/current",
@@ -42,7 +42,7 @@ define :rails_worker, {
   template "#{app_config[:app_directory]}/shared/worker_#{rails_worker_params[:name]}_restart.sh" do
     cookbook "rails"
     source "worker_restart.sh.erb"
-    mode 0755
+    mode '0755'
     owner app_config[:user]
     variables :name => rails_worker_params[:name]
   end

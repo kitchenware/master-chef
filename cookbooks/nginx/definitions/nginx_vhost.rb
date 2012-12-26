@@ -20,7 +20,7 @@ define :nginx_vhost, {
       template "/etc/nginx/#{vhost_sym}.#{ext}" do
         cookbook ssl[:cookbook]
         source ssl[ext.to_sym]
-        mode 0600
+        mode '0600'
         owner "www-data"
       end
     end
@@ -38,7 +38,7 @@ define :nginx_vhost, {
       template "/etc/nginx/#{basic_auth[:file]}.passwd" do
         cookbook basic_auth[:cookbook]
         source "#{basic_auth[:file]}.passwd.erb"
-        mode 0644
+        mode '0644'
         notifies :reload, resources(:service => "nginx")
       end
     end
@@ -53,7 +53,7 @@ define :nginx_vhost, {
 
       file "/etc/nginx/#{vhost_sym}.passwd" do
         content passwd
-        mode 0644
+        mode '0644'
         notifies :reload, resources(:service => :nginx)
       end
 
@@ -63,7 +63,7 @@ define :nginx_vhost, {
 
   template "/etc/nginx/sites-enabled/#{vhost_sym.to_s}.conf" do
     source nginx_vhost_params[:options][:source] || "#{vhost_sym.to_s}.conf.erb"
-    mode 0644
+    mode '0644'
     variables({:listen => nginx_listen + auth, :listen_no_auth => nginx_listen, :config => config, :server_tokens => 'Off'}.merge(nginx_vhost_params[:options]))
     notifies :reload, resources(:service => "nginx")
   end

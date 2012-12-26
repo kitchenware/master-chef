@@ -9,7 +9,7 @@ define :sudo_sudoers_file, {
 
   directory "/etc/sudoers.d" do
     owner "root"
-    mode 0755
+    mode '0755'
   end
 
   execute "add includedir /etc/sudoers.d in sudoers" do
@@ -19,7 +19,7 @@ define :sudo_sudoers_file, {
 
   file "/etc/sudoers.d/#{sudo_sudoers_file_params[:name]}" do
     owner "root"
-    mode 0440
+    mode '0440'
     content sudo_sudoers_file_params[:content]
   end
 

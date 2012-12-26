@@ -45,7 +45,7 @@ define :nodejs_app, {
       :extended_options => extended_options,
       :node_env => nodejs_app_params[:node_env],
     })
-    mode 0755
+    mode '0755'
   end
 
   basic_init_d nodejs_app_params[:name] do
@@ -60,7 +60,7 @@ define :nodejs_app, {
   end
 
   file "/etc/default/#{nodejs_app_params[:name]}" do
-    mode "0755"
+    mode '0755'
     content "NODE_OPTS=\"#{nodejs_app_params[:opts]}\""
     notifies :restart, resources(:service => nodejs_app_params[:name])
   end

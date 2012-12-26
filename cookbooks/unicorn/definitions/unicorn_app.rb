@@ -27,7 +27,7 @@ define :unicorn_app, {
   template "/etc/init.d/#{unicorn_app_params[:name]}" do
     cookbook 'unicorn'
     source 'unicorn_init_d.erb'
-    mode 0755
+    mode '0755'
     variables({
       :name => unicorn_app_params[:name],
       :app_directory => "#{unicorn_app_params[:app_directory]}/current",
@@ -48,7 +48,7 @@ define :unicorn_app, {
     cookbook 'unicorn'
     source "unicorn.conf.rb.erb"
     owner unicorn_app_params[:user]
-    mode 0644
+    mode '0644'
     variables({
       :app_directory => "#{unicorn_app_params[:app_directory]}/current",
       :unicorn_socket => unicorn_socket_file,

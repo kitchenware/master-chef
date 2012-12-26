@@ -12,7 +12,7 @@ if node[:ntp_servers]
   template "/etc/ntp.conf" do
     source "ntp.conf.erb"
     variables :servers => node.ntp_servers
-    mode 0644
+    mode '0644'
     notifies :restart, resources(:service => "ntp")
   end
 

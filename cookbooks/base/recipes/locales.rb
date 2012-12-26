@@ -36,13 +36,13 @@ if node.locales.configure
 
   file "/etc/locale.gen" do
     content node.locales.list.join("\n") + "\n"
-    mode 0644
+    mode '0644'
     notifies :run, resources(:execute => "locale-gen"), :delayed
   end
 
   file "/etc/default/locale" do
     content "LANG=\"#{node.locales.default_locale}\"\n"
-    mode 0644
+    mode '0644'
   end
 
 end

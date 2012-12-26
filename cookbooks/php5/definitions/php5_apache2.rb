@@ -21,7 +21,7 @@ define :php5_apache2, {
   config = node.php5.php_ini.to_hash.merge(options)
 
   template "/etc/php5/apache2/php.ini" do
-    mode 0644
+    mode '0644'
     cookbook "php5"
     source "php5.ini.erb"
     variables config
@@ -32,7 +32,7 @@ define :php5_apache2, {
 
   file "/etc/apache2/conf.d/https_php" do
     content "SetEnvIf X-Forwarded-Proto https HTTPS=on"
-    mode 0644
+    mode '0644'
     notifies :reload, resources(:service => "apache2")
   end
 
@@ -40,7 +40,7 @@ define :php5_apache2, {
 
     directory File.dirname(config["error_log"]) do
       owner "www-data"
-      mode 0755
+      mode '0755'
       recursive true
     end
 

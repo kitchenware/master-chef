@@ -11,11 +11,11 @@ service "collectd" do
 end
 
 directory "/etc/collectd/collectd.d" do
-  mode 0755
+  mode '0755'
 end
 
 template "/etc/collectd/collectd.conf" do
-  mode 0644
+  mode '0644'
   source "collectd.conf.erb"
   variables :interval => node.collectd.interval
   notifies :restart, resources(:service => "collectd")

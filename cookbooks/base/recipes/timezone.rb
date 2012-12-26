@@ -13,7 +13,7 @@ if node.timezone =~ /^([^\/]+)\/([^\/]+)$/
 
   file "/etc/timezone" do
     content node.timezone
-    mode 0644
+    mode '0644'
   end
 
 else

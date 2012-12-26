@@ -13,7 +13,7 @@ end
 
 template "/etc/statsd.conf" do
   owner node.graphite.statsd.user
-  mode 0644
+  mode '0644'
   source "statsd.conf.erb"
   variables :config => node.graphite.statsd.to_hash
   notifies :restart, resources(:service => "statsd")
@@ -28,7 +28,7 @@ end
 
 file "#{node.graphite.statsd.directory}/current/.node_version" do
   owner node.graphite.statsd.user
-  mode 0644
+  mode '0644'
   content node.graphite.statsd.node_version
 end
 

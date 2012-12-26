@@ -44,7 +44,7 @@ define :apache2_vhost, {
       template "#{node.apache2.server_root}/#{basic_auth[:file]}.passwd" do
         cookbook basic_auth[:cookbook]
         source "#{basic_auth[:file]}.passwd.erb"
-        mode 0644
+        mode '0644'
         notifies :reload, resources(:service => "apache2")
       end
     end
@@ -59,7 +59,7 @@ define :apache2_vhost, {
 
       file "#{node.apache2.server_root}/#{vhost_sym}.passwd" do
         content passwd
-        mode 0644
+        mode '0644'
         notifies :reload, resources(:service => :apache2)
       end
 
@@ -70,7 +70,7 @@ define :apache2_vhost, {
   template "#{node.apache2.server_root}/sites-enabled/#{vhost_sym.to_s}.conf" do
     cookbook apache2_vhost_params[:options][:cookbook] if apache2_vhost_params[:options][:cookbook]
     source apache2_vhost_params[:options][:source] || "#{vhost_sym.to_s}.conf.erb"
-    mode 0644
+    mode '0644'
     variables({
       :listen => apache2_listen,
       :basic_auth => basic_auth_conf,

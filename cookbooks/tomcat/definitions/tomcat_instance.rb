@@ -42,7 +42,7 @@ define :tomcat_instance, {
   template "/etc/init.d/#{config[:name]}" do
     cookbook "tomcat"
     source "init_d.erb"
-    mode 0755
+    mode '0755'
     variables({
       :catalina_base => catalina_base,
       :catalina_home => node.tomcat.catalina_home,
@@ -62,7 +62,7 @@ define :tomcat_instance, {
     cookbook "tomcat"
     source "env.erb"
     owner "tomcat"
-    mode 0644
+    mode '0644'
     variables :config => config
     notifies :restart, resources(:service => config[:name])
   end

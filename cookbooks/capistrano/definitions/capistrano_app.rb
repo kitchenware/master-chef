@@ -17,7 +17,7 @@ define :capistrano_app, {
     directory dir do
       owner capistrano_app_params[:user]
       group capistrano_app_params[:group] if capistrano_app_params[:group]
-      mode 0775
+      mode '0775'
       recursive true
     end
   end

@@ -53,7 +53,7 @@ if node.nginx[:deploy_default_config]
     end
     variables :worker_processes => nb_workers
     source "nginx.conf.erb"
-    mode 0644
+    mode '0644'
     notifies :reload, resources(:service => "nginx")
   end
 

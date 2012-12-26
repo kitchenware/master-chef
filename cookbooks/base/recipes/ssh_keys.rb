@@ -24,7 +24,7 @@ if node[:ssh_keys]
 
     directory "#{home}/.ssh" do
       owner user
-      mode 0700
+      mode '0700'
       action :nothing
     end
 
@@ -36,7 +36,7 @@ if node[:ssh_keys]
 
     file "#{home}/.ssh/authorized_keys" do
       owner user
-      mode 0700
+      mode '0700'
       content keys.uniq.sort.join("\n")
       action :nothing
     end

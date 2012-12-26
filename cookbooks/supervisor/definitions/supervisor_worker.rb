@@ -9,7 +9,7 @@ define :supervisor_worker, {
   supervisor_worker_params = params
 
   template "/etc/supervisor/conf.d/#{supervisor_worker_params[:name]}.conf" do
-    mode 0644
+    mode '0644'
     cookbook "supervisor"
     source "worker.conf.erb"
     variables({

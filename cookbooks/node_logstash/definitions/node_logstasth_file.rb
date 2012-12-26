@@ -13,7 +13,7 @@ define :node_logstash_files, {
   end
 
   file "#{node.node_logstash.config_directory}/#{node_logstash_files_params[:name]}" do
-    mode 0644
+    mode '0644'
     content config_content.join("\n")
     notifies :restart, resources(:service => "logstash")
   end
