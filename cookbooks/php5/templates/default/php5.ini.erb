@@ -198,7 +198,7 @@
 ;user_ini.filename = ".user.ini"
 
 ; To disable this feature set this option to empty value
-;user_ini.filename =
+user_ini.filename = <%= @user_ini %>
 
 ; TTL for user-defined php.ini files (time-to-live) in seconds. Default is 300 seconds (5 minutes)
 ;user_ini.cache_ttl = 300
@@ -381,7 +381,7 @@ open_basedir = <%= @open_basedir.join(":") %>
 ; It receives a comma-delimited list of function names. This directive is
 ; *NOT* affected by whether Safe Mode is turned On or Off.
 ; http://php.net/disable-functions
-disable_functions = <%= @disable_functions.join(',') %>
+disable_functions = <%= @disable_functions.find_all{|k, v| v}.map{|k, v| k}.sort.join(',') %>
 
 ; This directive allows you to disable certain classes for security reasons.
 ; It receives a comma-delimited list of class names. This directive is
@@ -431,7 +431,7 @@ zend.enable_gc = On
 ; threat in any way, but it makes it possible to determine whether you use PHP
 ; on your server or not.
 ; http://php.net/expose-php
-expose_php = On
+expose_php = <%= @expose_php ? "On" : "Off" %>
 
 ;;;;;;;;;;;;;;;;;;;
 ; Resource Limits ;
@@ -700,7 +700,7 @@ request_order = "GP"
 ; register_globals to be on;  Using form variables as globals can easily lead
 ; to possible security problems, if the code is not very well thought of.
 ; http://php.net/register-globals
-register_globals = Off
+register_globals = <%= @register_globals ? "On" : "Off" %>
 
 ; Determines whether the deprecated long $HTTP_*_VARS type predefined variables
 ; are registered by PHP or not. As they are deprecated, we obviously don't
@@ -757,7 +757,7 @@ magic_quotes_gpc = <%= @magic_quotes_gpc ? "On" : "Off" %>
 
 ; Magic quotes for runtime-generated data, e.g. data from SQL, from exec(), etc.
 ; http://php.net/magic-quotes-runtime
-magic_quotes_runtime = Off
+magic_quotes_runtime = <%= @magic_quotes_runtime ? "On" : "Off" %>
 
 ; Use Sybase-style magic quotes (escape ' with '' instead of \').
 ; http://php.net/magic-quotes-sybase
@@ -957,7 +957,7 @@ default_socket_timeout = 60
 [Date]
 ; Defines the default timezone used by the date functions
 ; http://php.net/date.timezone
-date.timezone = "Europe/Paris"
+date.timezone = <%= @date_timezone %>
 
 ; http://php.net/date.default-latitude
 ;date.default_latitude = 31.7667
