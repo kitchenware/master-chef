@@ -5,6 +5,7 @@ define :execute_version, {
   :user => "root",
   :version => "",
   :notifies => nil,
+  :or_only_if => [false],
 } do
 
   execute_version_params = params
@@ -15,7 +16,7 @@ define :execute_version, {
 
   execute "install #{execute_version_params[:name]}" do
     command "rm -f #{execute_version_params[:file_storage]} && su #{execute_version_params[:user]} -c '#{execute_version_params[:command]}' && echo #{execute_version_params[:version]} > #{execute_version_params[:file_storage]}"
-    not_if "[ -f #{execute_version_params[:file_storage]} ] && [ \"`cat #{execute_version_params[:file_storage]}`\" = \"#{execute_version_params[:version]}\" ]"
+    only_if (execute_version_params[:or_only_if] + ["[ ! -f #{execute_version_params[:file_storage]} ]", "[ \"`cat #{execute_version_params[:file_storage]}`\" != \"#{execute_version_params[:version]}\" ]"]).join(' || ')
     notifies execute_version_params[:notifies][0], execute_version_params[:notifies][1] if execute_version_params[:notifies]
   end
 
