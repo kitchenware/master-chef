@@ -6,6 +6,8 @@ package "libapache2-mod-php5" do
   notifies :reload, resources(:service => "apache2")
 end
 
+apache2_enable_module "php5"
+
 template "/etc/php5/apache2/php.ini" do
   mode '0644'
   cookbook "php5"
