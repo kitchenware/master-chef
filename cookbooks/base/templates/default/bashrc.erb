@@ -93,9 +93,9 @@ LWHITE='\[\033[1;37m\]'
 
 if [[ "$USER" == "root" ]]
 then
-  export PS1="${LBLUE}<${CYAN}\t${LBLUE}>[${LRED}\u@\h${LBLUE}:${YELLOW}\w${LBLUE}]${LWHITE}#${NORMAL} "
+  export PS1="${LBLUE}<${CYAN}\t${LBLUE}>[${LRED}\u@\h${LBLUE}:${YELLOW}\w${LBLUE}]\`if [[ \$? = \"0\" ]]; then echo \"${LWHITE}\"; else echo \"${RED}\"; fi\`#${NORMAL} "
 else
-  export PS1="${LBLUE}<${CYAN}\t${LBLUE}>[${GREEN}\u@\h${LBLUE}:${YELLOW}\w${LBLUE}]${LWHITE}\$${NORMAL} "
+  export PS1="${LBLUE}<${CYAN}\t${LBLUE}>[${GREEN}\u@\h${LBLUE}:${YELLOW}\w${LBLUE}]\`if [[ \$? = \"0\" ]]; then echo \"${LWHITE}\"; else echo \"${RED}\"; fi\`\$${NORMAL} "
 fi
 
 if [ -d $HOME/.bashrc.d ]; then
