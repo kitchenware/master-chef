@@ -18,7 +18,7 @@ default[:apache2][:tuning] = {
   :max_keepalive_request => 100,
   :timeout => 300,
   :log_level => 'info',
-  :enable_htaccess => false,
+  :enable_htaccess => true,
   :listen_backlog => 511,
 }
 
