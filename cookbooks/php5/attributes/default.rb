@@ -52,6 +52,7 @@ default[:php5][:cli_php_ini] = node.php5.php_ini.to_hash.merge({
 
 default[:php5][:apc] = {
   :shm_size => 30,
+  :slam_defense => 0,
 }
 
 default[:php5][:apc_vhost] = {
