@@ -175,7 +175,7 @@ AccessFileName .htaccess
 </Files>
 
 <% unless @tuning[:enable_htaccess] %>
-<Directory>
+<Directory />
     AllowOverride None
 </Directory>
 <% end %>
