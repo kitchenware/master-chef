@@ -22,6 +22,14 @@ if node.php5[:pear] || node.php5[:pear_modules] || node.php5[:pear_channels]
     notifies :run, "execute[pear upgrade]", :immediately
   end
 
+  if ENV['http_proxy']
+
+    execute "pear config-set http_proxy #{ENV['http_proxy']}" do
+      not_if "pear config-get http_proxy | grep #{ENV['http_proxy']}"
+    end
+
+  end
+
 end
 
 

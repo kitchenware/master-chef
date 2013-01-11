@@ -1,4 +1,6 @@
 
+include_recipe "php5"
+
 package "php5-cli"
 
 template "/etc/php5/cli/php.ini" do
