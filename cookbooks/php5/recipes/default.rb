@@ -1,5 +1,5 @@
 
-package "php5"
+package "php5-common"
 
 if node.php5[:modules]
 
