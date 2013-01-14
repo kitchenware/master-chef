@@ -156,13 +156,6 @@ ListenBacklog <%= @tuning[:listen_backlog] %>
 User ${APACHE_RUN_USER}
 Group ${APACHE_RUN_GROUP}
 
-#
-# AccessFileName: The name of the file to look for in each directory
-# for additional configuration directives.  See also the AllowOverride
-# directive.
-#
-
-AccessFileName .htaccess
 
 #
 # The following lines prevent .htaccess and .htpasswd files from being 
@@ -174,7 +167,19 @@ AccessFileName .htaccess
     Satisfy all
 </Files>
 
-<% unless @tuning[:enable_htaccess] %>
+#
+# AccessFileName: The name of the file to look for in each directory
+# for additional configuration directives.  See also the AllowOverride
+# directive.
+#
+<% if @tuning[:enable_htaccess] %>
+
+AccessFileName .htaccess
+
+<% else %>
+
+AccessFileName .do_not_exists_htaccess
+
 <Directory />
     AllowOverride None
 </Directory>
