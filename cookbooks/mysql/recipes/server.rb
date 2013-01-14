@@ -16,6 +16,13 @@ execute "reconfigure mysql bind address" do
   notifies :restart, resources(:service => "mysql")
 end
 
+execute "reconfigure mysql max max_allowed_packet" do
+  command "sed -ie 's/max_allowed_packet.*$/max_allowed_packet = #{node.mysql.max_allowed_packet}/' /etc/mysql/my.cnf"
+  not_if "cat /etc/mysql/my.cnf | grep max_allowed_packet | grep #{node.mysql.max_allowed_packet}"
+  notifies :restart, resources(:service => "mysql")
+end
+
+
 root_mysql_password = local_storage_read("mysql_password:root") do
   password = PasswordGenerator.generate 32
   Chef::Log.info "Mysql : new root password generated"

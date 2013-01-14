@@ -5,7 +5,7 @@ default[:sonar][:path] = "/opt/sonar"
 default[:sonar][:tomcat] = {
   :name => 'sonar',
   :env => {
-    'JAVA_OPTS' => '-XX:MaxPermSize=256m -Xmx1024m -Xms256m',
+    'JAVA_OPTS' => '-XX:MaxPermSize=512m -Xmx1024m -Xms256m',
   }
 }
 default[:sonar][:database] = {
