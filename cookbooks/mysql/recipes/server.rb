@@ -12,6 +12,7 @@ end
 
 execute "reconfigure mysql bind address" do
   command "sed -ie 's/bind-address.*$/bind-address = #{node.mysql.bind_address}/' /etc/mysql/my.cnf"
+  command "sed -ie 's/max_allowed_packet.*$/max_allowed_packet = #{node.mysql.max_allowed_packet}/' /etc/mysql/my.cnf"
   not_if "cat /etc/mysql/my.cnf | grep bind-address | grep #{node.mysql.bind_address}"
   notifies :restart, resources(:service => "mysql")
 end
