@@ -60,7 +60,7 @@ define :basic_init_d, {
 
     service basic_init_d_params[:name] do
       supports :status => true, :restart => true
-      action [ :enable, :start ]
+      action auto_compute_action
     end
 
   end
