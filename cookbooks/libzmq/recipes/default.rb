@@ -5,7 +5,7 @@ if node.lsb.codename == "lucid"
   end
 
   base_ppa "zeromq" do
-     url "ppa:chris-lea/zeromq"
+     url "ppa:bpaquet/zeromq2-lucid"
   end
 
 end
