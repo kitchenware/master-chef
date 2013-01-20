@@ -15,7 +15,7 @@ default[:gitlab][:mail_from] = "notify@localhost"
 
 default[:gitlab][:gitlab] = {
   :url => "git://github.com/gitlabhq/gitlabhq.git",
-  :reference => "4-0-stable",
+  :reference => "042a561baf9b9ca18c31c9b7aceade35a89b47a3", # branch 4-0-stable
   :path => "/opt/gitlab",
   :user => "gitlab",
 }
