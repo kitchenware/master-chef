@@ -44,18 +44,16 @@ status_<%= @name %>() {
   status_of_proc -p "$PID_FILE" "<%= @name %>" "$NAME"
 }
 
-kill_<%= @name %>() {
-  SIGNAL=$1
-
+stop_<%= @name %>() {
   if [ ! "$PID_FILE" = "" ]; then
     if [ -f $PID_FILE ]; then
-      kill $SIGNAL `cat $PID_FILE` || true
+      $START_STOP_DAEMON --oknodo --retry 2 --pidfile $PID_FILE --signal TERM --stop
     fi
   fi
 }
 
 run_<%= @name %>() {
- echo "Running $NAME :"
+  echo "Running $NAME :"
   <%= @su_command %> $DAEMON $OPTIONS <%= @end_of_command %>"
 }
 
@@ -77,12 +75,12 @@ case "$1" in
     ;;
   stop)
     echo -n "Stopping $DESC: "
-    kill_<%= @name %>
+    stop_<%= @name %>
     echo "$NAME."
     ;;
   restart)
     echo -n "Restarting $DESC: "
-    kill_<%= @name %> || true
+    stop_<%= @name %> || true
     sleep 1
     start_<%= @name %>
     echo "$NAME."
