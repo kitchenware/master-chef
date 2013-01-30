@@ -19,7 +19,7 @@ define :git_clone, {
 
   execute "git clone #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
-    command "git clone #{git_clone_params[:repository]} #{git_clone_params[:name]}"
+    command "git clone -q #{git_clone_params[:repository]} #{git_clone_params[:name]}"
     not_if "[ -d #{git_clone_params[:name]}/.git ]"
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
