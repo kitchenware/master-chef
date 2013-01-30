@@ -1,15 +1,16 @@
 
 
 class Hash
-  def deep_merge(hash)
-    target = dup
-    hash.keys.each do |key|
-      if hash[key].is_a? Hash and self[key].is_a? Hash
-        target[key] = target[key].deep_merge(hash[key])
-        next
-      end
-      target.update(hash) { |key, *values| values.flatten.uniq }
+  
+  def deep_merge(other_hash)
+    dup.deep_merge!(other_hash)
+  end
+
+  def deep_merge!(other_hash)
+    other_hash.each_pair do |k,v|
+      tv = self[k]
+      self[k] = tv.is_a?(Hash) && v.is_a?(Hash) ? tv.deep_merge(v) : v
     end
-    target
+    self
   end
 end
