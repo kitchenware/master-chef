@@ -25,6 +25,10 @@ test -f "$CONFIG_FILE" || exit 0
 
 <%= @code_for_initd %>
 
+<% @vars_to_unset.each do |v| %>
+unset <%= v %>
+<% end %>
+
 unset RBENV_DIR
 unset RBENV_HOOK_PATH
 unset RBENV_ROOT

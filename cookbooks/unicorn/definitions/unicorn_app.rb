@@ -6,6 +6,7 @@ define :unicorn_app, {
   :code_for_initd => "",
   :location => '/',
   :configure_nginx => true,
+  :vars_to_unset => [],
   :pid_file => 'shared/unicorn.pid'
 } do
 
@@ -35,7 +36,8 @@ define :unicorn_app, {
       :config_file => unicorn_config_file,
       :pid_file => unicorn_pid_file,
       :user => unicorn_app_params[:user],
-      :code_for_initd => unicorn_app_params[:code_for_initd]
+      :code_for_initd => unicorn_app_params[:code_for_initd],
+      :vars_to_unset => unicorn_app_params[:vars_to_unset],
     })
   end
 
