@@ -5,7 +5,9 @@ define :nginx_vhost, {
 
   config, vhost_sym = extract_config_with_last nginx_vhost_params[:name]
 
-  nginx_listen = "listen #{config[:listen]};\n"
+  nginx_listen = "listen #{config[:listen]}"
+  nginx_listen += " default" if config[:default]
+  nginx_listen += ";\n"
   nginx_listen += "server_name #{config[:virtual_host]};\n" if config[:virtual_host]
   basic_auth = config[:basic_auth]
 
