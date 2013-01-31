@@ -11,7 +11,7 @@ if node[:ntp_servers]
 
   template "/etc/ntp.conf" do
     source "ntp.conf.erb"
-    variables :servers => node.ntp_servers
+    variables :servers => node.ntp_servers, :local_stratum => node.ntp_local_stratum
     mode '0644'
     notifies :restart, resources(:service => "ntp")
   end
