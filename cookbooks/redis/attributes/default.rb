@@ -1,2 +1,20 @@
-default[:redis][:bind_address] = '127.0.0.1'
-default[:redis][:port] = 6379
+default[:redis] = {
+  :bind_address => '127.0.0.1',
+  :port => 6379,
+  :timeout => 300,
+  :log_level => 'notice',
+  :log_file => '/var/log/redis/redis-server.log',
+  :databases => 16,
+  :save => ["900 1", "300 10", "60 10000"],
+  :directory => '/var/lib/redis',
+  :maxclients => 128,
+  :maxmemory => nil,
+  :appendonly => 'no',
+  :appendfssync => 'everysec',
+  :vm_enabled => 'no',
+  :vm_swap_file => '/var/lib/redis/redis.swap',
+  :vm_max_memory => 0,
+  :vm_page_size => 32,
+  :vm_pages => 134217728,
+  :vm_max_threads => 4,
+}

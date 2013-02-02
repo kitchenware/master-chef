@@ -36,7 +36,7 @@ bind <%= @bind_address %>
 # unixsocket /var/run/redis/redis.sock
 
 # Close the connection after a client is idle for N seconds (0 to disable)
-timeout 300
+timeout <%= @timeout %>
 
 # Set server verbosity to 'debug'
 # it can be one of:
@@ -44,12 +44,12 @@ timeout 300
 # verbose (many rarely useful info, but not a mess like the debug level)
 # notice (moderately verbose, what you want in production probably)
 # warning (only very important / critical messages are logged)
-loglevel notice
+loglevel <%= @log_level %>
 
 # Specify the log file name. Also 'stdout' can be used to force
 # Redis to log on the standard output. Note that if you use standard
 # output for logging but daemonize, logs will be sent to /dev/null
-logfile /var/log/redis/redis-server.log
+logfile <%= @log_file %>
 
 # To enable logging to the system logger, just set 'syslog-enabled' to yes,
 # and optionally update the other syslog parameters to suit your needs.
@@ -64,7 +64,7 @@ logfile /var/log/redis/redis-server.log
 # Set the number of databases. The default database is DB 0, you can select
 # a different one on a per-connection basis using SELECT <dbid> where
 # dbid is a number between 0 and 'databases'-1
-databases 16
+databases <%= @databases %>
 
 ################################ SNAPSHOTTING  #################################
 #
@@ -82,9 +82,9 @@ databases 16
 #
 #   Note: you can disable saving at all commenting all the "save" lines.
 
-save 900 1
-save 300 10
-save 60 10000
+<% @save.each do |s| %>
+save <%= s %>
+<% end %>
 
 # Compress string objects using LZF when dump .rdb databases?
 # For default that's set to 'yes' as it's almost always a win.
@@ -103,7 +103,7 @@ dbfilename dump.rdb
 # Also the Append Only File will be created inside this directory.
 # 
 # Note that you must specify a directory here, not a file name.
-dir /var/lib/redis
+dir <%= @directory %>
 
 ################################# REPLICATION #################################
 
@@ -173,7 +173,7 @@ slave-serve-stale-data yes
 # Once the limit is reached Redis will close all the new connections sending
 # an error 'max number of clients reached'.
 #
-# maxclients 128
+maxclients <%= @maxclients %>
 
 # Don't use more memory than the specified amount of bytes.
 # When the memory limit is reached Redis will try to remove keys with an
@@ -192,7 +192,9 @@ slave-serve-stale-data yes
 # to upgrade. With maxmemory after the limit is reached you'll start to get
 # errors for write operations, and this may even lead to DB inconsistency.
 #
-# maxmemory <bytes>
+<% if @maxmemory %>
+  maxmemory <%= @maxmemory %>
+<% end %>
 
 # MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
 # is reached? You can select among five behavior:
@@ -243,7 +245,7 @@ slave-serve-stale-data yes
 # IMPORTANT: Check the BGREWRITEAOF to check how to rewrite the append
 # log file in background when it gets too big.
 
-appendonly no
+appendonly <%= @appendonly %>
 
 # The name of the append only file (default: "appendonly.aof")
 # appendfilename appendonly.aof
@@ -268,9 +270,7 @@ appendonly no
 #
 # If unsure, use "everysec".
 
-# appendfsync always
-appendfsync everysec
-# appendfsync no
+appendfsync <%= @appendfsync %>
 
 # When the AOF fsync policy is set to always or everysec, and a background
 # saving process (a background save or AOF log background rewriting) is
@@ -303,7 +303,7 @@ no-appendfsync-on-rewrite no
 # To enable VM just set 'vm-enabled' to yes, and set the following three
 # VM parameters accordingly to your needs.
 
-vm-enabled no
+vm-enabled <%= @vm_enabled %>
 # vm-enabled yes
 
 # This is the path of the Redis swap file. As you can guess, swap files
@@ -317,7 +317,7 @@ vm-enabled no
 # *** WARNING *** if you are using a shared hosting the default of putting
 # the swap file under /tmp is not secure. Create a dir with access granted
 # only to Redis user and configure Redis to create the swap file there.
-vm-swap-file /var/lib/redis/redis.swap
+vm-swap-file <%= @vm_swap_file %>
 
 # vm-max-memory configures the VM to use at max the specified amount of
 # RAM. Everything that deos not fit will be swapped on disk *if* possible, that
@@ -327,7 +327,7 @@ vm-swap-file /var/lib/redis/redis.swap
 # default, just specify the max amount of RAM you can in bytes, but it's
 # better to leave some margin. For instance specify an amount of RAM
 # that's more or less between 60 and 80% of your free RAM.
-vm-max-memory 0
+vm-max-memory <%= @vm_max_memory %>
 
 # Redis swap files is split into pages. An object can be saved using multiple
 # contiguous pages, but pages can't be shared between different objects.
@@ -338,7 +338,7 @@ vm-max-memory 0
 # If you use a lot of small objects, use a page size of 64 or 32 bytes.
 # If you use a lot of big objects, use a bigger page size.
 # If unsure, use the default :)
-vm-page-size 32
+vm-page-size <%= @vm_page_size %>
 
 # Number of total memory pages in the swap file.
 # Given that the page table (a bitmap of free/used pages) is taken in memory,
@@ -351,7 +351,7 @@ vm-page-size 32
 #
 # It's better to use the smallest acceptable value for your application,
 # but the default is large in order to work in most conditions.
-vm-pages 134217728
+vm-pages <%= @vm_pages %>
 
 # Max number of VM I/O threads running at the same time.
 # This threads are used to read/write data from/to swap file, since they
@@ -362,7 +362,7 @@ vm-pages 134217728
 #
 # The special value of 0 turn off threaded I/O and enables the blocking
 # Virtual Memory implementation.
-vm-max-threads 4
+vm-max-threads <%= @vm_max_threads %>
 
 ############################### ADVANCED CONFIG ###############################
 

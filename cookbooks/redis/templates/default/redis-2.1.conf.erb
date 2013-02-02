@@ -17,24 +17,24 @@ port <%= @port %>
 bind <%= @bind_address %>
 
 # Close the connection after a client is idle for N seconds (0 to disable)
-timeout 300
+timeout <%= @timeout %>
 
 # Set server verbosity to 'debug'
 # it can be one of:
 # debug (a lot of information, useful for development/testing)
 # notice (moderately verbose, what you want in production probably)
 # warning (only very important / critical messages are logged)
-loglevel notice
+loglevel <%= @log_level %>
 
 # Specify the log file name. Also 'stdout' can be used to force
 # the demon to log on the standard output. Note that if you use standard
 # output for logging but daemonize, logs will be sent to /dev/null
-logfile /var/log/redis/redis-server.log
+logfile <%= @log_file %>
 
 # Set the number of databases. The default database is DB 0, you can select
 # a different one on a per-connection basis using SELECT <dbid> where
 # dbid is a number between 0 and 'databases'-1
-databases 16
+databases <%= @databases %>
 
 ################################ SNAPSHOTTING  #################################
 #
@@ -64,7 +64,7 @@ dbfilename dump.rdb
 
 # For default save/load DB in/from the working directory
 # Note that you must specify a directory not a file name.
-dir /var/lib/redis
+dir <%= @directory %>
 
 ################################# REPLICATION #################################
 
@@ -101,7 +101,7 @@ dir /var/lib/redis
 # Once the limit is reached Redis will close all the new connections sending
 # an error 'max number of clients reached'.
 #
-# maxclients 128
+maxclients <%= @maxclients %>
 
 # Don't use more memory than the specified amount of bytes.
 # When the memory limit is reached Redis will try to remove keys with an
@@ -120,7 +120,9 @@ dir /var/lib/redis
 # to upgrade. With maxmemory after the limit is reached you'll start to get
 # errors for write operations, and this may even lead to DB inconsistency.
 #
-# maxmemory <bytes>
+<% if @maxmemory %>
+  maxmemory <%= @maxmemory %>
+<% end %>
 
 ############################## APPEND ONLY MODE ###############################
 
@@ -142,7 +144,7 @@ dir /var/lib/redis
 # IMPORTANT: Check the BGREWRITEAOF to check how to rewrite the append
 # log file in background when it gets too big.
 
-appendonly no
+appendonly <%= @appendonly %>
 
 # The fsync() call tells the Operating System to actually write data on disk
 # instead to wait for more data in the output buffer. Some OS will really flush 
@@ -160,9 +162,7 @@ appendonly no
 # it want, for better performances (but if you can live with the idea of
 # some data loss consider the default persistence mode that's snapshotting).
 
-appendfsync always
-# appendfsync everysec
-# appendfsync no
+appendfsync <%= @appendfsync %>
 
 ############################### ADVANCED CONFIG ###############################
 
