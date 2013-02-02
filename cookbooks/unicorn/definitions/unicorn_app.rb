@@ -56,7 +56,7 @@ define :unicorn_app, {
       :unicorn_socket => unicorn_socket_file,
       :log_prefix => unicorn_log_prefix,
       :pid_file => unicorn_pid_file,
-      :nb_workers => node.cpu.total,
+      :nb_workers => unicorn_app_params[:nb_workers] || node.cpu.total,
     })
     notifies :restart, resources(:service => unicorn_app_params[:name])
   end
