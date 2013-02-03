@@ -34,15 +34,16 @@ def capture_local cmd
   end
 end
 
-git_cache_directory = ENV["GIT_CACHE_DIRECTORY"] || "/var/chef/cache/git_repos"
-exec_local "mkdir -p #{git_cache_directory}"
-
 cookbooks = []
 roles = []
 
 folders = {}
 
 if config["repos"]["git"]
+
+  git_cache_directory = ENV["GIT_CACHE_DIRECTORY"] || "/var/chef/cache/git_repos"
+  exec_local "mkdir -p #{git_cache_directory} && chmod -R go-rwx #{git_cache_directory}"
+
   git_tag_override_file = config_file + ".git_tag_override"
   if ENV["GIT_TAG_OVERRIDE"]
     repos = {}
