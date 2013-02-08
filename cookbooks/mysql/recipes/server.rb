@@ -10,18 +10,20 @@ service "mysql" do
   action [ :enable, :start ]
 end
 
-execute "reconfigure mysql bind address" do
-  command "sed -ie 's/bind-address.*$/bind-address = #{node.mysql.bind_address}/' /etc/mysql/my.cnf"
-  not_if "cat /etc/mysql/my.cnf | grep bind-address | grep #{node.mysql.bind_address}"
-  notifies :restart, resources(:service => "mysql")
+mysql_conf = []
+
+node.mysql.engine_config.keys.sort.each do |k|
+  mysql_conf << "[#{k}]"
+  node.mysql.engine_config[k].keys.sort.each do |kk|
+    mysql_conf << "#{kk} = #{node.mysql.engine_config[k][kk]}"
+  end
+  mysql_conf << ""
 end
 
-execute "reconfigure mysql max max_allowed_packet" do
-  command "sed -ie 's/max_allowed_packet.*$/max_allowed_packet = #{node.mysql.max_allowed_packet}/' /etc/mysql/my.cnf"
-  not_if "cat /etc/mysql/my.cnf | grep max_allowed_packet | grep #{node.mysql.max_allowed_packet}"
+file "/etc/mysql/conf.d/chef_override.cnf" do
+  content mysql_conf.join("\n")
   notifies :restart, resources(:service => "mysql")
 end
-
 
 root_mysql_password = local_storage_read("mysql_password:root") do
   password = PasswordGenerator.generate 32
@@ -34,13 +36,12 @@ execute "change mysql root password" do
   only_if "echo 'select 1;' | mysql --user=root --password= "
 end
 
-if node[:mysql] && node.mysql[:keep_test] != true
+if node[:mysql] && ! node.mysql[:keep_test]
   execute "remove test mysql database" do
     command "echo 'drop database test;' | mysql --user=root --password=#{root_mysql_password} "
     only_if "echo 'show databases;' | mysql --user=root --password=#{root_mysql_password} | grep ^test$ "
   end
 end
-
 
 if node[:mysql] && node.mysql[:databases]
 

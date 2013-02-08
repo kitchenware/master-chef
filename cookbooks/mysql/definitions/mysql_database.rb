@@ -16,7 +16,7 @@ define :mysql_database, {
     root_mysql_password = mysql_password "root"
 
     users = ["#{config[:username]}@localhost"]
-    users << config[:username] unless node.mysql.bind_address == "127.0.0.1"
+    users << config[:username] unless node.mysql.engine_config.mysqld.bind_address == "127.0.0.1"
 
     c = "(\n"
     c += " echo \"CREATE DATABASE IF NOT EXISTS #{config[:database]};\"\n"
