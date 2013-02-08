@@ -36,9 +36,9 @@ if node.php5.php_ini["error_log"]
 end
 
 if node.apache2.default_vhost.enable
-  
+
   apache2_vhost "apache2:default_vhost" do
     options :cookbook => "apache2"
   end
-  
+
 end
