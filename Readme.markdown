@@ -8,7 +8,7 @@ There is 4 AMI pre-configured with master-chef
 * [Debian 6 squeeze](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-d1cef5a5)
 * [Debian 7 wheezy](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-95393be1)
 * [Ubuntu 10 lucid](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-2bcff45f)
-* [Ubuntu 12 precise](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-e36d5797)
+* [Ubuntu 12 precise](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-26575f52)
 
 You can click on link above to create instance.
 
