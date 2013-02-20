@@ -58,9 +58,26 @@ run_<%= @name %>() {
 }
 
 start_<%= @name %>() {
-  $START_STOP_DAEMON <%= @start_options %> --oknodo --start --pidfile $PID_FILE --startas /bin/sh -- -c "exec $DAEMON $OPTIONS <%= @end_of_command %>"
-  sleep 1
-  status_<%= @name %>
+  $START_STOP_DAEMON <%= @start_options %> --oknodo --start --pidfile $PID_FILE --startas /bin/sh -- -c "exec $DAEMON $OPTIONS <%= @end_of_command %>" 2>&1 > /dev/null
+<% if @check_start %>
+  sleep <%= @check_start[:initial_delay] %>
+  i=0
+  while [ true ]; do
+    sleep <%= @check_start[:loop_delay] %>
+    i=$(expr $i + 1)
+    set +e
+    status_<%= @name %> 2>&1 > /dev/null
+    res=$?
+    set -e
+    if [ $res = 0 ]; then
+      break;
+    fi
+    if [ $i -gt <%= (@check_start[:max_delay] / @check_start[:loop_delay]).to_i %> ]; then
+      echo "Unable to find running process after <%= @check_start[:max_delay] %> seconds."
+      exit 1
+    fi
+  done
+<% end %>
   <%= @post_start %>
 }
 
