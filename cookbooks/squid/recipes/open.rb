@@ -6,3 +6,9 @@ execute "configure squid for open access" do
   only_if "grep 'INSERT YOUR OWN RULE' /etc/squid3/squid.conf"
   notifies :restart, resources(:service => "squid3")
 end
+
+execute "remove via on on squid config" do
+  command "sed -ie 's/# via on/via off/' /etc/squid3/squid.conf"
+  not_if "grep 'via off' /etc/squid3/squid.conf"
+  notifies :restart, resources(:service => "squid3")
+end
