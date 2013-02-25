@@ -29,10 +29,10 @@ unicorn_rails_app "gitlab" do
   location node.gitlab.location
 end
 
-rails_resque_worker "gitlab_resque" do
+rails_worker "gitlab_sidekik" do
   rails_app "gitlab"
-  queues 'post_receive,mailer,system_hook'
-  workers 2
+  workers 1
+  command "bundle exec sidekiq -q post_receive,mailer,system_hook,project_web_hook,gitolite,common,default"
 end
 
 add_user_in_group node.gitlab.gitlab.user do
@@ -57,6 +57,7 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
     :port => node.gitlab.port,
     :https => node.gitlab.https,
     :mail_from => node.gitlab.mail_from,
+    :satellites => "#{node.gitlab.gitlab.path}/shared/satellites",
   })
   notifies :restart, resources(:service => "gitlab")
   notifies :restart, resources(:service => node.rails.resque_service_name)
@@ -120,6 +121,10 @@ directory "#{node.gitlab.gitlab.path}/shared/files" do
   owner node.gitlab.gitlab.user
 end
 
+directory "#{node.gitlab.gitlab.path}/shared/satellites" do
+  owner node.gitlab.gitlab.user
+end
+
 deployed_files.each do |f|
   template "#{node.gitlab.gitlab.path}/shared/files/#{f}" do
     owner node.gitlab.gitlab.user
@@ -148,7 +153,7 @@ end
 ruby_rbenv_command "initialize gitlab" do
   user node.gitlab.gitlab.user
   directory "#{node.gitlab.gitlab.path}/current"
-  code "RAILS_ENV=production rake gitlab:app:setup"
+  code "echo yes | RAILS_ENV=production rake gitlab:setup"
   file_storage "#{node.gitlab.gitlab.path}/shared/.initialized"
   version 1
 end
