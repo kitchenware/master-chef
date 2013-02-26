@@ -11,10 +11,4 @@ default[:redis] = {
   :maxmemory => nil,
   :appendonly => 'no',
   :appendfsync => 'everysec',
-  :vm_enabled => 'no',
-  :vm_swap_file => '/var/lib/redis/redis.swap',
-  :vm_max_memory => 0,
-  :vm_page_size => 32,
-  :vm_pages => 134217728,
-  :vm_max_threads => 4,
 }
