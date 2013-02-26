@@ -1,4 +1,5 @@
 
+redis_package_options = nil
 redis_config_file = "redis.conf.erb"
 
 if node.lsb.codename == "squeeze"
@@ -8,6 +9,9 @@ if node.lsb.codename == "squeeze"
     distrib "squeeze-backports"
     components ["main"]
   end
+
+  # awfull, cf http://tickets.opscode.com/browse/CHEF-1547
+  redis_package_version = "2:2.4.15-1~bpo60+2"
 
 end
 
@@ -21,7 +25,9 @@ if node.lsb.codename == "lucid"
 
 end
 
-package "redis-server"
+package "redis-server" do
+  version redis_package_version if redis_package_version
+end
 
 service "redis-server" do
 	supports :restart => true, :reload => true
