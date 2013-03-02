@@ -10,7 +10,7 @@ if node.platform == "centos"
 end
 
 if node.platform == "debian" || node.platform == "ubuntu"
-  
+
   package "build-essential"
 
 end
@@ -19,8 +19,11 @@ package "s3cmd"
 
 include_recipe "java"
 
-ruby_user "build" do
-  install_rbenv true
+base_user "build"
+
+warp_install "build" do
+  rbenv true
+  nvm true
 end
 
 sudo_sudoers_file "build" do

@@ -18,8 +18,10 @@ define :rails_app, {
     rails_app_params[:app_directory] = "#{get_home rails_app_params[:user]}/#{rails_app_params[:name]}" 
   end
 
-  ruby_user rails_app_params[:user] do
-    install_rbenv true
+  base_user rails_app_params[:user]
+
+  warp_install rails_app_params[:user] do
+    rbenv true
   end
 
   capistrano_app rails_app_params[:app_directory] do

@@ -1,6 +1,8 @@
 
-ruby_user node.kibana.user do
-  install_rbenv true
+base_user node.kibana.user
+
+warp_install node.kibana.user do
+  rbenv true
 end
 
 capistrano_app node.kibana.directory do

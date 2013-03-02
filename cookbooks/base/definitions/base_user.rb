@@ -26,6 +26,12 @@ define :base_user, {
     mode '0755'
   end
 
+  file "#{user_home}/.bash_profile" do
+    owner base_user_params[:name]
+    mode '0700'
+    action :create_if_missing
+  end
+
   directory "#{user_home}/.ssh" do
     owner base_user_params[:name]
     mode '0700'

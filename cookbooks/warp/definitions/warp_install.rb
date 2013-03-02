@@ -39,6 +39,11 @@ define :warp_install, {
       command "#{get_home warp_install_params[:name]}/.warp/common/ruby/install_rbenv.sh"
     end
 
+    file "#{get_home warp_install_params[:name]}/.gemrc" do
+      owner warp_install_params[:name]
+      content "gem: --no-ri --no-rdoc"
+    end
+
   end
 
 end
