@@ -97,7 +97,7 @@ define :tomcat_instance, {
     template "#{catalina_base}/conf/Catalina/localhost/#{tomcat_instance_params[:xml_config_file][:name]}" do
       cookbook tomcat_instance_params[:xml_config_file][:cookbook] if tomcat_instance_params[:xml_config_file][:cookbook]
       source tomcat_instance_params[:xml_config_file][:source] if tomcat_instance_params[:xml_config_file][:source]
-      user node.tomcat.user
+      owner node.tomcat.user
       variables tomcat_instance_params[:xml_config_file][:variables] if tomcat_instance_params[:xml_config_file][:variables]
       notifies :restart, resources(:service => config[:name])
     end
