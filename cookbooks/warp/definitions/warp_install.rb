@@ -25,7 +25,7 @@ define :warp_install, {
 
     execute "install nvm" do
       user warp_install_params[:name]
-      environment "HOME" => get_home(warp_install_params[:name])
+      environment get_proxy_environment("HOME" => get_home(warp_install_params[:name]))
       command "#{get_home warp_install_params[:name]}/.warp/common/node/install_nvm.sh"
     end
 
@@ -35,7 +35,7 @@ define :warp_install, {
 
     execute "install rbenv" do
       user warp_install_params[:name]
-      environment "HOME" => get_home(warp_install_params[:name])
+      environment get_proxy_environment("HOME" => get_home(warp_install_params[:name]))
       command "#{get_home warp_install_params[:name]}/.warp/common/ruby/install_rbenv.sh"
     end
 

@@ -13,13 +13,16 @@ define :git_clone, {
   raise "Please specify user for using git_clone" unless git_clone_params[:user]
   raise "Please specify repository for using git_clone" unless git_clone_params[:repository]
 
-  if node.git.auto_use_http_for_github && ENV['http_proxy'] && git_clone_params[:repository] =~ /^git:\/\/(github.com.*)/
+  if node.git.auto_use_http_for_github && ENV['BACKUP_http_proxy'] && git_clone_params[:repository] =~ /^git:\/\/(github.com.*)/
     git_clone_params[:repository] = "http://#{$1}"
   end
+
+  use_proxy = git_clone_params[:repository].match(/^http/)
 
   execute "git clone #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
     command "git clone -q #{git_clone_params[:repository]} #{git_clone_params[:name]}"
+    environment get_proxy_environment if use_proxy
     not_if "[ -d #{git_clone_params[:name]}/.git ]"
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
@@ -27,6 +30,7 @@ define :git_clone, {
   execute "create branch #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
     command "cd #{git_clone_params[:name]} && git checkout -q -b deploy"
+    environment get_proxy_environment if use_proxy
     not_if "cd #{git_clone_params[:name]} && git branch | grep deploy"
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
@@ -40,6 +44,7 @@ define :git_clone, {
   execute "update git clone of #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
     command "cd #{git_clone_params[:name]} && git fetch -q origin && git fetch --tags -q origin && git reset -q --hard #{sha} && git clean #{clean_options}"
+    environment get_proxy_environment if use_proxy
     not_if "cd #{git_clone_params[:name]} && git log -n1 --decorate | head -n 1 | grep #{sha}"
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end

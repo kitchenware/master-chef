@@ -43,6 +43,7 @@ ruby_rbenv_command "initialize kibana" do
   user node.kibana.user
   directory "#{node.kibana.directory}/current"
   code "rm -f .warped && #{cp_command} && rbenv warp install"
+  environment get_proxy_environment
   version node.kibana.version
   notifies :restart, resources(:service => "kibana")
 end

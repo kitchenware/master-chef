@@ -59,6 +59,7 @@ ruby_rbenv_command "initialize redmine" do
   user node.redmine.user
   directory "#{node.redmine.directory}/current"
   code "rm -f .warped && #{cp_command} && rbenv warp install && rake generate_session_store && RAILS_ENV=production rake db:migrate"
+  environment get_proxy_environment
   file_storage "#{node.redmine.directory}/current/.redmine_ready"
   version node.redmine.version
 end
