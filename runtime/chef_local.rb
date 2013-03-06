@@ -30,10 +30,14 @@ exec_local "scp #{user}@#{server}:/etc/chef/local.json /tmp/"
 json = ::JSON.parse(File.read(File.join("/tmp/", "local.json")))
 json["repos"] = {:local_path => []};
 
+git_cache_directory = ENV["GIT_CACHE_DIRECTORY"] || "/var/chef/cache/git_repos"
+exec_local "ssh #{user}@#{server} sudo mkdir -p #{git_cache_directory}"
+
 ["../master-chef", additionnal_path].each do |dir|
   if dir
-    exec_local "rsync --delete -avh --exclude=.git #{dir}/ #{user}@#{server}:/tmp/#{File.basename(dir)}/"
-    json["repos"][:local_path].push("/tmp/#{File.basename(dir)}")
+    target = "#{git_cache_directory}/local_#{File.basename(dir)}"
+    exec_local "rsync --delete --rsync-path='sudo rsync' -rlptDv --chmod=go-rwx --exclude=.git #{dir}/ #{user}@#{server}:#{target}/"
+    json["repos"][:local_path].push(target)
   end
 end
 
