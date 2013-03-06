@@ -93,7 +93,7 @@ file "#{get_home node.gitlab.gitlab.user}/.gitconfig" do
 end
 
 execute_version "configure gitolite for gitlab" do
-  command "cp #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa.pub /tmp/gitlab.pub && su #{node.gitlab.gitolite.user} -c \"cd #{node.gitlab.gitolite.path} && ./install -to #{get_home node.gitlab.gitolite.user}/bin && #{get_home node.gitlab.gitolite.user}/bin/gitolite setup -pk /tmp/gitlab.pub\""
+  command "cp #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa.pub /tmp/gitlab.pub && chmod 0644 /tmp/gitlab.pub && su #{node.gitlab.gitolite.user} -c \"cd #{node.gitlab.gitolite.path} && ./install -to #{get_home node.gitlab.gitolite.user}/bin && #{get_home node.gitlab.gitolite.user}/bin/gitolite setup -pk /tmp/gitlab.pub\""
   file_storage "#{node.gitlab.gitolite.path}/.gitolite_install"
   version node.gitlab.gitolite.reference
 end
