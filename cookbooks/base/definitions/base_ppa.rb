@@ -16,7 +16,8 @@ define :base_ppa, {
   end
 
   execute "ppa : #{base_ppa_params[:name]}" do
-    command "add-apt-repository #{base_ppa_params[:url]} && apt-get update"
+    command "add-apt-repository #{base_ppa_params[:url]}"
+    environment get_proxy_environment
     not_if "ls /etc/apt/sources.list.d | grep #{base_ppa_params[:name]}"
     notifies :run, "execute[apt-get-update]", :immediately
   end
