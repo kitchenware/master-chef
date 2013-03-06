@@ -57,7 +57,8 @@ if config["repos"]["git"]
   git_tag_override = {}
   git_tag_override = JSON.load(File.read(git_tag_override_file)) if File.exists? git_tag_override_file
   config["repos"]["git"].each do |url|
-    name = url.split('://')[0] + '_' + File.basename(url).gsub(/:/, '_')
+    name = File.basename(url).gsub(/:/, '_')
+    name = "#{$1}_#{name}" if url.match(/^(https?)/)
     target = File.join(git_cache_directory, name)
     if ENV["NO_UPDATE"]
       verb = "Using local"
