@@ -30,6 +30,7 @@ unzip sonar.zip &&
 mv sonar-#{node.sonar.version} sonar &&
 rm -f sonar.zip
 EOF
+  environment get_proxy_environment
   version node.sonar.zip_url
   file_storage "#{node.sonar.path}/.sonar_download"
   notifies :run, resources(:execute => "build sonar war"), :immediately

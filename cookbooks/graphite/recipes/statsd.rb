@@ -33,7 +33,9 @@ file "#{node.graphite.statsd.directory}/current/.node_version" do
 end
 
 execute_version "nodejs version statsd" do
-  command "export HOME=#{get_home node.graphite.statsd.user} && cd #{node.graphite.statsd.directory}/current && $HOME/.warp/client/node/install_node.sh"
+  user node.graphite.statsd.user
+  command "cd #{node.graphite.statsd.directory}/current && echo $HOME && $HOME/.warp/client/node/install_node.sh"
+  environment get_proxy_environment #("HOME" => get_home(node.graphite.statsd.user))
   version node.graphite.statsd.node_version
   file_storage "#{node.graphite.directory}/.statsd"
   notifies :restart, resources(:service => "statsd")

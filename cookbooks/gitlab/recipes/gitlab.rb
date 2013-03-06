@@ -145,6 +145,7 @@ rm -rf tmp &&
 ln -s #{node.gitlab.gitlab.path}/shared/tmp . &&
 RAILS_ENV=production rake db:migrate
 EOF
+  environment get_proxy_environment
   version node.gitlab.gitlab.reference
 end
 
