@@ -73,15 +73,12 @@ end
 
 execute "create ssh key for gitlab user" do
   user node.gitlab.gitlab.user
-  command "ssh-keygen -t rsa -f #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa -N '' -b 2048 && cp #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa.pub /tmp/gitlab.pub"
-  not_if "[ -f #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa ]"
+  command "ssh-keygen -t rsa -f #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa -N '' -b 2048 &&"
+  creates "#{get_home node.gitlab.gitlab.user}/.ssh/id_rsa"
 end
 
-execute_version "allow localhost connection for gitlab user" do
-  user node.gitlab.gitlab.user
-  command "ssh -o StrictHostKeyChecking=no git@localhost echo toto || true"
-  file_storage "#{get_home node.gitlab.gitlab.user}/.localhost_key_accepted"
-  version 1
+ssh_accept_host_key "localhost" do
+  user "git"
 end
 
 file "#{get_home node.gitlab.gitlab.user}/.gitconfig" do
@@ -94,8 +91,7 @@ file "#{get_home node.gitlab.gitlab.user}/.gitconfig" do
 end
 
 execute_version "configure gitolite for gitlab" do
-  user node.gitlab.gitolite.user
-  command "cd #{node.gitlab.gitolite.path} && ./install -to #{get_home node.gitlab.gitolite.user}/bin && #{get_home node.gitlab.gitolite.user}/bin/gitolite setup -pk /tmp/gitlab.pub"
+  command "cp #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa.pub /tmp/gitlab.pub && su #{node.gitlab.gitolite.user} -c \"cd #{node.gitlab.gitolite.path} && ./install -to #{get_home node.gitlab.gitolite.user}/bin && #{get_home node.gitlab.gitolite.user}/bin/gitolite setup -pk /tmp/gitlab.pub\""
   file_storage "#{node.gitlab.gitolite.path}/.gitolite_install"
   version node.gitlab.gitolite.reference
 end
