@@ -16,6 +16,7 @@ end
 execute "build sonar war" do
   user node.tomcat.user
   command "cd #{node.sonar.path}/sonar/war && sh build-war.sh && cp sonar.war #{target_war}"
+  environment get_proxy_environment
   action :nothing
 end
 

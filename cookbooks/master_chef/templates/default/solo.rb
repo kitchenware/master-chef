@@ -1,5 +1,7 @@
 config_file = ENV['MASTER_CHEF_CONFIG']
 
+puts "Using config gile #{config_file}"
+
 raise "Please specify config file with env var MASTER_CHEF_CONFIG" unless config_file
 raise "File not found #{config_file}" unless File.exists? config_file
 
@@ -100,6 +102,16 @@ end
 
 if ENV['REPOS_STATUS_FILE']
   File.open(ENV['REPOS_STATUS_FILE'], 'w') {|io| io.write(JSON.dump(folders))}
+end
+
+if ENV['http_proxy']
+  ENV['BACKUP_http_proxy'] = ENV['http_proxy']
+  ENV.delete 'http_proxy'
+end
+
+if ENV['https_proxy']
+  ENV['BACKUP_https_proxy'] = ENV['https_proxy']
+  ENV.delete 'https_proxy'
 end
 
 puts "************************* Master chef SOLO *************************"

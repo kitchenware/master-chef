@@ -8,6 +8,7 @@ end
 execute "install jboss with official zip" do
   command node.jboss.user
   code "cd #{node.jboss.home} && curl --location #{node.jboss.zip_file} -o && unzip jboss-as-#{node.jboss.version}.zip && jboss-as-#{node.jboss.version}.zip && rm jboss-as-#{node.jboss.version}.zip"
+  environment get_proxy_environment
   not_if "[ -d #{node.jboss.jboss_home} ]"
 end
 

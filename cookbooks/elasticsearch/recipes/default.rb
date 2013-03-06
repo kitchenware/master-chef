@@ -43,6 +43,7 @@ execute_version "install elasticsearch" do
     "mv #{File.basename(node.elasticsearch.url)[0..-8]} #{node.elasticsearch.directory} && "+
     "chown -R #{node.elasticsearch.user} #{node.elasticsearch.directory}"
   )
+  environment get_proxy_environment
   version node.elasticsearch.url
   file_storage "#{node.elasticsearch.directory}/.elasticsearch_ready"
   notifies :restart, resources(:service => "elasticsearch")
@@ -60,6 +61,7 @@ if node.elasticsearch.transport_zmq.enable
 
   execute_version "install transport zmq" do
     command "cd #{node.elasticsearch.directory} && curl --location #{node.elasticsearch.transport_zmq.url} -o /tmp/plugin_file.zip && rm -rf plugins/transport-zeromq &&  mkdir -p plugins/transport-zeromq && cd plugins/transport-zeromq && unzip /tmp/plugin_file.zip && rm jzmq-1.0.0.jar && ln -s /opt/jzmq/share/java/zmq.jar jzmq-1.0.0.jar"
+    environment get_proxy_environment
     file_storage "#{node.elasticsearch.directory}/.zmq_transport"
     version node.elasticsearch.url + node.elasticsearch.transport_zmq.url
     notifies :restart, resources(:service => "elasticsearch")

@@ -3,6 +3,7 @@ include_recipe "collectd"
 
 execute_version "bucky" do
   command "cd /tmp && curl --location #{node.graphite.bucky.url} -o bucky.tar.gz && tar xvzf bucky.tar.gz && cd #{File.basename(node.graphite.bucky.url)[0..-8]} && python setup.py install"
+  environment get_proxy_environment
   version File.basename(node.graphite.bucky.url)
   file_storage "#{node.graphite.directory}/.bucky"
 end
