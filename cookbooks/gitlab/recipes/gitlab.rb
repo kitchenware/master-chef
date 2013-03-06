@@ -73,7 +73,7 @@ end
 
 execute "create ssh key for gitlab user" do
   user node.gitlab.gitlab.user
-  command "ssh-keygen -t rsa -f #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa -N '' -b 2048 &&"
+  command "ssh-keygen -t rsa -f #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa -N '' -b 2048"
   creates "#{get_home node.gitlab.gitlab.user}/.ssh/id_rsa"
 end
 
