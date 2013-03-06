@@ -58,6 +58,8 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
     :https => node.gitlab.https,
     :mail_from => node.gitlab.mail_from,
     :satellites => "#{node.gitlab.gitlab.path}/shared/satellites",
+    :ssh_user => node.gitlab.gitolite.user,
+    :ssh_host => node.gitlab.hostname,
   })
   notifies :restart, resources(:service => "gitlab")
   notifies :restart, resources(:service => node.rails.resque_service_name)
