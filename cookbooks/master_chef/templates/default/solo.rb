@@ -1,6 +1,6 @@
 config_file = ENV['MASTER_CHEF_CONFIG']
 
-puts "Using config gile #{config_file}"
+puts "Using config file #{config_file}"
 
 raise "Please specify config file with env var MASTER_CHEF_CONFIG" unless config_file
 raise "File not found #{config_file}" unless File.exists? config_file
