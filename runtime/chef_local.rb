@@ -43,5 +43,6 @@ f.close
 
 envs = "MASTER_CHEF_CONFIG=/tmp/local.json"
 envs += " http_proxy=#{ENV["PROXY"]} https_proxy=#{ENV["PROXY"]}" if ENV["PROXY"]
+envs += " CHEF_LOG_LEVEL=#{ENV["CHEF_LOG_LEVEL"]}" if ENV["CHEF_LOG_LEVEL"]
 exec_local "scp #{f.path} #{user}@#{server}:/tmp/local.json"
 exec_local "ssh #{user}@#{server} #{envs} /etc/chef/update.sh"
