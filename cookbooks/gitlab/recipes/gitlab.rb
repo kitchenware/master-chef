@@ -77,8 +77,8 @@ execute "create ssh key for gitlab user" do
   creates "#{get_home node.gitlab.gitlab.user}/.ssh/id_rsa"
 end
 
-ssh_accept_host_key "localhost" do
-  user "git"
+ssh_accept_host_key "git@localhost" do
+  user node.gitlab.gitlab.user
 end
 
 file "#{get_home node.gitlab.gitlab.user}/.gitconfig" do
