@@ -20,12 +20,12 @@ directory node.jboss.log_dir do
   owner node.jboss.user
 end
 
-template "#{node.jboss.jboss_home}/standalone/configuration/standalone.xml" do 
+template "#{node.jboss.jboss_home}/standalone/configuration/standalone.xml" do
   mode '0644'
   source "standalone.xml"
 end
 
-template "#{node.jboss.jboss_home}/standalone/configuration/mgmt-users.properties" do 
+template "#{node.jboss.jboss_home}/standalone/configuration/mgmt-users.properties" do
   mode '0644'
   source "mgmt-users.properties"
 end
