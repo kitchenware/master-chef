@@ -41,11 +41,13 @@ define :git_clone, {
   sha = git_clone_params[:reference]
   sha = "`git ls-remote #{git_clone_params[:repository]} '#{sha}' '#{sha}^{}' | tail -n 1 | awk '{print $1}'`" unless sha =~ /^[0-9a-f]{40}$/
 
+  env_for_not_if = use_proxy ? get_proxy_environment : {}
+
   execute "update git clone of #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
     command "cd #{git_clone_params[:name]} && git fetch -q origin && git fetch --tags -q origin && git reset -q --hard #{sha} && git clean #{clean_options}"
     environment get_proxy_environment if use_proxy
-    not_if "cd #{git_clone_params[:name]} && git log -n1 --decorate | head -n 1 | grep #{sha}"
+    not_if "cd #{git_clone_params[:name]} && git log -n1 --decorate | head -n 1 | grep #{sha}", :environment => env_for_not_if
     notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
 
