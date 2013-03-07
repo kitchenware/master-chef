@@ -11,6 +11,12 @@ define :nginx_vhost, {
   nginx_listen += "server_name #{config[:virtual_host]};\n" if config[:virtual_host]
   basic_auth = config[:basic_auth]
 
+  if config[:deny]
+    config[:deny].each do |d|
+      nginx_listen += "deny #{d};\n"
+    end
+  end
+
   ssl = config[:ssl]
 
   if ssl
