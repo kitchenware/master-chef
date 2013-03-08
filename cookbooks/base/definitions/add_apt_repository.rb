@@ -19,8 +19,11 @@ define :add_apt_repository, {
 
   if add_apt_repository_params[:key] && add_apt_repository_params[:key_server]
 
+    params = ""
+    params += "--keyserver-options http-proxy=#{ENV['BACKUP_http_proxy']}" if ENV['BACKUP_http_proxy']
+
     execute "add apt key for #{add_apt_repository_params[:name]}" do
-      command "apt-key adv --keyserver #{add_apt_repository_params[:key_server]} --recv-keys #{add_apt_repository_params[:key]}"
+      command "apt-key adv #{params} --keyserver #{add_apt_repository_params[:key_server]} --recv-keys #{add_apt_repository_params[:key]}"
       not_if "apt-key list | grep #{add_apt_repository_params[:key]}"
     end
 
