@@ -7,6 +7,21 @@ default[:nginx][:default_vhost] = {
   :virtual_host => nil,
   :enabled => true,
   :locations => [],
+  :options => {
+    :gzip => true,
+    :gzip_comp_level => 3,
+    :gzip_types => [
+      "text/plain",
+      "text/css",
+      "application/x-javascript",
+      "text/xml",
+      "application/xml",
+      "application/xml+rss",
+      "text/javascript",
+      "application/atom+xml",
+      ],
+    :gzip_static => false,
+  }
 }
 
 default[:nginx][:config] = {

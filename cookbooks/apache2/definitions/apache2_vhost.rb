@@ -76,7 +76,7 @@ define :apache2_vhost, {
       :basic_auth => basic_auth_conf,
       :description => apache2_description,
       :config => config
-      }.merge(apache2_vhost_params[:options]))
+      }.merge(apache2_vhost_params[:options]).merge(config[:options] || {}))
     notifies :reload, resources(:service => "apache2")
   end
 

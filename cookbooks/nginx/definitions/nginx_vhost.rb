@@ -72,7 +72,12 @@ define :nginx_vhost, {
   template "/etc/nginx/sites-enabled/#{vhost_sym.to_s}.conf" do
     source nginx_vhost_params[:options][:source] || "#{vhost_sym.to_s}.conf.erb"
     mode '0644'
-    variables({:listen => nginx_listen + auth, :listen_no_auth => nginx_listen, :config => config, :server_tokens => 'Off'}.merge(nginx_vhost_params[:options]))
+    variables({
+      :listen => nginx_listen + auth,
+      :listen_no_auth => nginx_listen,
+      :config => config,
+      :server_tokens => 'Off',
+    }.merge(nginx_vhost_params[:options]).merge(config[:options] || {}))
     notifies :reload, resources(:service => "nginx")
   end
 
