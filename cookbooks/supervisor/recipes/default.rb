@@ -3,26 +3,24 @@ include_recipe "sudo"
 
 package "supervisor"
 
-# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=609457
-if node.platform == "debian" || node.platform == "ubuntu"
-
-  template "/etc/init.d/supervisor" do
-    source "init_d"
-    mode '0755'
-  end
-
+basic_init_d node.supervisor.service_name do
+  daemon "/usr/bin/supervisord"
+  make_pidfile false
+  check_stop({
+    :term_time => Proc.new { find_resources_by_name_pattern(/^\/etc\/supervisor\/conf.d\/.*\.conf$/).length * node.supervisor.restart_delay_by_job },
+    :kill_time => Proc.new { 5 },
+  })
 end
 
-template "/etc/default/supervisor" do
-  source "supervisor.erb"
-  variables :dodtime => Proc.new { find_resources_by_name_pattern(/^\/etc\/supervisor\/conf.d\/.*\.conf$/).length * node.supervisor.restart_delay_by_job }
-  mode '0644'
-end
-
-
-service "supervisor" do
+service node.supervisor.service_name do
   supports :status => true, :restart => true
   action auto_compute_action
+end
+
+if node.supervisor.service_name != "supervisor"
+  service "supervisor" do
+    action :disable
+  end
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("supervisor", ".*supervisord.*")
@@ -34,7 +32,7 @@ delayed_exec "Remove useless supervisor config" do
       unless vhosts.include? n
         Chef::Log.info "Removing supervisor config #{n}"
         File.unlink n
-        notifies :restart, resources(:service => "supervisor")
+        notifies :restart, resources(:service => node.supervisor.service_name)
       end
     end
   end

@@ -1,1 +1,0 @@
-default[:rails][:resque_service_name] = 'supervisor'

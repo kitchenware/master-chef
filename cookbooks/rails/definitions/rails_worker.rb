@@ -37,7 +37,7 @@ define :rails_worker, {
       :extended_path => rails_worker_params[:extended_path],
       :vars_to_unset => rails_worker_params[:vars_to_unset],
     })
-    notifies :restart, resources(:service => "supervisor")
+    notifies :restart, resources(:service => node.supervisor.service_name)
   end
 
 
