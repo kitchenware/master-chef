@@ -3,6 +3,23 @@ include_recipe "sudo"
 
 package "supervisor"
 
+if node.supervisor.service_name != "supervisor" && (node.platform == "debian" || node.platform == "ubuntu")
+
+  if File.exist? "/etc/init.d/supervisor"
+
+    service "supervisor" do
+      action [:disable, :stop]
+    end
+
+  end
+
+  file "/etc/init.d/supervisor" do
+    action :delete
+  end
+
+end
+
+
 basic_init_d node.supervisor.service_name do
   daemon "/usr/bin/supervisord"
   make_pidfile false
@@ -15,12 +32,6 @@ end
 service node.supervisor.service_name do
   supports :status => true, :restart => true
   action auto_compute_action
-end
-
-if node.supervisor.service_name != "supervisor"
-  service "supervisor" do
-    action :disable
-  end
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("supervisor", ".*supervisord.*")
