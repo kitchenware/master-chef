@@ -20,7 +20,7 @@ define :supervisor_worker, {
       :name => supervisor_worker_params[:name],
       :log_dir => node.supervisor.log_dir,
       })
-    notifies :restart, resources(:service => "supervisord")
+    notifies :restart, resources(:service => node.supervisor.service_name)
   end
 
   sudo_sudoers_file "supervisor_#{supervisor_worker_params[:name]}" do
