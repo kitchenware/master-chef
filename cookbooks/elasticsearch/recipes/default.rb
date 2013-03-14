@@ -57,6 +57,13 @@ template "#{node.elasticsearch.directory}/config/elasticsearch.yml" do
   notifies :restart, resources(:service => "elasticsearch")
 end
 
+template "#{node.elasticsearch.directory}/config/logging.yml" do
+  owner node.elasticsearch.user
+  source "logging.yml.erb"
+  mode '0644'
+  notifies :restart, resources(:service => "elasticsearch")
+end
+
 if node.elasticsearch.transport_zmq.enable
 
   execute_version "install transport zmq" do
