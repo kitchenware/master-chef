@@ -14,15 +14,8 @@ define :basic_init_d, {
   :log_file => nil,
   :pid_directory => "/var/run",
   :code => '',
-  :check_start => {
-    :initial_delay => 0.5,
-    :loop_delay => 0.2,
-    :max_delay => 5,
-  },
-  :check_stop => {
-    :term_time => Proc.new { 30 },
-    :kill_time => Proc.new { 5 },
-  }
+  :check_start => {},
+  :check_stop => {},
 } do
   basic_init_d_params = params
 
@@ -43,6 +36,13 @@ define :basic_init_d, {
 
   post_start = ""
   post_start += "chown #{basic_init_d_params[:user]} $PID_FILE" if basic_init_d_params[:make_pidfile]
+
+  basic_init_d_params[:check_start][:initial_delay] ||= 0.5
+  basic_init_d_params[:check_start][:loop_delay] ||= 0.2
+  basic_init_d_params[:check_start][:max_delay] ||= 5
+
+  basic_init_d_params[:check_stop][:term_time] ||= Proc.new { 30 }
+  basic_init_d_params[:check_stop][:kill_time] ||= Proc.new { 5 }
 
   template "/etc/init.d/#{basic_init_d_params[:name]}" do
     cookbook "base"

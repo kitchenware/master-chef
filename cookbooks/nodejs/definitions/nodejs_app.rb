@@ -8,6 +8,7 @@ define :nodejs_app, {
   :directory_check => [],
   :add_log_param => true,
   :node_env => "production",
+  :check_start => nil,
 } do
 
   nodejs_app_params = params
@@ -57,6 +58,7 @@ define :nodejs_app, {
     user nodejs_app_params[:user]
     working_directory "#{directory}/current"
     vars_to_unset ["NVM_DIR"]
+    check_start nodejs_app_params[:check_start] if nodejs_app_params[:check_start]
   end
 
   file "/etc/default/#{nodejs_app_params[:name]}" do

@@ -25,6 +25,7 @@ nodejs_app "logstash" do
   script "bin/node-logstash-agent"
   opts "--db_file #{node.node_logstash.directory}/shared/files.json --config_dir #{node.node_logstash.config_directory} --log_level #{node.node_logstash.log_level} #{patterns_directories}"
   directory_check "#{node.node_logstash.directory}/current/node_modules"
+  check_start :max_delay => 10
 end
 
 git_clone "#{node.node_logstash.directory}/current" do
