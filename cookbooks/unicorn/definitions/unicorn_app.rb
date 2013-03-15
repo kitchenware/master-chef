@@ -6,6 +6,7 @@ define :unicorn_app, {
   :code_for_initd => "",
   :location => '/',
   :configure_nginx => true,
+  :extended_nginx_config => "",
   :vars_to_unset => [],
   :pid_file => 'shared/unicorn.pid'
 } do
@@ -67,6 +68,8 @@ define :unicorn_app, {
 
     nginx_add_default_location unicorn_app_params[:name] do
       content <<-EOF
+
+  #{unicorn_app_params[:extended_nginx_config]}
 
   location #{unicorn_app_params[:location]} {
     root #{unicorn_app_params[:app_directory]}/current/public;

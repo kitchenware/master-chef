@@ -5,6 +5,7 @@ define :unicorn_rails_app, {
   :code_for_initd => "",
   :vars_to_unset => [],
   :configure_nginx => true,
+  :extended_nginx_config => "",
 } do
   unicorn_rails_app_params = params
 
@@ -25,6 +26,7 @@ define :unicorn_rails_app, {
     vars_to_unset unicorn_rails_app_params[:vars_to_unset]
     location unicorn_rails_app_params[:location]
     configure_nginx unicorn_rails_app_params[:configure_nginx]
+    extended_nginx_config unicorn_rails_app_params[:extended_nginx_config]
     pid_file "shared/pids/unicorn.pids"
   end
 
