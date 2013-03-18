@@ -9,5 +9,12 @@
 <% end %>
 
   DocumentRoot <%= @config[:document_root] %>
+<% if @options %>
+
+  <Directory  <%= @config[:document_root] %>>
+    Options <%= @options.join(' ') %>
+  </Directory>
+
+<% end %>
 
 </VirtualHost>
