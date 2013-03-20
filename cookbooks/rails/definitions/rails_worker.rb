@@ -40,7 +40,6 @@ define :rails_worker, {
     notifies :restart, resources(:service => node.supervisor.service_name)
   end
 
-
   template "#{app_config[:app_directory]}/shared/worker_#{rails_worker_params[:name]}_restart.sh" do
     cookbook "rails"
     source "worker_restart.sh.erb"
@@ -58,6 +57,7 @@ define :rails_resque_worker, {
   :command => 'resque:work',
   :extended_path => nil,
   :vars_to_unset => [],
+  :env => {},
   } do
 
   rails_resque_worker_params = params
@@ -65,7 +65,7 @@ define :rails_resque_worker, {
   rails_worker rails_resque_worker_params[:name] do
     rails_app rails_resque_worker_params[:rails_app]
     command "bundle exec rake environment #{rails_resque_worker_params[:command]}"
-    env({'QUEUES' => rails_resque_worker_params[:queues]})
+    env(rails_resque_worker_params[:env].merge({'QUEUES' => rails_resque_worker_params[:queues]}))
     workers rails_resque_worker_params[:workers]
     extended_path rails_resque_worker_params[:extended_path]
     vars_to_unset rails_resque_worker_params[:vars_to_unset]
