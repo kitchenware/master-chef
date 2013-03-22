@@ -14,7 +14,7 @@ if node.locales.configure
   if node.platform == "ubuntu"
 
     delayed_exec "Purge useless locales" do
-      after_block_notifies :run, resources(:service => "locale-gen")
+      after_block_notifies :run, resources(:execute => "locale-gen")
       block do
         updated = false
         Dir["/var/lib/locales/supported.d/*"].each do |n|
