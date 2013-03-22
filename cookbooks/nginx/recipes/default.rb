@@ -102,14 +102,17 @@ if node.nginx[:proxy_locations]
 end
 
 delayed_exec "Remove useless nginx vhost" do
+  after_block_notifies :restart, resources(:service => "nginx")
   block do
+    updated = false
     vhosts = find_resources_by_name_pattern(/^\/etc\/nginx\/sites-enabled\/.*\.conf$/).map{|r| r.name}
     Dir["/etc/nginx/sites-enabled/*.conf"].each do |n|
       unless vhosts.include? n
         Chef::Log.info "Removing vhost #{n}"
         File.unlink n
-        notifies :reload, resources(:service => "nginx")
+        updated = true
       end
     end
+    updated
   end
 end

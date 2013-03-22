@@ -54,28 +54,34 @@ node.apache2.modules.each do |m|
 end
 
 delayed_exec "Remove useless apache2 vhost" do
+  after_block_notifies :reload, resources(:service => "apache2")
   block do
+    updated = false
     vhosts = find_resources_by_name_pattern(/^#{node.apache2.server_root}\/sites-enabled\/.*\.conf$/).map{|r| r.name}
     Dir["#{node.apache2.server_root}/sites-enabled/*.conf"].each do |n|
       unless vhosts.include? n
         Chef::Log.info "Removing vhost #{n}"
         File.unlink n
-        notifies :reload, resources(:service => "apache2")
+        updated = true
       end
     end
+    updated
   end
 end
 
 delayed_exec "Remove useless apache2 modules" do
+  after_block_notifies :restart, resources(:service => "apache2")
   block do
+    updated = false
     modules = node.apache2[:modules_enabled] || []
     Dir["#{node.apache2.server_root}/mods-enabled/*.load"].each do |n|
       name = n.match(/\/([^\/]+).load$/)[1]
       unless modules.include? name
         Chef::Log.info "Disabling module #{name}"
         %x{a2dismod #{name}}
-        notifies :restart, resources(:service => "apache2")
+        updated = true
       end
     end
+    updated
   end
 end

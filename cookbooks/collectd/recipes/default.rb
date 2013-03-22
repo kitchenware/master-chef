@@ -28,14 +28,17 @@ node.collectd.plugins.each do |name, config|
 end
 
 delayed_exec "Remove collectd plugin" do
+  after_block_notifies :restart, resources(:service => "collectd")
   block do
+    updated = false
     plugins = find_resources_by_name_pattern(/^\/etc\/collectd\/collectd.d\/.*\.conf$/).map{|r| r.name}
     Dir["/etc/collectd/collectd.d/*.conf"].each do |n|
       unless plugins.include? n
         Chef::Log.info "Removing plugin #{n}"
         File.unlink n
-        notifies :restart, resources(:service => "collectd")
+        updated = true
       end
     end
+    updated
   end
 end

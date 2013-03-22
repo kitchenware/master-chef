@@ -19,7 +19,6 @@ if node.supervisor.service_name != "supervisor" && (node.platform == "debian" ||
 
 end
 
-
 basic_init_d node.supervisor.service_name do
   daemon "/usr/bin/supervisord"
   make_pidfile false
@@ -37,14 +36,17 @@ end
 Chef::Config.exception_handlers << ServiceErrorHandler.new("supervisor", ".*supervisord.*")
 
 delayed_exec "Remove useless supervisor config" do
+  after_block_notifies :restart, resources(:service => node.supervisor.service_name)
   block do
+    updated = false
     vhosts = find_resources_by_name_pattern(/^\/etc\/supervisor\/conf.d\/.*\.conf$/).map{|r| r.name}
     Dir["/etc/supervisor/conf.d/*.conf"].each do |n|
       unless vhosts.include? n
         Chef::Log.info "Removing supervisor config #{n}"
         File.unlink n
-        notifies :restart, resources(:service => node.supervisor.service_name)
+        updated = true
       end
     end
+    updated
   end
 end

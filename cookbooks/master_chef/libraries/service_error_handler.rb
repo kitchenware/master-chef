@@ -17,14 +17,12 @@ class ServiceErrorHandler < Chef::Handler
         if n.resource.name == @service_name && [:restart, :reload, :delayed_restart].include?(n.action) && r.action.class != Array
           action = r.action.to_sym
           unless action == :nothing
-            puts "******** Find resource to deploy : #{r.name}, action #{action}"
-            begin
-              r.run_action action
-            rescue Exception => e
-              puts "Unable to run resource #{r.name} : ", e
-            end
+            run_action r, action
           end
         end
+      end
+      if r.class == Chef::Resource::DelayedExec && r.after_block_notifies && r.after_block_notifies[1].name == @service_name
+        run_action r, :run
       end
     end
     puts "*********************************************************"
@@ -35,6 +33,8 @@ class ServiceErrorHandler < Chef::Handler
     restart
   end
 
+  private
+
   def restart
     puts "Trying to restart service"
     puts %x{/etc/init.d/#{@service_name} start}
@@ -43,5 +43,15 @@ class ServiceErrorHandler < Chef::Handler
     puts "*********************************************************"
     result
   end
+
+  def run_action r, action
+    puts "******** Find resource to deploy : #{r.class.name} #{r.name}, action #{action}"
+    begin
+      r.run_action action
+    rescue Exception => e
+      puts "Unable to run resource #{r.name} : ", e
+    end
+  end
+
 end
 

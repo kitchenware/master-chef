@@ -67,14 +67,17 @@ if node.node_logstash[:monitor_files]
 end
 
 delayed_exec "Remove useless logstash config files" do
+  after_block_notifies :restart, resources(:service => "logstash")
   block do
+    updated = false
     confs = find_resources_by_name_pattern(/^\/etc\/logstash.d\/.*$/).map{|r| r.name}
     Dir["/etc/logstash.d/*"].each do |n|
       unless confs.include? n
         Chef::Log.info "Removing config files #{n}"
         File.unlink n
-        notifies :restart, resources(:service => "logstash")
+        updated = true
       end
     end
+    updated
   end
 end
