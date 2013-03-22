@@ -85,3 +85,15 @@ delayed_exec "Remove useless apache2 modules" do
     updated
   end
 end
+
+# when reloading conf, apache2 is not stopped
+# if a reload failed, chef regenerates config files, and try to start apache
+# it's work because apache2 is already launched, and loaded conf in apache2 is different
+# from conf on disk
+delayed_exec "Check apache2 config" do
+  after_block_notifies :restart, resources(:service => "apache2")
+  block do
+    %x{apachectl configtest 2>&1 > /dev/null}
+    $?.exitstatus != 0
+  end
+end

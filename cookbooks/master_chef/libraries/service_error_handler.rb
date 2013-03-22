@@ -38,7 +38,7 @@ class ServiceErrorHandler < Chef::Handler
   def restart
     puts "Trying to restart service"
     puts %x{/etc/init.d/#{@service_name} start}
-    result = $?
+    result = $?.exitstatus
     puts "Result : #{result == 0 ? "OK" : "KO"} (#{result})"
     puts "*********************************************************"
     result
