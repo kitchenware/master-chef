@@ -8,7 +8,8 @@ define :unicorn_app, {
   :configure_nginx => true,
   :extended_nginx_config => "",
   :vars_to_unset => [],
-  :pid_file => 'shared/unicorn.pid'
+  :pid_file => 'shared/unicorn.pid',
+  :unicorn_timeout => 600
 } do
 
   unicorn_app_params = params
@@ -55,6 +56,7 @@ define :unicorn_app, {
     variables({
       :app_directory => "#{unicorn_app_params[:app_directory]}/current",
       :unicorn_socket => unicorn_socket_file,
+      :unicorn_timeout =>  unicorn_app_params[:unicorn_timeout],
       :log_prefix => unicorn_log_prefix,
       :pid_file => unicorn_pid_file,
       :nb_workers => unicorn_app_params[:nb_workers] || node.cpu.total,

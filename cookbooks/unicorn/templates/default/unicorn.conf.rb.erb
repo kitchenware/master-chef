@@ -4,7 +4,7 @@ working_directory "<%= @app_directory %>"
 
 listen "<%= @unicorn_socket %>", :backlog => 2048
 
-timeout 600
+timeout <%= @unicorn_timeout %>
 
 preload_app true
 
