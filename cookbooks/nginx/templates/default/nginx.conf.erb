@@ -18,6 +18,14 @@ http {
   tcp_nopush on;
   tcp_nodelay on;
 
+<% if node.nginx[:config][:proxy_buffer_size] %>
+  proxy_buffer_size <%= node.nginx[:config][:proxy_buffer_size] %>;
+<% end %>
+
+<% if node.nginx[:config][:proxy_buffers] %>
+  proxy_buffers <%= node.nginx[:config][:proxy_buffers] %>;
+<% end %>
+
   access_log /var/log/nginx/access.log;
 
   log_format main '$remote_addr - $host - [$time_local] ' '"$request" $status $body_bytes_sent $request_time "$http_referer" ' '"$http_user_agent"';
