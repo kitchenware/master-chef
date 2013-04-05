@@ -9,7 +9,8 @@ define :unicorn_app, {
   :extended_nginx_config => "",
   :vars_to_unset => [],
   :pid_file => 'shared/unicorn.pid',
-  :unicorn_timeout => 600
+  :unicorn_timeout => 600,
+  :nb_workers => nil,
 } do
 
   unicorn_app_params = params
