@@ -6,7 +6,8 @@ define :unicorn_rails_app, {
   :vars_to_unset => [],
   :configure_nginx => true,
   :extended_nginx_config => "",
-  :unicorn_timeout => 600
+  :unicorn_timeout => 600,
+  :nb_workers => nil,
 } do
   unicorn_rails_app_params = params
 
@@ -29,6 +30,7 @@ define :unicorn_rails_app, {
     unicorn_timeout unicorn_rails_app_params[:unicorn_timeout]
     configure_nginx unicorn_rails_app_params[:configure_nginx]
     extended_nginx_config unicorn_rails_app_params[:extended_nginx_config]
+    nb_workers unicorn_rails_app_params[:nb_workers]
     pid_file "shared/pids/unicorn.pids"
   end
 
