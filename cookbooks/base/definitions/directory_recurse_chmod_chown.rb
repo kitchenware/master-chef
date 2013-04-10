@@ -4,7 +4,7 @@ define :directory_recurse_chmod_chown, {
   :owner => nil,
   :group => nil,
 } do
-  
+
   directory_recurse_chmod_chown_params = params
 
   c = []
