@@ -5,7 +5,7 @@ define :collectd_plugin, {
 
   collectd_plugin_params = params
 
-  template "/etc/collectd/collectd.d/#{collectd_plugin_params[:name]}.conf" do
+  template "#{node.collectd.config_directory}/#{collectd_plugin_params[:name]}.conf" do
     cookbook "collectd"
     source "plugin.conf.erb"
     mode '0755'

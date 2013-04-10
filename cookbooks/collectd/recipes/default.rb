@@ -10,7 +10,7 @@ service "collectd" do
   action auto_compute_action
 end
 
-directory "/etc/collectd/collectd.d" do
+directory node.collectd.config_directory do
   mode '0755'
 end
 
@@ -27,12 +27,26 @@ node.collectd.plugins.each do |name, config|
   end
 end
 
+if node.collectd.python_plugin.enabled
+
+  incremental_template node.collectd.python_plugin.file do
+    mode '0755'
+    header <<-EOF
+<LoadPlugin python>
+  Globals true
+</LoadPlugin>
+
+EOF
+  end
+
+end
+
 delayed_exec "Remove collectd plugin" do
   after_block_notifies :restart, resources(:service => "collectd")
   block do
     updated = false
-    plugins = find_resources_by_name_pattern(/^\/etc\/collectd\/collectd.d\/.*\.conf$/).map{|r| r.name}
-    Dir["/etc/collectd/collectd.d/*.conf"].each do |n|
+    plugins = find_resources_by_name_pattern(/^#{node.collectd.config_directory}.*\.conf$/).map{|r| r.name}
+    Dir["#{node.collectd.config_directory}/*.conf"].each do |n|
       unless plugins.include? n
         Chef::Log.info "Removing plugin #{n}"
         File.unlink n
