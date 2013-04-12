@@ -1,21 +1,9 @@
 <%= @header %>
 <%
 @blocks.each do |b|
-
-  if b.class == Chef::Provider::Template
-    b.load_current_resource
-    b.send(:render_with_context, b.template_location) do |x|
 %>
-<%= File.read(x.path) %>
+<%= b.call() %>
 <%
-    end
-  end
-
-  if b.class == String
-%>
-<%= b %>
-<%
-  end
 end
 %>
 <%= @footer %>

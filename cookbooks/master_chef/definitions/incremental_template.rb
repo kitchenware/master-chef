@@ -49,7 +49,19 @@ define :incremental_template_part, {
 
   begin
     r = resources(:template => incremental_template_part_params[:target])
-    r.variables[:blocks] << Chef::Platform.provider_for_resource(this_template)
+    r.variables[:blocks] << Proc.new do
+      provider = Chef::Platform.provider_for_resource(this_template)
+      begin
+        provider.load_current_resource
+        result = ""
+        provider.send(:render_with_context, provider.template_location) do |x|
+          result = File.read(x.path)
+        end
+        result
+      rescue
+        raise "Unable to process incremental_template #{incremental_template_part_params[:name]}: #{$!}"
+      end
+    end
   rescue Chef::Exceptions::ResourceNotFound
     raise "Resource target not found #{incremental_template_part_params[:target]}"
   end
@@ -68,7 +80,7 @@ define :incremental_template_content, {
 
   begin
     r = resources(:template => incremental_template_content_params[:target])
-    r.variables[:blocks] << incremental_template_content_params[:content]
+    r.variables[:blocks] << Proc.new {incremental_template_content_params[:content]}
   rescue Chef::Exceptions::ResourceNotFound
     raise "Resource target not found #{incremental_template_content_params[:target]}"
   end
