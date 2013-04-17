@@ -37,6 +37,7 @@ if node.collectd.python_plugin.enabled
 </LoadPlugin>
 
 EOF
+    notifies :restart, resources(:service => "collectd")
   end
 
 end
