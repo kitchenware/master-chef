@@ -25,20 +25,13 @@ if node[:ssh_keys]
     directory "#{home}/.ssh" do
       owner user
       mode '0700'
-      action :nothing
-    end
-
-    execute "config ssh for #{user}" do
-      command "echo #{user}"
-      notifies :create, "directory[#{home}/.ssh]", :delayed
-      notifies :create, "file[#{home}/.ssh/authorized_keys]", :delayed
+      recursive true
     end
 
     file "#{home}/.ssh/authorized_keys" do
       owner user
       mode '0700'
       content keys.uniq.sort.join("\n")
-      action :nothing
     end
 
   end
