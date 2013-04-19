@@ -20,4 +20,4 @@ if [ "`which node | grep $NVM_DIR`" = "" ]; then
   exit 12
 fi
 
-exec node $* $NODE_OPTS
+exec node $* $NODE_OPTS 2>&1 | tee -a <%= @stdout_log_file %>
