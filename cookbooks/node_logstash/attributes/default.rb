@@ -5,7 +5,7 @@ default[:node_logstash] = {
   :config_directory => '/etc/logstash.d',
   :git => 'git://github.com/bpaquet/node-logstash.git',
   :version => 'bb11ab763e488d95b3f47fffa7ab18caa486e8ca',
-  :node_version => '0.8.16',
+  :node_version => '0.10.4',
   :log_level => 'info',
   :patterns_directories => [],
 }
