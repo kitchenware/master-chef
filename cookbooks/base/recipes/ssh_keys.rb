@@ -26,12 +26,19 @@ if node[:ssh_keys]
       owner user
       mode '0700'
       recursive true
+      action :nothing
     end
 
     file "#{home}/.ssh/authorized_keys" do
       owner user
       mode '0700'
       content keys.uniq.sort.join("\n")
+      action :nothing
+    end
+
+    delayed_exec "authorized_keys" do
+      after_block_notifies :create, resources(:directory => "#{home}/.ssh")
+      after_block_notifies :create, resources(:file => "#{home}/.ssh/authorized_keys")
     end
 
   end

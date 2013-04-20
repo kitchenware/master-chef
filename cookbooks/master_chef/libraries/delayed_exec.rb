@@ -9,12 +9,12 @@ class Chef
         @action = :wait
         @allowed_actions.push(:wait)
         @allowed_actions.push(:run)
-        @after_block_notifies = nil
+        @after_block_notifies = []
       end
 
       def after_block_notifies after_block_notifies_action = nil, after_block_notifies_resource = nil
         if after_block_notifies_action && after_block_notifies_resource
-          @after_block_notifies = [after_block_notifies_action, after_block_notifies_resource]
+          @after_block_notifies << [after_block_notifies_action, after_block_notifies_resource]
         end
         @after_block_notifies
       end
@@ -40,9 +40,11 @@ class Chef
       end
 
       def action_run
-        result = @new_resource.block.call
-        if result === true && @new_resource.after_block_notifies
-          @new_resource.notifies(@new_resource.after_block_notifies[0], @new_resource.after_block_notifies[1])
+        result = @new_resource.block ? @new_resource.block.call : true
+        if result == true && @new_resource.after_block_notifies.size > 0
+          @new_resource.after_block_notifies.each do |r|
+            @new_resource.notifies(r[0], r[1])
+          end
         end
         @new_resource.updated_by_last_action true
       end
