@@ -36,6 +36,7 @@ if node[:ssh_keys]
       action :nothing
     end
 
+    # we have to use delayed exec because users are often created after this recipe
     delayed_exec "authorized_keys" do
       after_block_notifies :create, resources(:directory => "#{home}/.ssh")
       after_block_notifies :create, resources(:file => "#{home}/.ssh/authorized_keys")
