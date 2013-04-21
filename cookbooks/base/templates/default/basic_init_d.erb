@@ -54,6 +54,7 @@ stop_<%= @name %>() {
 
 run_<%= @name %>() {
   echo "Running $NAME :"
+  <%= @run_code %>
   <%= @su_command %> $DAEMON $OPTIONS <%= @end_of_command %>"
 }
 

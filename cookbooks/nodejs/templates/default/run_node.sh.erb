@@ -20,4 +20,8 @@ if [ "`which node | grep $NVM_DIR`" = "" ]; then
   exit 12
 fi
 
-exec node $* $NODE_OPTS
+if [ "$REDIRECT_OUTPUT" = "" ]; then
+  exec node $* $NODE_OPTS
+else
+  exec node $* $NODE_OPTS >> <%= @stdout_log_file %>
+fi

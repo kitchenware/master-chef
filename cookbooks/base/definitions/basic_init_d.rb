@@ -14,6 +14,7 @@ define :basic_init_d, {
   :log_file => nil,
   :pid_directory => "/var/run",
   :code => '',
+  :run_code => '',
   :check_start => {},
   :check_stop => {},
 } do
@@ -62,6 +63,7 @@ define :basic_init_d, {
       :su_command => su_command,
       :vars_to_unset => basic_init_d_params[:vars_to_unset],
       :code => basic_init_d_params[:code],
+      :run_code => basic_init_d_params[:run_code],
       :check_start => basic_init_d_params[:check_start],
       :check_stop => basic_init_d_params[:check_stop],
       })

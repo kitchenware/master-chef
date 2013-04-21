@@ -45,6 +45,7 @@ define :nodejs_app, {
       :name => nodejs_app_params[:name],
       :extended_options => extended_options,
       :node_env => nodejs_app_params[:node_env],
+      :stdout_log_file => "#{directory}/shared/log/#{nodejs_app_params[:name]}_stdout.log",
     })
     mode '0755'
   end
@@ -58,6 +59,8 @@ define :nodejs_app, {
     user nodejs_app_params[:user]
     working_directory "#{directory}/current"
     vars_to_unset ["NVM_DIR"]
+    code "export REDIRECT_OUTPUT=true"
+    run_code "unset REDIRECT_OUTPUT"
     check_start nodejs_app_params[:check_start] if nodejs_app_params[:check_start]
   end
 
