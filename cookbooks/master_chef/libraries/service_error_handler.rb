@@ -21,8 +21,10 @@ class ServiceErrorHandler < Chef::Handler
           end
         end
       end
-      if r.class == Chef::Resource::DelayedExec && r.after_block_notifies && r.after_block_notifies[1].name == @service_name
-        run_action r, :run
+      if r.class == Chef::Resource::DelayedExec && r.after_block_notifies
+        r.after_block_notifies.each do |x|
+          run_action r, :run if x[1].name == @service_name
+        end
       end
     end
     puts "*********************************************************"
