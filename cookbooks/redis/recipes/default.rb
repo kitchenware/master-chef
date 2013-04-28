@@ -2,7 +2,7 @@
 redis_package_options = nil
 redis_config_file = "redis.conf.erb"
 
-if node.lsb.codename == "squeeze"
+if node.lsb.codename == "squeeze" && node.apt.master_chef_add_apt_repo
 
   add_apt_repository "squeeze-backports" do
     url "http://backports.debian.org/debian-backports"
@@ -15,7 +15,7 @@ if node.lsb.codename == "squeeze"
 
 end
 
-if node.lsb.codename == "lucid"
+if node.lsb.codename == "lucid" && node.apt.master_chef_add_apt_repo
 
   base_ppa "redis" do
     url "ppa:rwky/redis"

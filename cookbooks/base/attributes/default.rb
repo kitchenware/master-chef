@@ -18,3 +18,10 @@ default[:ssh] = {
   :client_alive_interval => 60,
   :gateway_ports => false,
 }
+
+default[:apt] = {
+  :configure_proxy_from_env => true,
+  :force_dist_upgrade => false,
+  :clean_sources_list_d => true,
+  :master_chef_add_apt_repo => true,
+}

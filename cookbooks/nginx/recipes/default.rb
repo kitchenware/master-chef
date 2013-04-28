@@ -1,4 +1,4 @@
-if node['platform'] == "ubuntu"
+if node['platform'] == "ubuntu" && node.apt.master_chef_add_apt_repo
 
   base_ppa "nginx" do
      url "ppa:nginx/stable"
@@ -6,9 +6,7 @@ if node['platform'] == "ubuntu"
 
 end
 
-if node.lsb.codename == "squeeze"
-
-  authorize_unauthenticated_packages
+if node.lsb.codename == "squeeze"  && node.apt.master_chef_add_apt_repo
 
   add_apt_repository "nginx" do
     url "http://nginx.org/packages/debian/"

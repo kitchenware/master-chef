@@ -1,5 +1,7 @@
 
+include_recipe "base::apt"
 include_recipe "base::apt_update"
+include_recipe "base::apt_dist_upgrade"
 include_recipe "base::bash"
 include_recipe "base::editor"
 include_recipe "base::sshd"
