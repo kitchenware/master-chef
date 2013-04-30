@@ -27,3 +27,36 @@ EOF
 }
   EOF
 end
+
+
+unless node[:jenkins][:server][:plugins].nil?
+  node[:jenkins][:server][:plugins].each do |name|
+    directory "#{node.jenkins.home}/plugins/#{name}" do
+      owner node.tomcat.user
+      group node.tomcat.user
+      only_if { node[:jenkins][:server][:plugins].size > 0 }
+      recursive true
+      action :create
+    end
+  end
+  
+  execute "stop jenkins" do
+    command "/etc/init.d/jenkins stop"
+  end
+  
+  node[:jenkins][:server][:plugins].each do |name|
+    execute "add jenkins plugin" do
+      user node.tomcat.user
+      group node.tomcat.user
+      only_if { node[:jenkins][:server][:plugins].size > 0 }
+      environment get_proxy_environment
+      command "cd #{node.jenkins.home}/plugins && curl -f -L -o #{name}.hpi http://updates.jenkins-ci.org/latest/#{name}.hpi"
+    end
+  end
+  
+  
+  execute "start jenkins" do
+    command "/etc/init.d/jenkins start "
+  end
+end
+
