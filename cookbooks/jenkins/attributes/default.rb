@@ -15,4 +15,4 @@ default[:jenkins][:tomcat] = {
 }
 
 default[:jenkins][:mirror] = "https://updates.jenkins-ci.org/"
-default[:jenkins][:server][:plugins] = ["ansicolor","greenballs"]
+default[:jenkins][:plugins] = {}
