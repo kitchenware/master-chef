@@ -26,9 +26,9 @@ http {
   proxy_buffers <%= node.nginx[:config][:proxy_buffers] %>;
 <% end %>
 
-  access_log /var/log/nginx/access.log;
-
   log_format main '$remote_addr - $host - [$time_local] ' '"$request" $status $body_bytes_sent $request_time "$http_referer" ' '"$http_user_agent"';
+
+  access_log /var/log/nginx/access.log <%= node.nginx[:config][:default_log_format] %>;
 
   include /etc/nginx/mime.types;
 
