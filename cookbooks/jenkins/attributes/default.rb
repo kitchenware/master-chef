@@ -14,5 +14,5 @@ default[:jenkins][:tomcat] = {
   }
 }
 
-default[:jenkins][:mirror] = "https://updates.jenkins-ci.org/"
-default[:jenkins][:plugins] = {}
+default[:jenkins][:update] = "https://updates.jenkins-ci.org/"
+default[:jenkins][:plugins] = []
