@@ -13,3 +13,6 @@ default[:jenkins][:tomcat] = {
     'JAVA_OPTS' => '-XX:MaxPermSize=256m -Xmx512m -Xms128m',
   }
 }
+
+default[:jenkins][:update] = "https://updates.jenkins-ci.org/"
+default[:jenkins][:plugins] = []

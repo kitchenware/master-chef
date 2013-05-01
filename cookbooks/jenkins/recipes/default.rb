@@ -27,3 +27,18 @@ EOF
 }
   EOF
 end
+
+node[:jenkins][:plugins].each do |name|
+  directory "#{node.jenkins.home}/plugins/#{name}" do
+    owner node.tomcat.user
+    group node.tomcat.user
+  end
+
+  execute "add jenkins plugin #{name}" do
+    user node.tomcat.user
+    group node.tomcat.user
+    environment get_proxy_environment
+    command "cd #{node.jenkins.home}/plugins && curl -f -s -L -o #{name}.hpi #{node[:jenkins][:update]}/latest/#{name}.hpi"
+    notifies :restart, resources(:service => "jenkins")
+  end
+end
