@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 ### BEGIN INIT INFO
 # Provides: graphite
@@ -10,3 +10,25 @@
 ### END INIT INFO
 
 cd <%= @graphite_directory %> && sudo -u www-data ./bin/carbon-cache.py $*
+
+if [ "$1" = "stop" ]; then
+ count=0
+ while true; do
+  if [ "$count" = "10" ]; then
+    echo "Unable to stop carbon"
+    exit 2
+  fi
+  if [ -f "<%= @graphite_directory %>/storage/carbon-cache-a.pid" ]; then
+   pid=`cat <%= @graphite_directory %>/storage/carbon-cache-a.pid`
+   if [ -d "/proc/$pid" ]; then
+     echo "."
+     sleep 1
+   else
+     break
+   fi
+  else
+   break
+  fi
+  count=$(($count + 1))
+ done
+fi
