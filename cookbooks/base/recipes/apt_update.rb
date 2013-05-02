@@ -7,9 +7,9 @@ if node['platform'] == "ubuntu" || node['platform'] == "debian"
 
     delayed_exec "Remove useless sources.list.d files" do
       block do
-        vhosts = find_resources_by_name_pattern(/^\/etc\/apt\/sources.list.d\/.*\.conf$/).map{|r| r.name}
-        Dir["/etc/apt/sources.list.d/*.conf"].each do |n|
-          unless vhosts.include? n
+        repos = find_resources_by_name_pattern(/^\/etc\/apt\/sources.list.d\/.*\.list$/).map{|r| r.name}
+        Dir["/etc/apt/sources.list.d/*.list"].each do |n|
+          unless repos.include? n
             Chef::Log.info "Removing file #{n}"
             File.unlink n
           end
