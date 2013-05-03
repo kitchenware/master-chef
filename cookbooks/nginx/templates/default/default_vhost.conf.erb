@@ -16,6 +16,7 @@ server {
   gzip_types        <%= @gzip_types.join(' ') %>;
   gzip_vary         on;
   gzip_static       <%= @gzip_static ? 'on' : 'off' %>;
+  autoindex         <%= @auto_index ? 'on' : 'off' %>;
 
   <% node.nginx.default_vhost.locations.each do |location| %>
     <%= location[:content] %>
