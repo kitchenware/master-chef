@@ -20,12 +20,10 @@ end
 
 default[:master_chef][:chef_solo_scripts] = {
   :user => "chef",
-  :log_prefix => "/tmp/last_chef",
-  :config_file => "/etc/chef/local.json",
 }
 
 default[:local_storage] = {
-  :file => "/var/chef/local_storage.yml",
+  :file => ENV['MASTER_CHEF_CONFIG'] == "/etc/chef/local.json" ? "/var/chef/local_storage.yml" : "/opt/chef/var/local_storage.json",
   :owner => "root",
 }
 

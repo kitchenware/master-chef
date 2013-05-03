@@ -25,12 +25,22 @@ def exec_local cmd
   end
 end
 
-exec_local "scp #{user}@#{server}:/etc/chef/local.json /tmp/"
+git_cache_directory = ENV["GIT_CACHE_DIRECTORY"]
+if ENV["OMNIBUS"]
+  local_json = "/opt/chef/etc/local.json"
+  launch_cmd = "/opt/chef/bin/master-chef.sh"
+  git_cache_directory = "/opt/chef/var/git_repos" unless git_cache_directory
+else
+  local_json = "/etc/chef/local.json"
+  launch_cmd = "/etc/chef/update.sh"
+  git_cache_directory = "/var/chef/cache/git_repos" unless git_cache_directory
+end
+
+exec_local "scp #{user}@#{server}:#{local_json} /tmp/"
 
 json = ::JSON.parse(File.read(File.join("/tmp/", "local.json")))
 json["repos"] = {:local_path => []};
 
-git_cache_directory = ENV["GIT_CACHE_DIRECTORY"] || "/var/chef/cache/git_repos"
 exec_local "ssh #{user}@#{server} sudo mkdir -p #{git_cache_directory}"
 
 ["../master-chef", additionnal_path].each do |dir|
@@ -45,8 +55,9 @@ f = Tempfile.new 'local.json'
 f.write JSON.pretty_generate(json)
 f.close
 
+exec_local "scp #{f.path} #{user}@#{server}:/tmp/local.json"
+
 envs = "MASTER_CHEF_CONFIG=/tmp/local.json"
 envs += " http_proxy=#{ENV["PROXY"]} https_proxy=#{ENV["PROXY"]}" if ENV["PROXY"]
 envs += " CHEF_LOG_LEVEL=#{ENV["CHEF_LOG_LEVEL"]}" if ENV["CHEF_LOG_LEVEL"]
-exec_local "scp #{f.path} #{user}@#{server}:/tmp/local.json"
-exec_local "ssh #{user}@#{server} #{envs} /etc/chef/update.sh"
+exec_local "ssh #{user}@#{server} #{envs} #{launch_cmd}"
