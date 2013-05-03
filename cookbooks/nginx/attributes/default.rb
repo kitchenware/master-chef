@@ -22,6 +22,7 @@ default[:nginx][:default_vhost] = {
       ],
     :gzip_static => false,
     :auto_index => false,
+    :static_error_pages => true,
   }
 }
 
