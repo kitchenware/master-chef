@@ -64,4 +64,4 @@ package "bzip2"
 package "curl"
 package "git-core"
 
-p node.local_storage.file
+Chef::Log.info "File for local storage : #{node.local_storage.file}"
