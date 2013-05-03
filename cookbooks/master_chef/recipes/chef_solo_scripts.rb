@@ -1,12 +1,14 @@
 
 if File.exists? "/opt/chef/bin/chef-solo"
 
-  directory "/opt/chef/etc"
-  directory "/opt/chef/var"
-  directory "/opt/chef/var/git_repos"
+  ["/opt/chef/etc", "/opt/chef/var", "/opt/chef/var/git_repos"].each do |d|
+    directory d
+  end
 
-  directory "/opt/chef/var/last" do
-    owner node.master_chef.chef_solo_scripts.user
+  ["/opt/chef/var/last", "/opt/chef/tmp"].each do |d|
+    directory d do
+      owner node.master_chef.chef_solo_scripts.user
+    end
   end
 
   template "/opt/chef/bin/master-chef.sh" do
@@ -61,3 +63,5 @@ package "unzip"
 package "bzip2"
 package "curl"
 package "git-core"
+
+p node.local_storage.file

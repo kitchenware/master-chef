@@ -23,7 +23,7 @@ default[:master_chef][:chef_solo_scripts] = {
 }
 
 default[:local_storage] = {
-  :file => ENV['MASTER_CHEF_CONFIG'] == "/etc/chef/local.json" ? "/var/chef/local_storage.yml" : "/opt/chef/var/local_storage.json",
+  :file => ENV['LOCAL_STORAGE_FILE'] || "/var/chef/local_storage.yml",
   :owner => "root",
 }
 

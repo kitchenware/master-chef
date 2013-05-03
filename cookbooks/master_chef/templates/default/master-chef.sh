@@ -7,6 +7,7 @@ fi
 STATUS_FILE="/opt/chef/var/last/result"
 LOG_FILE="/opt/chef/var/last/log"
 REPOS_STATUS_FILE="/opt/chef/var/last/repos.json"
+LOCAL_STORAGE_FILE="/opt/chef/var/local_storage.yml"
 FILE_OWNER="<%= @user %>"
 
 log() {
@@ -17,7 +18,7 @@ log() {
 log "Starting chef using omnibus at `date`"
 
 (
-  REPOS_STATUS_FILE=$REPOS_STATUS_FILE MASTER_CHEF_CONFIG=$MASTER_CHEF_CONFIG sudo -E /opt/chef/bin/chef-solo -c /opt/chef/etc/solo.rb
+  LOCAL_STORAGE_FILE=$LOCAL_STORAGE_FILE REPOS_STATUS_FILE=$REPOS_STATUS_FILE MASTER_CHEF_CONFIG=$MASTER_CHEF_CONFIG sudo -E /opt/chef/bin/chef-solo -c /opt/chef/etc/solo.rb
   if [ "$?" = 0 ]; then
     log "Chef run OK at `date`"
   else
