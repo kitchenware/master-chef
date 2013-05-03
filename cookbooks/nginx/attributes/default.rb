@@ -1,6 +1,6 @@
 default[:nginx][:deploy_default_config] = true
 
-default[:nginx][:default_root] = "/var/www/nginx-default";
+default[:nginx][:default_root] = "/var/www/nginx-default"
 
 default[:nginx][:default_vhost] = {
   :listen => '0.0.0.0:80',
@@ -21,6 +21,8 @@ default[:nginx][:default_vhost] = {
       "application/atom+xml",
       ],
     :gzip_static => false,
+    :auto_index => false,
+    :static_error_pages => true,
   }
 }
 

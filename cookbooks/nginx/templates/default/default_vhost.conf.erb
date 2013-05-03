@@ -16,6 +16,7 @@ server {
   gzip_types        <%= @gzip_types.join(' ') %>;
   gzip_vary         on;
   gzip_static       <%= @gzip_static ? 'on' : 'off' %>;
+  autoindex         <%= @auto_index ? 'on' : 'off' %>;
 
   <% node.nginx.default_vhost.locations.each do |location| %>
     <%= location[:content] %>
@@ -23,11 +24,12 @@ server {
 
   server_tokens <%= @server_tokens %>;
 
-  error_page 401 403 /401.html;
+  <% if @static_error_pages %>
+    error_page 401 403 /401.html;
 
-  error_page 404 /404.html;
-  error_page 500 501 502 503 504 505 /500.html;
-
+    error_page 404 /404.html;
+    error_page 500 501 502 503 504 505 /500.html;
+  <% end %>
 }
 
 <% end %>
