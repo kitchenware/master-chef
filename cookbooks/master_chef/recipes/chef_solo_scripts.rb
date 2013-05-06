@@ -1,31 +1,33 @@
 
 if File.exists? "/opt/chef/bin/chef-solo"
 
-  ["/opt/chef/etc", "/opt/chef/var", "/opt/chef/var/git_repos"].each do |d|
-    directory d
+  install_path = "/opt/master-chef"
+
+  ["", "bin", "etc", "var", "var/git_repos"].each do |d|
+    directory "#{install_path}/#{d}"
   end
 
-  ["/opt/chef/var/last", "/opt/chef/tmp"].each do |d|
-    directory d do
+  ["var/last", "tmp"].each do |d|
+    directory "#{install_path}/#{d}" do
       owner node.master_chef.chef_solo_scripts.user
     end
   end
 
-  template "/opt/chef/bin/master-chef.sh" do
+  template "#{install_path}/bin/master-chef.sh" do
     source "bootstrap.sh"
     mode '0755'
   end
 
-  template "/opt/chef/bin/master-chef.impl.last.sh" do
-    source "master-chef.sh"
+  template "#{install_path}/bin/update.impl.last.sh" do
+    source "update_omnibus.sh"
     mode '0755'
     variables({
       :user => node.master_chef.chef_solo_scripts.user,
     })
   end
 
-  template "/opt/chef/bin/master-chef.impl.sh" do
-    source "master-chef.sh"
+  template "#{install_path}/bin/update.impl.sh" do
+    source "update_omnibus.sh"
     mode '0755'
     variables({
       :user => node.master_chef.chef_solo_scripts.user,
@@ -33,10 +35,10 @@ if File.exists? "/opt/chef/bin/chef-solo"
     action :create_if_missing
   end
 
-  template "/opt/chef/etc/solo.rb" do
+  template "#{install_path}/etc/solo.rb" do
     source "solo.rb"
     mode '0644'
-    variables :cache_directory => "/opt/chef/var"
+    variables :cache_directory => "#{install_path}/var"
   end
 
 end
