@@ -7,7 +7,6 @@ if node.lsb.codename == "squeeze" && node.apt.master_chef_add_apt_repo
   add_apt_repository "squeeze-backports" do
     url "http://backports.debian.org/debian-backports"
     distrib "squeeze-backports"
-    components ["main"]
   end
 
   # awfull, cf http://tickets.opscode.com/browse/CHEF-1547
@@ -17,9 +16,12 @@ end
 
 if node.lsb.codename == "lucid" && node.apt.master_chef_add_apt_repo
 
-  base_ppa "redis" do
-    url "ppa:rwky/redis"
+  add_apt_repository "ppa_redis" do
+    url "http://ppa.launchpad.net/rwky/redis/ubuntu"
+    key "5862E31D"
+    key_server "keyserver.ubuntu.com"
   end
+
 
   redis_config_file = "redis-2.6.conf.erb"
 

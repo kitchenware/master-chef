@@ -1,7 +1,9 @@
 if node['platform'] == "ubuntu" && node.apt.master_chef_add_apt_repo
 
-  base_ppa "nginx" do
-     url "ppa:nginx/stable"
+  add_apt_repository "ppa_nginx" do
+    url "http://ppa.launchpad.net/nginx/stable/ubuntu"
+    key "C300EE8C"
+    key_server "keyserver.ubuntu.com"
   end
 
 end

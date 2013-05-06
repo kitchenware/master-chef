@@ -2,7 +2,7 @@
 define :add_apt_repository, {
   :url => nil,
   :distrib => nil,
-  :components => [],
+  :components => ["main"],
   :key => nil,
   :key_server => nil,
   :run_apt_get_update => true,
