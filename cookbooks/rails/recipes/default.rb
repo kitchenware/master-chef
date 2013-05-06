@@ -3,6 +3,7 @@ if node[:rails_app]
 
   node.rails_app.each do |k, v|
 
+
     include_recipe "mysql::server" if v[:mysql_database]
 
     rails_app k do

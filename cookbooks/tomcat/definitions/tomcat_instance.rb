@@ -51,12 +51,12 @@ define :tomcat_instance, {
       })
   end
 
+  Chef::Config.exception_handlers << ServiceErrorHandler.new(config[:name], catalina_base)
+
   service "#{config[:name]}" do
     supports :status => true, :restart => true, :reload => true, :graceful_restart => true
     action auto_compute_action
   end
-
-  Chef::Config.exception_handlers << ServiceErrorHandler.new(config[:name], catalina_base)
 
   template "#{catalina_base}/conf/env" do
     cookbook "tomcat"

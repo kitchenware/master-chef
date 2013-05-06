@@ -4,6 +4,10 @@ include_recipe "libzmq"
 
 base_user node.node_logstash.user
 
+warp_install node.node_logstash.user do
+  nvm true
+end
+
 node.node_logstash.groups.each do |g|
 
   group g do
@@ -19,12 +23,14 @@ directory node.node_logstash.config_directory
 patterns_directories = ""
 patterns_directories = "--patterns_directories #{node.node_logstash.patterns_directories.join(',')}" if node.node_logstash.patterns_directories.length > 0
 
+Chef::Config.exception_handlers << ServiceErrorHandler.new("logstash", ".*logstash.*")
+
 nodejs_app "logstash" do
   user node.node_logstash.user
   directory node.node_logstash.directory
   script "bin/node-logstash-agent"
   opts "--db_file #{node.node_logstash.directory}/shared/files.json --config_dir #{node.node_logstash.config_directory} --log_level #{node.node_logstash.log_level} #{patterns_directories}"
-  directory_check "#{node.node_logstash.directory}/current/node_modules"
+  directory_check ["#{node.node_logstash.directory}/current/node_modules"]
   check_start :max_delay => 10
 end
 

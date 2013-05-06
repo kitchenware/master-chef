@@ -18,12 +18,6 @@ define :rails_app, {
     rails_app_params[:app_directory] = "#{get_home rails_app_params[:user]}/#{rails_app_params[:name]}" 
   end
 
-  base_user rails_app_params[:user]
-
-  warp_install rails_app_params[:user] do
-    rbenv true
-  end
-
   capistrano_app rails_app_params[:app_directory] do
     user rails_app_params[:user]
   end
@@ -35,8 +29,6 @@ define :rails_app, {
   if rails_app_params[:mysql_database]
 
     include_recipe "mysql"
-
-    mysql_database rails_app_params[:mysql_database]
 
     config = mysql_config(rails_app_params[:mysql_database])
 

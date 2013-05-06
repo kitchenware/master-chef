@@ -32,6 +32,7 @@ define :unicorn_rails_app, {
     extended_nginx_config unicorn_rails_app_params[:extended_nginx_config]
     nb_workers unicorn_rails_app_params[:nb_workers]
     pid_file "shared/pids/unicorn.pids"
+    create_capistrano_app false
   end
 
 end

@@ -7,9 +7,6 @@ package "python-setuptools"
 
 include_recipe "apache2"
 
-apache2_enable_module "alias"
-apache2_enable_module "authz_host"
-
 apache2_enable_module "python" do
   install true
 end

@@ -5,8 +5,12 @@ warp_install node.kibana.user do
   rbenv true
 end
 
-capistrano_app node.kibana.directory do
+Chef::Config.exception_handlers << ServiceErrorHandler.new("kibana", ".*kibana.*")
+
+unicorn_app 'kibana' do
   user node.kibana.user
+  location node.kibana.location
+  app_directory node.kibana.directory
 end
 
 deployed_files = %w{Gemfile Gemfile.lock .rbenv-version .rbenv-gemsets}
@@ -23,14 +27,6 @@ deployed_files.each do |f|
 end
 
 cp_command = deployed_files.map{|f| "cp #{node.kibana.directory}/shared/files/#{f} #{node.kibana.directory}/current/#{f}"}.join(' && ')
-
-unicorn_app 'kibana' do
-  user node.kibana.user
-  location node.kibana.location
-  app_directory node.kibana.directory
-end
-
-Chef::Config.exception_handlers << ServiceErrorHandler.new("kibana", ".*kibana.*")
 
 git_clone "#{node.kibana.directory}/current" do
   user node.kibana.user

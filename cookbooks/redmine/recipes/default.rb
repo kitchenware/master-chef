@@ -3,6 +3,14 @@ include_recipe "rails"
 
 include_recipe "mysql::server"
 
+base_user node.redmine.user
+
+warp_install node.redmine.user do
+  rbenv true
+end
+
+mysql_database "redmine:database"
+
 rails_app "redmine" do
   app_directory node.redmine.directory
   user node.redmine.user

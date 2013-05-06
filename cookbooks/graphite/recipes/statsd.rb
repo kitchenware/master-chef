@@ -1,5 +1,11 @@
 include_recipe "nodejs"
 
+base_user node.graphite.statsd.user
+
+warp_install node.graphite.statsd.user do
+  nvm true
+end
+
 Chef::Config.exception_handlers << ServiceErrorHandler.new("statsd", "\\/etc\\/statsd.conf")
 
 nodejs_app "statsd" do

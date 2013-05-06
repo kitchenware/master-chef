@@ -33,7 +33,7 @@ define :mysql_database, {
 
   end
 
-  if config[:mysql_wrapper] && ! find_resources_by_name(File.dirname(config[:mysql_wrapper][:file])).empty?
+  if config[:mysql_wrapper]
 
     template config[:mysql_wrapper][:file] do
       cookbook "mysql"
@@ -41,6 +41,12 @@ define :mysql_database, {
       variables :config => config
       mode '0700'
       owner config[:mysql_wrapper][:owner]
+      action :nothing
+    end
+
+    # directory enclosing wrapper file is often created after
+    delayed_exec "create #{config[:mysql_wrapper][:file]}" do
+      after_block_notifies :create, resources(:template => config[:mysql_wrapper][:file])
     end
 
   end

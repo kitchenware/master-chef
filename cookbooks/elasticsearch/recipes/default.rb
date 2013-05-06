@@ -28,15 +28,15 @@ node.elasticsearch.env_vars.each do |k, v|
   init_d_code << "export #{k}=\"#{v}\""
 end
 
+Chef::Config.exception_handlers << ServiceErrorHandler.new("elasticsearch", ".*elasticsearch.*")
+
 basic_init_d "elasticsearch" do
   daemon "#{node.elasticsearch.directory}/bin/elasticsearch"
   user node.elasticsearch.user
-  directory_check node.elasticsearch.directory
+  directory_check [node.elasticsearch.directory]
   options "-f " + node.elasticsearch.command_line_options
   code init_d_code.join("\n")
 end
-
-Chef::Config.exception_handlers << ServiceErrorHandler.new("elasticsearch", ".*elasticsearch.*")
 
 execute_version "install elasticsearch" do
   command(

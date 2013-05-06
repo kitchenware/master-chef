@@ -15,6 +15,14 @@ include_recipe "mysql::server"
 
 include_recipe "rails"
 
+base_user node.gitlab.gitlab.user
+
+warp_install node.gitlab.gitlab.user do
+  rbenv true
+end
+
+mysql_database  "gitlab:database"
+
 rails_app "gitlab" do
   user node.gitlab.gitlab.user
   app_directory node.gitlab.gitlab.path

@@ -16,7 +16,7 @@ define :base_user, {
   end
 
   if node[:bash_users]
-    node.bash_users << base_user_params[:name]
+    node.set[:bash_users] = node.bash_users + [base_user_params[:name]]
   end
 
   user_home = base_user_params[:home] || get_home(base_user_params[:name])
@@ -30,11 +30,6 @@ define :base_user, {
     owner base_user_params[:name]
     mode '0700'
     action :create_if_missing
-  end
-
-  directory "#{user_home}/.ssh" do
-    owner base_user_params[:name]
-    mode '0700'
   end
 
 end

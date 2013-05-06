@@ -19,6 +19,8 @@ if node.supervisor.service_name != "supervisor" && (node.platform == "debian" ||
 
 end
 
+Chef::Config.exception_handlers << ServiceErrorHandler.new("supervisor", ".*supervisord.*")
+
 basic_init_d node.supervisor.service_name do
   daemon "/usr/bin/supervisord"
   make_pidfile false
@@ -27,13 +29,6 @@ basic_init_d node.supervisor.service_name do
     :kill_time => Proc.new { 5 },
   })
 end
-
-service node.supervisor.service_name do
-  supports :status => true, :restart => true
-  action auto_compute_action
-end
-
-Chef::Config.exception_handlers << ServiceErrorHandler.new("supervisor", ".*supervisord.*")
 
 delayed_exec "Remove useless supervisor config" do
   after_block_notifies :restart, resources(:service => node.supervisor.service_name)

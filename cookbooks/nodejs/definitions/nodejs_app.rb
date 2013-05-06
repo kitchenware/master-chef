@@ -19,19 +19,11 @@ define :nodejs_app, {
   include_recipe "capistrano"
   include_recipe "warp"
 
-  base_user nodejs_app_params[:user]
-
   directory = nodejs_app_params[:directory] || ::File.join(get_home(nodejs_app_params[:user]), nodejs_app_params[:name])
 
   current_path = ::File.join(directory, "current")
   extended_options = ""
   extended_options += " --log_file #{directory}/shared/log/#{nodejs_app_params[:name]}.log" if nodejs_app_params[:add_log_param]
-
-  Chef::Config.exception_handlers << ServiceErrorHandler.new(nodejs_app_params[:name], ".*#{directory}.*")
-
-  warp_install nodejs_app_params[:user] do
-    nvm true
-  end
 
   capistrano_app directory do
     user nodejs_app_params[:user]

@@ -11,6 +11,7 @@ define :unicorn_app, {
   :pid_file => 'shared/unicorn.pid',
   :unicorn_timeout => 600,
   :nb_workers => nil,
+  :create_capistrano_app => true,
 } do
 
   unicorn_app_params = params
@@ -19,8 +20,10 @@ define :unicorn_app, {
     raise "You have to specify #{sym} in unicorn_app" unless unicorn_app_params[sym]
   end
 
-  capistrano_app unicorn_app_params[:app_directory] do
-    user unicorn_app_params[:user]
+  if unicorn_app_params[:create_capistrano_app]
+    capistrano_app unicorn_app_params[:app_directory] do
+      user unicorn_app_params[:user]
+    end
   end
 
   unicorn_pid_file = "#{unicorn_app_params[:app_directory]}/#{unicorn_app_params[:pid_file]}"

@@ -17,7 +17,7 @@ Chef::Config.exception_handlers << ServiceErrorHandler.new("bucky", "\\/etc\\/bu
 basic_init_d "bucky" do
   daemon "/usr/local/bin/bucky"
   options "/etc/bucky/bucky.conf"
-  file_check "/etc/bucky/bucky.conf"
+  file_check ["/etc/bucky/bucky.conf"]
   user "www-data"
 end
 

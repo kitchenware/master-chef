@@ -2,7 +2,7 @@
 include_recipe "libzmq"
 
 execute_version "install jzmq" do
-  user root
+  user "root"
   command "cd /tmp && curl --location #{node.warp.warp_src}/#{node.libzmq.jzmq.warp_file} -o #{node.libzmq.jzmq.warp_file} && sh #{node.libzmq.jzmq.warp_file} && rm #{node.libzmq.jzmq.warp_file}"
   environment get_proxy_environment
   version node.libzmq.jzmq.version
