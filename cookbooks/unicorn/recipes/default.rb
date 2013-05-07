@@ -1,4 +1,6 @@
 
+include_recipe "capistrano"
+
 if node[:unicorn_apps]
 
   node.unicorn_apps.each do |k, v|

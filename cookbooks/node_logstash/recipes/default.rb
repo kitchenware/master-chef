@@ -1,5 +1,5 @@
-include_recipe "nodejs"
 
+include_recipe "nodejs"
 include_recipe "libzmq"
 
 base_user node.node_logstash.user

@@ -1,0 +1,3 @@
+name 'tomcat'
+
+depends :java

@@ -1,6 +1,5 @@
 
 include_recipe "rails"
-
 include_recipe "mysql::server"
 
 base_user node.redmine.user

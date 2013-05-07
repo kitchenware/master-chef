@@ -1,4 +1,6 @@
 
+include_recipe "unicorn"
+
 base_user node.kibana.user
 
 warp_install node.kibana.user do

@@ -17,7 +17,6 @@ define :nodejs_app, {
   raise "You have to specify script in nodejs_app" unless nodejs_app_params[:script]
 
   include_recipe "capistrano"
-  include_recipe "warp"
 
   directory = nodejs_app_params[:directory] || ::File.join(get_home(nodejs_app_params[:user]), nodejs_app_params[:name])
 
