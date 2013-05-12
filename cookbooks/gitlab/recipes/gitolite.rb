@@ -1,4 +1,6 @@
 
+include_recipe "git"
+
 base_user node.gitlab.gitolite.user
 
 directory node.gitlab.gitolite.path do
