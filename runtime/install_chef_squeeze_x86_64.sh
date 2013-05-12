@@ -1,12 +1,19 @@
-#!/bin/bash
+#!/bin/sh -e
 
 TARGET=$1
 
-KEY=`cat $HOME/.ssh/id_rsa.pub`
-WARP_FILE="ruby_squeeze_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
-WARP_ROOT="http://warp-repo.s3-eu-west-1.amazonaws.com"
+if [ "$TARGET" = "" ]; then
+  echo "Please specify target on command line"
+  exit 2
+fi
 
-cat <<-EOF | ssh $SSH_OPTS $TARGET bash
+if [ "$CHEF_USER" = "" ]; then
+  CHEF_USER="chef"
+fi
+
+KEY=`cat $HOME/.ssh/id_rsa.pub`
+
+cat <<-EOF | ssh $SSH_OPTS root@$TARGET "cat > /tmp/master_chef_install.sh"
 
 mkdir -p \$HOME/.ssh
 
@@ -18,20 +25,38 @@ apt-get clean
 
 groupadd sudo
 
-useradd -m -g sudo -s /bin/bash chef
+useradd -m -g sudo -s /bin/bash $CHEF_USER
 
-sudo echo "chef   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+sudo echo "$CHEF_USER   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-sudo mkdir -p /home/chef/.ssh/
-sudo cp \$HOME/.ssh/authorized_keys /home/chef/.ssh/authorized_keys
-sudo chown -R chef /home/chef/.ssh
+sudo mkdir -p /home/$CHEF_USER/.ssh/
+sudo cp \$HOME/.ssh/authorized_keys /home/$CHEF_USER/.ssh/authorized_keys
+sudo chown -R $CHEF_USER /home/$CHEF_USER/.ssh
 
 EOF
 
-HOST=`echo $TARGET | cut -d'@' -f2`
-cat <<-EOF | ssh chef@$HOST
+ssh $SSH_OPTS root@$TARGET "sh /tmp/master_chef_install.sh"
+
+if [ "$OMNIBUS" = "" ]; then
+
+WARP_FILE="ruby_squeeze_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
+WARP_ROOT="http://warp-repo.s3-eu-west-1.amazonaws.com"
+
+cat <<-EOF | ssh $SSH_OPTS $CHEF_USER@$TARGET
 
 [ -f $WARP_FILE ] || wget "$WARP_ROOT/$WARP_FILE"
 sh $WARP_FILE
 
 EOF
+
+else
+
+OMNIBUS_DEB="https://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.4.4-2.debian.6.0.5_amd64.deb"
+cat <<-EOF | ssh $SSH_OPTS $CHEF_USER@$TARGET
+
+[ -f $OMNIBUS_DEB ] || wget "$OMNIBUS_DEB"
+sudo dpkg -i `basename $OMNIBUS_DEB`
+
+EOF
+
+fi
