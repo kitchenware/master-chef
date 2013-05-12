@@ -1,62 +1,32 @@
-#!/bin/sh -e
+#!/bin/bash
 
-TARGET=$1
+source `dirname $0`/install_chef_common.sh
 
-if [ "$TARGET" = "" ]; then
-  echo "Please specify target on command line"
-  exit 2
+if [ "$INSTALL_USER" = "" ]; then
+  INSTALL_USER="admin"
 fi
 
-if [ "$CHEF_USER" = "" ]; then
-  CHEF_USER="chef"
-fi
+read -r -d '' INIT_SCRIPT <<EOF
 
-KEY=`cat $HOME/.ssh/id_rsa.pub`
+mkdir -p \$HOME/.ssh &&
 
-cat <<-EOF | ssh $SSH_OPTS root@$TARGET "cat > /tmp/master_chef_install.sh"
+echo $KEY > \$HOME/.ssh/authorized_keys &&
 
-mkdir -p \$HOME/.ssh
+useradd -m -g sudo -s /bin/bash chef &&
 
-echo $KEY > \$HOME/.ssh/authorized_keys
+$PROXY apt-get -y update &&
+$PROXY apt-get -y install git-core curl bzip2 sudo file lsb-release &&
+$PROXY apt-get clean &&
 
-apt-get -y update
-apt-get -y install git-core curl bzip2 sudo file lsb-release
-apt-get clean
+echo "chef   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers &&
 
-groupadd sudo
-
-useradd -m -g sudo -s /bin/bash $CHEF_USER
-
-sudo echo "$CHEF_USER   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
-sudo mkdir -p /home/$CHEF_USER/.ssh/
-sudo cp \$HOME/.ssh/authorized_keys /home/$CHEF_USER/.ssh/authorized_keys
-sudo chown -R $CHEF_USER /home/$CHEF_USER/.ssh
+mkdir -p /home/chef/.ssh/ &&
+cp \$HOME/.ssh/authorized_keys /home/chef/.ssh/authorized_keys &&
+chown -R chef /home/chef/.ssh
 
 EOF
-
-ssh $SSH_OPTS root@$TARGET "sh /tmp/master_chef_install.sh"
-
-if [ "$OMNIBUS" = "" ]; then
 
 WARP_FILE="ruby_squeeze_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
-WARP_ROOT="http://warp-repo.s3-eu-west-1.amazonaws.com"
+OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.4.4-2.debian.6.0.5_amd64.deb"
 
-cat <<-EOF | ssh $SSH_OPTS $CHEF_USER@$TARGET
-
-[ -f $WARP_FILE ] || wget "$WARP_ROOT/$WARP_FILE"
-sh $WARP_FILE
-
-EOF
-
-else
-
-OMNIBUS_DEB="https://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.4.4-2.debian.6.0.5_amd64.deb"
-cat <<-EOF | ssh $SSH_OPTS $CHEF_USER@$TARGET
-
-[ -f $OMNIBUS_DEB ] || wget "$OMNIBUS_DEB"
-sudo dpkg -i `basename $OMNIBUS_DEB`
-
-EOF
-
-fi
+chef_install

@@ -1,36 +1,32 @@
 #!/bin/bash
 
-TARGET=$1
+source `dirname $0`/install_chef_common.sh
 
-KEY=`cat $HOME/.ssh/id_rsa.pub`
+if [ "$INSTALL_USER" = "" ]; then
+  INSTALL_USER="ubuntu"
+fi
+
+read -r -d '' INIT_SCRIPT <<EOF
+
+mkdir -p \$HOME/.ssh &&
+
+echo $KEY > \$HOME/.ssh/authorized_keys &&
+
+useradd -m -g sudo -s /bin/bash chef &&
+
+$PROXY apt-get -y update &&
+$PROXY apt-get -y install git-core curl bzip2 &&
+$PROXY apt-get clean &&
+
+echo "chef   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers &&
+
+mkdir -p /home/chef/.ssh/ &&
+cp \$HOME/.ssh/authorized_keys /home/chef/.ssh/authorized_keys &&
+chown -R chef /home/chef/.ssh
+
+EOF
+
 WARP_FILE="ruby_lucid_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
-WARP_ROOT="http://warp-repo.s3-eu-west-1.amazonaws.com"
+OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/x86_64/chef_11.4.4-2.ubuntu.10.04_amd64.deb"
 
-cat <<-EOF | ssh $SSH_OPTS $TARGET sudo bash
-
-mkdir -p \$HOME/.ssh
-
-echo $KEY > \$HOME/.ssh/authorized_keys
-
-useradd -m -g sudo -s /bin/bash chef
-
-apt-get -y update
-apt-get -y install git-core curl bzip2
-apt-get clean
-
-
-sudo echo "chef   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
-sudo mkdir -p /home/chef/.ssh/
-sudo cp \$HOME/.ssh/authorized_keys /home/chef/.ssh/authorized_keys
-sudo chown -R chef /home/chef/.ssh
-
-EOF
-
-HOST=`echo $TARGET | cut -d'@' -f2`
-cat <<-EOF | ssh chef@$HOST
-
-[ -f $WARP_FILE ] || wget "$WARP_ROOT/$WARP_FILE"
-sh $WARP_FILE
-
-EOF
+chef_install

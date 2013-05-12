@@ -1,36 +1,32 @@
 #!/bin/bash
 
-TARGET=$1
+source `dirname $0`/install_chef_common.sh
 
-KEY=`cat $HOME/.ssh/id_rsa.pub`
-WARP_FILE="ruby_precise_x86_64_ree-1.8.7-2012.02_rbenv_chef.warp"
-WARP_ROOT="http://warp-repo.s3-eu-west-1.amazonaws.com"
+if [ "$INSTALL_USER" = "" ]; then
+  INSTALL_USER="ubuntu"
+fi
 
-cat <<-EOF | ssh $SSH_OPTS $TARGET sudo bash
+read -r -d '' INIT_SCRIPT <<EOF
 
-mkdir -p \$HOME/.ssh
+mkdir -p \$HOME/.ssh &&
 
-echo $KEY > \$HOME/.ssh/authorized_keys
+echo $KEY > \$HOME/.ssh/authorized_keys &&
 
-useradd -m -g sudo -s /bin/bash chef
+useradd -m -g sudo -s /bin/bash chef &&
 
-apt-get -y update
-apt-get -y install git-core curl bzip2
-apt-get clean
+$PROXY apt-get -y update &&
+$PROXY apt-get -y install git-core curl bzip2 &&
+$PROXY apt-get clean &&
 
+echo "chef   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers &&
 
-sudo echo "chef   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
-sudo mkdir -p /home/chef/.ssh/
-sudo cp \$HOME/.ssh/authorized_keys /home/chef/.ssh/authorized_keys
-sudo chown -R chef /home/chef/.ssh
-
-EOF
-
-HOST=`echo $TARGET | cut -d'@' -f2`
-cat <<-EOF | ssh chef@$HOST
-
-[ -f $WARP_FILE ] || wget "$WARP_ROOT/$WARP_FILE"
-sh $WARP_FILE
+mkdir -p /home/chef/.ssh/ &&
+cp \$HOME/.ssh/authorized_keys /home/chef/.ssh/authorized_keys &&
+chown -R chef /home/chef/.ssh
 
 EOF
+
+WARP_FILE="ruby_precise_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
+OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/11.04/x86_64/chef_11.4.4-2.ubuntu.11.04_amd64.deb"
+
+chef_install
