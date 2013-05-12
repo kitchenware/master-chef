@@ -43,7 +43,7 @@ folders = {}
 
 if config["repos"]["git"]
 
-  git_cache_directory = ENV["GIT_CACHE_DIRECTORY"] || "<%= @cache_directory %>/git_repos"
+  git_cache_directory = ENV["GIT_CACHE_DIRECTORY"] || "/opt/chef/var/git_repos"
   exec_local "mkdir -p #{git_cache_directory} && chmod -R go-rwx #{git_cache_directory}"
 
   git_tag_override_file = config_file + ".git_tag_override"
