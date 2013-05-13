@@ -13,7 +13,11 @@ if [ "$PROXY" != "" ]; then
   PROXY="http_proxy=$PROXY https_proxy=$PROXY"
 fi
 
-KEY=`cat $HOME/.ssh/id_rsa.pub`
+if [ "$KEY_FILE" = "" ]; then
+  KEY_FILE=$HOME/.ssh/id_rsa.pub
+fi
+
+KEY=`cat $KEY_FILE`
 
 WARP_ROOT="http://warp-repo.s3-eu-west-1.amazonaws.com"
 
