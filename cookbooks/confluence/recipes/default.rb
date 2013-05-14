@@ -24,7 +24,7 @@ tar_gz = "#{node.confluence.version}.tar.gz"
 build_dir = "#{node.confluence.path.build}/confluence-#{node.confluence.version}"
 execute "download confluence"  do
   user node.tomcat.user
-  command "cd #{node.confluence.path.build} && curl --location #{node.confluence.url} -o #{tar_gz} && tar xzf #{tar_gz}"
+  command "cd #{node.confluence.path.build} && curl -f -s --location #{node.confluence.url} -o #{tar_gz} && tar xzf #{tar_gz}"
   environment get_proxy_environment
   not_if "[ -d #{build_dir} ]"
 end
