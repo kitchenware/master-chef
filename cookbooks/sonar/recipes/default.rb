@@ -33,7 +33,7 @@ EOF
   environment get_proxy_environment
   version node.sonar.zip_url
   file_storage "#{node.sonar.path}/.sonar_download"
-  notifies :run, resources(:execute => "build sonar war"), :immediately
+  notifies :run, "execute[build sonar war]", :immediately
 end
 
 template "#{node.sonar.path}/sonar/conf/sonar.properties" do
@@ -41,7 +41,7 @@ template "#{node.sonar.path}/sonar/conf/sonar.properties" do
   mode '0644'
   variables :db_config => mysql_config("sonar:database")
   source "sonar.properties.erb"
-  notifies :run, resources(:execute => "build sonar war"), :immediately
+  notifies :run, "execute[build sonar war]", :immediately
 end
 
 tomcat_sonar_http_port = tomcat_config("sonar:tomcat")[:connectors][:http][:port]

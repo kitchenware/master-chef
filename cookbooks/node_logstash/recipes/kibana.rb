@@ -34,7 +34,7 @@ git_clone "#{node.kibana.directory}/current" do
   user node.kibana.user
   reference node.kibana.version
   repository node.kibana.git
-  notifies :restart, resources(:service => "kibana")
+  notifies :restart, "service[kibana]"
 end
 
 ruby_rbenv_command "initialize kibana" do
@@ -43,7 +43,7 @@ ruby_rbenv_command "initialize kibana" do
   code "rm -f .warped && #{cp_command} && rbenv warp install"
   environment get_proxy_environment
   version node.kibana.version
-  notifies :restart, resources(:service => "kibana")
+  notifies :restart, "service[kibana]"
 end
 
 elasticsearch_servers = node.kibana.config.elasticsearch
@@ -53,5 +53,5 @@ template "#{node.kibana.directory}/current/KibanaConfig.rb" do
   owner node.kibana.user
   source "kibana/KibanaConfig.rb.erb"
   variables({:elasticsearch_servers => elasticsearch_servers}.merge(node.kibana.config))
-  notifies :restart, resources(:service => "kibana")
+  notifies :restart, "service[kibana]"
 end

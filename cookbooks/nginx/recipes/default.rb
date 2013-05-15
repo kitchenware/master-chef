@@ -54,7 +54,7 @@ if node.nginx[:deploy_default_config]
     variables :worker_processes => nb_workers
     source "nginx.conf.erb"
     mode '0644'
-    notifies :reload, resources(:service => "nginx")
+    notifies :reload, "service[nginx]"
   end
 
   directory node.nginx.default_root do

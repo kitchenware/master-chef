@@ -18,7 +18,7 @@ template "/etc/collectd/collectd.conf" do
   mode '0644'
   source "collectd.conf.erb"
   variables :interval => node.collectd.interval
-  notifies :restart, resources(:service => "collectd")
+  notifies :restart, "service[collectd]"
 end
 
 node.collectd.plugins.each do |name, config|
@@ -37,13 +37,13 @@ if node.collectd.python_plugin.enabled
 </LoadPlugin>
 
 EOF
-    notifies :restart, resources(:service => "collectd")
+    notifies :restart, "service[collectd]"
   end
 
 end
 
 delayed_exec "Remove collectd plugin" do
-  after_block_notifies :restart, resources(:service => "collectd")
+  after_block_notifies :restart, "service[collectd]"
   block do
     updated = false
     plugins = find_resources_by_name_pattern(/^#{node.collectd.config_directory}.*\.conf$/).map{|r| r.name}
