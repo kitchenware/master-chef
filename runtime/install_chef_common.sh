@@ -60,7 +60,7 @@ fi
 
 cat <<-EOF | ssh $SSH_OPTS $CHEF_USER@$TARGET
 
-[ -f $WARP_FILE ] || $PROXY wget "$WARP_ROOT/$WARP_FILE"
+[ -f $WARP_FILE ] || $PROXY curl -f -s -L "$WARP_ROOT/$WARP_FILE" -o $WARP_FILE
 $PROXY sh $WARP_FILE
 
 EOF
@@ -74,7 +74,7 @@ fi
 
 cat <<-EOF | ssh $SSH_OPTS $CHEF_USER@$TARGET
 
-[ -f $OMNIBUS_DEB ] || $PROXY wget "$OMNIBUS_DEB"
+[ -f $OMNIBUS_DEB ] || $PROXY curl -f -s -L "$OMNIBUS_DEB" -o `basename $OMNIBUS_DEB`
 sudo dpkg -i `basename $OMNIBUS_DEB`
 
 EOF
