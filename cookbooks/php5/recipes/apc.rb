@@ -1,7 +1,7 @@
 package "php-apc"
 
 apache2_vhost "php5:apc_vhost" do
-	 options :document_root => "#{node.php5.apc_vhost.document_root}", :listen => "#{node.php5.apc_vhost.listen}", :cookbook => "apache2", :source => "default_vhost.conf.erb"
+	 options :document_root => node.php5.apc_vhost.document_root, :listen => node.php5.apc_vhost.listen, :cookbook => "apache2", :source => "default_vhost.conf.erb"
 end
 
 template "/etc/php5/conf.d/apc.ini" do
@@ -13,7 +13,7 @@ template "/etc/php5/conf.d/apc.ini" do
   notifies :reload, "service[php5-fpm]" if find_resources_by_name_pattern(/^php5-fpm$/).size > 0
 end
 
-directory "#{node.php5.apc_vhost.document_root}" do
+directory node.php5.apc_vhost.document_root do
   mode '0755'
   owner "www-data"
   group "www-data"

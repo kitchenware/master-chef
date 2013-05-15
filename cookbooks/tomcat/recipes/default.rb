@@ -17,7 +17,7 @@ execute "change owner for security" do
   command "sudo chown -R root:root #{node.tomcat.catalina_home} && find #{node.tomcat.catalina_home}/ -type f -exec chmod a+r {} \\; "
 end
 
-directory "#{node.tomcat.instances_base}" do
+directory node.tomcat.instances_base do
   owner node.tomcat.user
 end
 
