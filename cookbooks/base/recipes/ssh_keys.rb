@@ -25,7 +25,6 @@ if node[:ssh_keys]
     directory "#{home}/.ssh" do
       owner user
       mode '0700'
-      recursive true
       action :nothing
     end
 
