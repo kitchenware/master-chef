@@ -13,6 +13,8 @@ if node.lsb.codename == "squeeze"  && node.apt.master_chef_add_apt_repo
   add_apt_repository "nginx" do
     url "http://nginx.org/packages/debian/"
     components ["nginx"]
+    key "7BD9BF62"
+    key_server "keyserver.ubuntu.com"
   end
 
   directory "/etc/nginx/sites-enabled" do
