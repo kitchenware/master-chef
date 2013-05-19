@@ -22,6 +22,7 @@ KEY=`cat $KEY_FILE`
 WARP_ROOT="http://warp-repo.s3-eu-west-1.amazonaws.com"
 
 apt_based_init_script() {
+
 read -r -d '' INIT_SCRIPT <<EOF
 
 while ps axu | grep cloud-init | grep -v grep; do echo "Wait end of cloud-init"; sleep 2; done &&
@@ -49,7 +50,17 @@ chef_install() {
 
 echo "$INIT_SCRIPT" | ssh $SSH_OPTS $INSTALL_USER@$TARGET "cat > /tmp/master_chef_install.sh"
 
+if [ "$?" != "0" ]; then
+  echo "Unable to upload init script"
+  exit 2
+fi
+
 ssh $SSH_OPTS $INSTALL_USER@$TARGET "sudo sh /tmp/master_chef_install.sh"
+
+if [ "$?" != "0" ]; then
+  echo "Unable to run init script"
+  exit 2
+fi
 
 if [ "$OMNIBUS" = "" ]; then
 
@@ -58,12 +69,20 @@ if [ "$WARP_FILE" = "" ]; then
   exit 42
 fi
 
-cat <<-EOF | ssh $SSH_OPTS $CHEF_USER@$TARGET
+ssh $SSH_OPTS $CHEF_USER@$TARGET "[ -f $WARP_FILE ] || $PROXY curl -f -s -L \"$WARP_ROOT/$WARP_FILE\" -o $WARP_FILE"
 
-[ -f $WARP_FILE ] || $PROXY curl -f -s -L "$WARP_ROOT/$WARP_FILE" -o $WARP_FILE
-$PROXY sh $WARP_FILE
+if [ "$?" != "0" ]; then
+  echo "Unable to download chef via warp"
+  exit 2
+fi
 
-EOF
+
+ssh $SSH_OPTS $CHEF_USER@$TARGET "$PROXY sh $WARP_FILE"
+
+if [ "$?" != "0" ]; then
+  echo "Unable to install chef via warp"
+  exit 2
+fi
 
 else
 
@@ -72,12 +91,19 @@ if [ "$OMNIBUS_DEB" = "" ]; then
   exit 42
 fi
 
-cat <<-EOF | ssh $SSH_OPTS $CHEF_USER@$TARGET
+ssh $SSH_OPTS $CHEF_USER@$TARGET "[ -f $OMNIBUS_DEB ] || $PROXY curl -f -s -L \"$OMNIBUS_DEB\" -o `basename $OMNIBUS_DEB`"
 
-[ -f $OMNIBUS_DEB ] || $PROXY curl -f -s -L "$OMNIBUS_DEB" -o `basename $OMNIBUS_DEB`
-sudo dpkg -i `basename $OMNIBUS_DEB`
+if [ "$?" != "0" ]; then
+  echo "Unable to download chef via omnibus"
+  exit 2
+fi
 
-EOF
+ssh $SSH_OPTS $CHEF_USER@$TARGET "sudo dpkg -i `basename $OMNIBUS_DEB`"
+
+if [ "$?" != "0" ]; then
+  echo "Unable to install chef via omnibus"
+  exit 2
+fi
 
 fi
 
