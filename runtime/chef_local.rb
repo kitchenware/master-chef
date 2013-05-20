@@ -31,7 +31,7 @@ unless ENV["NO_CONTROL_MASTER"]
   control_master_path = File.expand_path(File.join(File.dirname(__FILE__), "socket", "ssh_#{server}"))
   %x{mkdir -p #{File.dirname(control_master_path)}}
 
-  Kernel.system("ssh -vnNf -o ControlMaster=yes -o ControlPath=\"#{control_master_path}\" #{user}@#{server}")
+  Kernel.system("ssh -nNf -o ControlMaster=yes -o ControlPath=\"#{control_master_path}\" #{user}@#{server}")
   Kernel.at_exit do
     Kernel.system("ssh -O exit -o ControlPath=\"#{control_master_path}\" #{user}@#{server} 2> /dev/null")
   end
