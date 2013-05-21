@@ -189,13 +189,7 @@ module SortedJsonDump
     JSON.pretty_generate dup_sorted(map)
   end
 
-
-  def pretty_generate_yaml map
-    dup_sorted(map).to_yaml.gsub("!omap", "")
-  end
-
   module_function :pretty_generate
-  module_function :pretty_generate_yaml
 
 end
 
