@@ -79,7 +79,7 @@ define :tomcat_instance, {
 
      execute_version "install war from #{tomcat_instance_params[:war_url]}" do
       user node.tomcat.user
-      command "curl -s -L #{tomcat_instance_params[:war_url]} -o /tmp#{tomcat_instance_params[:war_location]}.war && mv /tmp#{tomcat_instance_params[:war_location]}.war #{catalina_base}/webapps#{tomcat_instance_params[:war_location]}.war"
+      command "curl -s -f -L #{tomcat_instance_params[:war_url]} -o /tmp#{tomcat_instance_params[:war_location]}.war && mv /tmp#{tomcat_instance_params[:war_location]}.war #{catalina_base}/webapps#{tomcat_instance_params[:war_location]}.war"
       environment get_proxy_environment
       version tomcat_instance_params[:war_url]
       or_only_if ["[ ! -f #{catalina_base}/webapps#{tomcat_instance_params[:war_location]}.war ]"]

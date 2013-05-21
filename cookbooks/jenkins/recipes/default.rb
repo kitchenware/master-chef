@@ -1,10 +1,6 @@
 include_recipe "tomcat"
 include_recipe "nginx"
 
-directory node.jenkins.home do
-  owner node.tomcat.user
-end
-
 tomcat_instance "jenkins:tomcat" do
   war_url node.jenkins.url
   war_location node.jenkins.location
