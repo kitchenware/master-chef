@@ -84,6 +84,8 @@ if [ "$?" != "0" ]; then
   exit 2
 fi
 
+`dirname $0`/bootstrap_chef_solo_script.sh $TARGET
+
 else
 
 if [ "$OMNIBUS_DEB" = "" ]; then
@@ -104,6 +106,8 @@ if [ "$?" != "0" ]; then
   echo "Unable to install chef via omnibus"
   exit 2
 fi
+
+`dirname $0`/bootstrap_chef_solo_omnibus_script.sh $TARGET
 
 fi
 
