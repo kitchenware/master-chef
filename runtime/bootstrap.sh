@@ -7,7 +7,8 @@ if [ "$PROXY" != "" ]; then
 fi
 
 if [ "$MASTER_CHEF_URL" = "" ]; then
-  MASTER_CHEF_URL="http://raw.github.com/octo-technology/master-chef"
+  # non standard url. rawgithub.com support http, raw.github.com does not
+  MASTER_CHEF_URL="http://rawgithub.com/octo-technology/master-chef"
 fi
 
 if [ "$MASTER_CHEF_HASH_CODE" = "" ]; then
