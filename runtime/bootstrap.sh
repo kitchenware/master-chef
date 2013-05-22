@@ -115,7 +115,7 @@ if which apt-get > /dev/null; then
   fi
 
   exec_command "cat /etc/passwd | grep ^chef > /dev/null || $SUDO useradd -m -g sudo -s /bin/bash chef"
-  exec_command "$SUDO cat /etc/sudoers | grep ^chef > /dev/null || $SUDO echo \"chef   ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers"
+  exec_command "$SUDO cat /etc/sudoers | grep ^chef > /dev/null || $SUDO /bin/sh -c 'echo \"chef   ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers'"
   exec_command "$SUDO mkdir -p /home/chef/.ssh/"
 
   KEYS="$HOME/.ssh/authorized_keys"
