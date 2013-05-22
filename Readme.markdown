@@ -2,33 +2,32 @@
 
 This is a quick start guide to use Master-Chef with ec2 instances (only on eu-west-1).
 
-## Create instance from AMI
+## Create instance from official AMI
 
-There is 4 AMI pre-configured with master-chef
-* [Debian 6 squeeze](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-d1cef5a5)
-* [Debian 7 wheezy](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-95393be1)
-* [Ubuntu 10 lucid](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-2bcff45f)
-* [Ubuntu 12 precise](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-26575f52)
+* [Debian 6 squeeze](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-722e2606)
+* [Debian 7 wheezy](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-c90016bd)
+* [Ubuntu 10 lucid](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-ca1a14be)
+* [Ubuntu 12 precise](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-35acbb41)
 
-You can click on link above to create instance.
+You can click on link above to create instance, using your private key pair.
 
-Note : theses AMI are used for non regression tests on master-chef.
+## Bootstrap master-chef
 
-## Setup instance with your own SSH key
-
-Clone master chef :
+Clone master-chef :
 
     git clone git://github.com/octo-technology/master-chef.git
 
-Upload your public key :
+Bootstrap master-chef :
 
-    runtime/upload_ssh_keys_from_test_instance.sh ip_of_created_instance
+For debian
 
-You are now the only one which can use it, you can connect using the `chef` account
+    cat bootstrap.sh | ssh admin@INSTANCE_IP bash
 
-    ssh chef@ip_of_created_instance
+For ubuntu
 
-Note : you can also use the AWS key pair, but it's do not setup your key into the `chef` account.
+    cat bootstrap.sh | ssh ubuntu@INSTANCE_IP bash
+
+This script create a chef account, deploy your ssh key in this account, and bootstrap master-chef.
 
 ## Enjoy master-chef
 
