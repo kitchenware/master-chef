@@ -114,12 +114,14 @@ if which apt-get > /dev/null; then
   exec_command "$SUDO cat /etc/sudoers | grep ^chef > /dev/null || $SUDO /bin/sh -c 'echo \"chef   ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers'"
   exec_command "$SUDO mkdir -p /home/chef/.ssh/"
 
-  KEYS="$HOME/.ssh/authorized_keys"
-  if [ -f $KEYS ]; then
-    print "Installing credentials to chef account from $KEYS"
-    exec_command "$SUDO cp $KEYS /home/chef/.ssh/authorized_keys"
-  else
-    echo "File not found $KEYS"
+  if [ "$USER" != "chef" ]; then
+    KEYS="$HOME/.ssh/authorized_keys"
+    if [ -f $KEYS ]; then
+      print "Installing credentials to chef account from $KEYS"
+      exec_command "$SUDO cp $KEYS /home/chef/.ssh/authorized_keys"
+    else
+      echo "File not found $KEYS"
+    fi
   fi
 
   exec_command "$SUDO chown -R chef /home/chef/.ssh"
