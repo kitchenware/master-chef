@@ -86,7 +86,7 @@ if which apt-get > /dev/null; then
 
   case $distro in
     squeeze)
-      exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file"
+      exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file libreadline5"
       WARP_FILE="ruby_squeeze_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.4.4-2.debian.6.0.5_amd64.deb"
       ;;
