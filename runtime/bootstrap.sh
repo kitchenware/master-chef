@@ -84,35 +84,30 @@ if which apt-get > /dev/null; then
 
   print "Detected distro : $distro"
 
-  if [ "$distro" = "squeeze" ] || [ "$distro" == "wheezy" ]; then
-    exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file"
-  else
-    if [ "$distro" = "lucid" ] || [ "$distro" = "precise" ]; then
+  case $distro in
+    squeeze)
+      exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file"
+      WARP_FILE="ruby_squeeze_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.4.4-2.debian.6.0.5_amd64.deb"
+      ;;
+    wheezy)
+      exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file"
+      WARP_FILE="ruby_wheezy_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
+      ;;
+    lucid)
       exec_command "$SUDO apt-get install -y git-core curl bzip2"
-    else
-      echo "Unknown disto $distro"
-      exit 4
-    fi
-  fi
-
-  if [ "$distro" = "lucid" ]; then
-    WARP_FILE="ruby_lucid_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
-    OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/x86_64/chef_11.4.4-2.ubuntu.10.04_amd64.deb"
-  fi
-
-  if [ "$distro" = "precise" ]; then
-    WARP_FILE="ruby_precise_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
-    OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/11.04/x86_64/chef_11.4.4-2.ubuntu.11.04_amd64.deb"
-  fi
-
-  if [ "$distro" = "squeeze" ]; then
-    WARP_FILE="ruby_squeeze_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
-    OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.4.4-2.debian.6.0.5_amd64.deb"
-  fi
-
-  if [ "$distro" = "wheezy" ]; then
-    WARP_FILE="ruby_wheezy_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
-  fi
+      WARP_FILE="ruby_lucid_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/x86_64/chef_11.4.4-2.ubuntu.10.04_amd64.deb"
+      ;;
+    precise)
+      exec_command "$SUDO apt-get install -y git-core curl bzip2"
+      WARP_FILE="ruby_precise_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/11.04/x86_64/chef_11.4.4-2.ubuntu.11.04_amd64.deb"
+      ;;
+    *)
+      echo "Unknown distro"
+      exit 78
+  esac
 
   exec_command "cat /etc/passwd | grep ^chef > /dev/null || $SUDO useradd -m -g sudo -s /bin/bash chef"
   exec_command "$SUDO cat /etc/sudoers | grep ^chef > /dev/null || $SUDO /bin/sh -c 'echo \"chef   ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers'"
@@ -128,6 +123,11 @@ if which apt-get > /dev/null; then
 
   exec_command "$SUDO chown -R chef /home/chef/.ssh"
 
+fi
+
+if [ "$distro" = "" ]; then
+  echo "Unknown distro"
+  exit 78
 fi
 
 if [ "$OMNIBUS" =  "" ]; then
