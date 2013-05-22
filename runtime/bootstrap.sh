@@ -131,7 +131,7 @@ if [ "$distro" = "" ]; then
   exit 78
 fi
 
-if [ "$OMNIBUS" =  "" ]; then
+if [ "$OMNIBUS" = "" ]; then
 
   print "Installing chef from warp"
 
