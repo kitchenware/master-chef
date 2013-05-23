@@ -123,8 +123,14 @@ puts "Cookbooks path : #{cookbooks.inspect}"
 puts "Roles path : #{roles.inspect}"
 puts "********************************************************************"
 
+
 log_level (ENV['CHEF_LOG_LEVEL'] || 'info').to_sym
 log_location STDOUT
 json_attribs json_file
 cookbook_path cookbooks
 role_path roles
+
+var_chef = ENV["VAR_CHEF"] || "<%= @var_chef %>"
+file_cache_path "#{var_chef}/cache"
+file_backup_path "#{var_chef}/backup"
+openid_cstore_path "#{var_chef}/openid/cstore"

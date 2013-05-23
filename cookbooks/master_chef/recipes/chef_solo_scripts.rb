@@ -38,7 +38,7 @@ if File.exists? "/opt/chef/bin/chef-solo"
   template "#{install_path}/etc/solo.rb" do
     source "solo.rb"
     mode '0644'
-    variables :cache_directory => "#{install_path}/var"
+    variables :cache_directory => "#{install_path}/var", :var_chef => "/opt/chef/var"
   end
 
 end
@@ -55,6 +55,7 @@ if File.exists? "/etc/chef"
         :log_prefix => "/tmp/last_chef",
         :config_file => "/etc/chef/local.json",
         :cache_directory => "/var/chef/cache",
+        :var_chef => "/opt/chef/var",
       })
     end
   end
