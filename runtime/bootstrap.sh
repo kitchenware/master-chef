@@ -147,7 +147,7 @@ if [ "$OMNIBUS" = "" ]; then
 
   print "Bootstraping master-chef"
 
-  exec_command_chef "GIT_CACHE_DIRECTORY=/var/chef/cache/git_repos $PROXY $MASTER_CHEF_FIRST_RUN MASTER_CHEF_CONFIG=/etc/chef/local.json /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb"
+  exec_command_chef "VAR_CHEF=/var/chef GIT_CACHE_DIRECTORY=/var/chef/cache/git_repos $PROXY $MASTER_CHEF_FIRST_RUN MASTER_CHEF_CONFIG=/etc/chef/local.json /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb"
 
 else
 
@@ -167,7 +167,7 @@ else
 
   print "Bootstraping master-chef"
 
-  exec_command_chef "GIT_CACHE_DIRECTORY=/opt/master-chef/var/git_repos $PROXY $MASTER_CHEF_FIRST_RUN MASTER_CHEF_CONFIG=/opt/master-chef/etc/local.json sudo -E /opt/chef/bin/chef-solo -c /opt/master-chef/etc/solo.rb"
+  exec_command_chef "VAR_CHEF=/opt/chef/var GIT_CACHE_DIRECTORY=/opt/master-chef/var/git_repos $PROXY $MASTER_CHEF_FIRST_RUN MASTER_CHEF_CONFIG=/opt/master-chef/etc/local.json sudo -E /opt/chef/bin/chef-solo -c /opt/master-chef/etc/solo.rb"
 
 fi
 
