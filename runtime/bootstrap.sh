@@ -48,7 +48,7 @@ exec_command_chef() {
   cmd="$*"
   sh -c "$SUDO sudo -H -u chef /bin/sh -c \"cd /home/chef && $cmd\""
   if [ $? != 0 ]; then
-    echo "Exection failed for chef : $cmd"
+    echo "Execution failed for chef : $cmd"
     exit 2
   fi
 }
