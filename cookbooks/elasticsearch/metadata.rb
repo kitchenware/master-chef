@@ -1,4 +1,4 @@
 name 'elasticsearch'
 
-depends :java
-depends :libzmq
+depends "java"
+depends "libzmq"

@@ -1,3 +1,3 @@
 name 'munin'
 
-depends :cron
+depends "cron"

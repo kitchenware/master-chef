@@ -1,4 +1,4 @@
 name 'jboss'
 
-depends :java
-depends :nginx
+depends "java"
+depends "nginx"

@@ -1,5 +1,5 @@
 name 'base'
 
-depends :git
-depends :ruby
-depends :warp
+depends "git"
+depends "ruby"
+depends "warp"

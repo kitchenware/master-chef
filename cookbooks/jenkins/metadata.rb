@@ -1,4 +1,4 @@
 name 'jenkins'
 
-depends :nginx
-depends :tomcat
+depends "nginx"
+depends "tomcat"

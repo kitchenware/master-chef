@@ -1,3 +1,3 @@
 name 'nodejs'
 
-depends :capistrano
+depends "capistrano"

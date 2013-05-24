@@ -1,5 +1,5 @@
 name 'graphite'
 
-depends :apache2
-depends :collectd
-depends :nodejs
+depends "apache2"
+depends "collectd"
+depends "nodejs"

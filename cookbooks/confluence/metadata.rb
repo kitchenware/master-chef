@@ -1,5 +1,5 @@
 name 'confluence'
 
-depends :mysql
-depends :nginx
-depends :tomcat
+depends "mysql"
+depends "nginx"
+depends "tomcat"

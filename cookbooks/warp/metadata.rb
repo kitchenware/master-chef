@@ -1,4 +1,4 @@
 name 'warp'
 
-depends :git
-depends :java
+depends "git"
+depends "java"

@@ -1,3 +1,3 @@
 name 'ruby'
 
-depends :warp
+depends "warp"
