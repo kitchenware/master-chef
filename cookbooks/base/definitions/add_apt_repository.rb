@@ -29,8 +29,6 @@ define :add_apt_repository, {
 
   raise "Please specify component (such as non-free) name of the deb repository" unless add_apt_repository_params[:components]
 
-  include_recipe "base::apt_update"
-
   add_apt_repository_params[:distrib] = %x{lsb_release -cs}.strip unless add_apt_repository_params[:distrib]
 
   if add_apt_repository_params[:key] && add_apt_repository_params[:key_server]
@@ -44,7 +42,7 @@ define :add_apt_repository, {
   file "/etc/apt/sources.list.d/#{add_apt_repository_params[:name]}.list" do
     content "deb #{add_apt_repository_params[:url]} #{add_apt_repository_params[:distrib]} #{add_apt_repository_params[:components].join(' ')}\n"
     mode '0644'
-    notifies :run, "execute[apt-get update]", :immediately if add_apt_repository_params[:run_apt_get_update]
+    notifies :run, "execute[run apt-get update]", :immediately if add_apt_repository_params[:run_apt_get_update]
   end
 
 end

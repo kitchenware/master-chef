@@ -1,7 +1,9 @@
 
 if node['platform'] == "ubuntu" || node['platform'] == "debian"
 
-  execute "apt-get update"
+  execute "run apt-get update" do
+    command "apt-get update"
+  end
 
   if node.apt[:clean_sources_list_d]
 
