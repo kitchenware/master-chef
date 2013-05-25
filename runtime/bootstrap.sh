@@ -94,6 +94,8 @@ if which apt-get > /dev/null; then
     wheezy)
       exec_command "$SUDO $PROXY apt-get install -y git-core curl bzip2 sudo file"
       WARP_FILE="ruby_wheezy_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
+      # for now we use the package for squeeze
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.4.4-2.debian.6.0.5_amd64.deb"
       ;;
     lucid)
       exec_command "$SUDO $PROXY apt-get install -y git-core curl bzip2"
