@@ -9,10 +9,6 @@ define :ssh_user_directory, {
 
   if find_resources_by_name("directory[#{dir}]").empty?
 
-    nil
-
-  else
-
     directory dir do
       mode '0700'
       owner ssh_user_directory_params[:name]
@@ -21,6 +17,10 @@ define :ssh_user_directory, {
     end
 
     dir
+
+  else
+
+    nil
 
   end
 
