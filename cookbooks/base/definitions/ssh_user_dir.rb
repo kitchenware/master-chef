@@ -7,7 +7,7 @@ define :ssh_user_directory, {
 
   dir = "#{get_home ssh_user_directory_params[:name]}/.ssh"
 
-  if find_resources_by_name("directory[#{dir}]")
+  if find_resources_by_name("directory[#{dir}]").empty?
 
     nil
 
