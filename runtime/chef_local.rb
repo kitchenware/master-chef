@@ -27,13 +27,15 @@ end
 
 ssh_opts = ENV["SSH_OPTS"] || ""
 
+require 'tempfile'
+
 unless ENV["NO_CONTROL_MASTER"]
-  control_master_path = File.expand_path(File.join(File.dirname(__FILE__), "sockets", "ssh_#{server}"))
-  %x{mkdir -p #{File.dirname(control_master_path)}}
+  control_master_path = "/tmp/master_chef_socket_#{server}"
 
   Kernel.system("ssh -nNf -o ControlMaster=yes -o ControlPath=\"#{control_master_path}\" #{user}@#{server}")
   Kernel.at_exit do
     Kernel.system("ssh -O exit -o ControlPath=\"#{control_master_path}\" #{user}@#{server} 2> /dev/null")
+    Kernel.system("rm -f #{control_master_path}")
   end
   ssh_opts += " -o ControlPath='#{control_master_path}'"
 end
