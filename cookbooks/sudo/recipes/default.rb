@@ -9,6 +9,16 @@ execute "add includedir /etc/sudoers.d in sudoers" do
   not_if "cat /etc/sudoers | grep '#includedir /etc/sudoers.d'"
 end
 
+if node[:sudoers_files]
+
+  node.sudoers_files.each do |k, v|
+    sudo_sudoers_file k do
+      content "#{v}\n"
+    end
+  end
+
+end
+
 delayed_exec "Remove useless files in sudoers" do
   block do
     updated = false
