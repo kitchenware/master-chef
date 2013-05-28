@@ -7,7 +7,7 @@ define :ssh_user_directory, {
 
   dir = "#{get_home ssh_user_directory_params[:name]}/.ssh"
 
-  if find_resources_by_name("directory[#{dir}]").empty?
+  if find_resources_by_name(dir).empty?
 
     directory dir do
       mode '0700'
