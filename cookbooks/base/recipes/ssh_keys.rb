@@ -20,15 +20,12 @@ if node[:ssh_keys]
   end
 
   node.resolved_ssh_keys.each do |user, keys|
-    home = get_home user
 
-    directory "#{home}/.ssh" do
-      owner user
-      mode '0700'
+    dir = ssh_user_directory user do
       action :nothing
     end
 
-    file "#{home}/.ssh/authorized_keys" do
+    file "#{get_home user}/.ssh/authorized_keys" do
       owner user
       mode '0700'
       content keys.uniq.sort.join("\n")
@@ -37,8 +34,8 @@ if node[:ssh_keys]
 
     # we have to use delayed exec because users are often created after this recipe
     delayed_exec "authorized_keys for user #{user}" do
-      after_block_notifies :create, resources(:directory => "#{home}/.ssh")
-      after_block_notifies :create, resources(:file => "#{home}/.ssh/authorized_keys")
+      after_block_notifies :create, "directory[#{dir}]" if dir
+      after_block_notifies :create, "file[#{get_home user}/.ssh/authorized_keys]"
     end
 
   end

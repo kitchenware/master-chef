@@ -14,6 +14,7 @@ class Chef
 
       def after_block_notifies after_block_notifies_action = nil, after_block_notifies_resource = nil
         if after_block_notifies_action && after_block_notifies_resource
+          after_block_notifies_resource = resources(after_block_notifies_resource) if after_block_notifies_resource.is_a? String
           @after_block_notifies << [after_block_notifies_action, after_block_notifies_resource]
         end
         @after_block_notifies
