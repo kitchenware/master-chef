@@ -4,6 +4,7 @@ define :supervisor_worker, {
   :workers => nil,
   :user => nil,
   :autostart => true,
+  :autorestart => 'unexpected',
   } do
 
   supervisor_worker_params = params
@@ -17,6 +18,7 @@ define :supervisor_worker, {
       :numprocs => supervisor_worker_params[:workers],
       :user => supervisor_worker_params[:user],
       :autostart => supervisor_worker_params[:autostart],
+      :autorestart => supervisor_worker_params[:autorestart],
       :name => supervisor_worker_params[:name],
       :log_dir => node.supervisor.log_dir,
       })
