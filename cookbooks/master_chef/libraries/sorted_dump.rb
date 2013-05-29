@@ -177,12 +177,17 @@ module SortedJsonDump
   end
 
   def self.dup_sorted map
-    return map unless map.is_a? Hash
-    result = OrderedHash.new
-    map.keys.sort_by{|x| x.to_s}.each do |k|
-      result[k] = dup_sorted map[k]
+    if map.is_a? Hash
+      result = OrderedHash.new
+      map.keys.sort_by{|x| x.to_s}.each do |k|
+        result[k] = dup_sorted map[k]
+      end
+      result
+    elsif map.is_a? Array
+      map.map{|x| dup_sorted x}
+    else
+      map
     end
-    result
   end
 
   def pretty_generate map
@@ -192,4 +197,3 @@ module SortedJsonDump
   module_function :pretty_generate
 
 end
-
