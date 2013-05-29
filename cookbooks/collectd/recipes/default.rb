@@ -33,22 +33,19 @@ directory node.collectd.python_plugin.directory do
   recursive true
 end
 
-
 incremental_template node.collectd.python_plugin.file do
-    mode '0755'
-    header <<-EOF
+  mode '0755'
+  header <<-EOF
 <LoadPlugin python>
   Globals true
 </LoadPlugin>
 
 EOF
-    notifies :restart, resources(:service => "collectd")
+  notifies :restart, "service[collectd]"
 end
 
-
-
-delayed_exec "Remove collectd plugin" do
-  after_block_notifies :restart, resources(:service => "collectd")
+delayed_exec "Remove useless collectd plugin" do
+  after_block_notifies :restart, "service[collectd]"
   block do
     updated = false
     plugins = find_resources_by_name_pattern(/^#{node.collectd.config_directory}.*\.conf$/).map{|r| r.name}
