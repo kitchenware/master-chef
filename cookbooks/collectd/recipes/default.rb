@@ -27,9 +27,14 @@ node.collectd.plugins.each do |name, config|
   end
 end
 
-if node.collectd.python_plugin.enabled
+directory node.collectd.python_plugin.directory do
+  owner 'root'
+  group 'root'
+  recursive true
+end
 
-  incremental_template node.collectd.python_plugin.file do
+
+incremental_template node.collectd.python_plugin.file do
     mode '0755'
     header <<-EOF
 <LoadPlugin python>
@@ -38,9 +43,9 @@ if node.collectd.python_plugin.enabled
 
 EOF
     notifies :restart, resources(:service => "collectd")
-  end
-
 end
+
+
 
 delayed_exec "Remove collectd plugin" do
   after_block_notifies :restart, resources(:service => "collectd")
