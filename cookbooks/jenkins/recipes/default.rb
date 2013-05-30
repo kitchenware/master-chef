@@ -56,7 +56,7 @@ end
 
 if node.jenkins.install_maven
 
-  directory "#{node.maven.home}" do
+  directory node.maven.home do
     recursive true
     owner node.tomcat.user
   end

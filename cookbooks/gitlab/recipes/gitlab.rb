@@ -64,7 +64,7 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
     :hostname => node.gitlab.hostname,
     :port => node.gitlab.port,
     :https => node.gitlab.https,
-    :mail_from => node.gitlab.mail_from,
+    :email_from => node.gitlab.email_from,
     :satellites => "#{node.gitlab.gitlab.path}/shared/satellites",
     :ssh_user => node.gitlab.gitolite.user,
     :ssh_host => node.gitlab.hostname,
