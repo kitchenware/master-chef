@@ -21,7 +21,7 @@ define :collectd_python_plugin, {
     notifies :restart, "service[collectd]"
   end
 
-  incremental_template_part '#{collectd_python_plugin_params[:name]}' do
+  incremental_template_part collectd_python_plugin_params[:name] do
     cookbook collectd_python_plugin_params[:template_cookbook] if collectd_python_plugin_params[:template_cookbook]
     target node.collectd.python_plugin.file
     source collectd_python_plugin_params[:conf_file_name]
