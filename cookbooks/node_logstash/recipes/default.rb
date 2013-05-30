@@ -10,10 +10,8 @@ end
 
 node.node_logstash.groups.each do |g|
 
-  group g do
-    action :manage
-    members [node.node_logstash.user]
-    append true
+  add_user_in_group node.node_logstash.user do
+    group g
   end
 
 end

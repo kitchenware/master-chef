@@ -6,7 +6,11 @@ define :base_user, {
   base_user_params = params
 
   if base_user_params[:group]
-    group base_user_params[:group]
+
+    group "create group for user #{base_user_params[:name]}" do
+      group_name base_user_params[:group]
+    end
+
   end
 
   user base_user_params[:name] do
