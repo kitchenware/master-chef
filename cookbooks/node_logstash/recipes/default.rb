@@ -36,7 +36,7 @@ git_clone "#{node.node_logstash.directory}/current" do
   reference node.node_logstash.version
   repository node.node_logstash.git
   user node.node_logstash.user
-  notifies :restart, resources(:service => "logstash")
+  notifies :restart, "service[logstash]"
 end
 
 file "#{node.node_logstash.directory}/current/.node_version" do
@@ -50,7 +50,7 @@ execute_version "install node-logstash dependencies" do
   version node.node_logstash.node_version + '_' + node.node_logstash.version
   environment get_proxy_environment
   file_storage "#{node.node_logstash.directory}/current/.npm_ready"
-  notifies :restart, resources(:service => "logstash")
+  notifies :restart, "service[logstash]"
 end
 
 if node.node_logstash[:configs]
@@ -71,7 +71,7 @@ if node.node_logstash[:monitor_files]
 end
 
 delayed_exec "Remove useless logstash config files" do
-  after_block_notifies :restart, resources(:service => "logstash")
+  after_block_notifies :restart, "service[logstash]"
   block do
     updated = false
     confs = find_resources_by_name_pattern(/^\/etc\/logstash.d\/.*$/).map{|r| r.name}

@@ -40,5 +40,5 @@ template "/etc/redis/redis.conf" do
 	source redis_config_file
 	owner "redis"
 	variables node.redis
-	notifies :restart, resources(:service => "redis-server")
+	notifies :restart, "service[redis-server]"
 end

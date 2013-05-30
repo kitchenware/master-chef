@@ -22,14 +22,14 @@ template "/etc/statsd.conf" do
   mode '0644'
   source "statsd.conf.erb"
   variables :config => node.graphite.statsd.to_hash
-  notifies :restart, resources(:service => "statsd")
+  notifies :restart, "service[statsd]"
 end
 
 git_clone "#{node.graphite.statsd.directory}/current" do
   reference node.graphite.statsd.version
   repository node.graphite.statsd.git
   user node.graphite.statsd.user
-  notifies :restart, resources(:service => "statsd")
+  notifies :restart, "service[statsd]"
 end
 
 file "#{node.graphite.statsd.directory}/current/.node_version" do
@@ -44,5 +44,5 @@ execute_version "nodejs version statsd" do
   environment get_proxy_environment #("HOME" => get_home(node.graphite.statsd.user))
   version node.graphite.statsd.node_version
   file_storage "#{node.graphite.directory}/.statsd"
-  notifies :restart, resources(:service => "statsd")
+  notifies :restart, "service[statsd]"
 end

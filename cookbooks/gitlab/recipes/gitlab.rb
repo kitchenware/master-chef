@@ -51,8 +51,8 @@ git_clone "#{node.gitlab.gitlab.path}/current" do
   repository node.gitlab.gitlab.url
   reference node.gitlab.gitlab.reference
   user node.gitlab.gitlab.user
-  notifies :restart, resources(:service => "gitlab")
-  notifies :restart, resources(:service => node.supervisor.service_name)
+  notifies :restart, "service[gitlab]"
+  notifies :restart, "service[#{node.supervisor.service_name}]"
 end
 
 template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
@@ -64,13 +64,13 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
     :hostname => node.gitlab.hostname,
     :port => node.gitlab.port,
     :https => node.gitlab.https,
-    :mail_from => node.gitlab.mail_from,
+    :email_from => node.gitlab.email_from,
     :satellites => "#{node.gitlab.gitlab.path}/shared/satellites",
     :ssh_user => node.gitlab.gitolite.user,
     :ssh_host => node.gitlab.hostname,
   })
-  notifies :restart, resources(:service => "gitlab")
-  notifies :restart, resources(:service => node.supervisor.service_name)
+  notifies :restart, "service[gitlab]"
+  notifies :restart, "service[#{node.supervisor.service_name}]"
 end
 
 link "#{node.gitlab.gitlab.path}/current/config/database.yml" do

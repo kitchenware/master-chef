@@ -49,7 +49,7 @@ template "#{node.graphite.directory}/webapp/graphite/local_settings.py" do
   source "local_settings.py.erb"
   mode '0644'
   variables :timezone => node.graphite.timezone, :db_file => "#{node.graphite.directory}/storage/graphite.db"
-  notifies :restart, resources(:service => "apache2")
+  notifies :restart, "service[apache2]"
 end
 
 execute "create db" do
@@ -91,20 +91,20 @@ template "#{node.graphite.directory}/conf/carbon.conf" do
   source "carbon.conf.erb"
   mode '0644'
   variables :carbon_receiver_port => node.graphite.carbon.port
-  notifies :restart, resources(:service => "carbon")
+  notifies :restart, "service[carbon]"
 end
 
 template "#{node.graphite.directory}/conf/storage-aggregation.conf" do
   source "storage-aggregation.conf.erb"
   mode '0644'
   variables :default_xFilesFactor => node.graphite.xFilesFactor
-  notifies :restart, resources(:service => "carbon")
+  notifies :restart, "service[carbon]"
 end
 
 template "#{node.graphite.directory}/conf/storage-schemas.conf" do
   source "storage-schemas.conf.erb"
   mode '0644'
   variables :configs => node.graphite.storages
-  notifies :restart, resources(:service => "carbon")
+  notifies :restart, "service[carbon]"
 end
 

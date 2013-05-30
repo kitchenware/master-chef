@@ -25,5 +25,5 @@ template "/etc/bucky/bucky.conf" do
   source "bucky.conf.erb"
   mode '0644'
   variables :bucky_port => node.graphite.bucky.collectd_port
-  notifies :restart, resources(:service => "bucky")
+  notifies :restart, "service[bucky]"
 end
