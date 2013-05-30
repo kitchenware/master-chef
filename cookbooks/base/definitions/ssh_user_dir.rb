@@ -17,12 +17,18 @@ define :ssh_user_directory, {
       action ssh_user_directory_params[:action]
     end
 
-    dir
-
   else
 
-    nil
+    if ssh_user_directory_params[:action] == :create && r.length == 1 && r.first.action.length > 0 && r.first.action.first == :nothing
+      ruby_block "launch home directory creation for user #{ssh_user_directory_params[:name]}" do
+        block do
+          r.first.run_action :create
+        end
+      end
+    end
 
   end
+
+  dir
 
 end
