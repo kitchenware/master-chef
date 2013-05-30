@@ -8,7 +8,6 @@ define :ssh_user_directory, {
   dir = "#{get_home ssh_user_directory_params[:name]}/.ssh"
 
   r = find_resources_by_name(dir)
-  r.first.run_action :create if ssh_user_directory_params[:action] == :create && r.length == 1 && r.first.action.length > 0 && r.first.action.first == :nothing
 
   if r.empty?
 
