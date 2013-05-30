@@ -16,3 +16,10 @@ default[:jenkins][:tomcat] = {
 
 default[:jenkins][:update_site] = "http://mirrors.jenkins-ci.org/plugins"
 default[:jenkins][:plugins] = []
+
+
+default[:jenkins][:install_maven] = false
+
+default[:maven][:version] = "3.0.5"
+default[:maven][:home] = "/opt/maven/"
+default[:maven][:zip_url] = "http://apache.opensourcemirror.com/maven/maven-3/#{node.maven.version}/binaries/apache-maven-#{node.maven.version}-bin.tar.gz"

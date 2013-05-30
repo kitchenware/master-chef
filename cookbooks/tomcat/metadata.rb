@@ -1,3 +1,3 @@
 name 'tomcat'
 
-depends :java
+depends "java"

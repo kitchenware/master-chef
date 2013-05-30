@@ -1,6 +1,6 @@
 name 'node_logstash'
 
-depends :elasticsearch
-depends :libzmq
-depends :nodejs
-depends :unicorn
+depends "elasticsearch"
+depends "libzmq"
+depends "nodejs"
+depends "unicorn"

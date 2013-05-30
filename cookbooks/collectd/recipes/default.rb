@@ -27,22 +27,24 @@ node.collectd.plugins.each do |name, config|
   end
 end
 
-if node.collectd.python_plugin.enabled
+directory node.collectd.python_plugin.directory do
+  owner 'root'
+  group 'root'
+  recursive true
+end
 
-  incremental_template node.collectd.python_plugin.file do
-    mode '0755'
-    header <<-EOF
+incremental_template node.collectd.python_plugin.file do
+  mode '0755'
+  header <<-EOF
 <LoadPlugin python>
   Globals true
 </LoadPlugin>
 
 EOF
-    notifies :restart, "service[collectd]"
-  end
-
+  notifies :restart, "service[collectd]"
 end
 
-delayed_exec "Remove collectd plugin" do
+delayed_exec "Remove useless collectd plugin" do
   after_block_notifies :restart, "service[collectd]"
   block do
     updated = false

@@ -1,4 +1,4 @@
 name 'unicorn'
 
-depends :capistrano
-depends :nginx
+depends "capistrano"
+depends "nginx"

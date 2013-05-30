@@ -1,4 +1,4 @@
 name 'redmine'
 
-depends :mysql
-depends :rails
+depends "mysql"
+depends "rails"

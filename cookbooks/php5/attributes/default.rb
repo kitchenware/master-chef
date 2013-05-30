@@ -1,4 +1,4 @@
-default[:php5][:php_ini] = {
+default_php_ini = {
   :max_execution_time => 30,
   :max_input_time => 60,
   :memory_limit => "128M",
@@ -45,10 +45,12 @@ default[:php5][:php_ini] = {
   }
 }
 
-default[:php5][:cli_php_ini] = node.php5.php_ini.to_hash.merge({
-  :memory_limit => "-1",
+default[:php5][:php_ini] = default_php_ini.merge({
 })
 
+default[:php5][:cli_php_ini] = default_php_ini.merge({
+  :memory_limit => "-1",
+})
 
 default[:php5][:apc] = {
   :shm_size => 30,

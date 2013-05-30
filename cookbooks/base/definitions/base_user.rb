@@ -6,7 +6,11 @@ define :base_user, {
   base_user_params = params
 
   if base_user_params[:group]
-    group base_user_params[:group]
+
+    group "create group for user #{base_user_params[:name]}" do
+      group_name base_user_params[:group]
+    end
+
   end
 
   user base_user_params[:name] do
@@ -19,14 +23,15 @@ define :base_user, {
     node.set[:bash_users] = node.bash_users + [base_user_params[:name]]
   end
 
-  user_home = base_user_params[:home] || get_home(base_user_params[:name])
-  directory user_home do
+  base_user_params[:home] ||= get_home(base_user_params[:name])
+
+  directory base_user_params[:home] do
     recursive true
     owner base_user_params[:name]
     mode '0755'
   end
 
-  file "#{user_home}/.bash_profile" do
+  file "#{base_user_params[:home]}/.bash_profile" do
     owner base_user_params[:name]
     mode '0700'
     action :create_if_missing

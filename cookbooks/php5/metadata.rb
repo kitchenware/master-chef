@@ -1,3 +1,3 @@
 name 'php5'
 
-depends :apache2
+depends "apache2"
