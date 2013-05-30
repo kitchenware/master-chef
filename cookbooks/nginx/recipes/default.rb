@@ -56,7 +56,7 @@ if node.nginx[:deploy_default_config]
     variables :worker_processes => nb_workers
     source "nginx.conf.erb"
     mode '0644'
-    notifies :reload, resources(:service => "nginx")
+    notifies :reload, "service[nginx]"
   end
 
   directory node.nginx.default_root do
@@ -67,7 +67,7 @@ if node.nginx[:deploy_default_config]
   if node.nginx[:locations]
 
     node.nginx.locations.keys.sort.each do |k|
-      directory "#{node.nginx.locations[k]["path"]}" do
+      directory node.nginx.locations[k]["path"] do
         owner node.nginx.locations[k]["owner"]
         recursive true
       end

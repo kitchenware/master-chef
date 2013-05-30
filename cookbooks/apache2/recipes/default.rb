@@ -39,14 +39,14 @@ template "#{node.apache2.server_root}/apache2.conf" do
   end
   source "apache2.conf.erb"
   mode '0644'
-  notifies :restart, resources(:service => "apache2")
+  notifies :restart, "service[apache2]"
 end
 
 template "#{node.apache2.server_root}/ports.conf" do
   source "ports.conf.erb"
   mode '0644'
   variables :ports => Proc.new{node.apache2[:ports] ? node.apache2.ports : ["80"]}
-  notifies :restart, resources(:service => "apache2")
+  notifies :restart, "service[apache2]"
 end
 
 node.apache2.modules.each do |m|

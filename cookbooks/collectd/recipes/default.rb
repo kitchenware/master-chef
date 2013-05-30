@@ -18,7 +18,7 @@ template "/etc/collectd/collectd.conf" do
   mode '0644'
   source "collectd.conf.erb"
   variables :interval => node.collectd.interval
-  notifies :restart, resources(:service => "collectd")
+  notifies :restart, "service[collectd]"
 end
 
 node.collectd.plugins.each do |name, config|

@@ -2,7 +2,7 @@
 include_recipe "apache2"
 
 package "libapache2-mod-php5" do
-  notifies :reload, resources(:service => "apache2")
+  notifies :reload, "service[apache2]"
 end
 
 include_recipe "php5"
@@ -14,7 +14,7 @@ template "/etc/php5/apache2/php.ini" do
   cookbook "php5"
   source "php5.ini.erb"
   variables node.php5.php_ini
-  notifies :reload, resources(:service => "apache2")
+  notifies :reload, "service[apache2]"
 end
 
 apache2_enable_module "setenvif"
@@ -22,7 +22,7 @@ apache2_enable_module "setenvif"
 file "/etc/apache2/conf.d/https_php" do
   content "SetEnvIf X-Forwarded-Proto https HTTPS=on"
   mode '0644'
-  notifies :reload, resources(:service => "apache2")
+  notifies :reload, "service[apache2]"
 end
 
 if node.php5.php_ini["error_log"]

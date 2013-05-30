@@ -51,7 +51,7 @@ execute_version "install elasticsearch" do
   environment get_proxy_environment
   version node.elasticsearch.url
   file_storage "#{node.elasticsearch.directory}/.elasticsearch_ready"
-  notifies :restart, resources(:service => "elasticsearch")
+  notifies :restart, "service[elasticsearch]"
 end
 
 template "#{node.elasticsearch.directory}/config/elasticsearch.yml" do
@@ -59,14 +59,14 @@ template "#{node.elasticsearch.directory}/config/elasticsearch.yml" do
   source "elasticsearch.yml.erb"
   mode '0644'
   variables :config => node.elasticsearch.to_hash, :optional_config => optional_config
-  notifies :restart, resources(:service => "elasticsearch")
+  notifies :restart, "service[elasticsearch]"
 end
 
 template "#{node.elasticsearch.directory}/config/logging.yml" do
   owner node.elasticsearch.user
   source "logging.yml.erb"
   mode '0644'
-  notifies :restart, resources(:service => "elasticsearch")
+  notifies :restart, "service[elasticsearch]"
 end
 
 if node.elasticsearch.transport_zmq.enable
@@ -76,7 +76,7 @@ if node.elasticsearch.transport_zmq.enable
     environment get_proxy_environment
     file_storage "#{node.elasticsearch.directory}/.zmq_transport"
     version node.elasticsearch.url + node.elasticsearch.transport_zmq.url
-    notifies :restart, resources(:service => "elasticsearch")
+    notifies :restart, "service[elasticsearch]"
   end
 
 end

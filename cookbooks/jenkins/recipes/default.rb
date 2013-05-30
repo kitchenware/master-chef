@@ -50,13 +50,13 @@ node.jenkins.plugins.each do |name|
     environment get_proxy_environment
     command "cd #{node.jenkins.home}/plugins && curl -f -s -L -o #{name}.hpi #{node.jenkins.update_site}/#{name}/latest/#{name}.hpi"
     not_if "[ -f #{node.jenkins.home}/plugins/#{name}.hpi ]"
-    notifies :restart, resources(:service => "jenkins")
+    notifies :restart, "service[jenkins]"
   end
 end
 
 if node.jenkins.install_maven
 
-  directory "#{node.maven.home}" do
+  directory node.maven.home do
     recursive true
     owner node.tomcat.user
   end

@@ -22,7 +22,7 @@ end
 
 file "/etc/mysql/conf.d/chef_override.cnf" do
   content mysql_conf.join("\n")
-  notifies :restart, resources(:service => "mysql")
+  notifies :restart, "service[mysql]"
 end
 
 root_mysql_password = local_storage_read("mysql_password:root") do

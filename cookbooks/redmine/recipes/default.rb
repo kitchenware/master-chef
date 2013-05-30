@@ -24,7 +24,7 @@ git_clone "#{node.redmine.directory}/current" do
   user node.redmine.user
   repository node.redmine.git_url
   reference node.redmine.version
-  notifies :restart, resources(:service => "redmine")
+  notifies :restart, "service[redmine]"
 end
 
 directory "#{node.redmine.directory}/current/files" do
