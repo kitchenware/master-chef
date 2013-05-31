@@ -75,10 +75,10 @@ if which apt-get > /dev/null; then
 
   print "Debian based distribution detected"
 
-  exec_command "$SUDO $PROXY apt-get update"
+  exec_command "$SUDO apt-get update"
 
   if ! which lsb_release > /dev/null; then
-    exec_command "$SUDO $PROXY apt-get install -y lsb-release"
+    exec_command "$SUDO apt-get install -y lsb-release"
   fi
 
   distro=`lsb_release -cs`
@@ -87,23 +87,23 @@ if which apt-get > /dev/null; then
 
   case $distro in
     squeeze)
-      exec_command "$SUDO $PROXY apt-get install -y git-core curl bzip2 sudo file libreadline5"
+      exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file libreadline5"
       WARP_FILE="ruby_squeeze_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.4.4-2.debian.6.0.5_amd64.deb"
       ;;
     wheezy)
-      exec_command "$SUDO $PROXY apt-get install -y git-core curl bzip2 sudo file"
+      exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file"
       WARP_FILE="ruby_wheezy_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
       # for now we use the package for squeeze
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.4.4-2.debian.6.0.5_amd64.deb"
       ;;
     lucid)
-      exec_command "$SUDO $PROXY apt-get install -y git-core curl bzip2"
+      exec_command "$SUDO apt-get install -y git-core curl bzip2"
       WARP_FILE="ruby_lucid_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/x86_64/chef_11.4.4-2.ubuntu.10.04_amd64.deb"
       ;;
     precise)
-      exec_command "$SUDO $PROXY apt-get install -y git-core curl bzip2"
+      exec_command "$SUDO apt-get install -y git-core curl bzip2"
       WARP_FILE="ruby_precise_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/11.04/x86_64/chef_11.4.4-2.ubuntu.11.04_amd64.deb"
       ;;
