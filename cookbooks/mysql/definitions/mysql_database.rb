@@ -47,7 +47,7 @@ define :mysql_database, {
     # directory enclosing wrapper file is often created after, or does not exists (server with db only)
     delayed_exec "create #{config[:mysql_wrapper][:file]}" do
       block do
-        notifies :create, resources(:template => config[:mysql_wrapper][:file]) if File.exists?(File.dirname(config[:mysql_wrapper][:file]))
+        notifies :create, "template[config[:mysql_wrapper][:file]]" if File.exists?(File.dirname(config[:mysql_wrapper][:file]))
       end
     end
 

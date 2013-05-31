@@ -11,7 +11,7 @@ define :apache2_enable_module, {
 
   execute "enable apache2 module #{apache2_enable_module_params[:name]}" do
     command "a2enmod #{apache2_enable_module_params[:name]}"
-    notifies :restart, resources(:service => "apache2")
+    notifies :restart, "service[apache2]"
     not_if "[ -h #{node.apache2.server_root}/mods-enabled/#{apache2_enable_module_params[:name]}.load ]"
   end
 

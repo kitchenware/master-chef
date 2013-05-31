@@ -65,7 +65,7 @@ define :unicorn_app, {
       :pid_file => unicorn_pid_file,
       :nb_workers => unicorn_app_params[:nb_workers] || node.cpu.total,
     })
-    notifies :restart, resources(:service => unicorn_app_params[:name])
+    notifies :restart, "service[#{unicorn_app_params[:name]}]"
   end
 
   if unicorn_app_params[:configure_nginx]
