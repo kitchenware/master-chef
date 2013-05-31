@@ -98,7 +98,7 @@ file "#{get_home node.gitlab.gitlab.user}/.gitconfig" do
   content <<-EOF
 [user]
   name = Gitlab
-  email = #{node.gitlab.mail_from}
+  email = #{node.gitlab.email_from}
   EOF
 end
 
