@@ -35,7 +35,7 @@ if File.exists? "/opt/chef/bin/chef-solo"
     action :create_if_missing
   end
 
-  template "#{install_path}/etc/solo.rb.erb" do
+  template "#{install_path}/etc/solo.rb" do
     source "solo.rb.erb"
     mode '0644'
     variables :cache_directory => "#{install_path}/var", :var_chef => "/opt/chef/var"
