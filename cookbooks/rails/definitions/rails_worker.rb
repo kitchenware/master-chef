@@ -37,7 +37,7 @@ define :rails_worker, {
       :extended_path => rails_worker_params[:extended_path],
       :vars_to_unset => rails_worker_params[:vars_to_unset],
     })
-    notifies :restart, resources(:service => node.supervisor.service_name)
+    notifies :restart, "service[#{node.supervisor.service_name)}]"
   end
 
   template "#{app_config[:app_directory]}/shared/worker_#{rails_worker_params[:name]}_restart.sh" do

@@ -55,12 +55,13 @@ git_clone "#{node.gitlab.gitlab.path}/current" do
   notifies :restart, "service[#{node.supervisor.service_name}]"
 end
 
+home = get_home node.gitlab.gitolite.user
 template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
   owner node.gitlab.gitlab.user
   source "gitlab.yml.erb"
   variables({
     :repositories => node.gitlab.gitolite.repositories,
-    :hooks => "#{get_home node.gitlab.gitolite.user}/.gitolite/hooks",
+    :hooks => "#{home}/.gitolite/hooks",
     :hostname => node.gitlab.hostname,
     :port => node.gitlab.port,
     :https => node.gitlab.https,
@@ -81,10 +82,11 @@ link "#{node.gitlab.gitlab.path}/current/config/gitlab.yml" do
   to "#{node.gitlab.gitlab.path}/shared/gitlab.yml"
 end
 
+home = get_home node.gitlab.gitlab.user
 execute "create ssh key for gitlab user" do
   user node.gitlab.gitlab.user
-  command "ssh-keygen -t rsa -f #{get_home node.gitlab.gitlab.user}/.ssh/id_rsa -N '' -b 2048"
-  creates "#{get_home node.gitlab.gitlab.user}/.ssh/id_rsa"
+  command "ssh-keygen -t rsa -f #{home}/.ssh/id_rsa -N '' -b 2048"
+  creates "#{home}/.ssh/id_rsa"
 end
 
 ssh_accept_host_key "git@localhost" do

@@ -17,7 +17,7 @@ define :tomcat_instance, {
   catalina_base = "#{node.tomcat.instances_base}/#{config[:name]}"
 
   [
-    "#{catalina_base}",
+    catalina_base,
     "#{catalina_base}/temp",
     "#{catalina_base}/webapps",
     "#{catalina_base}/work",
@@ -53,7 +53,7 @@ define :tomcat_instance, {
 
   Chef::Config.exception_handlers << ServiceErrorHandler.new(config[:name], catalina_base)
 
-  service "#{config[:name]}" do
+  service config[:name] do
     supports :status => true, :restart => true, :reload => true, :graceful_restart => true
     action auto_compute_action
   end
@@ -64,7 +64,7 @@ define :tomcat_instance, {
     owner "tomcat"
     mode '0644'
     variables :config => config
-    notifies :restart, resources(:service => config[:name])
+    notifies :restart, "service[#{config[:name]}]"
   end
 
   template "#{catalina_base}/conf/server.xml" do
@@ -72,7 +72,7 @@ define :tomcat_instance, {
     source "server.xml.erb"
     owner node.tomcat.user
     variables :config => config
-    notifies :restart, resources(:service => config[:name])
+    notifies :restart, "service[#{config[:name]}]"
   end
 
   if tomcat_instance_params[:war_location] && tomcat_instance_params[:war_url]
@@ -100,7 +100,7 @@ define :tomcat_instance, {
       source tomcat_instance_params[:xml_config_file][:source] if tomcat_instance_params[:xml_config_file][:source]
       owner node.tomcat.user
       variables tomcat_instance_params[:xml_config_file][:variables] if tomcat_instance_params[:xml_config_file][:variables]
-      notifies :restart, resources(:service => config[:name])
+      notifies :restart, "service[#{config[:name]}]"
     end
 
   end

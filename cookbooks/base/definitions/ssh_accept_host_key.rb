@@ -19,10 +19,11 @@ define :ssh_accept_host_key, {
     ssh_keygen_host = "[#{host}]:#{ssh_accept_host_key_params[:port]}"
   end
 
+  home = get_home ssh_accept_host_key_params[:user]
   execute "accept key for #{host} for user #{ssh_accept_host_key_params[:user]} port #{ssh_accept_host_key_params[:port]}" do
     command "ssh #{ssh_opts} #{host} exit || true"
     user ssh_accept_host_key_params[:user]
-    not_if "ssh-keygen -F #{ssh_keygen_host} -f #{get_home ssh_accept_host_key_params[:user]}/.ssh/known_hosts | grep ."
+    not_if "ssh-keygen -F #{ssh_keygen_host} -f #{home}/.ssh/known_hosts | grep ."
   end
 
 end

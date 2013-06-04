@@ -21,7 +21,7 @@ define :ruby_rbenv_command, {
   cmd << "cd $HOME"
   cmd << "source .warp/common/ruby/include"
   cmd << "cd #{ruby_rbenv_command_params[:directory]}"
-  cmd << "#{ruby_rbenv_command_params[:code]}"
+  cmd << ruby_rbenv_command_params[:code]
   if ruby_rbenv_command_params[:file_check]
     not_if "[ -f #{ruby_rbenv_command_params[:file_check]} ]"
     cmd << "touch #{ruby_rbenv_command_params[:file_check]}"

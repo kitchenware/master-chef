@@ -23,12 +23,12 @@ end
 
 template "#{node.jboss.jboss_home}/standalone/configuration/standalone.xml" do
   mode '0644'
-  source "standalone.xml"
+  source "standalone.xml.erb"
 end
 
 template "#{node.jboss.jboss_home}/standalone/configuration/mgmt-users.properties" do
   mode '0644'
-  source "mgmt-users.properties"
+  source "mgmt-users.properties.erb"
 end
 
 template "/etc/init.d/jboss" do

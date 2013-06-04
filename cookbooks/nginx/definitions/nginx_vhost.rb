@@ -47,7 +47,7 @@ define :nginx_vhost, {
         cookbook basic_auth[:cookbook]
         source "#{basic_auth[:file]}.passwd.erb"
         mode '0644'
-        notifies :reload, resources(:service => "nginx")
+        notifies :reload, "service[nginx]"
       end
     end
 
@@ -62,7 +62,7 @@ define :nginx_vhost, {
       file "/etc/nginx/#{vhost_sym}.passwd" do
         content passwd
         mode '0644'
-        notifies :reload, resources(:service => :nginx)
+        notifies :reload, "service[nginx]"
       end
 
     end
@@ -78,7 +78,7 @@ define :nginx_vhost, {
       :config => config,
       :server_tokens => 'Off',
     }.merge(nginx_vhost_params[:options]).merge(config[:options] || {}))
-    notifies :reload, resources(:service => "nginx")
+    notifies :reload, "service[nginx]"
   end
 
 end

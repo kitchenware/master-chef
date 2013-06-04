@@ -14,12 +14,12 @@ if File.exists? "/opt/chef/bin/chef-solo"
   end
 
   template "#{install_path}/bin/master-chef.sh" do
-    source "bootstrap.sh"
+    source "bootstrap.sh.erb"
     mode '0755'
   end
 
   template "#{install_path}/bin/update.impl.last.sh" do
-    source "update_omnibus.sh"
+    source "update_omnibus.sh.erb"
     mode '0755'
     variables({
       :user => node.master_chef.chef_solo_scripts.user,
@@ -27,7 +27,7 @@ if File.exists? "/opt/chef/bin/chef-solo"
   end
 
   template "#{install_path}/bin/update.impl.sh" do
-    source "update_omnibus.sh"
+    source "update_omnibus.sh.erb"
     mode '0755'
     variables({
       :user => node.master_chef.chef_solo_scripts.user,
@@ -36,7 +36,7 @@ if File.exists? "/opt/chef/bin/chef-solo"
   end
 
   template "#{install_path}/etc/solo.rb" do
-    source "solo.rb"
+    source "solo.rb.erb"
     mode '0644'
     variables :cache_directory => "#{install_path}/var", :var_chef => "/opt/chef/var"
   end

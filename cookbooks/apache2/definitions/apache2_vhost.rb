@@ -45,7 +45,7 @@ define :apache2_vhost, {
         cookbook basic_auth[:cookbook]
         source "#{basic_auth[:file]}.passwd.erb"
         mode '0644'
-        notifies :reload, resources(:service => "apache2")
+        notifies :reload, "service[apache2]"
       end
     end
 
@@ -60,7 +60,7 @@ define :apache2_vhost, {
       file "#{node.apache2.server_root}/#{vhost_sym}.passwd" do
         content passwd
         mode '0644'
-        notifies :reload, resources(:service => :apache2)
+        notifies :reload, "service[apache2]"
       end
 
     end
@@ -77,7 +77,7 @@ define :apache2_vhost, {
       :description => apache2_description,
       :config => config
       }.merge(apache2_vhost_params[:options]).merge(config[:options] || {}))
-    notifies :reload, resources(:service => "apache2")
+    notifies :reload, "service[apache2]"
   end
 
 end

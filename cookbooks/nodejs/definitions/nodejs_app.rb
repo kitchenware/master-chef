@@ -58,7 +58,7 @@ define :nodejs_app, {
   file "/etc/default/#{nodejs_app_params[:name]}" do
     mode '0755'
     content "NODE_OPTS=\"#{nodejs_app_params[:opts]}\""
-    notifies :restart, resources(:service => nodejs_app_params[:name])
+    notifies :restart, "service[#{nodejs_app_params[:name]}]"
   end
 
 end
