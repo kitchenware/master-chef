@@ -3,7 +3,8 @@ define :java_from_warp, {
 
 } do
 
-  jdk = node.java.versions.params[:name]
+  version_name = params[:name]
+  jdk = node.java.versions[version_name]
 
   warp_file = "#{jdk}_`arch`.warp"
 
