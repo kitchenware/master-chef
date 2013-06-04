@@ -45,7 +45,7 @@ end
 
 if File.exists? "/etc/chef"
 
-  ["solo.rb.erb", "rbenv_sudo_chef.sh", "update.sh"].each do |f|
+  ["solo.rb", "rbenv_sudo_chef.sh", "update.sh"].each do |f|
     template "/etc/chef/#{f}" do
       mode (f =~ /\.sh$/ ? '0755' : '0644')
       source f
