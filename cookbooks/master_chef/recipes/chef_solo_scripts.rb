@@ -48,7 +48,7 @@ if File.exists? "/etc/chef"
   ["solo.rb", "rbenv_sudo_chef.sh", "update.sh"].each do |f|
     template "/etc/chef/#{f}" do
       mode (f =~ /\.sh$/ ? '0755' : '0644')
-      source f
+      source "#{f}.erb"
       variables({
         :user => node.master_chef.chef_solo_scripts.user,
         :user_home => get_home(node.master_chef.chef_solo_scripts.user),
