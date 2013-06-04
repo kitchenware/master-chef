@@ -144,7 +144,7 @@ if [ "$OMNIBUS" = "" ]; then
 
   exec_command "$SUDO mkdir -p /etc/chef"
   install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/etc/chef/solo.rb"
-  install_master_chef_shell_file "cookbooks/master_chef/templates/default/rbenv_sudo_chef.sh" "/etc/chef/rbenv_sudo_chef.sh"
+  install_master_chef_shell_file "cookbooks/master_chef/templates/default/rbenv_sudo_chef.sh.erb" "/etc/chef/rbenv_sudo_chef.sh"
   install_master_chef_file "runtime/local.json" "/etc/chef/local.json"
 
   print "Bootstraping master-chef"
