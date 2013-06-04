@@ -55,7 +55,7 @@ if File.exists? "/etc/chef"
         :log_prefix => "/tmp/last_chef",
         :config_file => "/etc/chef/local.json",
         :cache_directory => "/var/chef/cache",
-        :var_chef => "/opt/chef/var",
+        :var_chef => "/var",
       })
     end
   end
