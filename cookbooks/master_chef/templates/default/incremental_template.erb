@@ -2,7 +2,7 @@
 <%
 @blocks.each do |b|
 %>
-<%= b.call() %>
+<%= b.call().split("\n").map{|x| (" " * @indentation) + x}.join("\n") %>
 <%
 end
 %>

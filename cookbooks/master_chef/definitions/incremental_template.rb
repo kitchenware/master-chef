@@ -7,6 +7,7 @@ define :incremental_template, {
   :notifies => nil,
   :only_if => nil,
   :not_if => nil,
+  :indentation => 0,
 } do
 
   incremental_template_params = params
@@ -19,7 +20,8 @@ define :incremental_template, {
     variables({
       :header => incremental_template_params[:header] || "",
       :footer => incremental_template_params[:footer] || "",
-      :blocks => []
+      :blocks => [],
+      :indentation => incremental_template_params[:indentation],
     })
     notifies incremental_template_params[:notifies][0], incremental_template_params[:notifies][1] if incremental_template_params[:notifies]
     only_if incremental_template_params[:only_if] if incremental_template_params[:only_if]
