@@ -40,7 +40,10 @@ incremental_template node.collectd.python_plugin.file do
   Globals true
 </LoadPlugin>
 
+<Plugin python>
 EOF
+  footer "</Plugin>"
+  indentation 2
   notifies :restart, "service[collectd]"
 end
 
