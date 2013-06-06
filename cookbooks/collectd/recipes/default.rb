@@ -39,10 +39,9 @@ incremental_template node.collectd.python_plugin.file do
 <LoadPlugin python>
   Globals true
 </LoadPlugin>
-
-<Plugin python>
 EOF
-  footer "</Plugin>"
+  header_if_block "<Plugin python>"
+  footer_if_block "</Plugin>"
   indentation 2
   notifies :restart, "service[collectd]"
 end

@@ -1,4 +1,5 @@
 <%= @header %>
+<%= @blocks.empty?  ? '' : @header_if_block %>
 <%
 @blocks.each do |b|
 %>
@@ -6,4 +7,5 @@
 <%
 end
 %>
+<%= @blocks.empty?  ? '' : @footer_if_block %>
 <%= @footer %>
