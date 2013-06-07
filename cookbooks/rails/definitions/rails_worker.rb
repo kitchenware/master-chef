@@ -11,6 +11,7 @@ define :rails_worker, {
 
   rails_app = rails_worker_params[:rails_app] || rails_worker_params[:name]
   app_config = node.deployed_rails_apps[rails_app]
+
   raise "Rails app #{rails_app} not found" unless app_config
 
 	[:workers, :command].each do |s|
@@ -47,6 +48,15 @@ define :rails_worker, {
     owner app_config[:user]
     variables :name => rails_worker_params[:name]
   end
+
+  restart_resource = execute "#{app_config[:app_directory]}/shared/worker_#{rails_worker_params[:name]}_restart.sh" do
+    user app_config[:user]
+    action :nothing
+  end
+
+  node.set[:deployed_rails_workers][rails_worker_params[:name]] = {
+    :restart => Proc.new { restart_resource.run_action :run }
+  }
 
 end
 
