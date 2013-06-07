@@ -15,11 +15,14 @@ delayed_exec "Remove useless logrotate files" do
 end
 
 if node[:logrotate]
-  node.logrotate.each do |k, v|
-   logrotate_file k do
-     files v
-   end
- end
+  node.logrotate.each do |name, config|
+    config.each do |k, v|
+      logrotate_file name do
+        files v
+        user k
+      end
+    end
+  end
 end
 
 delayed_exec "Remove useless logrotate files" do
