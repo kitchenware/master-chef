@@ -1,9 +1,9 @@
 
 define :incremental_template, {
-  :header => nil,
-  :header_if_block => nil,
-  :footer => nil,
-  :footer_if_block => nil,
+  :header => "",
+  :header_if_block => "",
+  :footer => "",
+  :footer_if_block => "",
   :owner => nil,
   :mode => nil,
   :notifies => nil,
@@ -20,10 +20,10 @@ define :incremental_template, {
     mode incremental_template_params[:mode] if incremental_template_params[:mode]
     owner incremental_template_params[:owner] if incremental_template_params[:owner]
     variables({
-      :header => incremental_template_params[:header] || "",
-      :header_if_block => incremental_template_params[:header_if_block] || "",
-      :footer => incremental_template_params[:footer] || "",
-      :footer_if_block => incremental_template_params[:footer_if_block] || "",
+      :header => incremental_template_params[:header],
+      :header_if_block => incremental_template_params[:header_if_block],
+      :footer => incremental_template_params[:footer],
+      :footer_if_block => incremental_template_params[:footer_if_block],
       :blocks => [],
       :indentation => incremental_template_params[:indentation],
     })
