@@ -1,4 +1,3 @@
-
 delayed_exec "Remove useless logrotate files" do
   block do
     files = find_resources_by_name_pattern(/^\/etc\/logrotate.d\/.*$/).map{|r| r.name}
@@ -22,11 +21,5 @@ if node[:logrotate]
         user k
       end
     end
-  end
-end
-
-delayed_exec "Remove useless logrotate files" do
-  block do
-    files = find_resources_by_name_pattern(/^\/etc\/logrotate.d\/.*$/).map{|r| r.name}
   end
 end
