@@ -1,0 +1,20 @@
+<%= @files.join(' ') %> {
+	daily
+	missingok
+	rotate 52
+	compress
+	delaycompress
+	notifempty
+	<% if @copytruncate %>
+	copytruncate
+	<% end %>
+	create 644 <%= @user %> <%= @group %>
+  <% if @sharedscripts %>
+    sharedscripts
+  <% end %>
+	<% if @post_rotate %>
+	postrotate
+	  <%= @post_rotate %>
+	endscript
+	<% end %>
+}
