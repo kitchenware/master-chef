@@ -11,7 +11,7 @@ if node['platform'] == "ubuntu" && node.apt.master_chef_add_apt_repo
 end
 
 package_fixed_version "mongodb-10gen" do
-	version "2.2.4"
+	version node.mongodb.version
 end
 
 service "mongodb" do

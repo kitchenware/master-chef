@@ -3,5 +3,6 @@ default[:mongodb] = {
   :port => 27017,
   :smallfiles => false,
   :profile => 1,
-  :slowms => 300 # unused if profile == 0
+  :slowms => 300, # unused if profile == 0
+  :version => "2.2.4",
 }
