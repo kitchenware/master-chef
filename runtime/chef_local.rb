@@ -5,6 +5,9 @@ require 'tempfile'
 
 abort "Syntax : chef_local.rb host [additionnal chef cookbooks & roles path]" if ARGV == 0
 
+master_chef_path = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+master_chef_path += "/" unless master_chef_path.match(/\/$/)
+
 Dir.chdir File.join(File.dirname(__FILE__), "..")
 
 server = ARGV[0]
@@ -64,7 +67,7 @@ json["repos"] = {:local_path => []};
 
 exec_local "ssh #{ssh_opts} #{user}@#{server} sudo mkdir -p #{git_cache_directory}"
 
-["../master-chef", additionnal_path].each do |dir|
+[master_chef_path, additionnal_path].each do |dir|
   if dir
     target = "#{git_cache_directory}/local_#{File.basename(dir)}"
     exec_local "rsync -e \"ssh #{ssh_opts}\" --delete --rsync-path='sudo rsync' -rlptDv --chmod=go-rwx --exclude=.git --exclude=runtime/sockets #{dir}/ #{user}@#{server}:#{target}/"
