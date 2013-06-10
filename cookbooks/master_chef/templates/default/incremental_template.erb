@@ -1,11 +1,7 @@
 <%= @header %>
 <%= @blocks.empty?  ? '' : @header_if_block %>
-<%
-@blocks.each do |b|
-%>
+<% @blocks.each do |b| %>
 <%= b.call().split("\n").map{|x| (" " * @indentation) + x}.join("\n") %>
-<%
-end
-%>
+<% end %>
 <%= @blocks.empty?  ? '' : @footer_if_block %>
 <%= @footer %>
