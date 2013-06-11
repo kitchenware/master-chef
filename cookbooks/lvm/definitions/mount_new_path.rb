@@ -21,10 +21,10 @@ define :mount_new_path, {
     end
   end
 
-  directory mount_new_path_params[:target] do
-    owner 'root'
-    group 'root'
-    mode '0700'
+  # not using directory resource to avoir conflicts
+  execute "create fake folder to allow mount on #{mount_new_path_params[:target]}" do
+    command "mkdir #{mount_new_path_params[:target]}"
+    not_if "[ -d #{mount_new_path_params[:target]} ]"
   end
 
   mount mount_new_path_params[:target] do
