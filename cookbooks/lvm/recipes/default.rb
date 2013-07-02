@@ -33,5 +33,6 @@ node[:lvm][:mount_new_path].each do |device, config|
     options config[:options] if config[:options]
     mkfs_options config[:mkfs_options] if config[:mkfs_options]
     owner config[:owner] if config[:owner]
+    mode config[:mode] if config[:mode]
   end
 end
