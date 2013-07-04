@@ -24,7 +24,7 @@ end
 deployed_files.each do |f|
   template "#{node.kibana.directory}/shared/files/#{f}" do
     owner node.kibana.user
-    source "kibana/#{f}"
+    source "kibana2/#{f}"
   end
 end
 
@@ -51,7 +51,7 @@ elasticsearch_servers = [elasticsearch_servers] if elasticsearch_servers.is_a? S
 
 template "#{node.kibana.directory}/current/KibanaConfig.rb" do
   owner node.kibana.user
-  source "kibana/KibanaConfig.rb.erb"
+  source "kibana2/KibanaConfig.rb.erb"
   variables({:elasticsearch_servers => elasticsearch_servers}.merge(node.kibana.config))
   notifies :restart, "service[kibana]"
 end

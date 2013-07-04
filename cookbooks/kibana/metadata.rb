@@ -1,0 +1,3 @@
+name 'kibana'
+
+depends "unicorn"
