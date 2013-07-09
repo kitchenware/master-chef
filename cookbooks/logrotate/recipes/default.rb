@@ -1,4 +1,6 @@
 
+package "logrotate"
+
 if node[:logrotate]
   node.logrotate.each do |name, config|
     config.each do |k, v|
