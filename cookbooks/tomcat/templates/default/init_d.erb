@@ -121,7 +121,8 @@ catalina_sh() {
 
   # Define the command to run Tomcat's catalina.sh as a daemon
   # set -a tells sh to export assigned variables to spawned shells.
-  TOMCAT_SH="set -a; JAVA_HOME=\"$JAVA_HOME\"; $TO_BE_SOURCED source \"$DEFAULT\"; \
+  # !!!! Unset LC_ALL to Fix CHEF issue : http://tickets.opscode.com/browse/CHEF-2784 and file encoding
+  TOMCAT_SH="set -a; unset LC_ALL; JAVA_HOME=\"$JAVA_HOME\"; $TO_BE_SOURCED source \"$DEFAULT\"; \
     CATALINA_HOME=\"$CATALINA_HOME\"; \
     CATALINA_BASE=\"$CATALINA_BASE\"; \
     JAVA_OPTS=\"$JAVA_OPTS\"; \
