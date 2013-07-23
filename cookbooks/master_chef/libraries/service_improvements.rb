@@ -7,16 +7,23 @@ class Chef::Provider::Service
 
 end
 
-class Chef::Resource::Service
+unless defined?(CHEF_SERVICE_ALREADY_IMPROVED)
 
-  alias_method :after_created_old, :after_created
+  class Chef::Resource::Service
 
-  def after_created
-    after_created_old
-    @allowed_actions.push(:delayed_restart)
+    alias_method :initialize_old, :initialize
+
+    def initialize(name, run_context=nil)
+      initialize_old(name, run_context)
+      @allowed_actions.push(:delayed_restart)
+    end
+
   end
 
+  CHEF_SERVICE_ALREADY_IMPROVED = 1
+
 end
+
 
 module ServiceHelper
 
