@@ -9,10 +9,10 @@ end
 
 class Chef::Resource::Service
 
-  alias_method :initialize_old, :initialize
+  alias_method :after_created_old, :after_created
 
-  def initialize(name, run_context=nil)
-    initialize_old(name, run_context)
+  def after_created
+    after_created_old
     @allowed_actions.push(:delayed_restart)
   end
 
