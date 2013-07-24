@@ -10,6 +10,8 @@ package "apache2-mpm-#{node.apache2.mpm}"
   "#{node.apache2.server_root}/conf.d/other-vhosts-access-log",
   ].each do |f|
   file f do
+    # avoid warning if file is a symlink
+    manage_symlink_source true
     action :delete
   end
 end
