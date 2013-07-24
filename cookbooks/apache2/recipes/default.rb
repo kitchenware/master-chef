@@ -11,7 +11,7 @@ package "apache2-mpm-#{node.apache2.mpm}"
   ].each do |f|
   # file is not used, because file provider generates a warning in 11.6,
   # because some of this files can be symlink
-  ruby_block "remove file deployed by apache2 package" do
+  ruby_block "remove file deployed by apache2 package #{f}" do
     block do
       File.unlink f if File.exists? f
     end
