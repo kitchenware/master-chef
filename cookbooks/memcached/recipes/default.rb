@@ -1,6 +1,6 @@
 
 if node.memcached[:version]
-	package_fixed_version node.nginx.package_name do
+	package_fixed_version node.memcached.package_name do
 		version node.memcached[:version]
 	end
 else
