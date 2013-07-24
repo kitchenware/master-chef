@@ -41,10 +41,12 @@ end
   "/etc/nginx/conf.d/default.conf",
   "/etc/nginx/conf.d/example_ssl.conf"
   ].each do |f|
-  file f do
-    # avoid warning if file is a symlink
-    manage_symlink_source true
-    action :delete
+  # file is not used, because file provider generates a warning in 11.6,
+  # because some of this files can be symlink
+  ruby_block "remove file deployed by nginx package" do
+    block do
+      File.unlink f if File.exists? f
+    end
   end
 end
 

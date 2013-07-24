@@ -9,10 +9,12 @@ package "apache2-mpm-#{node.apache2.mpm}"
   "#{node.apache2.server_root}/httpd.conf",
   "#{node.apache2.server_root}/conf.d/other-vhosts-access-log",
   ].each do |f|
-  file f do
-    # avoid warning if file is a symlink
-    manage_symlink_source true
-    action :delete
+  # file is not used, because file provider generates a warning in 11.6,
+  # because some of this files can be symlink
+  ruby_block "remove file deployed by apache2 package" do
+    block do
+      File.unlink f if File.exists? f
+    end
   end
 end
 
