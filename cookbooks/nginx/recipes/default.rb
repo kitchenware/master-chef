@@ -23,8 +23,16 @@ if node.lsb.codename == "squeeze"  && node.apt.master_chef_add_apt_repo
 
 end
 
-package node.nginx.package_name do
-  version node.nginx[:nginx_version] if node.nginx[:nginx_version]
+if node.nginx[:nginx_version]
+
+  package_fixed_version node.nginx.package_name do
+    version version node.nginx[:nginx_version]
+  end
+
+else
+
+  package node.nginx.package_name
+
 end
 
 [
@@ -34,6 +42,8 @@ end
   "/etc/nginx/conf.d/example_ssl.conf"
   ].each do |f|
   file f do
+    # avoid warning if file is a symlink
+    manage_symlink_source true
     action :delete
   end
 end
