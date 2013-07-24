@@ -1,5 +1,10 @@
-package "memcached" do
-	action :upgrade
+
+if node.memcached[:version]
+	package_fixed_version 'memcached' do
+		version node.memcached[:version]
+	end
+else
+	package "memcached"
 end
 
 service "memcached" do
