@@ -20,6 +20,7 @@ end
 
 default[:master_chef][:chef_solo_scripts] = {
   :user => "chef",
+  :use_formatter_logging => true,
 }
 
 default[:local_storage] = {

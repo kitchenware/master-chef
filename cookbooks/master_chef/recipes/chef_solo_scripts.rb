@@ -23,6 +23,7 @@ if File.exists? "/opt/chef/bin/chef-solo"
     mode '0755'
     variables({
       :user => node.master_chef.chef_solo_scripts.user,
+      :use_formatter_logging => node.master_chef.chef_solo_scripts.use_formatter_logging,
     })
   end
 
@@ -31,6 +32,7 @@ if File.exists? "/opt/chef/bin/chef-solo"
     mode '0755'
     variables({
       :user => node.master_chef.chef_solo_scripts.user,
+      :use_formatter_logging => node.master_chef.chef_solo_scripts.use_formatter_logging,
     })
     action :create_if_missing
   end
