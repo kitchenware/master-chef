@@ -5,4 +5,5 @@ default[:memcached] = {
   :user => "nobody",
   :maxconn => 1024,
   :extra_opts => '',
+  :package_name => 'memcached',
 }
