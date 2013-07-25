@@ -60,11 +60,21 @@ define :incremental_template_part, {
       begin
         provider.load_current_resource
         result = ""
-        provider.send(:render_with_context, provider.template_location) do |x|
-          result = File.read(x.path)
+
+        if Chef::Mixin::Template.const_defined? "TemplateContext"
+          # new templating system
+          context = Chef::Mixin::Template::TemplateContext.new(this_template.variables)
+          template_location = provider.send(:content).template_location
+          context[:node] = r.run_context
+          result = context.render_template(template_location)
+        else
+          # old templating system
+          provider.send(:render_with_context, provider.template_location) do |x|
+            result = File.read(x.path)
+          end
         end
-        result
       rescue
+        Chef::Log.error($!)
         raise "Unable to process incremental_template #{incremental_template_part_params[:name]}: #{$!}"
       end
     end
