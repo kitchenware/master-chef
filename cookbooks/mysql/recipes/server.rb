@@ -1,13 +1,26 @@
 
 include_recipe "mysql"
 
-package "mysql-server"
+server_package_name = node.mysql.use_percona ? node.mysql.percona_server_package_name : node.mysql.server_package_name
+Chef::Log.info "Using mysql server package #{server_package_name}"
+
+package server_package_name
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("mysql", ".*mysql.*")
 
 service "mysql" do
   supports :status => true, :restart => true, :reload => true
   action [ :enable, :start ]
+end
+
+if node.mysql.use_percona
+
+  template "/etc/mysql/my.cnf" do
+    source "my.cnf.percona.erb"
+    mode '0644'
+    notifies :restart, "service[mysql]", :immediately
+  end
+
 end
 
 mysql_conf = []
@@ -22,7 +35,8 @@ end
 
 file "/etc/mysql/conf.d/chef_override.cnf" do
   content mysql_conf.join("\n")
-  notifies :restart, "service[mysql]"
+  mode '0644'
+  notifies :restart, "service[mysql]", :immediately
 end
 
 root_mysql_password = local_storage_read("mysql_password:root") do
