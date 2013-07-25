@@ -15,6 +15,8 @@ end
 
 if node.mysql.use_percona
 
+  node.set[:mysql][:engine_config][:mysqld][:bind_address] = '0.0.0.0' if node.mysql.engine_config.mysqld.bind_address == '127.0.0.1'
+
   template "/etc/mysql/my.cnf" do
     source "my.cnf.percona.erb"
     mode '0644'
