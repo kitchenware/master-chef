@@ -10,7 +10,8 @@ node.logrotate.files.each do |name, config|
   end
 end
 
-unless node.logrotate[:disable_conf_purge] do
+unless node.logrotate[:disable_conf_purge]
+
   delayed_exec "Remove useless logrotate files" do
     block do
       files = find_resources_by_name_pattern(/^\/etc\/logrotate.d\/.*$/).map{|r| r.name}
@@ -25,4 +26,5 @@ unless node.logrotate[:disable_conf_purge] do
       end
     end
   end
+
 end
