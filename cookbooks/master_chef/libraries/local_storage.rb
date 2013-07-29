@@ -10,12 +10,12 @@ module LocalStorage
     end
     if block_given? && data.nil?
       data = yield
-      local_storage_store key, data
+      local_storage_write key, data
     end
     data
   end
 
-  def local_storage_store key, value
+  def local_storage_write key, value
     full_data = read_file
     current = full_data
     keys = key.split(':').map{|s| s.to_sym}
@@ -31,7 +31,7 @@ module LocalStorage
     end
   end
 
-  def local_storage_store_memory key, value
+  def local_storage_write_memory key, value
     current = node.set
     keys = key.split(':').map{|s| s.to_sym}
     keys.each do |s|

@@ -6,7 +6,7 @@ module TcpPortManager
     port = local_storage_read "tcp_port_manager:last_used"
     port = range.begin unless port
     port = port + 1
-    local_storage_store "tcp_port_manager:last_used", port
+    local_storage_write "tcp_port_manager:last_used", port
     port
   end
 

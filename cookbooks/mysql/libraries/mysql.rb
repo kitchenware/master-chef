@@ -15,7 +15,7 @@ module MysqlHelper
     unless config[:host]
       config[:host] = yield
     end
-    local_storage_store_memory "#{key}:host", config[:host]
+    local_storage_write_memory "#{key}:host", config[:host]
   end
 
 end
