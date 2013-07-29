@@ -5,7 +5,7 @@ define :mysql_database, {
 
   config = extract_config mysql_database_params[:name]
 
-  if config[:host] == "localhost"
+  if config[:host] == "localhost" && node.mysql[:run_sql]
 
     unless config[:password]
       config[:password] = local_storage_read("mysql_password:#{config[:username]}") do
