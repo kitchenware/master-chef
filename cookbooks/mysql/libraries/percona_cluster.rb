@@ -23,9 +23,7 @@ class PerconaCluster
           Chef::Log.info "Boostraping new cluster"
           restart "stop"
           restart "bootstrap-pxc"
-          wait "cluster bootstrap", 60, 5 do
-            is_cluster_sync?
-          end
+          wait_cluster_sync
           Chef::Log.info "Creating replication user"
 
           code, result = mysql_command "CREATE USER '#{@config["rep_username"]}'@'localhost' IDENTIFIED BY '#{@config["rep_password"]}'"
@@ -74,7 +72,7 @@ class PerconaCluster
   end
 
   def wait_cluster_sync
-    wait "cluster synchronisation", 60, 5 do
+    wait "cluster synchronisation", 180, 5 do
       is_cluster_sync?
     end
   end
