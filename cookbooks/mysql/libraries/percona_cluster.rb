@@ -101,7 +101,6 @@ class PerconaCluster
   def is_cluster_sync?
     code, content = mysql_command "show status like 'wsrep%'"
     return false unless code == 0
-    puts content
     extract_key_value(content, "wsrep_local_state_comment") == "Synced" && extract_key_value(content, "wsrep_ready") == "ON" && extract_key_value(content, "wsrep_connected") == "ON"
   end
 
