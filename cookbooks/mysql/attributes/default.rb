@@ -12,3 +12,5 @@ default[:mysql][:engine_config] = {
     :max_allowed_packet => '16M',
   }
 }
+
+default[:mysql][:run_sql] = true
