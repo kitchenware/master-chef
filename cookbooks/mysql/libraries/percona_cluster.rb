@@ -133,8 +133,8 @@ class PerconaCluster
     raise "Timeout while waiting #{title}"
   end
 
-  def mysql_command command, host = "localhost"
-    result = %x{echo \"#{command};\" | mysql --host #{host} --user=root --password=#{@config["root_password"]} --raw 2>&1}
+  def mysql_command command
+    result = %x{echo \"#{command};\" | mysql --user=root --password=#{@config["root_password"]} --raw 2>&1}
     return $?.exitstatus, result
   end
 
