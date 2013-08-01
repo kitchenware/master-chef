@@ -26,19 +26,16 @@ class PerconaCluster
           wait_cluster_sync
           Chef::Log.info "Creating replication user"
 
-          code, result = mysql_command "CREATE USER '#{@config["rep_username"]}'@'localhost' IDENTIFIED BY '#{@config["rep_password"]}'"
-          raise "Unable to create replication user : #{result}" unless code == 0
-
-          code, result = mysql_command "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO '#{@config["rep_username"]}'@'localhost'"
-          raise "Unable to create replication user : #{result}" unless code == 0
-
-          code, result = mysql_command "FLUSH PRIVILEGES"
-          raise "Unable to create replication user : #{result}" unless code == 0
+          @config["mysql_commands"].each do |cmd|
+            Chef::Log.info "Running #{cmd}"
+            code, result = mysql_command cmd
+            raise "Unable to create replication user : #{result}" unless code == 0
+          end
 
           Chef::Log.info "Cluster boostraped"
 
           wait "other nodes", 3600, 10 do
-            code, result = mysql_command "show status like 'wsrep%'"
+            code, result = mysql_command "show status like 'wsrep%';"
             raise "Unable to get replication status : #{result}" unless code == 0
             extract_key_value(result, "wsrep_incoming_addresses").split(',').size > 1
           end
@@ -93,13 +90,13 @@ class PerconaCluster
   end
 
   def is_cluster_activated?
-    code, content = mysql_command "show status like 'wsrep%'"
+    code, content = mysql_command "show status like 'wsrep%';"
     return false unless code == 0
     extract_key_value(content, "wsrep_connected") == "ON"
   end
 
   def is_cluster_sync?
-    code, content = mysql_command "show status like 'wsrep%'"
+    code, content = mysql_command "show status like 'wsrep%';"
     return false unless code == 0
     extract_key_value(content, "wsrep_local_state_comment") == "Synced" && extract_key_value(content, "wsrep_ready") == "ON" && extract_key_value(content, "wsrep_connected") == "ON"
   end
@@ -134,7 +131,7 @@ class PerconaCluster
   end
 
   def mysql_command command
-    result = %x{echo \"#{command};\" | mysql --user=root --password=#{@config["root_password"]} --raw 2>&1}
+    result = %x{echo \"#{command}\" | mysql --user=root --password=#{@config["root_password"]} --raw 2>&1}
     return $?.exitstatus, result
   end
 

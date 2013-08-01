@@ -76,6 +76,12 @@ if node.mysql.use_percona && node.mysql[:percona_cluster]
   config["local_node"] = local_node
   config["root_password"] = root_mysql_password
   config["is_master"] = local_node == config["master"]
+  config["mysql_commands"] = [
+    "CREATE USER '#{config["rep_username"]}'@'localhost' IDENTIFIED BY '#{config["rep_password"]}';",
+    "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO '#{config["rep_username"]}'@'localhost';",
+    "FLUSH PRIVILEGES;"
+  ]
+  config["mysql_commands"] += node.mysql.percona_cluster.mysql_commands if node.mysql.percona_cluster[:mysql_commands]
 
   ruby_block "update percona cluster" do
     block do
