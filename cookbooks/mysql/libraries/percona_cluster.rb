@@ -37,11 +37,11 @@ class PerconaCluster
           wait "other nodes", 3600, 10 do
             code, result = mysql_command "show status like 'wsrep%';"
             raise "Unable to get replication status : #{result}" unless code == 0
-            extract_key_value(result, "wsrep_incoming_addresses").split(',').size > 1
+            extract_key_value(result, "wsrep_incoming_addresses").split(',').size > 2
           end
 
           wait "other nodes mysql port ready", 3600, 10 do
-            other_nodes_ready
+            other_nodes_ready 2
           end
 
           Chef::Log.info "Rebooting in standard configuration"
@@ -74,15 +74,15 @@ class PerconaCluster
     end
   end
 
-  def other_nodes_ready
-    other_nodes_ready = false
+  def other_nodes_ready number_of_nodes = 1
+    nodes_ready = 0
     @config["nodes"].reject{|x| x == @config["local_node"]}.each do |x|
       if port_open?(x, 3306) && port_open?(x, 4567)
         Chef::Log.info "Node #{x} is ready"
-        other_nodes_ready = true
+        nodes_ready += 1
       end
     end
-    other_nodes_ready
+    nodes_ready >= number_of_nodes
   end
 
   def restart command = "restart"
