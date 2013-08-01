@@ -48,6 +48,7 @@ define :tomcat_instance, {
       :catalina_home => node.tomcat.catalina_home,
       :name => config[:name],
       :user => node.tomcat.user,
+      :tmp_dir => config[:tmp_dir] || "/tmp/tomcat6-tmp-#{config[:name]}"
       })
   end
 
