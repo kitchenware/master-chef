@@ -59,6 +59,16 @@ unless node[:no_sshd_config]
     not_if "egrep 'ClientAliveInterval #{node.ssh[:client_alive_interval]}' /etc/ssh/sshd_config"
   end
 
+  execute "Configure sshd - client alive count max" do
+    user "root"
+    command <<-EOF
+    sed -i -e '/^ClientAliveCountMax.*/d' /etc/ssh/sshd_config
+    echo "ClientAliveCountMax #{node.ssh[:client_alive_count_max]}" >> /etc/ssh/sshd_config
+    EOF
+    notifies :restart, "service[ssh]", :immediately
+    not_if "egrep 'ClientAliveCountMax #{node.ssh[:client_alive_count_max]}' /etc/ssh/sshd_config"
+  end
+
   gateway_ports_value = node.ssh[:gateway_ports] ? "yes" : "no"
 
   execute "Configure sshd - gateway ports" do
