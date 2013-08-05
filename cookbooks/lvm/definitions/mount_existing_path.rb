@@ -1,4 +1,3 @@
-
 define :mount_existing_path, {
   :target => nil,
   :fstype => 'ext4',
@@ -43,6 +42,7 @@ define :mount_existing_path, {
     mkdir #{mount_existing_path_params[:target]} &&
     umount $tmp_mount &&
     mount #{mount_existing_path_params[:target]} &&
+    mkdir -p #{mount_existing_path_params[:target]}/lost+found &&
     rm -rf $tmp_mount &&
     #{start_command}
 EOF
