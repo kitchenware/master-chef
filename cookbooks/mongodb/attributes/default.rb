@@ -5,4 +5,5 @@ default[:mongodb] = {
   :profile => 1,
   :slowms => 300, # unused if profile == 0
   :version => "2.2.4",
+  :rs => nil, # ReplicaSet Name (nil for none)
 }

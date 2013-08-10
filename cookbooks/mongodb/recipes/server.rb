@@ -34,5 +34,5 @@ end
 template "/etc/mongodb.conf" do
 	mode 0644
 	variables node.mongodb.to_hash
-	notifies :restart, "service[mongodb]"
+	notifies :restart, "service[mongodb]", :immediately
 end
