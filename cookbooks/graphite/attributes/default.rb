@@ -31,6 +31,7 @@ default[:graphite][:bucky] = {
 
 default[:graphite][:carbon] = {
   :port => 2003,
+  :interface => '127.0.0.1',
 }
 
 default[:graphite][:statsd] = {
