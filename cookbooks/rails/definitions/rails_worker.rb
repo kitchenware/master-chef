@@ -5,6 +5,7 @@ define :rails_worker, {
 	:env => {},
   :vars_to_unset => [],
   :extended_path => nil,
+  :autostart => true,
 	} do
 
 	rails_worker_params = params
@@ -24,6 +25,7 @@ define :rails_worker, {
     command "#{app_config[:app_directory]}/shared/worker_#{rails_worker_params[:name]}.sh"
     workers rails_worker_params[:workers]
     user app_config[:user]
+    autostart rails_worker_params[:autostart]
   end
 
 	template "#{app_config[:app_directory]}/shared/worker_#{rails_worker_params[:name]}.sh" do
@@ -68,6 +70,7 @@ define :rails_resque_worker, {
   :extended_path => nil,
   :vars_to_unset => [],
   :env => {},
+  :autostart => true,
   } do
 
   rails_resque_worker_params = params
@@ -79,6 +82,7 @@ define :rails_resque_worker, {
     workers rails_resque_worker_params[:workers]
     extended_path rails_resque_worker_params[:extended_path]
     vars_to_unset rails_resque_worker_params[:vars_to_unset]
+    autostart rails_resque_worker_params[:autostart]
   end
 
 end
