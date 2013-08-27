@@ -11,6 +11,7 @@ default[:collectd][:plugins] = {
   "users" => {},
   "syslog" => {:config => "LogLevel \"info\""}
 }
+default[:collectd][:package_name] = "collectd-core"
 default[:collectd][:interval] = 10
 default[:collectd][:config_directory] = "/etc/collectd/collectd.d"
 default[:collectd][:python_plugin] = {

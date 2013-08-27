@@ -1,5 +1,5 @@
 
-package "collectd-core" do
+package node.collectd.package_name do
   options "--no-install-recommends"
 end
 
