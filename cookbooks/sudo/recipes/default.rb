@@ -19,19 +19,23 @@ if node[:sudoers_files]
 
 end
 
-delayed_exec "Remove useless files in sudoers" do
-  block do
-    updated = false
-    sudoers_files = find_resources_by_name_pattern(/^\/etc\/sudoers\.d\/.*$/).map{|r| r.name}
-    Dir["/etc/sudoers.d/*"].each do |n|
-      Kernel.system "dpkg -S #{n} > /dev/null 2>&1"
-      is_system_file = $?.exitstatus == 0
-      unless is_system_file || sudoers_files.include?(n)
-        Chef::Log.info "Removing sudoers #{n}"
-        File.unlink n
-        updated = true
+if node.purge_sudoers
+
+  delayed_exec "Remove useless files in sudoers" do
+    block do
+      updated = false
+      sudoers_files = find_resources_by_name_pattern(/^\/etc\/sudoers\.d\/.*$/).map{|r| r.name}
+      Dir["/etc/sudoers.d/*"].each do |n|
+        Kernel.system "dpkg -S #{n} > /dev/null 2>&1"
+        is_system_file = $?.exitstatus == 0
+        unless is_system_file || sudoers_files.include?(n)
+          Chef::Log.info "Removing sudoers #{n}"
+          File.unlink n
+          updated = true
+        end
       end
+      updated
     end
-    updated
   end
+
 end

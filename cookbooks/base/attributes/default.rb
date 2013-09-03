@@ -26,3 +26,5 @@ default[:apt] = {
   :clean_sources_list_d => true,
   :master_chef_add_apt_repo => true,
 }
+
+default[:purge_sudoers] = true
