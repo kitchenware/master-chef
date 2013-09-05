@@ -61,6 +61,16 @@ execute "change mysql root password" do
   only_if "echo 'select 1;' | mysql --user=root --password= "
 end
 
+file "/root/.my.cnf" do
+  content <<-EOF
+[client]
+user=root
+host=localhost
+password=#{root_mysql_password}
+EOF
+  mode '0400'
+end
+
 if node.mysql.use_percona && node.mysql[:percona_cluster]
 
   local_node = nil
