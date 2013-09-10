@@ -1,4 +1,9 @@
 
+# debian sqeeze : 2.4 : redis-server.pid
+# debian wheezy : 2.4 : redis-server.pid
+# ubuntu precise : 2.2 : redis-server.pid
+# ubuntu lucid : 2.2 : redid.pid
+
 redis_package_options = nil
 redis_config_file = "redis.conf.erb"
 
