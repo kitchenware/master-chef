@@ -5,7 +5,9 @@ if node[:users]
 
     unless v[:do_not_create]
 
-      base_user k
+      base_user k do
+        home v[:home] if v[:home]
+      end
 
       if v[:rbenv] || v[:nvm]
 
