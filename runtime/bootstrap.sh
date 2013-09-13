@@ -165,6 +165,7 @@ else
 
   exec_command "$SUDO mkdir -p /opt/master-chef/etc"
   install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/opt/master-chef/etc/solo.rb"
+  $SUDO sed -ie '/^<%=/d' "/opt/master-chef/etc/solo.rb"
   install_master_chef_file "runtime/local.json" "/opt/master-chef/etc/local.json"
 
   print "Bootstraping master-chef"

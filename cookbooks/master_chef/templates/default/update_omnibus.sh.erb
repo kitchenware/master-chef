@@ -18,7 +18,7 @@ log() {
 log "Starting chef using omnibus at `date`"
 
 (
-  LOCAL_STORAGE_FILE=$LOCAL_STORAGE_FILE REPOS_STATUS_FILE=$REPOS_STATUS_FILE MASTER_CHEF_CONFIG=$MASTER_CHEF_CONFIG sudo -E /opt/chef/bin/chef-solo -c /opt/master-chef/etc/solo.rb <% if @use_formatter_logging %> --force-formatter <% end %> <% if @use_logger_logging %> --force-logger <% end %>
+  LOCAL_STORAGE_FILE=$LOCAL_STORAGE_FILE REPOS_STATUS_FILE=$REPOS_STATUS_FILE MASTER_CHEF_CONFIG=$MASTER_CHEF_CONFIG sudo -E /opt/chef/bin/chef-solo -c /opt/master-chef/etc/solo.rb <%= @logging[:command_line] %>
   if [ "$?" = 0 ]; then
     log "Chef run OK at `date`"
   else

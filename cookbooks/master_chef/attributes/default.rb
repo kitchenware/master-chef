@@ -20,8 +20,13 @@ end
 
 default[:master_chef][:chef_solo_scripts] = {
   :user => "chef",
-  :use_formatter_logging => false,
-  :use_logger_logging => false,
+  :logging => {
+    :command_line => "--force-formatter",
+    :solo_rb => <<-EOF
+verbose_logging false
+Mixlib::Log::Formatter.show_time = false
+EOF
+  }
 }
 
 default[:local_storage] = {

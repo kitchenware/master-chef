@@ -23,8 +23,7 @@ if File.exists? "/opt/chef/bin/chef-solo"
     mode '0755'
     variables({
       :user => node.master_chef.chef_solo_scripts.user,
-      :use_formatter_logging => node.master_chef.chef_solo_scripts.use_formatter_logging,
-      :use_logger_logging => node.master_chef.chef_solo_scripts.use_logger_logging,
+      :logging => node.master_chef.chef_solo_scripts.logging,
     })
   end
 
@@ -33,8 +32,7 @@ if File.exists? "/opt/chef/bin/chef-solo"
     mode '0755'
     variables({
       :user => node.master_chef.chef_solo_scripts.user,
-      :use_formatter_logging => node.master_chef.chef_solo_scripts.use_formatter_logging,
-      :use_logger_logging => node.master_chef.chef_solo_scripts.use_logger_logging,
+      :logging => node.master_chef.chef_solo_scripts.logging,
     })
     action :create_if_missing
   end
@@ -42,7 +40,11 @@ if File.exists? "/opt/chef/bin/chef-solo"
   template "#{install_path}/etc/solo.rb" do
     source "solo.rb.erb"
     mode '0644'
-    variables :cache_directory => "#{install_path}/var", :var_chef => "/opt/chef/var"
+    variables({
+      :cache_directory => "#{install_path}/var",
+      :var_chef => "/opt/chef/var",
+      :logging => node.master_chef.chef_solo_scripts.logging,
+    })
   end
 
 end
