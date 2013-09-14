@@ -3,7 +3,7 @@ if node.mysql.use_percona && node.apt.master_chef_add_apt_repo
 
   add_apt_repository "percona_repo" do
     url "http://repo.percona.com/apt"
-    key "1C4CBDCDCD2EFD2A"
+    key "CD2EFD2A"
     key_server "keys.gnupg.net"
   end
 
