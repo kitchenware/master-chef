@@ -2,7 +2,7 @@
 # debian sqeeze : 2.4 : redis-server.pid
 # debian wheezy : 2.4 : redis-server.pid
 # ubuntu precise : 2.2 : redis-server.pid
-# ubuntu lucid : 2.2 : redid.pid
+# ubuntu lucid : 2.6 : redid.pid
 
 redis_package_options = nil
 redis_config_file = "redis.conf.erb"
@@ -19,18 +19,23 @@ if node.lsb.codename == "squeeze" && node.apt.master_chef_add_apt_repo
 
 end
 
-if node.lsb.codename == "lucid" && node.apt.master_chef_add_apt_repo
+if node.lsb.codename == "lucid"
 
-  add_apt_repository "ppa_redis" do
-    url "http://ppa.launchpad.net/rwky/redis/ubuntu"
-    key "5862E31D"
-    key_server "keyserver.ubuntu.com"
+  if node.apt.master_chef_add_apt_repo
+
+    add_apt_repository "ppa_redis" do
+      url "http://ppa.launchpad.net/rwky/redis/ubuntu"
+      key "5862E31D"
+      key_server "keyserver.ubuntu.com"
+    end
+
   end
 
-
-  redis_config_file = "redis-2.6.conf.erb"
+  node.set[:redis][:version_config] = "2.6"
 
 end
+
+redis_config_file = "redis-2.6.conf.erb" if node.redis.version_config == "2.6"
 
 package "redis-server" do
   version redis_package_version if redis_package_version

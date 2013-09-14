@@ -11,4 +11,5 @@ default[:redis] = {
   :maxmemory => nil,
   :appendonly => 'no',
   :appendfsync => 'everysec',
+  :version_config => '2.2',
 }
