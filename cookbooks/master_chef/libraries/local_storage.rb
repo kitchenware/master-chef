@@ -48,6 +48,7 @@ module LocalStorage
     keys.each do |s|
       current = current[s] if current
     end
+    return {}, keys.last unless current
     return symbolize_keys(current.to_hash), keys.last
   end
 
