@@ -1,5 +1,5 @@
 
-if node[:ntp_servers]
+if node[:ntp_servers] && ! node[:disable_ntp]
 
   package "ntp"
   package "ntpdate"
