@@ -47,9 +47,7 @@ if File.exists? "/opt/chef/bin/chef-solo"
     })
   end
 
-end
-
-if File.exists? "/etc/chef"
+else
 
   ["solo.rb", "rbenv_sudo_chef.sh", "update.sh"].each do |f|
     template "/etc/chef/#{f}" do
@@ -62,6 +60,7 @@ if File.exists? "/etc/chef"
         :config_file => "/etc/chef/local.json",
         :cache_directory => "/var/chef/cache",
         :var_chef => "/var/chef",
+        :logging => node.master_chef.chef_solo_scripts.logging,
       })
     end
   end
