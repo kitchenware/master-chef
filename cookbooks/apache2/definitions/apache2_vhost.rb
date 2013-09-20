@@ -16,10 +16,10 @@ define :apache2_vhost, {
   basic_auth = config[:basic_auth]
 
   apache2_description = ""
-  if config[:domains] && config[:domains].size >= 1
-    apache2_description = "ServerName #{config[:domains].first}"
+  if config[:virtual_host] && config[:virtual_host].size >= 1
+    apache2_description = "ServerName #{config[:virtual_host].first}"
     aliases = ""
-    config[:domains][1..-1].each do |d|
+    config[:virtual_host][1..-1].each do |d|
       aliases += "#{d} "
     end
     apache2_description += "\nServerAlias #{aliases}\n" unless aliases.empty?

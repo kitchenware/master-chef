@@ -6,7 +6,17 @@ default[:apache2][:mpm_config][:prefork] = {
   :max_spare => 20,
   :server_limit => 256,
   :max_clients => 256,
-  :max_request_per_child => 20,
+  :max_requests_per_child => 20,
+}
+
+default[:apache2][:mpm_config][:worker] = {
+  :start_servers => 2,
+  :min_spare_threads => 25,
+  :max_spare_threads => 75,
+  :thread_limit => 64,
+  :threads_per_child => 25,
+  :max_clients => 150,
+  :max_requests_per_child => 0,
 }
 
 default[:apache2][:tuning] = {
@@ -28,7 +38,7 @@ default[:apache2][:log_directory] = "/var/log/apache2"
 default[:apache2][:default_vhost] = {
   :listen => '0.0.0.0:80',
   :document_root => '/var/www',
-  :enable => true,
+  :enabled => true,
 }
 
 default[:apache2][:modules] = ["dir", "mime", "authz_host", "alias"]

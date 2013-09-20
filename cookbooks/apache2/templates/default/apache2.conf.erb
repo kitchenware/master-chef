@@ -92,13 +92,13 @@ PidFile ${APACHE_PID_FILE}
 ServerTokens <%= @tuning[:tokens] %>
 ServerSignature <%= @tuning[:server_signature] %>
 
-HostnameLookups <%= @tuning[:hostname_lookups] %> 
+HostnameLookups <%= @tuning[:hostname_lookups] %>
 KeepAlive <%= @tuning[:keepalive] %>
 KeepAliveTimeout <%= @tuning[:keepalive_timeout] %>
 MaxKeepAliveRequests <%= @tuning[:max_keepalive_request] %>
-Timeout <%= @tuning[:timeout] %> 
+Timeout <%= @tuning[:timeout] %>
 
-ListenBacklog <%= @tuning[:listen_backlog] %> 
+ListenBacklog <%= @tuning[:listen_backlog] %>
 
 # prefork MPM
 # StartServers: number of server processes to start
@@ -112,7 +112,7 @@ ListenBacklog <%= @tuning[:listen_backlog] %>
     MaxSpareServers       <%= @mpm[:prefork][:max_spare] %>
     ServerLimit           <%= @mpm[:prefork][:server_limit] %>
     MaxClients            <%= @mpm[:prefork][:max_clients] %>
-    MaxRequestsPerChild   <%= @mpm[:prefork][:max_request_per_child] %>
+    MaxRequestsPerChild   <%= @mpm[:prefork][:max_requests_per_child] %>
 </IfModule>
 
 # worker MPM
@@ -126,13 +126,13 @@ ListenBacklog <%= @tuning[:listen_backlog] %>
 # ThreadsPerChild: constant number of worker threads in each server process
 # MaxRequestsPerChild: maximum number of requests a server process serves
 <IfModule mpm_worker_module>
-    StartServers          2
-    MinSpareThreads      25
-    MaxSpareThreads      75 
-    ThreadLimit          64
-    ThreadsPerChild      25
-    MaxClients          150
-    MaxRequestsPerChild   0
+    StartServers         <%= @mpm[:worker][:start_servers] %>
+    MinSpareThreads      <%= @mpm[:worker][:min_spare_threads] %>
+    MaxSpareThreads      <%= @mpm[:worker][:max_spare_threads] %>
+    ThreadLimit          <%= @mpm[:worker][:thread_limit] %>
+    ThreadsPerChild      <%= @mpm[:worker][:threads_per_child] %>
+    MaxClients           <%= @mpm[:worker][:max_clients] %>
+    MaxRequestsPerChild  <%= @mpm[:worker][:max_requests_per_child] %>
 </IfModule>
 
 # event MPM
