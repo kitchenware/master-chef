@@ -20,16 +20,20 @@ define :nginx_vhost, {
   ssl = config[:ssl]
 
   if ssl
-    nginx_listen += "ssl on;\n";
-    nginx_listen += "ssl_certificate /etc/nginx/#{vhost_sym}.crt;\n"
-    nginx_listen += "ssl_certificate_key /etc/nginx/#{vhost_sym}.key;\n"
+    ssl_sym = ssl[:ssl_sym] || vhost_sym;
 
-    %w{key crt}.each do |ext|
-      template "/etc/nginx/#{vhost_sym}.#{ext}" do
-        cookbook ssl[:cookbook]
-        source ssl[ext.to_sym]
-        mode '0600'
-        owner "www-data"
+    nginx_listen += "ssl on;\n";
+    nginx_listen += "ssl_certificate /etc/nginx/#{ssl_sym}.crt;\n"
+    nginx_listen += "ssl_certificate_key /etc/nginx/#{ssl_sym}.key;\n"
+
+    unless ssl[:ssl_sym]
+      %w{key crt}.each do |ext|
+        template "/etc/nginx/#{vhost_sym}.#{ext}" do
+          cookbook ssl[:cookbook]
+          source ssl[ext.to_sym]
+          mode '0600'
+          owner "www-data"
+        end
       end
     end
 
