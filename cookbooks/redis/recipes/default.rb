@@ -43,7 +43,7 @@ end
 
 service "redis-server" do
 	supports :restart => true, :reload => true
-	action [ :enable, :start ]
+	action node.redis[:service_action] || auto_compute_action
 end
 
 template "/etc/redis/redis.conf" do
