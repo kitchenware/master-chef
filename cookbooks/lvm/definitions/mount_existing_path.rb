@@ -42,7 +42,8 @@ define :mount_existing_path, {
     mkdir #{mount_existing_path_params[:target]} &&
     umount $tmp_mount &&
     mount #{mount_existing_path_params[:target]} &&
-    mkdir -p #{mount_existing_path_params[:target]}/lost+found &&
+    cd #{mount_existing_path_params[:target]}/ &&
+    mklost+found &&
     rm -rf $tmp_mount &&
     #{start_command}
 EOF
