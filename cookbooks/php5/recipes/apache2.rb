@@ -19,10 +19,8 @@ end
 
 apache2_enable_module "setenvif"
 
-file "/etc/apache2/conf.d/https_php" do
+apache2_configuration_file "https_php" do
   content "SetEnvIf X-Forwarded-Proto https HTTPS=on"
-  mode '0644'
-  notifies :reload, "service[apache2]"
 end
 
 if node.php5.php_ini["error_log"]
