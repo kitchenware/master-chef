@@ -1,0 +1,10 @@
+
+listen stats <%= @config[:stats][:port] %>
+  mode http
+  stats enable
+  stats hide-version
+  stats uri /
+  stats refresh 5s
+  timeout client 60s
+  timeout server 60s
+  timeout connect 60s

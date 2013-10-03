@@ -1,0 +1,9 @@
+
+global
+  log /dev/log daemon info
+  maxconn <%= @config[:global][:maxconn] %>
+  user haproxy
+  group haproxy
+  daemon
+  stats socket <%= @config[:socket] %> level admin
+
