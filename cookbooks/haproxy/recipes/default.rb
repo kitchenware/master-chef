@@ -5,6 +5,8 @@ add_apt_repository "haproxy_dev" do
   key_server "keyserver.ubuntu.com"
 end
 
+package "socat"
+
 package "haproxy"
 
 service "haproxy" do
