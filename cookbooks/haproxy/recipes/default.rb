@@ -23,7 +23,7 @@ file "/etc/default/haproxy" do
 end
 
 incremental_template "/etc/haproxy/haproxy.cfg" do
-  notifies :restart, "service[haproxy]"
+  notifies :reload, "service[haproxy]"
 end
 
 haproxy_vhost "global" do
