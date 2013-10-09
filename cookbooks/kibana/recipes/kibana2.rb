@@ -15,7 +15,7 @@ unicorn_app 'kibana' do
   app_directory node.kibana.directory
 end
 
-deployed_files = %w{Gemfile Gemfile.lock .rbenv-version .rbenv-gemsets}
+deployed_files = %w{Gemfile Gemfile.lock .ruby-version .rbenv-gemsets}
 
 directory "#{node.kibana.directory}/shared/files" do
   owner node.kibana.user

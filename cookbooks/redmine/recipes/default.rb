@@ -47,7 +47,7 @@ link "#{node.redmine.directory}/current/config/configuration.yml" do
   to "#{node.redmine.directory}/shared/configuration.yml"
 end
 
-deployed_files = %w{Gemfile.local Gemfile.lock .rbenv-version .rbenv-gemsets .bundle-option}
+deployed_files = %w{Gemfile.local Gemfile.lock .ruby-version .rbenv-gemsets .bundle-option}
 
 directory "#{node.redmine.directory}/shared/files" do
   owner node.redmine.user

@@ -123,7 +123,7 @@ directory_recurse_chmod_chown node.gitlab.gitolite.repositories do
   group node.gitlab.gitolite.user
 end
 
-deployed_files = %w{.bundle-option .rbenv-version .rbenv-gemsets}
+deployed_files = %w{.bundle-option .ruby-version .rbenv-gemsets}
 
 directory "#{node.gitlab.gitlab.path}/shared/files" do
   owner node.gitlab.gitlab.user
