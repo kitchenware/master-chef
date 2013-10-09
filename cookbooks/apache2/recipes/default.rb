@@ -90,6 +90,24 @@ delayed_exec "Remove useless apache2 modules" do
   end
 end
 
+delayed_exec "Remove useless apache2 configuration file" do
+  after_block_notifies :restart, resources(:service => "apache2")
+  block do
+    updated = false
+    conf_enabled = find_resources_by_name_pattern(/^\/etc\/apache2\/conf.d\/.*$/).map { |r| r.name }
+    Dir["/etc/apache2/conf.d/*"].each do |n|
+      Kernel.system "dpkg -S #{n} > /dev/null 2>&1"
+      is_system_file = $?.exitstatus == 0
+      unless is_system_file || conf_enabled.include?(n)
+        Chef::Log.info "Removing apache2 configuration file #{n}"
+        %x{rm #{n}}
+        updated = true
+      end
+    end
+    updated
+  end
+end
+
 # when reloading conf, apache2 is not stopped
 # if a reload failed, chef regenerates config files, and try to start apache
 # it's work because apache2 is already launched, and loaded conf in apache2 is different
