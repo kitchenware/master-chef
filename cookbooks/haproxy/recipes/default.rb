@@ -16,14 +16,24 @@ end
 if node.platform == "debian" && node.apt.master_chef_add_apt_repo
   # no debian repo with haproxy 1.5.x beurk
 
-  haproxy_deb = "http://www.roedie.nl/downloads/haproxy/haproxy-1.5-dev19/haproxy_1.5.0-1~dev19-1_amd64.deb"
-  base_haproxy_deb = File.basename(haproxy_deb)
+  if node.lsb.codename == "squeeze"
 
-  execute_version "install haproxy on debian system" do
-    command "cd /tmp && curl -s -f #{haproxy_deb} -o #{base_haproxy_deb} && dpkg -i #{base_haproxy_deb}"
-    environment get_proxy_environment
-    version base_haproxy_deb
-    file_storage "/.haproxy_version"
+    deb_curl_dpkg "multiarch_support" do
+      url "http://ftp.us.debian.org/debian/pool/main/e/eglibc/multiarch-support_2.13-38_amd64.deb"
+    end
+
+    deb_curl_dpkg "libpcre3" do
+      url "http://ftp.us.debian.org/debian/pool/main/p/pcre3/libpcre3_8.30-5_amd64.deb"
+    end
+
+    deb_curl_dpkg "libssl1.1.0" do
+      url "http://ftp.us.debian.org/debian/pool/main/o/openssl/libssl1.0.0_1.0.1e-2_amd64.deb"
+    end
+
+  end
+
+  deb_curl_dpkg "haproxy" do
+    url "http://www.roedie.nl/downloads/haproxy/haproxy-1.5-dev19/haproxy_1.5.0-1~dev19-1_amd64.deb"
   end
 
 end
