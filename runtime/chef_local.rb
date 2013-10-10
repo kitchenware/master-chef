@@ -45,17 +45,10 @@ unless ENV["NO_CONTROL_MASTER"]
 end
 
 git_cache_directory = ENV["GIT_CACHE_DIRECTORY"]
-if ENV["OMNIBUS"]
-  local_json = "/opt/master-chef/etc/local.json"
-  launch_cmd = "/opt/master-chef/bin/master-chef.sh"
-  git_cache_directory = "/opt/master-chef/var/git_repos" unless git_cache_directory
-  tmp_file = "/opt/master-chef/tmp/local.json"
-else
-  local_json = "/etc/chef/local.json"
-  launch_cmd = "/etc/chef/update.sh"
-  git_cache_directory = "/var/chef/cache/git_repos" unless git_cache_directory
-  tmp_file = "/tmp/local.json"
-end
+local_json = "/opt/master-chef/etc/local.json"
+launch_cmd = "/opt/master-chef/bin/master-chef.sh"
+git_cache_directory = "/opt/master-chef/var/git_repos" unless git_cache_directory
+tmp_file = "/opt/master-chef/tmp/local.json"
 
 local_tmp_file = Tempfile.new 'local_json'
 local_tmp_file.close

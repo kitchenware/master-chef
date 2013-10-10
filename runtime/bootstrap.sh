@@ -88,23 +88,19 @@ if which apt-get > /dev/null; then
   case $distro in
     squeeze)
       exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file libreadline5"
-      WARP_FILE="ruby_squeeze_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.6.0-1.debian.6.0.5_amd64.deb"
       ;;
     wheezy)
       exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file"
-      WARP_FILE="ruby_wheezy_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
       # for now we use the package for squeeze
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.6.0-1.debian.6.0.5_amd64.deb"
       ;;
     lucid)
       exec_command "$SUDO apt-get install -y git-core curl bzip2"
-      WARP_FILE="ruby_lucid_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/x86_64/chef_11.6.0-1.ubuntu.10.04_amd64.deb"
       ;;
     precise)
       exec_command "$SUDO apt-get install -y git-core curl bzip2"
-      WARP_FILE="ruby_precise_x86_64_ree-1.8.7-2012.01_rbenv_chef.warp"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/11.04/x86_64/chef_11.6.0-1.ubuntu.11.04_amd64.deb"
       ;;
     *)
@@ -135,43 +131,24 @@ if [ "$distro" = "" ]; then
   exit 78
 fi
 
-if [ "$OMNIBUS" = "" ]; then
 
-  print "Installing chef from warp"
+print "Installing chef from Omnibus"
 
-  exec_command_chef "[ -f $WARP_FILE ] || $PROXY curl -f -s -L \"$WARP_ROOT/$WARP_FILE\" -o $WARP_FILE"
-  exec_command_chef "$PROXY sh $WARP_FILE"
-
-  exec_command "$SUDO mkdir -p /etc/chef"
-  install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/etc/chef/solo.rb"
-  install_master_chef_shell_file "cookbooks/master_chef/templates/default/rbenv_sudo_chef.sh.erb" "/etc/chef/rbenv_sudo_chef.sh"
-  install_master_chef_file "runtime/local.json" "/etc/chef/local.json"
-
-  print "Bootstraping master-chef"
-
-  exec_command_chef "VAR_CHEF=/var/chef GIT_CACHE_DIRECTORY=/var/chef/cache/git_repos $PROXY $MASTER_CHEF_FIRST_RUN MASTER_CHEF_CONFIG=/etc/chef/local.json /etc/chef/rbenv_sudo_chef.sh -c /etc/chef/solo.rb"
-
-else
-
-  print "Installing chef from Omnibus"
-
-  if [ "$OMNIBUS_DEB" = "" ]; then
-    echo "Omnibus url not set for this distro : $distro"
-    exit 42
-  fi
-
-  exec_command_chef "[ -f $OMNIBUS_DEB ] || $PROXY curl -f -s -L \"$OMNIBUS_DEB\" -o `basename $OMNIBUS_DEB`"
-  exec_command_chef "sudo dpkg -i `basename $OMNIBUS_DEB`"
-
-  exec_command "$SUDO mkdir -p /opt/master-chef/etc"
-  install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/opt/master-chef/etc/solo.rb"
-  $SUDO sed -ie '/^<%=/d' "/opt/master-chef/etc/solo.rb"
-  install_master_chef_file "runtime/local.json" "/opt/master-chef/etc/local.json"
-
-  print "Bootstraping master-chef"
-
-  exec_command_chef "VAR_CHEF=/opt/chef/var GIT_CACHE_DIRECTORY=/opt/master-chef/var/git_repos $PROXY $MASTER_CHEF_FIRST_RUN MASTER_CHEF_CONFIG=/opt/master-chef/etc/local.json sudo -E /opt/chef/bin/chef-solo -c /opt/master-chef/etc/solo.rb"
-
+if [ "$OMNIBUS_DEB" = "" ]; then
+  echo "Omnibus url not set for this distro : $distro"
+  exit 42
 fi
+
+exec_command_chef "[ -f $OMNIBUS_DEB ] || $PROXY curl -f -s -L \"$OMNIBUS_DEB\" -o `basename $OMNIBUS_DEB`"
+exec_command_chef "sudo dpkg -i `basename $OMNIBUS_DEB`"
+
+exec_command "$SUDO mkdir -p /opt/master-chef/etc"
+install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/opt/master-chef/etc/solo.rb"
+$SUDO sed -ie '/^<%=/d' "/opt/master-chef/etc/solo.rb"
+install_master_chef_file "runtime/local.json" "/opt/master-chef/etc/local.json"
+
+print "Bootstraping master-chef"
+
+exec_command_chef "VAR_CHEF=/opt/chef/var GIT_CACHE_DIRECTORY=/opt/master-chef/var/git_repos $PROXY $MASTER_CHEF_FIRST_RUN MASTER_CHEF_CONFIG=/opt/master-chef/etc/local.json sudo -E /opt/chef/bin/chef-solo -c /opt/master-chef/etc/solo.rb"
 
 print "Master-chef Ready !!!!!!!"
