@@ -6,7 +6,7 @@ define :limits_d, {
 
   raise "Please specify content with limits_d" unless limits_d_params[:content]
 
-  if node['platform'] == 'debian'
+  if node.platform == 'debian'
 
     execute "active limits in pam common-session" do
       command 'echo -e "session required pam_limits.so" >> /etc/pam.d/common-session'

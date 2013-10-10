@@ -1,5 +1,5 @@
 
-if node['platform'] == "ubuntu" || node['platform'] == "debian"
+if node.platform == "ubuntu" || node.platform == "debian"
 
   execute "run apt-get update" do
     command "apt-get update"
