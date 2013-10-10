@@ -1,8 +1,7 @@
 
-default[:gitlab][:gitolite] = {
-  :url => "git://github.com/gitlabhq/gitolite.git",
-  :reference => "gl-v320",
-  :path => "/opt/gitolite",
+default[:gitlab][:gitlab_shell] = {
+  :url => "git://github.com/gitlabhq/gitlab-shell.git",
+  :reference => "v1.7.1",
   :repositories => "/opt/repositories",
   :user => "git",
 }
