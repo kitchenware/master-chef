@@ -30,6 +30,7 @@ def exec_local cmd
 end
 
 ssh_opts = ENV["SSH_OPTS"] || ""
+ssh_opts += " -o StrictHostKeyChecking=no"
 
 require 'tempfile'
 
