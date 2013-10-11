@@ -1,4 +1,15 @@
 
+if node.lsb.codename == "lucid"
+
+  # to be compatible with drush
+  add_apt_repository "php5_old_stable" do
+    url "http://ppa.launchpad.net/ondrej/php5-oldstable/ubuntu"
+    key "E5267A6C"
+    key_server "keyserver.ubuntu.com"
+  end
+
+end
+
 package "php5-common"
 
 if node.php5[:modules]

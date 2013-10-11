@@ -1,11 +1,11 @@
 
 include_recipe "apache2"
 
+include_recipe "php5"
+
 package "libapache2-mod-php5" do
   notifies :reload, "service[apache2]"
 end
-
-include_recipe "php5"
 
 apache2_enable_module "php5"
 

@@ -1,4 +1,4 @@
-if node['platform'] == "ubuntu" && node.apt.master_chef_add_apt_repo
+if node.platform == "ubuntu" && node.apt.master_chef_add_apt_repo
 
 	add_apt_repository "ubuntu_10gen" do
 		url "http://downloads-distro.mongodb.org/repo/ubuntu-upstart"
@@ -10,7 +10,7 @@ if node['platform'] == "ubuntu" && node.apt.master_chef_add_apt_repo
 	end
 end
 
-if node['platform'] == "debian" && node.apt.master_chef_add_apt_repo
+if node.platform == "debian" && node.apt.master_chef_add_apt_repo
 
 	add_apt_repository "ubuntu_10gen" do
 		url "http://downloads-distro.mongodb.org/repo/debian-sysvinit"

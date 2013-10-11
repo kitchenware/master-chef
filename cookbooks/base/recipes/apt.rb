@@ -1,5 +1,5 @@
 
-if node['platform'] == "ubuntu" || node['platform'] == "debian"
+if node.platform == "ubuntu" || node.platform == "debian"
 
   ["http", "https"].each do |proto|
     execute "purge #{proto} proxy in apt.conf" do

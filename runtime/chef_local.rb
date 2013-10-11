@@ -30,32 +30,26 @@ def exec_local cmd
 end
 
 ssh_opts = ENV["SSH_OPTS"] || ""
+ssh_opts += " -o StrictHostKeyChecking=no"
 
 require 'tempfile'
 
 unless ENV["NO_CONTROL_MASTER"]
   control_master_path = "/tmp/master_chef_socket_#{server}"
 
-  Kernel.system("ssh -nNf -o ControlMaster=yes -o ControlPath=\"#{control_master_path}\" #{user}@#{server}")
+  Kernel.system("ssh -nNf -o StrictHostKeyChecking=no -o ControlMaster=yes -o ControlPath=\"#{control_master_path}\" #{user}@#{server}")
   Kernel.at_exit do
-    Kernel.system("ssh -O exit -o ControlPath=\"#{control_master_path}\" #{user}@#{server} 2> /dev/null")
+    Kernel.system("ssh -O exit -o StrictHostKeyChecking=no -o ControlPath=\"#{control_master_path}\" #{user}@#{server} 2> /dev/null")
     Kernel.system("rm -f #{control_master_path}")
   end
   ssh_opts += " -o ControlPath='#{control_master_path}'"
 end
 
 git_cache_directory = ENV["GIT_CACHE_DIRECTORY"]
-if ENV["OMNIBUS"]
-  local_json = "/opt/master-chef/etc/local.json"
-  launch_cmd = "/opt/master-chef/bin/master-chef.sh"
-  git_cache_directory = "/opt/master-chef/var/git_repos" unless git_cache_directory
-  tmp_file = "/opt/master-chef/tmp/local.json"
-else
-  local_json = "/etc/chef/local.json"
-  launch_cmd = "/etc/chef/update.sh"
-  git_cache_directory = "/var/chef/cache/git_repos" unless git_cache_directory
-  tmp_file = "/tmp/local.json"
-end
+local_json = "/opt/master-chef/etc/local.json"
+launch_cmd = "/opt/master-chef/bin/master-chef.sh"
+git_cache_directory = "/opt/master-chef/var/git_repos" unless git_cache_directory
+tmp_file = "/opt/master-chef/tmp/local.json"
 
 local_tmp_file = Tempfile.new 'local_json'
 local_tmp_file.close

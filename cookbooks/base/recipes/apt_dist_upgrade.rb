@@ -1,5 +1,5 @@
 
-if node['platform'] == "ubuntu" || node['platform'] == "debian"
+if node.platform == "ubuntu" || node.platform == "debian"
 
   if node.apt[:force_dist_upgrade]
 

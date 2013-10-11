@@ -1,4 +1,4 @@
-if node['platform'] == "ubuntu" && node.apt.master_chef_add_apt_repo
+if node.platform == "ubuntu" && node.apt.master_chef_add_apt_repo
 
   add_apt_repository "ppa_nginx" do
     url "http://ppa.launchpad.net/nginx/stable/ubuntu"
