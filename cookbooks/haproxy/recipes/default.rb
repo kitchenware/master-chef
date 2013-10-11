@@ -9,34 +9,19 @@ if node.platform == "ubuntu" && node.apt.master_chef_add_apt_repo
     key_server "keyserver.ubuntu.com"
   end
 
-  package "haproxy"
-
 end
 
-if node.platform == "debian" && node.apt.master_chef_add_apt_repo
-  # no debian repo with haproxy 1.5.x beurk
+if node.lsb.codename == "wheezy" && node.apt.master_chef_add_apt_repo
 
-  if node.lsb.codename == "squeeze"
-
-    deb_curl_dpkg "multiarch_support" do
-      url "http://ftp.us.debian.org/debian/pool/main/e/eglibc/multiarch-support_2.13-38_amd64.deb"
-    end
-
-    deb_curl_dpkg "libpcre3" do
-      url "http://ftp.us.debian.org/debian/pool/main/p/pcre3/libpcre3_8.30-5_amd64.deb"
-    end
-
-    deb_curl_dpkg "libssl1.1.0" do
-      url "http://ftp.us.debian.org/debian/pool/main/o/openssl/libssl1.0.0_1.0.1e-2_amd64.deb"
-    end
-
-  end
-
-  deb_curl_dpkg "haproxy" do
-    url "http://www.roedie.nl/downloads/haproxy/haproxy-1.5-dev19/haproxy_1.5.0-1~dev19-1_amd64.deb"
+  add_apt_repository "wheezy-backports" do
+    url "http://ftp.debian.org/debian/"
+    distrib "wheezy-backports"
+    components ["main"]
   end
 
 end
+
+package "haproxy"
 
 service "haproxy" do
   supports :status => true, :restart => true, :reload => true
