@@ -4,17 +4,24 @@ default[:gitlab][:gitlab_shell] = {
   :reference => "v1.7.1",
   :repositories => "/opt/repositories",
   :user => "git",
+  :group => "git",
+  :path => "/opt/gitlab-shell",
 }
 
-default[:gitlab][:location] = "/"
-default[:gitlab][:hostname] = %x{hostname}.strip
-default[:gitlab][:https] = false
-default[:gitlab][:port] = 80
-default[:gitlab][:email_from] = "notify@localhost"
+default[:gitlab][:config] = {
+  :location => "/",
+  :hostname => %x{hostname}.strip,
+  :https => false,
+  :port => 80,
+  :email_from => "notify@localhost",
+  :default_projects_limit => 10,
+  :default_can_create_group => true,
+  :signup_enabled => false,
+}
 
 default[:gitlab][:gitlab] = {
   :url => "git://github.com/gitlabhq/gitlabhq.git",
-  :reference => "d67117b5a185cfb15a1d7e749588ff981ffbf779", # branch 4-2-stable
+  :reference => "b595503968078e583ed2715840095719d72e4f3b", # branch 6-1-stable
   :path => "/opt/gitlab",
   :user => "gitlab",
 }

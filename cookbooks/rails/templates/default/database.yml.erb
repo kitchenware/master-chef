@@ -5,3 +5,4 @@ production:
   username: <%= @database[:username] %>
   password: <%= @database[:password] %>
   encoding: utf8
+  pool: <%= @database[:pool] || 10 %>

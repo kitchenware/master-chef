@@ -16,7 +16,7 @@ http_settings:
 repos_path: "<%= @repositories %>"
 
 # File used as authorized_keys for gitlab user
-auth_file: "/home/git/.ssh/authorized_keys"
+auth_file: "/home/<%= @gitlab_shell_user %>/.ssh/authorized_keys"
 
 # Redis settings used for pushing commit notices to gitlab
 redis:
@@ -28,7 +28,7 @@ redis:
 
 # Log file.
 # Default is gitlab-shell.log in the root directory.
-# log_file: "/home/git/gitlab-shell/gitlab-shell.log"
+log_file: "<%= @log_file %>"
 
 # Log level. INFO by default
 log_level: INFO
