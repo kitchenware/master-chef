@@ -1,4 +1,4 @@
 
-include_recipe "gitlab::gitolite"
+include_recipe "gitlab::gitlab-shell"
 
 include_recipe "gitlab::gitlab"

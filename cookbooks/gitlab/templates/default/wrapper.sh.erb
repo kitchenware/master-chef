@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source $HOME/.warp/common/ruby/include
+exec=`basename $0`
+
+exec <%= @path %>/bin.orig/$exec "$@"

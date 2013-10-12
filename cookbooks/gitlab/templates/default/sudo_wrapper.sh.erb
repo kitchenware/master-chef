@@ -1,0 +1,11 @@
+#!/bin/bash
+
+res=$(id | awk '{print $1}' | grep '(<%= @user %>)')
+if [ "$res" = "" ]; then
+  exec sudo -H -u <%= @user %> $0 "$@"
+fi
+
+source $HOME/.warp/common/ruby/include
+exec=`basename $0`
+
+exec <%= @path %>/bin.orig/$exec "$@"
