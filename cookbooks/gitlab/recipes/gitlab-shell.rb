@@ -44,7 +44,6 @@ end
     source "wrapper.sh.erb"
     variables({
       :path => node.gitlab.gitlab_shell.path,
-      :user => node.gitlab.gitlab_shell.user,
     })
     mode '0755'
     owner node.gitlab.gitlab_shell.user
