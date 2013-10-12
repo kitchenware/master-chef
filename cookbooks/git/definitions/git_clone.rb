@@ -24,7 +24,6 @@ define :git_clone, {
     command "git clone -q #{git_clone_params[:repository]} #{git_clone_params[:name]}"
     environment get_proxy_environment if use_proxy
     not_if "[ -d #{git_clone_params[:name]}/.git ]"
-    notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
   end
 
   execute "create branch #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
@@ -32,7 +31,7 @@ define :git_clone, {
     command "cd #{git_clone_params[:name]} && git checkout -q -b deploy"
     environment get_proxy_environment if use_proxy
     not_if "cd #{git_clone_params[:name]} && git branch | grep deploy"
-    notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
+    notifies *git_clone_params[:notifies] if git_clone_params[:notifies]
   end
 
   clean_options = "-q -d -f"
@@ -48,7 +47,7 @@ define :git_clone, {
     command "cd #{git_clone_params[:name]} && git fetch -q origin && git fetch --tags -q origin && git reset -q --hard #{sha} && git clean #{clean_options}"
     environment get_proxy_environment if use_proxy
     not_if "cd #{git_clone_params[:name]} && git log -n1 --decorate | head -n 1 | grep #{sha}", :environment => env_for_not_if
-    notifies git_clone_params[:notifies][0], git_clone_params[:notifies][1] if git_clone_params[:notifies]
+    notifies *git_clone_params[:notifies] if git_clone_params[:notifies]
   end
 
 end

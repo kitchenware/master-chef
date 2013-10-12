@@ -19,7 +19,7 @@ define :execute_version, {
     command "rm -f #{execute_version_params[:file_storage]} && su #{execute_version_params[:user]} -c '#{execute_version_params[:command]}' && echo #{execute_version_params[:version]} > #{execute_version_params[:file_storage]}"
     environment execute_version_params[:environment]
     only_if (execute_version_params[:or_only_if] + ["[ ! -f #{execute_version_params[:file_storage]} ]", "[ \"`cat #{execute_version_params[:file_storage]}`\" != \"#{execute_version_params[:version]}\" ]"]).join(' || ')
-    notifies execute_version_params[:notifies][0], execute_version_params[:notifies][1] if execute_version_params[:notifies]
+    notifies *execute_version_params[:notifies] if execute_version_params[:notifies]
   end
 
 end

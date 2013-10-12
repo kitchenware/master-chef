@@ -35,7 +35,7 @@ define :ruby_rbenv_command, {
     version ruby_rbenv_command_params[:version]
     file_storage storage
     environment ruby_rbenv_command_params[:environment]
-    notifies ruby_rbenv_command_params[:notifies][0], ruby_rbenv_command_params[:notifies][1] if ruby_rbenv_command_params[:notifies]
+    notifies *ruby_rbenv_command_params[:notifies] if ruby_rbenv_command_params[:notifies]
   end
 
 end
