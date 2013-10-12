@@ -27,7 +27,7 @@ define :incremental_template, {
       :blocks => [],
       :indentation => incremental_template_params[:indentation],
     })
-    notifies incremental_template_params[:notifies][0], incremental_template_params[:notifies][1] if incremental_template_params[:notifies]
+    notifies *incremental_template_params[:notifies] if incremental_template_params[:notifies]
     only_if incremental_template_params[:only_if] if incremental_template_params[:only_if]
     not_if incremental_template_params[:not_if] if incremental_template_params[:not_if]
   end
