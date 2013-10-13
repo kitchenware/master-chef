@@ -6,4 +6,4 @@ if [ "$MYSQL_DUMP" != "" ]; then
   EXEC=mysqldump
 fi
 
-$EXEC --user=<%= @config[:username] %> --password=<%= @config[:password] %> --host=<%= @config[:host] %> $MYSQL_OPTS <%= @config[:database] %> $*
+$EXEC --user=<%= @config[:username] %> --password=<%= @config[:password] %> --host=<%= @config[:host] %> $MYSQL_OPTS <%= @config[:database] %> "$@"
