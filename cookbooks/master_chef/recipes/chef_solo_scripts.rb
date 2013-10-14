@@ -1,5 +1,4 @@
 
-
 install_path = "/opt/master-chef"
 
 ["", "bin", "etc", "var", "var/git_repos"].each do |d|

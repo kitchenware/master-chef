@@ -38,6 +38,7 @@ end
 
 cookbooks = []
 roles = []
+ohai_plugins = []
 
 folders = {}
 
@@ -98,6 +99,8 @@ if config["repos"]["local_path"]
     cookbooks << cookbook if File.exists? cookbook
     role = File.join(target, "roles")
     roles << role if File.exists? role
+    ohai_plugin = File.join(target, "ohai_plugins")
+    ohai_plugins << ohai_plugin if File.exists? ohai_plugin
   end
 end
 
@@ -120,9 +123,11 @@ puts "Hostname : #{`hostname`}"
 puts "Repos : #{config["repos"].inspect}"
 puts "Run list : #{run_list.inspect}"
 puts "Cookbooks path : #{cookbooks.inspect}"
+puts "Ohai plugin path : #{ohai_plugins.inspect}"
 puts "Roles path : #{roles.inspect}"
 puts "********************************************************************"
 
+Ohai::Config[:plugin_path] += ohai_plugins
 
 log_level (ENV['CHEF_LOG_LEVEL'] || 'info').to_sym
 log_location STDOUT
