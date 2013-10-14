@@ -30,7 +30,7 @@ EOF
 }
 
 default[:local_storage] = {
-  :file => ENV['LOCAL_STORAGE_FILE'] || "/var/chef/local_storage.yml",
+  :file => "/opt/master-chef/var/local_storage.yml",
   :owner => "root",
 }
 
