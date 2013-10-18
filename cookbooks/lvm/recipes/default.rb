@@ -1,6 +1,10 @@
 
 package "lvm2"
 
+node[:lvm][:physical_volumes].each do |dev|
+  lvm_physical_volume dev
+end
+
 node[:lvm][:volume_groups].each do |name, pvs|
   lvm_volume_group name do
     physical_volumes pvs
