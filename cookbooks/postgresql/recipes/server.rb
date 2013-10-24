@@ -8,6 +8,10 @@ service "postgresql" do
   action auto_compute_action
 end
 
+if node.postgresql.version == node.default[:postgresql][:version]
+  node.set[:postgresql][:version] = '8.4' if node.lsb.codename == "lucid" || node.lsb.codename == "squeeze"
+end
+
 directory "/etc/postgresql/#{node.postgresql.version}/main/conf.d"
 
 template "/etc/postgresql/#{node.postgresql.version}/main/pg_hba.conf" do
