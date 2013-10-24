@@ -3,7 +3,7 @@ if node.platform == "ubuntu" || node.platform == "debian"
 
   ["http", "https"].each do |proto|
     execute "purge #{proto} proxy in apt.conf" do
-      command "sed -ie '/Acquire::#{proto}::Proxy/d' /etc/apt/apt.conf"
+      command "sed -i '/Acquire::#{proto}::Proxy/d' /etc/apt/apt.conf"
       only_if "grep 'Acquire::#{proto}::Proxy' /etc/apt/apt.conf"
     end
 
