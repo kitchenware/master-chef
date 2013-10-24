@@ -27,25 +27,25 @@ define :postgresql_database, {
 
   end
 
-  # if config[:postgresql_wrapper]
+  if config[:postgresql_wrapper]
 
-  #   template config[:postgresql_wrapper][:file] do
-  #     cookbook "postgresql"
-  #     source "postgresql.sh.erb"
-  #     variables :config => config
-  #     mode '0700'
-  #     owner config[:postgresql_wrapper][:owner]
-  #     action :nothing
-  #   end
+    template config[:postgresql_wrapper][:file] do
+      cookbook "postgresql"
+      source "postgresql.sh.erb"
+      variables :config => config
+      mode '0700'
+      owner config[:postgresql_wrapper][:owner]
+      action :nothing
+    end
 
-  #   # directory enclosing wrapper file is often created after, or does not exists (server with db only)
-  #   delayed_exec "create #{config[:postgresql_wrapper][:file]}" do
-  #     after_block_notifies :create, "template[#{config[:postgresql_wrapper][:file]}]"
-  #     block do
-  #       File.exists? File.dirname(config[:postgresql_wrapper][:file])
-  #     end
-  #   end
+    # directory enclosing wrapper file is often created after, or does not exists (server with db only)
+    delayed_exec "create #{config[:postgresql_wrapper][:file]}" do
+      after_block_notifies :create, "template[#{config[:postgresql_wrapper][:file]}]"
+      block do
+        File.exists? File.dirname(config[:postgresql_wrapper][:file])
+      end
+    end
 
-  # end
+  end
 
 end

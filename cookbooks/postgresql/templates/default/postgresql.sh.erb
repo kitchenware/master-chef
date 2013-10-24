@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+PGPASSWORD=<%= @config[:password] %> psql --username=<%= @config[:username] %> --host=<%= @config[:host] %> <%= @config[:database] %> "$@"
