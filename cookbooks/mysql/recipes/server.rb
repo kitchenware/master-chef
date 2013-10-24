@@ -55,7 +55,7 @@ end
 
 execute "change mysql root password" do
   command "mysqladmin -u root password #{root_mysql_password}"
-  only_if "echo 'select 1;' | mysql --user=root --password=#{root_mysql_password}"
+  only_if "echo 'select 1;' | mysql --user=root --password="
 end
 
 file "/root/.my.cnf" do
