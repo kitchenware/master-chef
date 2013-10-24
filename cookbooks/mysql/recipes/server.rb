@@ -1,7 +1,4 @@
 
-require 'socket'
-require 'ipaddr'
-
 include_recipe "mysql"
 
 server_package_name = node.mysql.use_percona ? node.mysql.percona_server_package_name : node.mysql.server_package_name
@@ -58,7 +55,7 @@ end
 
 execute "change mysql root password" do
   command "mysqladmin -u root password #{root_mysql_password}"
-  only_if "echo 'select 1;' | mysql --user=root --password= "
+  only_if "echo 'select 1;' | mysql --user=root --password=#{root_mysql_password}"
 end
 
 file "/root/.my.cnf" do
@@ -119,8 +116,8 @@ end
 
 if node[:mysql] && ! node.mysql[:keep_test] && node.mysql[:run_sql]
   execute "remove test mysql database" do
-    command "echo 'drop database test;' | mysql --user=root --password=#{root_mysql_password} "
-    only_if "echo 'show databases;' | mysql --user=root --password=#{root_mysql_password} | grep ^test$ "
+    command "echo 'drop database test;' | mysql --user=root --password=#{root_mysql_password}"
+    only_if "echo 'show databases;' | mysql --user=root --password=#{root_mysql_password} | grep ^test$"
   end
 end
 
