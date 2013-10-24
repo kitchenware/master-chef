@@ -124,7 +124,6 @@ end
 if node[:mysql] && node.mysql[:databases]
 
   node.mysql.databases.keys.each do |k|
-    node.set[:mysql][:databases][k][:database] = k
 
     mysql_database "mysql:databases:#{k}" do
       instance_name k

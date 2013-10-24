@@ -67,7 +67,6 @@ end
 if node[:postgresql] && node.postgresql[:databases]
 
   node.postgresql.databases.keys.each do |k|
-    node.set[:postgresql][:databases][k][:database] = k
 
     postgresql_database "postgresql:databases:#{k}" do
       instance_name k

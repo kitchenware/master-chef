@@ -100,6 +100,6 @@ local   all             root                                    md5
 #host    replication     postgres        ::1/128                 md5
 
 <% @databases.each do |k, v| %>
-local <%= k %> <%= v['username'] %> md5
-host <%= k %> <%= v['username'] %> <%= @user_filter %> md5
+local <%= v['database'] %> <%= v['username'] %> md5
+host <%= v['database'] %> <%= v['username'] %> <%= @user_filter %> md5
 <% end %>
