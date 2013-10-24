@@ -1,3 +1,9 @@
 #!/bin/sh -e
 
-PGPASSWORD=<%= @config[:password] %> psql --username=<%= @config[:username] %> --host=<%= @config[:host] %> <%= @config[:database] %> "$@"
+EXEC=psql
+
+if [ "$PG_DUMP" != "" ]; then
+  EXEC=pg_dump
+fi
+
+PGPASSWORD=<%= @config[:password] %> $EXEC --username=<%= @config[:username] %> --host=<%= @config[:host] %> <%= @config[:database] %> "$@"

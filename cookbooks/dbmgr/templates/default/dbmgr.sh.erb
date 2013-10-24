@@ -1,0 +1,163 @@
+#!/bin/bash
+
+set -e
+
+usage() {
+  cat <<-EOF
+  Syntax: $0 --cmd <sql interpreter command> --dir <scripts dir> --version version [ --prefix <sql table prefix> ]
+    default prefix is empty
+EOF
+}
+
+prefix=""
+
+while [ ! -z "$1" ]; do
+  case "$1" in
+    --cmd)
+    cmd=$2
+    shift
+    ;;
+    --help)
+    usage
+    exit 0
+    ;;
+    --dir)
+    dir=$2
+    shift
+    ;;
+    --version)
+    version=$2
+    shift
+    ;;
+    --prefix)
+    prefix=$2
+    shift
+    ;;
+    *)
+    usage
+    exit 1
+    ;;
+  esac
+  shift
+done
+
+if [ -z "$cmd" -o -z "$dir" -o -z "$version" ]; then
+  usage
+  echo "--cmd, --version and --dir args are mandatory"
+  exit 1
+fi
+
+run_sql_scripts() {
+  local cmd=$1
+  local folder=$2
+  local version=$3
+  local prefix=$4
+  local files
+  [ -f $folder ] && files=$folder
+  [ -d $folder ] && files=$folder/*.sql
+  [ -z "$files" ] && echo "No file to run ???"
+  local f
+  echo "Running scripts of $folder"
+  echo "Database access command: '$cmd'"
+  echo "'+' : to run, '()' : already run"
+  if [ "$(ls -1 $files 2>/dev/null | wc -l)" -ne 0 ]; then
+    for f in $files; do
+      local filename=$(basename $f)
+<% if @driver == 'mysql' %>
+      local hasbeenrun=$($cmd <<< "select 1 from ${prefix}playedsqlscripts where name like '%$filename'" 2>/dev/null)
+<% end %>
+<% if @driver == 'postgresql' %>
+      local hasbeenrun=$($cmd -A -q -t --command "select 1 from ${prefix}playedsqlscripts where name like '%$filename'" 2>/dev/null)
+<% end %>
+      if [ "$hasbeenrun" ]; then
+        echo "($filename)"
+      else
+        echo "+$filename"
+        echo "# Processing $filename file..."
+<% if @driver == 'mysql' %>
+        $cmd < "$f"
+        $cmd <<< "INSERT INTO ${prefix}playedsqlscripts (name, version) VALUES ( '$f', '$version' );"
+<% end %>
+<% if @driver == 'postgresql' %>
+        $cmd --set ON_ERROR_STOP=1 --file $f
+        $cmd -q -t --command "INSERT INTO ${prefix}playedsqlscripts (name, version) VALUES ( '$f', '$version' );"
+<% end %>
+      fi
+    done
+  else
+    echo "No file to process !"
+  fi
+}
+
+pre_check() {
+  local cmd=$1
+  local prefix=$2
+<% if @driver == 'mysql' %>
+  $cmd <<< "select 1;" >/dev/null
+  $cmd <<-EOF
+  CREATE TABLE IF NOT EXISTS ${prefix}playedsqlscripts (
+    id int(10) unsigned NOT NULL auto_increment,
+    name VARCHAR(256) NOT NULL,
+    version VARCHAR(256) NOT NULL,
+    ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+  );
+EOF
+  $cmd <<< "select count(*) from ${prefix}playedsqlscripts" >/dev/null
+<% end %>
+<% if @driver == 'postgresql' %>
+  $cmd --command "select 1;" >/dev/null
+  f=$(mktemp)
+  cat <<-EOF > $f
+  CREATE TABLE IF NOT EXISTS ${prefix}playedsqlscripts (
+    id SERIAL,
+    name VARCHAR NOT NULL,
+    version VARCHAR NOT NULL,
+    ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+  );
+EOF
+  $cmd --set ON_ERROR_STOP=1 --file $f
+  rm $f
+  $cmd --command "select count(*) from ${prefix}playedsqlscripts" >/dev/null
+<% end %>
+}
+
+test_script(){
+  local list=$1
+  local script_to_test=$2
+  local last_script=$3
+
+  if ! (echo "$list" | egrep -q "^$script_to_test$"); then
+    if [[ "$script_to_test" < "$last_script" ]]; then
+      echo "Ho no! $script_to_test < $last_script";
+      echo "$script should be named after $last_script"
+      return 1;
+    fi
+  fi
+}
+
+check_script_order()
+{
+  local cmd=$1
+  local prefix=$2
+  local folder=$3
+
+<% if @driver == 'mysql' %>
+  played_scripts=$($cmd -N <<< "select substring_index(coalesce(name, '0'), '/', -1) from ${prefix}playedsqlscripts" )
+  last_script=$($cmd -N <<< "select substring_index(coalesce(MAX(name), '0'), '/', -1) from ${prefix}playedsqlscripts")
+<% end %>
+
+<% if @driver == 'postgresql' %>
+  played_scripts=$($cmd -q -t -A --command "select substring(name from '\/([^\/]+)$') from ${prefix}playedsqlscripts;" )
+  last_script=$($cmd -q -t -A --command "select max(substring(name from '\/([^\/]+)$')) from ${prefix}playedsqlscripts")
+<% end %>
+
+  for script in $(ls ${folder%/}/*sql | xargs -L1 basename); do
+    test_script "$played_scripts" $(basename $script) $last_script
+  done
+}
+
+pre_check "$cmd" "$prefix"
+check_script_order "$cmd" "$prefix" "$dir"
+run_sql_scripts "$cmd" "$dir" "$version" "$prefix"
