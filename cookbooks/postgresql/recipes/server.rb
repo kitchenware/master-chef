@@ -3,13 +3,17 @@ include_recipe "postgresql"
 
 package "postgresql"
 
-service "postgresql" do
-  supports :status => true, :restart => true
-  action auto_compute_action
-end
-
 if node.postgresql.version == node.default[:postgresql][:version]
   node.set[:postgresql][:version] = '8.4' if node.lsb.codename == "lucid" || node.lsb.codename == "squeeze"
+end
+
+if node.postgresql.service_name == node.default[:postgresql][:service_name] && node.lsb.codename == "lucid"
+  node.set[:postgresql][:service_name] = 'postgresql-8.4'
+end
+
+service node.postgresql.service_name do
+  supports :status => true, :restart => true
+  action auto_compute_action
 end
 
 directory "/etc/postgresql/#{node.postgresql.version}/main/conf.d"
@@ -19,7 +23,7 @@ template "/etc/postgresql/#{node.postgresql.version}/main/pg_hba.conf" do
   variables node.postgresql
   mode '0640'
   owner node.postgresql.user
-  notifies :restart, "service[postgresql]", :immediately
+  notifies :restart, "service[#{node.postgresql.service_name}]", :immediately
 end
 
 root_postgresql_password = node.postgresql[:root_password]
@@ -57,7 +61,7 @@ template "/etc/postgresql/#{node.postgresql.version}/main/conf.d/chef.conf" do
   variables node.postgresql
   mode '0644'
   owner node.postgresql.user
-  notifies :restart, "service[postgresql]", :immediately
+  notifies :restart, "service[#{node.postgresql.service_name}]", :immediately
 end
 
 if node[:postgresql] && node.postgresql[:databases]
