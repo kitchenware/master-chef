@@ -21,7 +21,7 @@ define :postgresql_database, {
 
     execute "create database #{config[:database]}" do
       user node.postgresql.user
-      command "psql --command \"CREATE DATABASE #{config[:database]};\""
+      command "psql --command \"CREATE DATABASE #{config[:database]} OWNER #{config[:username]};\""
       not_if "sudo -u #{node.postgresql.user} psql --command=\"select datname from pg_catalog.pg_database;\" --tuples-only | grep #{config[:database]}"
     end
 
