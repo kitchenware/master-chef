@@ -1,0 +1,45 @@
+<security-config>
+    <parameters>
+        <init-param>
+            <param-name>login.url</param-name>
+            <param-value>/login.action?os_destination=${originalurl}</param-value>
+        </init-param>
+        <init-param>
+            <param-name>link.login.url</param-name>
+            <param-value>/login.action</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cookie.encoding</param-name>
+            <param-value>cNf</param-value>
+        </init-param>
+        <init-param>
+            <param-name>login.cookie.key</param-name>
+            <param-value>seraph.confluence</param-value>
+        </init-param>
+
+        <!--only basic authentication available-->
+        <init-param>
+            <param-name>authentication.type</param-name>
+            <param-value>os_authType</param-value>
+        </init-param>
+    </parameters>
+
+    <rolemapper class="com.atlassian.confluence.security.ConfluenceRoleMapper"/>
+    <controller class="com.atlassian.confluence.setup.seraph.ConfluenceSecurityController"/>
+    <authenticator class="com.atlassian.crowd.integration.seraph.ConfluenceAuthenticator"/>
+    <services>
+        <service class="com.atlassian.seraph.service.PathService">
+            <init-param>
+                <param-name>config.file</param-name>
+                <param-value>seraph-paths.xml</param-value>
+            </init-param>
+        </service>
+    </services>
+
+    <elevatedsecurityguard class="com.atlassian.confluence.security.seraph.ConfluenceElevatedSecurityGuard"/>
+
+    <interceptors>
+        <interceptor name="session-invalidator" class="com.atlassian.confluence.security.seraph.SessionInvalidatingLoginInterceptor"/>        
+        <interceptor name="login-logger" class="com.atlassian.confluence.user.ConfluenceLoginInterceptor"/>
+    </interceptors>
+</security-config>
