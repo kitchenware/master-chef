@@ -140,7 +140,7 @@ if [ "$OMNIBUS_DEB" = "" ]; then
 fi
 
 exec_command_chef "[ -f `basename $OMNIBUS_DEB` ] || $PROXY curl -f -s -L \"$OMNIBUS_DEB\" -o `basename $OMNIBUS_DEB`"
-exec_command_chef "$SUDO dpkg -i `basename $OMNIBUS_DEB`"
+exec_command_chef "sudo dpkg -i `basename $OMNIBUS_DEB`"
 
 exec_command "$SUDO mkdir -p /opt/master-chef/etc"
 install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/opt/master-chef/etc/solo.rb"
