@@ -71,6 +71,21 @@ while ps axu | grep cloud-init | grep -v grep; do
   sleep 2
 done
 
+arch=`arch`
+
+echo "Detected architecture : $arch"
+
+if [ "$arch" = "x86_64" ]; then
+  opscode_dir="x86_64"
+  arch="amd64"
+elif [ "$arch" = "i686" ]; then
+  opscode_dir="i686"
+  arch="i386"
+else
+  echo "Unknown arch $arch"
+  exit 2
+fi
+
 if which apt-get > /dev/null; then
 
   print "Debian based distribution detected"
@@ -88,20 +103,20 @@ if which apt-get > /dev/null; then
   case $distro in
     squeeze)
       exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file libreadline5"
-      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.6.0-1.debian.6.0.5_`arch`.deb"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.6.0-1.debian.6.0.5_${arch}.deb"
       ;;
     wheezy)
       exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file"
       # for now we use the package for squeeze
-      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.6.0-1.debian.6.0.5_`arch`.deb"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.6.0-1.debian.6.0.5_${arch}.deb"
       ;;
     lucid)
       exec_command "$SUDO apt-get install -y git-core curl bzip2"
-      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/x86_64/chef_11.6.0-1.ubuntu.10.04_`arch`.deb"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/${opscode_dir}/chef_11.6.0-1.ubuntu.10.04_${arch}.deb"
       ;;
     precise)
       exec_command "$SUDO apt-get install -y git-core curl bzip2"
-      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/11.04/x86_64/chef_11.6.0-1.ubuntu.11.04_`arch`.deb"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/11.04/${opscode_dir}/chef_11.6.0-1.ubuntu.11.04_${arch}.deb"
       ;;
     *)
       echo "Unknown distro"
