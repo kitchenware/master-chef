@@ -1,7 +1,7 @@
 {
   "repos": {
     "git": [
-      "http://github.com/octo-technology/master-chef.git"
+      "http://github.com/kitchenware/master-chef.git"
     ]
   },
   "run_list": [

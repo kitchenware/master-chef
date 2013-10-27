@@ -15,7 +15,7 @@ You can click on link above to create instance, using your private key pair.
 
 Clone master-chef :
 
-    git clone git://github.com/octo-technology/master-chef.git
+    git clone git://github.com/kitchenware/master-chef.git
 
 Bootstrap master-chef :
 
@@ -41,8 +41,8 @@ Run master-chef
 
 How to configure it ? All the master-chef is in the file `/etc/chef/local.json`. Re-run `/etc/chef/update.sh` after each `local.json` modification.
 
-You can find lot of examples [here](https://github.com/octo-technology/master-chef/tree/master/tests/json).
-The description of what these config do is [here](https://github.com/octo-technology/master-chef/blob/master/tests/tests/what_is_tested.txt).
+You can find lot of examples [here](https://github.com/kitchenware/master-chef/tree/master/tests/json).
+The description of what these config do is [here](https://github.com/kitchenware/master-chef/blob/master/tests/tests/what_is_tested.txt).
 
 # Just one example
 
@@ -51,7 +51,7 @@ A `local.json` file to install [Jenkins](http://jenkins-ci.org/).
     {
       "repos": {
         "git": [
-          "git://github.com/octo-technology/master-chef.git"
+          "git://github.com/kitchenware/master-chef.git"
         ]
       },
       "run_list": [

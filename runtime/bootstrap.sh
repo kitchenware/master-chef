@@ -8,13 +8,13 @@ fi
 
 if [ "$MASTER_CHEF_URL" = "" ]; then
   # non standard url. rawgithub.com support http, raw.github.com does not
-  MASTER_CHEF_URL="http://rawgithub.com/octo-technology/master-chef"
+  MASTER_CHEF_URL="http://rawgithub.com/kitchenware/master-chef"
 fi
 
 if [ "$MASTER_CHEF_HASH_CODE" = "" ]; then
   MASTER_CHEF_HASH_CODE="master"
 else
-  MASTER_CHEF_FIRST_RUN="GIT_TAG_OVERRIDE=\"http://github.com/octo-technology/master-chef.git=$MASTER_CHEF_HASH_CODE\""
+  MASTER_CHEF_FIRST_RUN="GIT_TAG_OVERRIDE=\"http://github.com/kitchenware/master-chef.git=$MASTER_CHEF_HASH_CODE\""
 fi
 
 print() {

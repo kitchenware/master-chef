@@ -10,11 +10,11 @@ localhost:2323/apc_clear_cache.php which allow to reset the cache content
 
 To proceed theses pages a curl is launched locally (with cap or handly)
 
-APC Require php5/apache2 activated so you should have a json like this 
+APC Require php5/apache2 activated so you should have a json like this
 {
   "repos": {
     "git": [
-      "http://github.com/octo-technology/master-chef.git",
+      "http://github.com/kitchenware/master-chef.git",
       "git@other_git_server:other_git_repo.git"
     ]
   },
