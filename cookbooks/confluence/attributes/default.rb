@@ -3,13 +3,6 @@ default[:confluence][:url] = "http://downloads.atlassian.com/software/confluence
 default[:confluence][:path][:root_path] = "/confluence"
 default[:confluence][:path][:home] = "#{default[:confluence][:path][:root_path]}/home"
 default[:confluence][:path][:build] = "#{default[:confluence][:path][:root_path]}/build"
-
-default[:confluence][:crowd][:enabled] = false
-default[:confluence][:crowd][:connector_version] = "2.2.7"
-default[:confluence][:crowd][:crowd_url] = "http://crowd/crowd"
-default[:confluence][:crowd][:crowd_application_name] = "confluence"
-default[:confluence][:crowd][:crowd_application_password] = "confluence_password"
-
 default[:confluence][:location] = "/confluence"
 default[:confluence][:tomcat] = {
   :name => 'confluence',
