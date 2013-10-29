@@ -108,7 +108,6 @@ EOF
 <% if @driver == 'postgresql' %>
   $cmd --command "select 1;" >/dev/null
   local res=$($cmd -A -q -t --command "SELECT COUNT (relname) as a FROM pg_class WHERE relname = '${prefix}playedsqlscripts';" 2>/dev/null)
-  echo "_${res}_"
   if [ "$res" = "0" ]; then
     f=$(mktemp)
     cat <<-EOF > $f

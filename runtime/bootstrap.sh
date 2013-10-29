@@ -71,6 +71,21 @@ while ps axu | grep cloud-init | grep -v grep; do
   sleep 2
 done
 
+arch=`arch`
+
+echo "Detected architecture : $arch"
+
+if [ "$arch" = "x86_64" ]; then
+  opscode_dir="x86_64"
+  arch="amd64"
+elif [ "$arch" = "i686" ]; then
+  opscode_dir="i686"
+  arch="i386"
+else
+  echo "Unknown arch $arch"
+  exit 2
+fi
+
 if which apt-get > /dev/null; then
 
   print "Debian based distribution detected"
@@ -88,20 +103,20 @@ if which apt-get > /dev/null; then
   case $distro in
     squeeze)
       exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file libreadline5"
-      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.6.0-1.debian.6.0.5_amd64.deb"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.6.0-1.debian.6.0.5_${arch}.deb"
       ;;
     wheezy)
       exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file"
       # for now we use the package for squeeze
-      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/x86_64/chef_11.6.0-1.debian.6.0.5_amd64.deb"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.6.0-1.debian.6.0.5_${arch}.deb"
       ;;
     lucid)
       exec_command "$SUDO apt-get install -y git-core curl bzip2"
-      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/x86_64/chef_11.6.0-1.ubuntu.10.04_amd64.deb"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/${opscode_dir}/chef_11.6.0-1.ubuntu.10.04_${arch}.deb"
       ;;
     precise)
       exec_command "$SUDO apt-get install -y git-core curl bzip2"
-      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/11.04/x86_64/chef_11.6.0-1.ubuntu.11.04_amd64.deb"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/11.04/${opscode_dir}/chef_11.6.0-1.ubuntu.11.04_${arch}.deb"
       ;;
     *)
       echo "Unknown distro"
@@ -140,11 +155,11 @@ if [ "$OMNIBUS_DEB" = "" ]; then
 fi
 
 exec_command_chef "[ -f `basename $OMNIBUS_DEB` ] || $PROXY curl -f -s -L \"$OMNIBUS_DEB\" -o `basename $OMNIBUS_DEB`"
-exec_command_chef "$SUDO dpkg -i `basename $OMNIBUS_DEB`"
+exec_command_chef "sudo dpkg -i `basename $OMNIBUS_DEB`"
 
 exec_command "$SUDO mkdir -p /opt/master-chef/etc"
 install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/opt/master-chef/etc/solo.rb"
-$SUDO sed -ie '/^<%=/d' "/opt/master-chef/etc/solo.rb"
+$SUDO sed -i '/^<%=/d' "/opt/master-chef/etc/solo.rb"
 install_master_chef_file "runtime/local.json" "/opt/master-chef/etc/local.json"
 
 print "Bootstraping master-chef"
