@@ -47,7 +47,7 @@ link "#{node.redmine.directory}/current/config/configuration.yml" do
   to "#{node.redmine.directory}/shared/configuration.yml"
 end
 
-deployed_files = %w{Gemfile.local Gemfile.lock .ruby-version .rbenv-gemsets .bundle-option config.ru}
+deployed_files = %w{Gemfile.local Gemfile.lock .ruby-version .rbenv-gemsets .bundle-option}
 
 directory "#{node.redmine.directory}/shared/files" do
   owner node.redmine.user
@@ -60,6 +60,14 @@ deployed_files.each do |f|
   end
 end
 
+template "#{node.redmine.directory}/shared/files/config.ru" do
+  owner node.redmine.user
+  variables :location => node.redmine.location
+  source "config.ru"
+end
+
+deployed_files << "config.ru"
+
 cp_command = deployed_files.map{|f| "cp #{node.redmine.directory}/shared/files/#{f} #{node.redmine.directory}/current/#{f}"}.join(' && ')
 
 ruby_rbenv_command "initialize redmine" do
@@ -69,5 +77,6 @@ ruby_rbenv_command "initialize redmine" do
   environment get_proxy_environment
   file_storage "#{node.redmine.directory}/current/.redmine_ready"
   version node.redmine.version
+  notifies :restart, "service[redmine]"
 end
 
