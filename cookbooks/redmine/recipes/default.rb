@@ -47,7 +47,7 @@ link "#{node.redmine.directory}/current/config/configuration.yml" do
   to "#{node.redmine.directory}/shared/configuration.yml"
 end
 
-deployed_files = %w{Gemfile.local Gemfile.lock .ruby-version .rbenv-gemsets .bundle-option}
+deployed_files = %w{Gemfile.local Gemfile.lock .ruby-version .rbenv-gemsets .bundle-option config.ru}
 
 directory "#{node.redmine.directory}/shared/files" do
   owner node.redmine.user
@@ -56,17 +56,10 @@ end
 deployed_files.each do |f|
   template "#{node.redmine.directory}/shared/files/#{f}" do
     owner node.redmine.user
+    variables :location => node.redmine.location
     source f
   end
 end
-
-template "#{node.redmine.directory}/shared/files/config.ru" do
-  owner node.redmine.user
-  variables :location => node.redmine.location
-  source "config.ru"
-end
-
-deployed_files << "config.ru"
 
 cp_command = deployed_files.map{|f| "cp #{node.redmine.directory}/shared/files/#{f} #{node.redmine.directory}/current/#{f}"}.join(' && ')
 
