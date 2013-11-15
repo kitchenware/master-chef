@@ -47,7 +47,7 @@ link "#{node.redmine.directory}/current/config/configuration.yml" do
   to "#{node.redmine.directory}/shared/configuration.yml"
 end
 
-deployed_files = %w{Gemfile.local Gemfile.lock .ruby-version .rbenv-gemsets .bundle-option}
+deployed_files = %w{Gemfile.local Gemfile.lock .ruby-version .rbenv-gemsets .bundle-option config.ru}
 
 directory "#{node.redmine.directory}/shared/files" do
   owner node.redmine.user
@@ -65,7 +65,7 @@ cp_command = deployed_files.map{|f| "cp #{node.redmine.directory}/shared/files/#
 ruby_rbenv_command "initialize redmine" do
   user node.redmine.user
   directory "#{node.redmine.directory}/current"
-  code "rm -f .warped && #{cp_command} && rbenv warp install && rake generate_session_store && RAILS_ENV=production rake db:migrate"
+  code "rm -f .warped && #{cp_command} && rbenv warp install && rake generate_secret_token && RAILS_ENV=production rake db:migrate && RAILS_ENV=production REDMINE_LANG=fr rake redmine:load_default_data"
   environment get_proxy_environment
   file_storage "#{node.redmine.directory}/current/.redmine_ready"
   version node.redmine.version
