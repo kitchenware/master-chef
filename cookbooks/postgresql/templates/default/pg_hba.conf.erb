@@ -101,5 +101,7 @@ local   all             root                                    md5
 
 <% @databases.each do |k, v| %>
 local <%= v['database'] %> <%= v['username'] %> md5
-host <%= v['database'] %> <%= v['username'] %> <%= @user_filter %> md5
+<% @user_filters.each do |f| %>
+host <%= v['database'] %> <%= v['username'] %> <%= f %> md5
+<% end %>
 <% end %>
