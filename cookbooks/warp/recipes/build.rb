@@ -18,6 +18,7 @@ end
 package "s3cmd"
 
 include_recipe "java"
+include_recipe "sudo"
 
 base_user "build"
 
