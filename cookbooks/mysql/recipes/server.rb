@@ -17,10 +17,6 @@ if node.mysql.use_percona
 
   node.set[:mysql][:engine_config][:mysqld][:bind_address] = '0.0.0.0' if node.mysql.engine_config.mysqld.bind_address == '127.0.0.1'
 
-  # query cache is not compatible with wsrep
-  node.set[:mysql][:engine_config][:mysqld][:query_cache_size] = 0
-  node.set[:mysql][:engine_config][:mysqld][:query_cache_type] = 0
-
   template "/etc/mysql/my.cnf" do
     source "my.cnf.percona.erb"
     mode '0644'

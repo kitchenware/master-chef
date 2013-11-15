@@ -42,8 +42,8 @@ myisam-recover         = BACKUP
 #
 # * Query Cache Configuration
 #
-query_cache_limit = 1M
-query_cache_size        = 16M
+# query cache is not compatible with wsrep
+query_cache_type = 0
 #
 # * Logging and Replication
 #
