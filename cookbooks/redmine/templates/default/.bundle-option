@@ -1,1 +1,1 @@
---without development postgresql rmagick sqlite mysql test
+--without development test rmagick
