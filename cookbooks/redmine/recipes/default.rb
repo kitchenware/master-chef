@@ -60,14 +60,23 @@ deployed_files.each do |f|
   end
 end
 
+template "#{node.redmine.directory}/shared/files/config.ru" do
+  owner node.redmine.user
+  variables :location => node.redmine.location
+  source "config.ru"
+end
+
+deployed_files << "config.ru"
+
 cp_command = deployed_files.map{|f| "cp #{node.redmine.directory}/shared/files/#{f} #{node.redmine.directory}/current/#{f}"}.join(' && ')
 
 ruby_rbenv_command "initialize redmine" do
   user node.redmine.user
   directory "#{node.redmine.directory}/current"
-  code "rm -f .warped && #{cp_command} && rbenv warp install && rake generate_session_store && RAILS_ENV=production rake db:migrate"
+  code "rm -f .warped && #{cp_command} && rbenv warp install && rake generate_secret_token && RAILS_ENV=production rake db:migrate && RAILS_ENV=production REDMINE_LANG=fr rake redmine:load_default_data"
   environment get_proxy_environment
   file_storage "#{node.redmine.directory}/current/.redmine_ready"
   version node.redmine.version
+  notifies :restart, "service[redmine]"
 end
 
