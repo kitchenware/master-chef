@@ -65,11 +65,10 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
   owner node.gitlab.gitlab.user
   source "gitlab.yml.erb"
   variables(node.gitlab.config.merge({
-    :repositories => node.gitlab.gitlab_shell.repositories,
-    :hooks => "#{node.gitlab.gitlab_shell.path}/hooks",
+    :gitlab_shell => node.gitlab.gitlab_shell,
     :satellites => "#{node.gitlab.gitlab.path}/shared/satellites",
     :user => node.gitlab.gitlab.user,
-    :gitlab_shell_user => node.gitlab.gitlab_shell.user,
+    :omniauth => node.gitlab.omniauth,
   }))
   notifies :restart, "service[gitlab]"
   notifies :restart, "service[#{node.supervisor.service_name}]"

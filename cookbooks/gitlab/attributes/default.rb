@@ -35,3 +35,10 @@ default[:gitlab][:database] = {
     :owner => "gitlab"
   }
 }
+
+default[:gitlab][:omniauth] = {
+    :enabled => false,
+    :allow_single_sign_on => false,
+    :block_auto_created_users => true,
+    :providers => [],
+}
