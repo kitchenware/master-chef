@@ -115,14 +115,14 @@ production: &base
   ## OmniAuth settings
   omniauth:
     # Allow login via Twitter, Google, etc. using OmniAuth providers
-    enabled: false
+    enabled: <%= @omniauth[:enabled] %>
 
     # CAUTION!
     # This allows users to login without having a user account first (default: false).
     # User accounts will be created automatically when authentication was successful.
-    allow_single_sign_on: false
+    allow_single_sign_on: <%= @omniauth[:allow_single_sign_on] %>
     # Locks down those users until they have been cleared by the admin (default: true).
-    block_auto_created_users: true
+    block_auto_created_users: <%= @omniauth[:block_auto_created_users] %>
 
     ## Auth providers
     # Uncomment the following lines and fill in the data of the auth provider you want to use
@@ -131,6 +131,9 @@ production: &base
     # The 'app_id' and 'app_secret' parameters are always passed as the first two
     # arguments, followed by optional 'args' which can be either a hash or an array.
     providers:
+<% (@omniauth[:providers] || []).each do |provider| %>
+<%= "      - #{provider.to_json}" %>
+<% end %>
       # - { name: 'google_oauth2', app_id: 'YOUR APP ID',
       #     app_secret: 'YOUR APP SECRET',
       #     args: { access_type: 'offline', approval_prompt: '' } }
@@ -158,8 +161,8 @@ production: &base
   ## GitLab Shell settings
   gitlab_shell:
     # REPOS_PATH MUST NOT BE A SYMLINK!!!
-    repos_path: <%= @repositories %>
-    hooks_path: <%= @hooks %>
+    repos_path: <%= @gitlab_shell[:repositories] %>
+    hooks_path: <%= @gitlab_shell[:path] %>/hooks
 
     # Git over HTTP
     upload_pack: true
@@ -167,7 +170,7 @@ production: &base
 
     # If you use non-standard ssh port you need to specify it
     # ssh_port: 22
-    ssh_user: <%= @gitlab_shell_user %>
+    ssh_user: <%= @gitlab_shell[:user] %>
 
   ## Git settings
   # CAUTION!
