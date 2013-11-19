@@ -69,7 +69,16 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
     :satellites => "#{node.gitlab.gitlab.path}/shared/satellites",
     :user => node.gitlab.gitlab.user,
     :omniauth => node.gitlab.omniauth,
+    :location => node.gitlab.config.location
   }))
+  notifies :restart, "service[gitlab]"
+  notifies :restart, "service[#{node.supervisor.service_name}]"
+end
+
+template "#{node.gitlab.gitlab.path}/shared/initializer_location.rb" do
+  owner node.gitlab.gitlab.user
+  source "initializer_location.rb.erb"
+  variables :location => node.gitlab.config.location
   notifies :restart, "service[gitlab]"
   notifies :restart, "service[#{node.supervisor.service_name}]"
 end
@@ -80,6 +89,10 @@ end
 
 link "#{node.gitlab.gitlab.path}/current/config/gitlab.yml" do
   to "#{node.gitlab.gitlab.path}/shared/gitlab.yml"
+end
+
+link "#{node.gitlab.gitlab.path}/current/config/initializers/initializer_location.rb" do
+  to "#{node.gitlab.gitlab.path}/shared/initializer_location.rb"
 end
 
 file "#{get_home node.gitlab.gitlab.user}/.gitconfig" do
