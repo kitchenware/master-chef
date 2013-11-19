@@ -18,17 +18,26 @@ define :mysql_database, {
     users = ["#{config[:username]}@localhost"]
     users << config[:username] unless node.mysql.engine_config.mysqld.bind_address == "127.0.0.1"
 
-    c = "(\n"
-    c += " echo \"CREATE DATABASE IF NOT EXISTS #{config[:database]};\"\n"
-    users.each do |u|
-      c += "echo \"CREATE USER #{u} IDENTIFIED BY \\\"#{config[:password]}\\\";\"\n"
-      c += "echo \"GRANT ALL PRIVILEGES ON #{config[:database]} . * TO  #{u};\"\n";
+    execute "create msqyl database #{config[:database]}" do
+      command "echo \"CREATE DATABASE IF NOT EXISTS #{config[:database]};\" | mysql --user=root --password=#{root_mysql_password}"
+      not_if "echo 'SHOW DATABASES' | mysql --skip-column-names --user=root --password=#{root_mysql_password} | grep #{config[:database]}"
     end
-    c += ") | mysql --user=root --password=#{root_mysql_password}"
 
-    execute "create database #{config[:database]}" do
-      command c
-      not_if "echo 'SHOW DATABASES' | mysql --user=root --password=#{root_mysql_password} | grep #{config[:database]}"
+    users.each do |u|
+
+      splitted = u.split('@')
+      username = splitted.size > 1 ? splitted.first : u
+
+      execute "create mysql user #{u}" do
+        command "echo \"CREATE USER #{u} IDENTIFIED BY \\\"#{config[:password]}\\\";\" | mysql --user=root --password=#{root_mysql_password}"
+        not_if "echo 'SELECT User FROM mysql.user;' | mysql --skip-column-names --user=root --password=#{root_mysql_password} | grep #{username}"
+      end
+
+      execute "grant mysql user #{u} to #{config[:database]}" do
+        command "echo \"GRANT ALL PRIVILEGES ON #{config[:database]} . * TO  #{u};\" | mysql --user=root --password=#{root_mysql_password}"
+        not_if "echo 'select Db, User FROM mysql.db;' | mysql --skip-column-names --user=root --password=#{root_mysql_password} | grep #{username} | grep #{config[:database]}"
+      end
+
     end
 
   end
