@@ -1,5 +1,6 @@
 GEM
   remote: https://rubygems.org/
+  remote: http://rubygems.org/
   specs:
     actionmailer (3.2.13)
       actionpack (= 3.2.13)
@@ -94,6 +95,8 @@ GEM
       json (~> 1.4)
     rmagick (2.13.2)
     ruby-openid (2.2.3)
+    ruby-openid-apps-discovery (1.2.0)
+      ruby-openid (>= 2.1.7)
     rubyzip (1.0.0)
     selenium-webdriver (2.37.0)
       childprocess (>= 0.2.5)
@@ -147,6 +150,7 @@ DEPENDENCIES
   rdoc (>= 2.4.2)
   rmagick (>= 2.0.0)
   ruby-openid (~> 2.2.3)
+  ruby-openid-apps-discovery
   shoulda (~> 3.3.2)
   unicorn
   yard
