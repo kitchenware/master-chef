@@ -111,7 +111,7 @@ EOF
   if [ "$res" = "0" ]; then
     f=$(mktemp)
     cat <<-EOF > $f
-    CREATE TABLE IF NOT EXISTS ${prefix}playedsqlscripts (
+    CREATE TABLE ${prefix}playedsqlscripts (
       id SERIAL,
       name VARCHAR NOT NULL,
       version VARCHAR NOT NULL,
@@ -152,8 +152,8 @@ check_script_order()
 <% end %>
 
 <% if @driver == 'postgresql' %>
-  played_scripts=$($cmd -q -t -A --command "select substring(name from '\/([^\/]+)$') from ${prefix}playedsqlscripts;" )
-  last_script=$($cmd -q -t -A --command "select max(substring(name from '\/([^\/]+)$')) from ${prefix}playedsqlscripts")
+  played_scripts=$($cmd -q -t -A --command "select substring(name from E'\/([^\/]+)$') from ${prefix}playedsqlscripts;" )
+  last_script=$($cmd -q -t -A --command "select max(substring(name from E'\/([^\/]+)$')) from ${prefix}playedsqlscripts;")
 <% end %>
 
   for script in $(ls ${folder%/}/*sql | xargs -L1 basename); do

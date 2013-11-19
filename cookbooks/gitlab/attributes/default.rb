@@ -21,7 +21,7 @@ default[:gitlab][:config] = {
 
 default[:gitlab][:gitlab] = {
   :url => "git://github.com/gitlabhq/gitlabhq.git",
-  :reference => "b595503968078e583ed2715840095719d72e4f3b", # branch 6-1-stable
+  :reference => "7ad3917bb2cc145281f0f1f5abd017287e75686e", # tag v6.2.4
   :path => "/opt/gitlab",
   :user => "gitlab",
 }
@@ -34,4 +34,11 @@ default[:gitlab][:database] = {
     :file => default[:gitlab][:gitlab][:path] + "/shared/mysql.sh",
     :owner => "gitlab"
   }
+}
+
+default[:gitlab][:omniauth] = {
+    :enabled => false,
+    :allow_single_sign_on => false,
+    :block_auto_created_users => true,
+    :providers => [],
 }
