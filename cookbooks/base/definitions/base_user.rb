@@ -5,19 +5,19 @@ define :base_user, {
 } do
   base_user_params = params
 
+  user base_user_params[:name] do
+    shell "/bin/bash"
+    home base_user_params[:home] if base_user_params[:home]
+  end
+
   if base_user_params[:group]
 
-    group "create group for user #{base_user_params[:name]}" do
-      group_name base_user_params[:group]
+    add_user_in_group base_user_params[:name] do
+      group base_user_params[:group]
     end
 
   end
 
-  user base_user_params[:name] do
-    shell "/bin/bash"
-    home base_user_params[:home] if base_user_params[:home]
-    group base_user_params[:group] if base_user_params[:group]
-  end
 
   if node[:bash_users]
     node.set[:bash_users] = node.bash_users + [base_user_params[:name]]
