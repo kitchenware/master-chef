@@ -49,10 +49,6 @@ rails_worker "gitlab_sidekik" do
   command "bundle exec sidekiq -q post_receive,mailer,system_hook,project_web_hook,gitlab_shell,common,default"
 end
 
-add_user_in_group node.gitlab.gitlab.user do
-  group node.gitlab.gitlab_shell.user
-end
-
 git_clone "#{node.gitlab.gitlab.path}/current" do
   repository node.gitlab.gitlab.url
   reference node.gitlab.gitlab.reference
