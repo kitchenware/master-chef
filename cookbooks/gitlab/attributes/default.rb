@@ -21,7 +21,7 @@ default[:gitlab][:config] = {
 
 default[:gitlab][:gitlab] = {
   :url => "git://github.com/gitlabhq/gitlabhq.git",
-  :reference => "7ad3917bb2cc145281f0f1f5abd017287e75686e", # tag v6.2.4
+  :reference => "e48313f709e8d99e954a98bc569cfaccd65efa4d", # tag v6.2.4
   :path => "/opt/gitlab",
   :user => "gitlab",
 }
