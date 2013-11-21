@@ -44,7 +44,7 @@ define :git_clone, {
 
   execute "update git clone of #{git_clone_params[:repository]} to #{git_clone_params[:name]}" do
     user git_clone_params[:user]
-    command "cd #{git_clone_params[:name]} && git fetch -q origin && git fetch --tags -q origin && git reset -q --hard #{sha} && git clean #{clean_options}"
+    command "cd #{git_clone_params[:name]} && git fetch -q origin && git fetch --tags -q origin && git reset -q --hard #{sha} && git clean #{clean_options} && git log -n1 --decorate | head -n 1 | grep #{sha}"
     environment get_proxy_environment if use_proxy
     not_if "cd #{git_clone_params[:name]} && git log -n1 --decorate | head -n 1 | grep #{sha}", :environment => env_for_not_if
     notifies *git_clone_params[:notifies] if git_clone_params[:notifies]
