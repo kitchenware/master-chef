@@ -53,6 +53,7 @@ end
 
 directory node.gitlab.gitlab_shell.repositories do
   owner node.gitlab.gitlab_shell.user
+  group node.gitlab.gitlab_shell.group
 end
 
 template "#{node.gitlab.gitlab_shell.path}/config.yml" do

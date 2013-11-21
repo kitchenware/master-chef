@@ -105,7 +105,7 @@ end
 directory_recurse_chmod_chown node.gitlab.gitlab_shell.repositories do
   chmod 'ug+rwX,o-rwx'
   owner node.gitlab.gitlab_shell.user
-  group node.gitlab.gitlab_shell.user
+  group node.gitlab.gitlab_shell.group
 end
 
 deployed_files = %w{.bundle-option .ruby-version .rbenv-gemsets}
