@@ -59,6 +59,7 @@ end
 template "#{node.gitlab.gitlab_shell.path}/config.yml" do
   source "config.yml.erb"
   variables({
+    :location => node.gitlab.config.location,
     :repositories => node.gitlab.gitlab_shell.repositories,
     :gitlab_shell_user => node.gitlab.gitlab_shell.user,
     :log_file => "#{node.gitlab.gitlab_shell.path}/log/gitlab-shell.log",
