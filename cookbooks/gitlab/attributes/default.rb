@@ -1,7 +1,7 @@
 
 default[:gitlab][:gitlab_shell] = {
   :url => "git://github.com/gitlabhq/gitlab-shell.git",
-  :reference => "v1.7.1",
+  :reference => "v1.7.8",
   :repositories => "/opt/repositories",
   :user => "git",
   :group => "git",
