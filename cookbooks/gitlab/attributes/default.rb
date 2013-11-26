@@ -19,6 +19,7 @@ default[:gitlab][:config] = {
   :default_projects_limit => 10,
   :default_can_create_group => true,
   :signup_enabled => false,
+  :configure_nginx => true,
 }
 
 default[:gitlab][:gitlab] = {
