@@ -18,7 +18,7 @@ end
 
 unicorn_rails_app "redmine" do
   location node.redmine.location
-  configure_nginx node.redmine.config.configure_nginx
+  configure_nginx node.redmine.configure_nginx
 end
 
 git_clone "#{node.redmine.directory}/current" do
