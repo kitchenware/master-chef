@@ -62,6 +62,8 @@ template "#{node.gitlab.gitlab_shell.path}/config.yml" do
     :location => node.gitlab.config.location,
     :repositories => node.gitlab.gitlab_shell.repositories,
     :gitlab_shell_user => node.gitlab.gitlab_shell.user,
+    :self_signed_cert => node.gitlab.gitlab_shell.self_signed_cert,
+    :gitlab_url => node.gitlab.gitlab_shell.gitlab_url,
     :log_file => "#{node.gitlab.gitlab_shell.path}/log/gitlab-shell.log",
   })
   owner node.gitlab.gitlab_shell.user
