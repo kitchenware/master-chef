@@ -20,6 +20,7 @@ default[:gitlab][:config] = {
   :default_can_create_group => true,
   :signup_enabled => false,
   :configure_nginx => true,
+  :email_domain => false,
 }
 
 default[:gitlab][:gitlab] = {
