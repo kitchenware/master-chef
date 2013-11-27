@@ -68,6 +68,11 @@ define :unicorn_app, {
     notifies :restart, "service[#{unicorn_app_params[:name]}]"
   end
 
+  node.set[:unicorn][:apps][unicorn_app_params[:name]] = {
+    :socket => unicorn_socket_file,
+    :root => "#{unicorn_app_params[:app_directory]}/current",
+  }
+
   if unicorn_app_params[:configure_nginx]
 
     include_recipe "nginx"

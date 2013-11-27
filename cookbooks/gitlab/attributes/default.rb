@@ -6,6 +6,8 @@ default[:gitlab][:gitlab_shell] = {
   :user => "git",
   :group => "git",
   :path => "/opt/gitlab-shell",
+  :self_signed_cert => false,
+  :gitlab_url => 'http://localhost/',
 }
 
 default[:gitlab][:config] = {
@@ -17,6 +19,8 @@ default[:gitlab][:config] = {
   :default_projects_limit => 10,
   :default_can_create_group => true,
   :signup_enabled => false,
+  :configure_nginx => true,
+  :email_domain => false,
 }
 
 default[:gitlab][:gitlab] = {

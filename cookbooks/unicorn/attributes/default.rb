@@ -1,0 +1,2 @@
+
+default[:unicorn][:apps] = {}
