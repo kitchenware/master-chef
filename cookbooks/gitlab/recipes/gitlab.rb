@@ -66,7 +66,6 @@ template "#{node.gitlab.gitlab.path}/shared/gitlab.yml" do
     :satellites => "#{node.gitlab.gitlab.path}/shared/satellites",
     :user => node.gitlab.gitlab.user,
     :omniauth => node.gitlab.omniauth,
-    :location => node.gitlab.config.location
   }))
   notifies :restart, "service[gitlab]"
   notifies :restart, "service[#{node.supervisor.service_name}]"
