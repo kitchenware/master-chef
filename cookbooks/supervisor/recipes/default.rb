@@ -30,6 +30,15 @@ basic_init_d node.supervisor.service_name do
   })
 end
 
+if node.logrotate[:auto_deploy]
+
+  logrotate_file "supervisord" do
+    files ["#{node.supervisor.log_dir}/supervisord.log"]
+    variables :post_rotate => "kill -USR2 `cat /var/run/supervisord.pid`"
+  end
+
+end
+
 delayed_exec "Remove useless supervisor config" do
   after_block_notifies :restart, resources(:service => node.supervisor.service_name)
   block do
