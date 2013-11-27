@@ -11,7 +11,7 @@ default[:gitlab][:gitlab_shell] = {
 }
 
 default[:gitlab][:config] = {
-  :location => nil,
+  :location => "/",
   :hostname => %x{hostname}.strip,
   :https => false,
   :port => 80,
