@@ -4,8 +4,6 @@ define :logrotate_file, {
   :source => 'logrotate.erb',
   :variables => {},
   :files => nil,
-  :user => 'root',
-  :group => 'root',
 } do
   logrotate_file_params = params
 
@@ -15,12 +13,7 @@ define :logrotate_file, {
     cookbook logrotate_file_params[:cookbook]
     source logrotate_file_params[:source]
     mode '0644'
-    variables(
-    {
-      :files => logrotate_file_params[:files],
-      :user => logrotate_file_params[:user],
-      :group => (logrotate_file_params[:group] || logrotate_file_params[:user]),
-    }.merge(logrotate_file_params[:variables]))
+    variables({:files => logrotate_file_params[:files]}.merge(node.logrotate.default_config.to_hash).merge(logrotate_file_params[:variables]))
   end
 
 end

@@ -26,11 +26,16 @@ define :nodejs_app, {
   if nodejs_app_params[:add_log_param]
     extended_options += " --log_file #{directory}/shared/log/#{nodejs_app_params[:name]}.log"
 
-    logrotate_file "nodejs_log_file_#{nodejs_app_params[:name]}" do
-      files ["#{directory}/shared/log/#{nodejs_app_params[:name]}.log"]
-      user nodejs_app_params[:user]
-      variables :post_rotate => "kill -USR2 `cat #{directory}/shared/#{nodejs_app_params[:name]}`"
+    if node.logrotate[:auto_deploy]
+
+      logrotate_file "nodejs_log_file_#{nodejs_app_params[:name]}" do
+        files ["#{directory}/shared/log/#{nodejs_app_params[:name]}.log"]
+        user nodejs_app_params[:user]
+        variables :post_rotate => "kill -USR2 `cat #{directory}/shared/#{nodejs_app_params[:name]}`"
+      end
+
     end
+
   end
 
   capistrano_app directory do
@@ -50,10 +55,14 @@ define :nodejs_app, {
     mode '0755'
   end
 
-  logrotate_file "nodejs_stdout_#{nodejs_app_params[:name]}" do
-    files ["#{directory}/shared/log/#{nodejs_app_params[:name]}_stdout.log"]
-    user nodejs_app_params[:user]
-    variables :copytruncate => true
+  if node.logrotate[:auto_deploy]
+
+    logrotate_file "nodejs_stdout_#{nodejs_app_params[:name]}" do
+      files ["#{directory}/shared/log/#{nodejs_app_params[:name]}_stdout.log"]
+      user nodejs_app_params[:user]
+      variables :copytruncate => true
+    end
+
   end
 
   basic_init_d nodejs_app_params[:name] do

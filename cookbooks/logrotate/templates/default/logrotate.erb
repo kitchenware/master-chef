@@ -1,14 +1,14 @@
 <%= @files.join(' ') %> {
-	daily
+	<%= @frequency %>
 	missingok
-	rotate 52
+	rotate <%= @rotate %>
 	compress
 	delaycompress
 	notifempty
 	<% if @copytruncate %>
 	copytruncate
 	<% end %>
-	create 644 <%= @user %> <%= @group %>
+	create <%= @mode %> <%= @user %> <%= @group %>
   <% if @sharedscripts %>
     sharedscripts
   <% end %>
