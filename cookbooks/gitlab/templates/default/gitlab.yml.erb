@@ -131,6 +131,11 @@ production: &base
     # Locks down those users until they have been cleared by the admin (default: true).
     block_auto_created_users: <%= @omniauth[:block_auto_created_users] %>
 
+<% if @email_domain %>
+    # Limit email domain of users to a specific one like example.com (default: false)
+    email_domain: <%= @email_domain %>
+<% end %>
+
     ## Auth providers
     # Uncomment the following lines and fill in the data of the auth provider you want to use
     # If your favorite auth provider is not listed you can use others:
