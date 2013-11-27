@@ -26,8 +26,9 @@ production: &base
     # 2) In your gitlab.yml file: relative_url_root: /gitlab
     # 3) In your unicorn.rb: ENV['RAILS_RELATIVE_URL_ROOT'] = "/gitlab"
     #
+<% if @location %>
     relative_url_root: <%= @location %>
-
+<% end %>
     # Uncomment and customize if you can't use the default user to run GitLab (default: 'git')
     user: <%= @user %>
 
