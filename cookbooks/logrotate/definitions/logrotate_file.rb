@@ -6,8 +6,7 @@ define :logrotate_file, {
   :files => nil,
   :user => 'root',
   :group => 'root',
-  :copytruncate => false,
-  } do
+} do
   logrotate_file_params = params
 
   raise "Please specify files in logrotate_file" unless logrotate_file_params[:files]
@@ -17,12 +16,11 @@ define :logrotate_file, {
     source logrotate_file_params[:source]
     mode '0644'
     variables(
-        {
-            :files => logrotate_file_params[:files],
-            :user => logrotate_file_params[:user],
-            :group => (logrotate_file_params[:group] || logrotate_file_params[:user]),
-            :copytruncate => logrotate_file_params[:copytruncate]
-        }.merge(logrotate_file_params[:variables]))
+    {
+      :files => logrotate_file_params[:files],
+      :user => logrotate_file_params[:user],
+      :group => (logrotate_file_params[:group] || logrotate_file_params[:user]),
+    }.merge(logrotate_file_params[:variables]))
   end
 
 end
