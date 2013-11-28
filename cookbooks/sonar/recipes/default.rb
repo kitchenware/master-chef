@@ -9,13 +9,13 @@ directory node.sonar.path do
   recursive true
 end
 
-target_war = tomcat_instance "sonar:tomcat" do
+tomcat_instance "sonar:tomcat" do
   war_location node.sonar.location
 end
 
 execute "build sonar war" do
   user node.tomcat.user
-  command "cd #{node.sonar.path}/sonar/war && sh build-war.sh && cp sonar.war #{target_war}"
+  command "cd #{node.sonar.path}/sonar/war && sh build-war.sh && cp sonar.war #{node.tomcat.instances["sonar:tomcat"][:war]}"
   environment get_proxy_environment
   action :nothing
 end
