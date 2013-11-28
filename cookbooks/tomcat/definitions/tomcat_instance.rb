@@ -106,6 +106,10 @@ define :tomcat_instance, {
 
   end
 
-  "#{catalina_base}/webapps#{tomcat_instance_params[:war_location]}.war"
+  node.set[:tomcat][:instances][tomcat_instance_params[:name]] = {
+    :war => "#{catalina_base}/webapps#{tomcat_instance_params[:war_location]}.war",
+    :base => catalina_base,
+    :logs => "#{catalina_base}/logs",
+  }
 
 end
