@@ -1,4 +1,6 @@
 
+include_recipe "logrotate"
+
 if node[:nodejs_app]
 
   node.nodejs_app.each do |k, v|

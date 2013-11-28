@@ -1,5 +1,6 @@
 
 include_recipe "sudo"
+include_recipe "logrotate"
 
 package "supervisor"
 
