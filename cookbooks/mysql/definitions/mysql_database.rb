@@ -15,8 +15,8 @@ define :mysql_database, {
 
     root_mysql_password = mysql_password "root"
 
-    users = ["#{config[:username]}@localhost"]
-    users << config[:username] unless node.mysql.engine_config.mysqld.bind_address == "127.0.0.1"
+    users = [{:username => config[:username], :host => "localhost"}]
+    users << {:username => config[:username], :host => "%"} unless node.mysql.engine_config.mysqld.bind_address == "127.0.0.1"
 
     execute "create msqyl database #{config[:database]}" do
       command "echo \"CREATE DATABASE IF NOT EXISTS #{config[:database]};\" | mysql --user=root --password=#{root_mysql_password}"
@@ -25,17 +25,14 @@ define :mysql_database, {
 
     users.each do |u|
 
-      splitted = u.split('@')
-      username = splitted.size > 1 ? splitted.first : u
-
       execute "create mysql user #{u}" do
-        command "echo \"CREATE USER #{u} IDENTIFIED BY \\\"#{config[:password]}\\\";\" | mysql --user=root --password=#{root_mysql_password}"
-        not_if "echo 'SELECT User FROM mysql.user;' | mysql --skip-column-names --user=root --password=#{root_mysql_password} | grep #{username}"
+        command "echo \"CREATE USER \\\"#{u[:username]}\\\"@\\\"#{u[:host]}\\\" IDENTIFIED BY \\\"#{config[:password]}\\\";\" | mysql --user=root --password=#{root_mysql_password}"
+        not_if "echo 'SELECT User,Host FROM mysql.user;' | mysql --skip-column-names --user=root --password=#{root_mysql_password} | grep -v root | grep #{u[:username]} | grep #{u[:host]}"
       end
 
       execute "grant mysql user #{u} to #{config[:database]}" do
-        command "echo \"GRANT ALL PRIVILEGES ON #{config[:database]} . * TO  #{u};\" | mysql --user=root --password=#{root_mysql_password}"
-        not_if "echo 'select Db, User FROM mysql.db;' | mysql --skip-column-names --user=root --password=#{root_mysql_password} | grep #{username} | grep #{config[:database]}"
+        command "echo \"GRANT ALL PRIVILEGES ON #{config[:database]} . * TO \\\"#{u[:username]}\\\"@\\\"#{u[:host]}\\\";\" | mysql --user=root --password=#{root_mysql_password}"
+        not_if "echo 'select Db, User, Host FROM mysql.db;' | mysql --skip-column-names --user=root --password=#{root_mysql_password} | grep -v root | grep #{u[:username]} | grep #{u[:host]} | grep #{config[:database]}"
       end
 
     end
