@@ -7,8 +7,12 @@ if [ "$PROXY" != "" ]; then
 fi
 
 if [ "$MASTER_CHEF_URL" = "" ]; then
+  MASTER_CHEF_URL="https://github.com/kitchenware/master-chef.git"
+fi
+
+if [ "$MASTER_CHEF_DIRECT_ACCESS_URL" = "" ]; then
   # non standard url. rawgithub.com support http, raw.github.com does not
-  MASTER_CHEF_URL="http://rawgithub.com/kitchenware/master-chef"
+  MASTER_CHEF_DIRECT_ACCESS_URL="http://rawgithub.com/kitchenware/master-chef"
 fi
 
 if [ "$MASTER_CHEF_HASH_CODE" = "" ]; then
@@ -56,7 +60,7 @@ exec_command_chef() {
 install_master_chef_file() {
   file=$1
   target=$2
-  url="$MASTER_CHEF_URL/$MASTER_CHEF_HASH_CODE/$file"
+  url="$MASTER_CHEF_DIRECT_ACCESS_URL/$MASTER_CHEF_HASH_CODE/$file"
   echo "Downloading $url to $target"
   exec_command "$SUDO $PROXY curl -f -s -L $url -o $target"
 }
@@ -160,9 +164,9 @@ exec_command_chef "sudo dpkg -i `basename $OMNIBUS_DEB`"
 exec_command "$SUDO mkdir -p /opt/master-chef/etc"
 install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/opt/master-chef/etc/solo.rb"
 $SUDO sed -i '/^<%=/d' "/opt/master-chef/etc/solo.rb"
-install_master_chef_file "runtime/local.json" "/opt/master-chef/etc/local.json"
+exec_command_chef "echo '{\\\"repos\\\":{\\\"git\\\":[\\\"$MASTER_CHEF_URL\\\"]},\\\"run_list\\\":[\\\"recipe[master_chef::chef_solo_scripts]\\\"],\\\"node_config\\\":{}}' | sudo tee /opt/master-chef/etc/local.json > /dev/null"
 
-print "Bootstraping master-chef"
+print "Bootstraping master-chef, using url $MASTER_CHEF_URL"
 
 exec_command_chef "VAR_CHEF=/opt/chef/var GIT_CACHE_DIRECTORY=/opt/master-chef/var/git_repos $PROXY $MASTER_CHEF_FIRST_RUN MASTER_CHEF_CONFIG=/opt/master-chef/etc/local.json sudo -E /opt/chef/bin/chef-solo -c /opt/master-chef/etc/solo.rb"
 
