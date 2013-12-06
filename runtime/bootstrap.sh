@@ -14,7 +14,7 @@ fi
 if [ "$MASTER_CHEF_HASH_CODE" = "" ]; then
   MASTER_CHEF_HASH_CODE="master"
 else
-  MASTER_CHEF_FIRST_RUN="GIT_TAG_OVERRIDE=\"http://github.com/kitchenware/master-chef.git=$MASTER_CHEF_HASH_CODE\""
+  MASTER_CHEF_FIRST_RUN="GIT_TAG_OVERRIDE=\"$MASTER_CHEF_URL=$MASTER_CHEF_HASH_CODE\""
 fi
 
 print() {
