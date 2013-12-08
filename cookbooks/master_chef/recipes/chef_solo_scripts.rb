@@ -45,9 +45,4 @@ template "#{install_path}/etc/solo.rb" do
   })
 end
 
-package "unzip"
-package "bzip2"
-package "curl"
-package "git-core"
-
 Chef::Log.info "File for local storage : #{node.local_storage.file}"
