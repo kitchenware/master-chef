@@ -23,18 +23,26 @@ end
 if node.php5[:pear] || node.php5[:pear_modules] || node.php5[:pear_channels]
 
   execute "pear upgrade" do
+    environment 'HOME' => get_home('root')
     command "pear upgrade pear"
     action :nothing
   end
 
-  package "php-pear" do
-    notifies :run, "execute[pear upgrade]", :immediately
-  end
-
   if ENV['BACKUP_http_proxy']
 
-    execute "pear config-set http_proxy #{ENV['BACKUP_http_proxy']}" do
+    package "php-pear"
+
+    execute "set pear proxy to #{ENV['BACKUP_http_proxy']}" do
+      environment 'HOME' => get_home('root')
+      command "pear config-set http_proxy #{ENV['BACKUP_http_proxy']}"
       not_if "pear config-get http_proxy | grep #{ENV['BACKUP_http_proxy']}"
+      notifies :run, "execute[pear upgrade]", :immediately
+    end
+
+  else
+
+    package "php-pear" do
+      notifies :run, "execute[pear upgrade]", :immediately
     end
 
   end
