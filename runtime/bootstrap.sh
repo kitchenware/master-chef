@@ -94,10 +94,10 @@ if which apt-get > /dev/null; then
 
   print "Debian based distribution detected"
 
-  exec_command "$SUDO apt-get update"
+  exec_command "$SUDO $APT_PROXY apt-get update"
 
   if ! which lsb_release > /dev/null; then
-    exec_command "$SUDO apt-get install -y lsb-release"
+    exec_command "$SUDO $APT_PROXY apt-get install -y lsb-release"
   fi
 
   distro=`lsb_release -cs`
@@ -106,20 +106,20 @@ if which apt-get > /dev/null; then
 
   case $distro in
     squeeze)
-      exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file libreadline5"
+      exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2 sudo file libreadline5"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.8.0-1.debian.6.0.5_${arch}.deb"
       ;;
     wheezy)
-      exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file"
+      exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2 sudo file"
       # for now we use the package for squeeze
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.8.0-1.debian.6.0.5_${arch}.deb"
       ;;
     lucid)
-      exec_command "$SUDO apt-get install -y git-core curl bzip2"
+      exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/${opscode_dir}/chef_11.8.0-1.ubuntu.10.04_${arch}.deb"
       ;;
     precise)
-      exec_command "$SUDO apt-get install -y git-core curl bzip2"
+      exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/${opscode_dir}/chef_11.8.0-1.ubuntu.12.04_${arch}.deb"
       ;;
     *)
