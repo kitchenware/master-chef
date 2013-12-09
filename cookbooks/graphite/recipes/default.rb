@@ -74,13 +74,9 @@ template "#{node.graphite.directory}/webapp/graphite/local_settings.py" do
     :timezone => node.graphite.timezone,
     :db_file => "#{node.graphite.directory}/storage/graphite.db",
     :secret_key => secret_key,
+    :old_format => node.lsb.codename == "lucid",
   })
   notifies :restart, "service[apache2]"
-end
-
-execute "create db" do
-  command "cd #{node.graphite.directory}/webapp/graphite && python manage.py syncdb --noinput"
-  not_if "[ -f #{node.graphite.directory}/storage/graphite.db ]"
 end
 
 directory_recurse_chmod_chown "#{node.graphite.directory}/storage" do
@@ -89,6 +85,12 @@ end
 
 directory_recurse_chmod_chown "#{node.graphite.directory}/lib/twisted/plugins" do
   owner "www-data"
+end
+
+execute "create db" do
+  user "www-data"
+  command "cd #{node.graphite.directory}/webapp/graphite && python manage.py syncdb --noinput"
+  not_if "[ -f #{node.graphite.directory}/storage/graphite.db ]"
 end
 
 execute "configure wsgi" do
