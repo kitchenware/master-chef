@@ -19,18 +19,35 @@ directory node.graphite.directory_install do
   recursive true
 end
 
+template "/etc/init.d/carbon" do
+  source "carbon_init_d.erb"
+  mode '0755'
+  variables :graphite_directory => node.graphite.directory
+end
+
+Chef::Config.exception_handlers << ServiceErrorHandler.new("carbon", "\\/opt\\/graphite\\/conf\\/.*")
+
+service "carbon" do
+  supports :status => true
+  action auto_compute_action
+end
+
 [:whisper, :carbon, :web_app].each do |app|
 
   git_clone "#{node.graphite.directory_install}/#{app}" do
     reference node.graphite.git.version
     repository node.graphite.git[app]
     user 'root'
+    notifies :restart, "service[#{app}]" if app == :carbon
+    notifies :restart, "service[apache2]" if app == :web_app
   end
 
   execute_version "install_#{app}" do
     command "cd #{node.graphite.directory_install}/#{app} && python setup.py install"
     version "#{app}_#{node.graphite.git.version}"
     file_storage "#{node.graphite.directory}/.#{app}"
+    notifies :restart, "service[#{app}]" if app == :carbon
+    notifies :restart, "service[apache2]" if app == :web_app
   end
 
 end
@@ -38,6 +55,7 @@ end
 execute "configure carbon" do
   command "cd #{node.graphite.directory}/conf && cp carbon.conf.example carbon.conf && cp storage-schemas.conf.example storage-schemas.conf"
   not_if "[ -f #{node.graphite.directory}/conf/carbon.conf ]"
+  notifies :restart, "service[carbon]"
 end
 
 directory "#{node.apache2.server_root}/wsgi" do
@@ -72,19 +90,6 @@ end
 
 apache2_vhost "graphite:graphite" do
   options :graphite_directory => node.graphite.directory, :wsgi_socket_prefix => "#{node.apache2.server_root}/wsgi"
-end
-
-template "/etc/init.d/carbon" do
-  source "carbon_init_d.erb"
-  mode '0755'
-  variables :graphite_directory => node.graphite.directory
-end
-
-Chef::Config.exception_handlers << ServiceErrorHandler.new("carbon", "\\/opt\\/graphite\\/conf\\/.*")
-
-service "carbon" do
-  supports :status => true
-  action auto_compute_action
 end
 
 template "#{node.graphite.directory}/conf/carbon.conf" do
