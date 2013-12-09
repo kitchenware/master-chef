@@ -1,6 +1,7 @@
 
 package node.collectd.package_name do
   options "--no-install-recommends"
+  version node.collectd[:package_version] if node.collectd[:package_version]
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("collectd", ".*collectd.*")
