@@ -63,10 +63,18 @@ directory "#{node.apache2.server_root}/wsgi" do
   mode '0755'
 end
 
+secret_key = local_storage_read("graphite:secret_key") do
+  PasswordGenerator.generate 64
+end
+
 template "#{node.graphite.directory}/webapp/graphite/local_settings.py" do
   source "local_settings.py.erb"
   mode '0644'
-  variables :timezone => node.graphite.timezone, :db_file => "#{node.graphite.directory}/storage/graphite.db"
+  variables({
+    :timezone => node.graphite.timezone,
+    :db_file => "#{node.graphite.directory}/storage/graphite.db",
+    :secret_key => secret_key,
+  })
   notifies :restart, "service[apache2]"
 end
 
