@@ -1,15 +1,9 @@
 
+package "python-pip"
 package "python-cairo"
-package "python-django"
-package "python-django-tagging"
 package "python-twisted"
-package "python-setuptools"
 
 include_recipe "apache2"
-
-apache2_enable_module "python" do
-  install true
-end
 
 apache2_enable_module "wsgi" do
   install true
@@ -17,6 +11,24 @@ end
 
 directory node.graphite.directory_install do
   recursive true
+end
+
+execute_version "update pip" do
+  command "pip install --upgrade pip"
+  version "1"
+  file_storage "/.pip_updated"
+end
+
+execute "install django" do
+  command "pip install django==#{node.graphite.django_version}"
+  environment get_proxy_environment
+  not_if "pip show django | grep Version | grep #{node.graphite.django_version}"
+end
+
+execute "install django-tagging" do
+  command "pip install django-tagging"
+  environment get_proxy_environment
+  not_if "pip show django-tagging | grep Version"
 end
 
 template "/etc/init.d/carbon" do
@@ -38,7 +50,7 @@ end
     reference node.graphite.git.version
     repository node.graphite.git[app]
     user 'root'
-    notifies :restart, "service[#{app}]" if app == :carbon
+    notifies :restart, "service[carbon]" if app == :carbon
     notifies :restart, "service[apache2]" if app == :web_app
   end
 
@@ -46,7 +58,7 @@ end
     command "cd #{node.graphite.directory_install}/#{app} && python setup.py install"
     version "#{app}_#{node.graphite.git.version}"
     file_storage "#{node.graphite.directory}/.#{app}"
-    notifies :restart, "service[#{app}]" if app == :carbon
+    notifies :restart, "service[carbon]" if app == :carbon
     notifies :restart, "service[apache2]" if app == :web_app
   end
 
@@ -74,7 +86,6 @@ template "#{node.graphite.directory}/webapp/graphite/local_settings.py" do
     :timezone => node.graphite.timezone,
     :db_file => "#{node.graphite.directory}/storage/graphite.db",
     :secret_key => secret_key,
-    :old_format => node.lsb.codename == "lucid",
   })
   notifies :restart, "service[apache2]"
 end

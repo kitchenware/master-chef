@@ -7,6 +7,7 @@ default[:graphite] = {
   },
   :directory => '/opt/graphite',
   :directory_install => '/opt/graphite/install',
+  :django_version => '1.4.10',
 }
 
 default[:graphite][:graphite] = {
@@ -25,7 +26,7 @@ default[:graphite][:xFilesFactor] = 0.5
 default[:graphite][:timezone] = "Europe/Paris"
 
 default[:graphite][:bucky] = {
-  :url => "http://pypi.python.org/packages/source/b/bucky/bucky-0.2.6.tar.gz",
+  :version => "0.2.6",
   :collectd_port => 25826,
 }
 

@@ -11,10 +11,4 @@ DATABASES = {
     }
 }
 
-<% if @old_format %>
-# Needed for old django version
-DATABASE_ENGINE = 'django.db.backends.sqlite3'
-DATABASE_NAME = '<%= @db_file %>'
-<% end %>
-
 SECRET_KEY = '<%= @secret_key %>'

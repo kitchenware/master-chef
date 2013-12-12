@@ -9,7 +9,8 @@
 # Short-Description: graphite
 ### END INIT INFO
 
-cd <%= @graphite_directory %> && sudo -u www-data ./bin/carbon-cache.py $*
+cd <%= @graphite_directory %>
+sudo -u www-data ./bin/carbon-cache.py $*
 
 if [ "$1" = "stop" ]; then
  count=0
