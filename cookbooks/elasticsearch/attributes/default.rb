@@ -10,6 +10,7 @@ default[:elasticsearch] = {
   :host => '127.0.0.1',
   :http_port => 9200,
   :tcp_port => 9300,
+  :cluster_name => 'elasticsearch',
   :transport_zmq => {
     :enable => true,
     :listen => 'tcp://127.0.0.1:9700',
