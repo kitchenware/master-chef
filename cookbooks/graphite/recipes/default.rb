@@ -19,6 +19,12 @@ execute_version "update pip" do
   file_storage "/.pip_updated"
 end
 
+execute_version "upgrade setuptools" do
+  command "pip install setuptools --no-use-wheel --upgrade"
+  version "1"
+  file_storage "/.pip_setupstools"
+end
+
 execute "install django" do
   command "pip install django==#{node.graphite.django_version}"
   environment get_proxy_environment
