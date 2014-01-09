@@ -13,16 +13,16 @@ directory node.graphite.directory_install do
   recursive true
 end
 
-execute_version "upgrade setuptools" do
-  command "pip install setuptools --no-use-wheel --upgrade"
-  version "1"
-  file_storage "/.pip_setupstools"
-end
-
 execute_version "update pip" do
   command "pip install --upgrade pip"
   version "1"
   file_storage "/.pip_updated"
+end
+
+execute_version "upgrade setuptools" do
+  command "pip install setuptools --no-use-wheel --upgrade"
+  version "1"
+  file_storage "/.pip_setupstools"
 end
 
 execute "install django" do
