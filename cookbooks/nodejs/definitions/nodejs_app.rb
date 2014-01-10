@@ -30,8 +30,7 @@ define :nodejs_app, {
 
       logrotate_file "nodejs_log_file_#{nodejs_app_params[:name]}" do
         files ["#{directory}/shared/log/#{nodejs_app_params[:name]}.log"]
-        user nodejs_app_params[:user]
-        variables :post_rotate => "kill -USR2 `cat #{directory}/shared/#{nodejs_app_params[:name]}`"
+        variables :post_rotate => "kill -USR2 `cat #{directory}/shared/#{nodejs_app_params[:name]}`", :user => nodejs_app_params[:user]
       end
 
     end
