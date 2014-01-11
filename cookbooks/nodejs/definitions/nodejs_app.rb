@@ -9,6 +9,7 @@ define :nodejs_app, {
   :add_log_param => true,
   :node_env => "production",
   :check_start => nil,
+  :logrotate_files => [],
 } do
 
   nodejs_app_params = params
@@ -29,7 +30,7 @@ define :nodejs_app, {
     if node.logrotate[:auto_deploy]
 
       logrotate_file "nodejs_log_file_#{nodejs_app_params[:name]}" do
-        files ["#{directory}/shared/log/#{nodejs_app_params[:name]}.log"]
+        files (["#{nodejs_app_params[:name]}.log"] + nodejs_app_params[:logrotate_files]).map{|x| "#{directory}/shared/log/#{x}"}
         variables :post_rotate => "kill -USR2 `cat #{directory}/shared/#{nodejs_app_params[:name]}.pid`", :user => nodejs_app_params[:user]
       end
 
