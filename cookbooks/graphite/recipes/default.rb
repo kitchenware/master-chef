@@ -25,6 +25,16 @@ execute_version "upgrade setuptools" do
   file_storage "/.pip_setupstools"
 end
 
+if node.lsb.codename == "lucid"
+
+  execute_version "fix pip install under lucid" do
+    command "easy_install pip"
+    version "1"
+    file_storage "/.fix_pip_install"
+  end
+
+end
+
 execute "install django" do
   command "pip install django==#{node.graphite.django_version}"
   environment get_proxy_environment
