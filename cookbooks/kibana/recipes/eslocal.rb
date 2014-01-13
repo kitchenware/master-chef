@@ -1,4 +1,22 @@
 
+include_recipe "nginx"
+
+directory "#{node.kibana3.directory}/shared/www"
+
+link "#{node.kibana3.directory}/shared/www/#{node.kibana3.location}" do
+  to "#{node.kibana3.directory}/current"
+end
+
+nginx_add_default_location node.kibana3.location do
+  content <<-EOF
+
+  location #{node.kibana3.location} {
+    root #{node.kibana3.directory}/shared/www;
+  }
+
+EOF
+end
+
 nginx_add_default_location "bind_to_es" do
   content <<-EOF
 

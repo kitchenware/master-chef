@@ -85,7 +85,7 @@ node.elasticsearch.plugins.each do |k, v|
           counter = 0
           while true do
             begin
-              resp = Net::HTTP.new('localhost', 9200).start {|http| http.request(req) }
+              resp = Net::HTTP.new('localhost', node.elasticsearch.http_port).start {|http| http.request(req) }
               break
             rescue
               counter += 1
