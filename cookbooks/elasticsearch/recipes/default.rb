@@ -93,7 +93,7 @@ node.elasticsearch.plugins.each do |k, v|
               sleep 2
             end
           end
-          raise "Wrong return for post install #{k} : #{resp.code}" unless resp.code.to_i == v[:post_install_curl][:return_code]
+          raise "Wrong return for post install #{k} : #{resp.code}" unless v[:post_install_curl][:return_codes].include?(resp.code.to_i)
           Chef::Log.info("Request result ok")
           File.open(check_file, 'w') {|io| io.write(1)}
         end
