@@ -1,5 +1,5 @@
 default[:sonar][:location] = "/sonar"
-default[:sonar][:version] = "3.0.1"
+default[:sonar][:version] = "3.7.4"
 default[:sonar][:zip_url] = "http://dist.sonar.codehaus.org/sonar-#{default[:sonar][:version]}.zip"
 default[:sonar][:path] = "/opt/sonar"
 default[:sonar][:tomcat] = {
