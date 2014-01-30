@@ -1,7 +1,7 @@
 
 default[:kibana3] = {
-  :git => 'git://github.com/elasticsearch/kibana.git',
-  :version => '4f1b33b316b7603ffa122296b2c2eee037ee8cfc',
+  :url => 'http://download.elasticsearch.org/kibana/kibana/kibana-',
+  :version => '3.0.0milestone4',
   :directory => '/opt/kibana3',
   :location => '/kibana3',
 }
