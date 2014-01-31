@@ -9,6 +9,7 @@ define :php5_pear_module, {
   opts << "--alldeps" if php5_pear_module_params[:alldeps]
 
   execute "install pear module #{php5_pear_module_params[:name]}" do
+  	environment 'HOME' => get_home('root')
     command "pear install #{opts.join(' ')} #{php5_pear_module_params[:name]}"
     not_if "pear list-files #{php5_pear_module_params[:name]} > /dev/null"
   end

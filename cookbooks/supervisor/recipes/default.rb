@@ -1,5 +1,6 @@
 
 include_recipe "sudo"
+include_recipe "logrotate"
 
 package "supervisor"
 
@@ -28,6 +29,15 @@ basic_init_d node.supervisor.service_name do
     :term_time => Proc.new { find_resources_by_name_pattern(/^\/etc\/supervisor\/conf.d\/.*\.conf$/).length * node.supervisor.restart_delay_by_job },
     :kill_time => Proc.new { 5 },
   })
+end
+
+if node.logrotate[:auto_deploy]
+
+  logrotate_file "supervisord" do
+    files ["#{node.supervisor.log_dir}/supervisord.log"]
+    variables :post_rotate => "kill -USR2 `cat /var/run/supervisord.pid`"
+  end
+
 end
 
 delayed_exec "Remove useless supervisor config" do

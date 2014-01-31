@@ -30,6 +30,7 @@ class ServiceErrorHandler < Chef::Handler
     puts "*********************************************************"
     result = restart
     return if result == 0
+    return if node['no_kill_' +  @service_name]
     puts "Trying to kill processes : #{@pattern_for_process_kill}"
     puts %x{pkill -f '#{@pattern_for_process_kill}'}
     restart

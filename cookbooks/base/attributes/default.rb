@@ -27,4 +27,6 @@ default[:apt] = {
   :master_chef_add_apt_repo => true,
 }
 
+default[:apt_keys] = []
+
 default[:purge_sudoers] = true

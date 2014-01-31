@@ -21,12 +21,15 @@ define :warp_install, {
 
   end
 
+  install_env = get_proxy_environment("HOME" => get_home(warp_install_params[:name]))
+  install_env.merge!({"GIT_PREFIX" => "http"}) if node.git.auto_use_http_for_github && ENV['BACKUP_http_proxy']
+
   if warp_install_params[:nvm]
 
     home = get_home warp_install_params[:name]
     execute "install nvm for user #{warp_install_params[:name]}" do
       user warp_install_params[:name]
-      environment get_proxy_environment("HOME" => get_home(warp_install_params[:name]))
+      environment install_env
       command "#{home}/.warp/common/node/install_nvm.sh"
     end
 
@@ -37,7 +40,7 @@ define :warp_install, {
     home = get_home warp_install_params[:name]
     execute "install rbenv for user #{warp_install_params[:name]}" do
       user warp_install_params[:name]
-      environment get_proxy_environment("HOME" => get_home(warp_install_params[:name]))
+      environment install_env
       command "#{home}/.warp/common/ruby/install_rbenv.sh"
     end
 

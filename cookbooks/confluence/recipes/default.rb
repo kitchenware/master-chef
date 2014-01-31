@@ -39,13 +39,13 @@ file "#{build_dir}/edit-webapp/WEB-INF/classes/confluence-init.properties" do
   content "confluence.home=#{node.confluence.path.home}"
 end
 
-target_war = tomcat_instance "confluence:tomcat" do
+tomcat_instance "confluence:tomcat" do
   war_location node.confluence.location
 end
 
 execute_version "build confluence" do
   user node.tomcat.user
-  command "cd #{build_dir} && sh build.sh clean && sh build.sh && cp dist/confluence-#{node.confluence.version}.war #{target_war}"
+  command "cd #{build_dir} && sh build.sh clean && sh build.sh && cp dist/confluence-#{node.confluence.version}.war #{node.tomcat.instances["confluence:tomcat"][:war]}"
   version node.confluence.url
   file_storage "#{build_dir}/.confluence_build"
 end

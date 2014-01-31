@@ -1,3 +1,4 @@
+require 'net/http'
 
 include_recipe "java"
 
@@ -6,18 +7,6 @@ base_user node.elasticsearch.user
 optional_config = ""
 init_d_code = []
 init_d_code << "ulimit -n 65000\nexport JAVA_OPTS=\"#{node.elasticsearch.java_opts}\""
-
-if node.elasticsearch.transport_zmq.enable
-
-  include_recipe "libzmq::jzmq"
-
-  optional_config += <<-EOF
-zeromq.bind: #{node.elasticsearch.transport_zmq.listen}
-EOF
-
-  init_d_code << "export LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH:#{node.libzmq.jzmq.directory}/lib\""
-
-end
 
 directory node.elasticsearch.directory_data do
   owner node.elasticsearch.user
@@ -69,14 +58,48 @@ template "#{node.elasticsearch.directory}/config/logging.yml" do
   notifies :restart, "service[elasticsearch]"
 end
 
-if node.elasticsearch.transport_zmq.enable
+node.elasticsearch.plugins.each do |k, v|
 
-  execute_version "install transport zmq" do
-    command "cd #{node.elasticsearch.directory} && curl --location #{node.elasticsearch.transport_zmq.url} -o /tmp/plugin_file.zip && rm -rf plugins/transport-zeromq &&  mkdir -p plugins/transport-zeromq && cd plugins/transport-zeromq && unzip /tmp/plugin_file.zip && rm jzmq-1.0.0.jar && ln -s /opt/jzmq/share/java/zmq.jar jzmq-1.0.0.jar"
+  next unless v[:enable]
+
+  command = "bin/plugin -install #{v[:id]}"
+  command += " --url #{v[:url]}" if v[:url]
+
+  execute_version "install elasticsearch plugin #{k}" do
+    command "cd #{node.elasticsearch.directory} && #{command}"
     environment get_proxy_environment
-    file_storage "#{node.elasticsearch.directory}/.zmq_transport"
-    version node.elasticsearch.url + node.elasticsearch.transport_zmq.url
+    version "#{k}_#{v[:id]}"
+    file_storage "#{node.elasticsearch.directory}/.plugin_install_#{k}"
     notifies :restart, "service[elasticsearch]"
+  end
+
+  if v[:post_install_curl]
+
+    delayed_exec "install elasticsearch plugin #{k} post curl" do
+      block do
+        check_file = "#{node.elasticsearch.directory}/.plugin_#{k}_post_curl"
+        if !File.exists?(check_file) || File.read(check_file) != '1'
+          Chef::Log.info("Sending #{v[:post_install_curl][:method]} request to elasticsearch")
+          req = eval('Net::HTTP::' + v[:post_install_curl][:method]).new(v[:post_install_curl][:path], {'Content-Type' => 'application/json'})
+          req.body = JSON.dump(v[:post_install_curl][:json_content])
+          counter = 0
+          while true do
+            begin
+              resp = Net::HTTP.new('localhost', node.elasticsearch.http_port).start {|http| http.request(req) }
+              break
+            rescue
+              counter += 1
+              raise "Too many try for post install #{k}" if counter > 10
+              sleep 2
+            end
+          end
+          raise "Wrong return for post install #{k} : #{resp.code}" unless v[:post_install_curl][:return_codes].include?(resp.code.to_i)
+          Chef::Log.info("Request result ok")
+          File.open(check_file, 'w') {|io| io.write(1)}
+        end
+      end
+    end
+
   end
 
 end

@@ -6,12 +6,18 @@ define :add_apt_key, {
 
   raise "Please specify key_server with add_apt_key" unless add_apt_key_params[:key_server]
 
-  params = ""
-  params += "--keyserver-options http-proxy=#{ENV['BACKUP_http_proxy']}" if ENV['BACKUP_http_proxy']
+  unless node.apt_keys.include? add_apt_key_params[:name]
 
-  execute "add apt key #{add_apt_key_params[:name]}" do
-    command "apt-key adv #{params} --keyserver #{add_apt_key_params[:key_server]} --recv-keys #{add_apt_key_params[:name]}"
-    not_if "apt-key list | grep #{add_apt_key_params[:name]}"
+    params = ""
+    params += "--keyserver-options http-proxy=#{ENV['BACKUP_http_proxy']}" if ENV['BACKUP_http_proxy']
+
+    execute "add apt key #{add_apt_key_params[:name]}" do
+      command "apt-key adv #{params} --keyserver #{add_apt_key_params[:key_server]} --recv-keys #{add_apt_key_params[:name]}"
+      not_if "apt-key list | grep #{add_apt_key_params[:name]}"
+    end
+
+    node.set[:apt_keys] = node.apt_keys + [add_apt_key_params[:name]]
+
   end
 
 end

@@ -7,14 +7,18 @@ if [ "$PROXY" != "" ]; then
 fi
 
 if [ "$MASTER_CHEF_URL" = "" ]; then
+  MASTER_CHEF_URL="http://github.com/kitchenware/master-chef.git"
+fi
+
+if [ "$MASTER_CHEF_DIRECT_ACCESS_URL" = "" ]; then
   # non standard url. rawgithub.com support http, raw.github.com does not
-  MASTER_CHEF_URL="http://rawgithub.com/kitchenware/master-chef"
+  MASTER_CHEF_DIRECT_ACCESS_URL="http://rawgithub.com/kitchenware/master-chef"
 fi
 
 if [ "$MASTER_CHEF_HASH_CODE" = "" ]; then
   MASTER_CHEF_HASH_CODE="master"
 else
-  MASTER_CHEF_FIRST_RUN="GIT_TAG_OVERRIDE=\"http://github.com/kitchenware/master-chef.git=$MASTER_CHEF_HASH_CODE\""
+  MASTER_CHEF_FIRST_RUN="GIT_TAG_OVERRIDE=\"$MASTER_CHEF_URL=$MASTER_CHEF_HASH_CODE\""
 fi
 
 print() {
@@ -56,7 +60,7 @@ exec_command_chef() {
 install_master_chef_file() {
   file=$1
   target=$2
-  url="$MASTER_CHEF_URL/$MASTER_CHEF_HASH_CODE/$file"
+  url="$MASTER_CHEF_DIRECT_ACCESS_URL/$MASTER_CHEF_HASH_CODE/$file"
   echo "Downloading $url to $target"
   exec_command "$SUDO $PROXY curl -f -s -L $url -o $target"
 }
@@ -90,10 +94,10 @@ if which apt-get > /dev/null; then
 
   print "Debian based distribution detected"
 
-  exec_command "$SUDO apt-get update"
+  exec_command "$SUDO $APT_PROXY apt-get update"
 
   if ! which lsb_release > /dev/null; then
-    exec_command "$SUDO apt-get install -y lsb-release"
+    exec_command "$SUDO $APT_PROXY apt-get install -y lsb-release"
   fi
 
   distro=`lsb_release -cs`
@@ -102,20 +106,20 @@ if which apt-get > /dev/null; then
 
   case $distro in
     squeeze)
-      exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file libreadline5"
+      exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2 unzip sudo file libreadline5"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.8.0-1.debian.6.0.5_${arch}.deb"
       ;;
     wheezy)
-      exec_command "$SUDO apt-get install -y git-core curl bzip2 sudo file"
+      exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2 unzip sudo file"
       # for now we use the package for squeeze
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.8.0-1.debian.6.0.5_${arch}.deb"
       ;;
     lucid)
-      exec_command "$SUDO apt-get install -y git-core curl bzip2"
+      exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2 unzip"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/${opscode_dir}/chef_11.8.0-1.ubuntu.10.04_${arch}.deb"
       ;;
     precise)
-      exec_command "$SUDO apt-get install -y git-core curl bzip2"
+      exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2 unzip"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/${opscode_dir}/chef_11.8.0-1.ubuntu.12.04_${arch}.deb"
       ;;
     *)
@@ -160,9 +164,9 @@ exec_command_chef "sudo dpkg -i `basename $OMNIBUS_DEB`"
 exec_command "$SUDO mkdir -p /opt/master-chef/etc"
 install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/opt/master-chef/etc/solo.rb"
 $SUDO sed -i '/^<%=/d' "/opt/master-chef/etc/solo.rb"
-install_master_chef_file "runtime/local.json" "/opt/master-chef/etc/local.json"
+exec_command_chef "echo '{\\\"repos\\\":{\\\"git\\\":[\\\"$MASTER_CHEF_URL\\\"]},\\\"run_list\\\":[\\\"recipe[master_chef::chef_solo_scripts]\\\"],\\\"node_config\\\":{}}' | sudo tee /opt/master-chef/etc/local.json > /dev/null"
 
-print "Bootstraping master-chef"
+print "Bootstraping master-chef, using url $MASTER_CHEF_URL"
 
 exec_command_chef "VAR_CHEF=/opt/chef/var GIT_CACHE_DIRECTORY=/opt/master-chef/var/git_repos $PROXY $MASTER_CHEF_FIRST_RUN MASTER_CHEF_CONFIG=/opt/master-chef/etc/local.json sudo -E /opt/chef/bin/chef-solo -c /opt/master-chef/etc/solo.rb"
 

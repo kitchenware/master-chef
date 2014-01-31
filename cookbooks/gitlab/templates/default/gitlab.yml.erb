@@ -26,7 +26,9 @@ production: &base
     # 2) In your gitlab.yml file: relative_url_root: /gitlab
     # 3) In your unicorn.rb: ENV['RAILS_RELATIVE_URL_ROOT'] = "/gitlab"
     #
+<% if @location != '/' %>
     relative_url_root: <%= @location %>
+<% end %>
 
     # Uncomment and customize if you can't use the default user to run GitLab (default: 'git')
     user: <%= @user %>
@@ -40,10 +42,8 @@ production: &base
 
     ## User settings
     default_projects_limit: <%= @default_projects_limit %>
-    default_can_create_group: <%= @default_can_create_group %>
-    username_changing_enabled: false
-    # default_can_create_group: false  # default: true
-    # username_changing_enabled: false # default: true - User can change her username/namespace
+    default_can_create_group: <%= @default_can_create_group %> # default: true
+    username_changing_enabled: false # default: true - User can change her username/namespace
     ## Default theme
     ##   BASIC  = 1
     ##   MARS   = 2
@@ -59,7 +59,7 @@ production: &base
 
     ## Automatic issue closing
     # If a commit message matches this regular expression, all issues referenced from the matched text will be closed.
-    # This  happends when the commit is pushed or merged into the default branch of a project.
+    # This happens when the commit is pushed or merged into the default branch of a project.
     # When not specified the default issue_closing_pattern as specified below will be used.
     # issue_closing_pattern: ([Cc]loses|[Ff]ixes) +#\d+
 
@@ -132,6 +132,11 @@ production: &base
     allow_single_sign_on: <%= @omniauth[:allow_single_sign_on] %>
     # Locks down those users until they have been cleared by the admin (default: true).
     block_auto_created_users: <%= @omniauth[:block_auto_created_users] %>
+
+<% if @email_domain %>
+    # Limit email domain of users to a specific one like example.com (default: false)
+    email_domain: <%= @email_domain %>
+<% end %>
 
     ## Auth providers
     # Uncomment the following lines and fill in the data of the auth provider you want to use

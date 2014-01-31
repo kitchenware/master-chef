@@ -1,5 +1,3 @@
-<% if node.nginx.default_vhost.enabled %>
-
 <% node.nginx.default_vhost.locations.each do |location| %>
   <%= location[:upstream] %>
 <% end %>
@@ -31,5 +29,3 @@ server {
     error_page 500 501 502 503 504 505 /500.html;
   <% end %>
 }
-
-<% end %>

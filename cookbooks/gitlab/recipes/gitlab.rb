@@ -41,6 +41,7 @@ end
 
 unicorn_rails_app "gitlab" do
   location node.gitlab.config.location
+  configure_nginx node.gitlab.config.configure_nginx
 end
 
 rails_worker "gitlab_sidekik" do

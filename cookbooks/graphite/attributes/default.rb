@@ -3,10 +3,11 @@ default[:graphite] = {
     :whisper => "git://github.com/graphite-project/whisper.git",
     :carbon => "git://github.com/graphite-project/carbon.git",
     :web_app => "git://github.com/graphite-project/graphite-web.git",
-    :version => "0.9.10",
+    :version => "0.9.12",
   },
   :directory => '/opt/graphite',
   :directory_install => '/opt/graphite/install',
+  :django_version => '1.4.10',
 }
 
 default[:graphite][:graphite] = {
@@ -25,7 +26,7 @@ default[:graphite][:xFilesFactor] = 0.5
 default[:graphite][:timezone] = "Europe/Paris"
 
 default[:graphite][:bucky] = {
-  :url => "http://pypi.python.org/packages/source/b/bucky/bucky-0.2.2.tar.gz",
+  :version => "0.2.6",
   :collectd_port => 25826,
 }
 
@@ -38,8 +39,8 @@ default[:graphite][:statsd] = {
   :user => 'statsd',
   :directory => '/opt/statsd',
   :port => 8125,
-  :version => 'v0.5.0',
-  :node_version => '0.8.7',
+  :version => 'v0.7.0',
+  :node_version => '0.10.4',
   :git => 'git://github.com/etsy/statsd.git',
   :graphite_host => 'localhost',
   :graphite_port => '2003',

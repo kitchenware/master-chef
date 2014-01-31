@@ -9,6 +9,7 @@ define :nodejs_app, {
   :add_log_param => true,
   :node_env => "production",
   :check_start => nil,
+  :logrotate_files => [],
 } do
 
   nodejs_app_params = params
@@ -17,12 +18,25 @@ define :nodejs_app, {
   raise "You have to specify script in nodejs_app" unless nodejs_app_params[:script]
 
   include_recipe "capistrano"
+  include_recipe "logrotate"
 
   directory = nodejs_app_params[:directory] || ::File.join(get_home(nodejs_app_params[:user]), nodejs_app_params[:name])
 
   current_path = ::File.join(directory, "current")
   extended_options = ""
-  extended_options += " --log_file #{directory}/shared/log/#{nodejs_app_params[:name]}.log" if nodejs_app_params[:add_log_param]
+  if nodejs_app_params[:add_log_param]
+    extended_options += " --log_file #{directory}/shared/log/#{nodejs_app_params[:name]}.log"
+
+    if node.logrotate[:auto_deploy]
+
+      logrotate_file "nodejs_log_file_#{nodejs_app_params[:name]}" do
+        files (["#{nodejs_app_params[:name]}.log"] + nodejs_app_params[:logrotate_files]).map{|x| "#{directory}/shared/log/#{x}"}
+        variables :post_rotate => "kill -USR2 `cat #{directory}/shared/#{nodejs_app_params[:name]}.pid`", :user => nodejs_app_params[:user]
+      end
+
+    end
+
+  end
 
   capistrano_app directory do
     user nodejs_app_params[:user]
@@ -39,6 +53,16 @@ define :nodejs_app, {
       :stdout_log_file => "#{directory}/shared/log/#{nodejs_app_params[:name]}_stdout.log",
     })
     mode '0755'
+  end
+
+  if node.logrotate[:auto_deploy]
+
+    logrotate_file "nodejs_stdout_#{nodejs_app_params[:name]}" do
+      files ["#{directory}/shared/log/#{nodejs_app_params[:name]}_stdout.log"]
+      user nodejs_app_params[:user]
+      variables :copytruncate => true
+    end
+
   end
 
   basic_init_d nodejs_app_params[:name] do

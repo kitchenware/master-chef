@@ -47,7 +47,7 @@ end
 
 if node.haproxy.config.stats.enabled
 
-  haproxy_vhost "stats_#{node.hostname} %>" do
+  haproxy_vhost "stats_#{node.hostname}" do
     source "stats.conf.erb"
     variables :config => node.haproxy.config
   end
