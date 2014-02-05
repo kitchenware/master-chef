@@ -1,7 +1,7 @@
 
 default[:elasticsearch] = {
   :user => 'elastic',
-  :url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.0.0.Beta2.tar.gz',
+  :url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.0.0.RC1.tar.gz',
   :directory => '/opt/elasticsearch',
   :directory_data => '/opt/elasticsearch_data',
   :java_opts => '',
