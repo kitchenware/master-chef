@@ -10,6 +10,7 @@ define :nodejs_app, {
   :node_env => "production",
   :check_start => nil,
   :logrotate_files => [],
+  :no_capistrano_app => false,
 } do
 
   nodejs_app_params = params
@@ -38,11 +39,13 @@ define :nodejs_app, {
 
   end
 
-  capistrano_app directory do
-    user nodejs_app_params[:user]
+  unless nodejs_app_params[:no_capistrano_app]
+    capistrano_app directory do
+      user nodejs_app_params[:user]
+    end
   end
 
-  template "#{directory}/shared/run_node.sh" do
+  template "#{directory}/shared/run_node_#{nodejs_app_params[:name]}.sh" do
     source "run_node.sh.erb"
     cookbook "nodejs"
     owner nodejs_app_params[:user]
@@ -66,7 +69,7 @@ define :nodejs_app, {
   end
 
   basic_init_d nodejs_app_params[:name] do
-    daemon "#{directory}/shared/run_node.sh"
+    daemon "#{directory}/shared/run_node_#{nodejs_app_params[:name]}.sh"
     file_check ["#{directory}/current/#{nodejs_app_params[:script]}"] + nodejs_app_params[:file_check]
     directory_check nodejs_app_params[:directory_check]
     options nodejs_app_params[:script]
