@@ -1,4 +1,3 @@
-require 'net/http'
 
 include_recipe "java"
 
@@ -84,30 +83,21 @@ if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zer
 
   delayed_exec "configure zeromq river" do
     block do
-      check_file = "#{node.elasticsearch.directory_data}/.configure_zeromq_river"
-      if !File.exists?(check_file) || File.read(check_file) != '1'
-        Chef::Log.info("Creating river " + zeromq_river_name + "into elasticsearch")
-        req = Net::HTTP::Put.new("/_river/#{zeromq_river_name}/_meta", {'Content-Type' => 'application/json'})
-        req.body = JSON.dump({
+      Chef::Log.info("Creating river " + zeromq_river_name + "into elasticsearch")
+      driver = ElasticsearchDriver.new('localhost', node.elasticsearch.http_port)
+      driver.wait_ready
+      code, body = driver.get "/_river/#{zeromq_river_name}/_meta"
+      if code == 200
+        Chef::Log.info("River already exists")
+      else
+        code = driver.put "/_river/#{zeromq_river_name}/_meta", {
           :type => 'zeromq-logstash',
           :'zeromq-logstash' => {
             :address => node.elasticsearch.configure_zeromq_river.address,
           }
-        })
-        counter = 0
-        while true do
-          begin
-            resp = Net::HTTP.new('localhost', node.elasticsearch.http_port).start {|http| http.request(req) }
-            break
-          rescue
-            counter += 1
-            raise "Too many try forconfiguring zeromq river" if counter > 30
-            sleep 2
-          end
-        end
-        raise "Wrong return for configuring zeromq river : #{resp.code}" unless resp.code.to_i == 201
-        Chef::Log.info("Request result ok")
-        File.open(check_file, 'w') {|io| io.write(1)}
+        }
+        raise "Unable to create river : #{code} #{body}" unless code == 201
+        Chef::Log.info("River created")
       end
     end
   end
