@@ -84,7 +84,7 @@ if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zer
 
   delayed_exec "configure zeromq river" do
     block do
-      check_file = "#{node.elasticsearch.directory}/.configure_zeromq_river"
+      check_file = "#{node.elasticsearch.directory_data}/.configure_zeromq_river"
       if !File.exists?(check_file) || File.read(check_file) != '1'
         Chef::Log.info("Creating river " + zeromq_river_name + "into elasticsearch")
         req = Net::HTTP::Put.new("/_river/#{zeromq_river_name}/_meta", {'Content-Type' => 'application/json'})
