@@ -76,7 +76,8 @@ f = Tempfile.new 'local.json'
 f.write JSON.pretty_generate(json)
 f.close
 
-exec_local "scp #{ssh_opts} #{f.path} #{user}@#{server}:#{tmp_file}"
+exec_local "scp #{ssh_opts} #{f.path} #{user}@#{server}:/tmp/local_tmp_json"
+exec_local "ssh #{ssh_opts} #{user}@#{server} 'sudo mv /tmp/local_tmp_json #{tmp_file}'"
 
 envs = "MASTER_CHEF_CONFIG=#{tmp_file}"
 envs += " http_proxy=#{ENV["PROXY"]} https_proxy=#{ENV["PROXY"]}" if ENV["PROXY"]
