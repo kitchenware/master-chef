@@ -1,12 +1,16 @@
-require 'net/http'
 
 include_recipe "java"
 
 base_user node.elasticsearch.user
 
-optional_config = ""
+optional_config = node.elasticsearch[:config] || ""
 init_d_code = []
 init_d_code << "ulimit -n 65000\nexport JAVA_OPTS=\"#{node.elasticsearch.java_opts}\""
+
+if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zeromq_river.enable
+  zeromq_river_name = "zeromq_river_" + node.hostname
+  optional_config += "\nnode.river: " + zeromq_river_name + "\n"
+end
 
 directory node.elasticsearch.directory_data do
   owner node.elasticsearch.user
@@ -73,33 +77,29 @@ node.elasticsearch.plugins.each do |k, v|
     notifies :restart, "service[elasticsearch]"
   end
 
-  if v[:post_install_curl]
+end
 
-    delayed_exec "install elasticsearch plugin #{k} post curl" do
-      block do
-        check_file = "#{node.elasticsearch.directory}/.plugin_#{k}_post_curl"
-        if !File.exists?(check_file) || File.read(check_file) != '1'
-          Chef::Log.info("Sending #{v[:post_install_curl][:method]} request to elasticsearch")
-          req = eval('Net::HTTP::' + v[:post_install_curl][:method]).new(v[:post_install_curl][:path], {'Content-Type' => 'application/json'})
-          req.body = JSON.dump(v[:post_install_curl][:json_content])
-          counter = 0
-          while true do
-            begin
-              resp = Net::HTTP.new('localhost', node.elasticsearch.http_port).start {|http| http.request(req) }
-              break
-            rescue
-              counter += 1
-              raise "Too many try for post install #{k}" if counter > 10
-              sleep 2
-            end
-          end
-          raise "Wrong return for post install #{k} : #{resp.code}" unless v[:post_install_curl][:return_codes].include?(resp.code.to_i)
-          Chef::Log.info("Request result ok")
-          File.open(check_file, 'w') {|io| io.write(1)}
-        end
+if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zeromq_river.enable
+
+  delayed_exec "configure zeromq river" do
+    block do
+      Chef::Log.info("Creating river " + zeromq_river_name + "into elasticsearch")
+      driver = ElasticsearchDriver.new('localhost', node.elasticsearch.http_port)
+      driver.wait_ready
+      code, body = driver.get "/_river/#{zeromq_river_name}/_meta"
+      if code == 200
+        Chef::Log.info("River already exists")
+      else
+        code = driver.put "/_river/#{zeromq_river_name}/_meta", {
+          :type => 'zeromq-logstash',
+          :'zeromq-logstash' => {
+            :address => node.elasticsearch.configure_zeromq_river.address,
+          }
+        }
+        raise "Unable to create river : #{code} #{body}" unless code == 201
+        Chef::Log.info("River created")
       end
     end
-
   end
 
 end
