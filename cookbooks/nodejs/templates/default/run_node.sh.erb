@@ -9,7 +9,9 @@ fi
 
 [ -f /etc/default/<%= @name %> ] && . /etc/default/<%= @name %>
 
-NODE_OPTS="$NODE_OPTS <%= @extended_options %>"
+if [ "$NO_NODE_OPTS" = "" ]; then
+	NODE_OPTS="$NODE_OPTS <%= @extended_options %>"
+fi
 
 export NODE_ENV=<%= @node_env %>
 
