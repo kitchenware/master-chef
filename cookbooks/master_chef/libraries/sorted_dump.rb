@@ -190,7 +190,22 @@ module SortedJsonDump
     end
   end
 
+  def self.recurse_merge map
+    target = {}
+    map.each do |k, v|
+      k = k.to_s if k.is_a? Symbol
+      p k, v
+      if v.is_a? Hash
+        target[k] = (target[k] || {}).merge(SortedJsonDump.recurse_merge(v))
+      else
+        target[k] = v
+      end
+    end
+    target
+  end
+
   def pretty_generate map
+    map = SortedJsonDump.recurse_merge map.to_hash.dup
     JSON.pretty_generate dup_sorted(map)
   end
 
