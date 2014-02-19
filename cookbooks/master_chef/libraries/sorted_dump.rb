@@ -194,7 +194,6 @@ module SortedJsonDump
     target = {}
     map.each do |k, v|
       k = k.to_s if k.is_a? Symbol
-      p k, v
       if v.is_a? Hash
         target[k] = (target[k] || {}).merge(SortedJsonDump.recurse_merge(v))
       else
