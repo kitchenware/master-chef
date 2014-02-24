@@ -25,5 +25,5 @@ fi
 if [ "$REDIRECT_OUTPUT" = "" ]; then
   exec node $* $NODE_OPTS
 else
-  exec node $* $NODE_OPTS 2>1 >> <%= @stdout_log_file %>
+  exec node $* $NODE_OPTS >> <%= @stdout_log_file %> 2>&1
 fi
