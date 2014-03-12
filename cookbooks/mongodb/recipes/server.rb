@@ -39,13 +39,9 @@ end
 
 if node.logrotate[:auto_deploy]
 
-	if node.platform == "ubuntu"
-
-		logrotate_file "mongodb" do
-		  files ["/var/log/mongodb/mongodb.log"]
-		  variables :post_rotate => "kill -USR1 $(initctl status mongodb | awk '{print $4}')"
-		end
-
+	logrotate_file "mongodb" do
+	  files ["/var/log/mongodb/mongodb.log"]
+	  variables :post_rotate => "kill -USR1 $(cat /var/lib/mongodb/mongod.lock) && rm -f /var/log/mongodb/mongodb.log.????-??-??T??-??-??"
 	end
 
 end
