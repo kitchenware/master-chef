@@ -36,3 +36,16 @@ template "/etc/mongodb.conf" do
 	variables node.mongodb.to_hash
 	notifies :restart, "service[mongodb]", :immediately
 end
+
+if node.logrotate[:auto_deploy]
+
+	if node.platform == "ubuntu"
+
+		logrotate_file "mongodb" do
+		  files ["/var/log/mongodb/mongodb.log"]
+		  variables :post_rotate => "kill -USR1 $(initctl status mongodb | awk '{print $4}')"
+		end
+
+	end
+
+end
