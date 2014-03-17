@@ -5,7 +5,6 @@ define :add_apt_key, {
 } do
   add_apt_key_params = params
 
-p add_apt_key_params
   raise "Please specify key_server or key_url with add_apt_key" unless add_apt_key_params[:key_server] || add_apt_key_params[:key_url]
 
   unless node.apt_keys.include? add_apt_key_params[:name]
