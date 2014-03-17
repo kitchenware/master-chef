@@ -1,4 +1,3 @@
-name "offline_proxy"
+name 'offline_proxy'
 
-depends "logrotate"
 depends "nodejs"

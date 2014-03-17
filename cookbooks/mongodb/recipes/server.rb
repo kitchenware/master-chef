@@ -37,6 +37,8 @@ template "/etc/mongodb.conf" do
 	notifies :restart, "service[mongodb]", :immediately
 end
 
+include_recipe "logrotate"
+
 if node.logrotate[:auto_deploy]
 
 	logrotate_file "mongodb" do

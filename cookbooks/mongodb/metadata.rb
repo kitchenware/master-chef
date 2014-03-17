@@ -1,2 +1,3 @@
 name 'mongodb'
 
+depends "logrotate"
