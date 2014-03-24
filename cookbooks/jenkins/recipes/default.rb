@@ -15,8 +15,14 @@ tomcat_jenkins_http_port = tomcat_config("jenkins:tomcat")[:connectors][:http][:
 nginx_add_default_location "jenkins" do
   content <<-EOF
 
+  set $my_protocol http;
+  if ($http_x_forwarded_proto = "https") {
+    set $my_protocol https;
+  }
+
   location #{node.jenkins.location} {
     proxy_pass http://tomcat_jenkins_upstream;
+    proxy_redirect http://tomcat_jenkins_upstream $my_protocol://$http_host;
     break;
   }
 

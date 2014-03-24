@@ -15,7 +15,7 @@ default[:jenkins][:tomcat] = {
 }
 
 default[:jenkins][:update_site] = "http://mirrors.jenkins-ci.org/plugins"
-default[:jenkins][:plugins] = []
+default[:jenkins][:plugins] = ['credentials', 'ssh-credentials', 'git-client', 'scm-api', 'git', 'greenballs']
 
 
 default[:jenkins][:install_maven] = false
