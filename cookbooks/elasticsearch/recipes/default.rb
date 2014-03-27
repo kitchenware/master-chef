@@ -103,3 +103,17 @@ if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zer
   end
 
 end
+
+
+if node.logrotate[:auto_deploy]
+
+  logrotate_file "elasticsearch" do
+    files [
+      "#{node.elasticsearch.directory}/logs/#{node.elasticsearch.cluster_name}.log",
+      "#{node.elasticsearch.directory}/logs/#{node.elasticsearch.cluster_name}_index_indexing_slowlog.log",
+      "#{node.elasticsearch.directory}/logs/#{node.elasticsearch.cluster_name}_index_search_slowlog.log",
+    ]
+    variables :copytruncate => true, :user => node.elasticsearch.user
+  end
+
+end
