@@ -62,8 +62,7 @@ define :nodejs_app, {
 
     logrotate_file "nodejs_stdout_#{nodejs_app_params[:name]}" do
       files ["#{directory}/shared/log/#{nodejs_app_params[:name]}_stdout.log"]
-      user nodejs_app_params[:user]
-      variables :copytruncate => true
+      variables :copytruncate => true, :user => nodejs_app_params[:user]
     end
 
   end
