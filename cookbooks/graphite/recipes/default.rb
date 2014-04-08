@@ -50,7 +50,7 @@ end
 template "/etc/init.d/carbon" do
   source "carbon_init_d.erb"
   mode '0755'
-  variables :graphite_directory => node.graphite.directory, :whisper_dev_shm => node.graphite.whisper_dev_shm
+  variables :graphite_directory => node.graphite.directory, :whisper_dev_shm => node.graphite[:whisper_dev_shm]
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("carbon", "\\/opt\\/graphite\\/conf\\/.*")
