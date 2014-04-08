@@ -10,6 +10,7 @@ define :nodejs_app, {
   :node_env => "production",
   :check_start => nil,
   :logrotate_files => [],
+  :ulimit => nil,
   :no_capistrano_app => false,
 } do
 
@@ -67,6 +68,11 @@ define :nodejs_app, {
 
   end
 
+  code = "export REDIRECT_OUTPUT=true\n"
+  if nodejs_app_params[:ulimit]
+    code += "ulimit -n #{nodejs_app_params[:ulimit]}"
+  end
+
   basic_init_d nodejs_app_params[:name] do
     daemon "#{directory}/shared/run_node_#{nodejs_app_params[:name]}.sh"
     file_check ["#{directory}/current/#{nodejs_app_params[:script]}"] + nodejs_app_params[:file_check]
@@ -76,14 +82,16 @@ define :nodejs_app, {
     user nodejs_app_params[:user]
     working_directory "#{directory}/current"
     vars_to_unset ["NVM_DIR"]
-    code "export REDIRECT_OUTPUT=true"
+    code code
     run_code "unset REDIRECT_OUTPUT"
     check_start nodejs_app_params[:check_start] if nodejs_app_params[:check_start]
   end
 
+  default_content = "NODE_OPTS=\"#{nodejs_app_params[:opts]}\"\n"
+
   file "/etc/default/#{nodejs_app_params[:name]}" do
     mode '0755'
-    content "NODE_OPTS=\"#{nodejs_app_params[:opts]}\""
+    content default_content
     notifies :restart, "service[#{nodejs_app_params[:name]}]"
   end
 
