@@ -50,7 +50,7 @@ end
 template "/etc/init.d/carbon" do
   source "carbon_init_d.erb"
   mode '0755'
-  variables :graphite_directory => node.graphite.directory
+  variables :graphite_directory => node.graphite.directory, :whisper_dev_shm => node.graphite.whisper_dev_shm
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("carbon", "\\/opt\\/graphite\\/conf\\/.*")
@@ -109,6 +109,16 @@ end
 directory_recurse_chmod_chown "#{node.graphite.directory}/storage" do
   owner "www-data"
 end
+
+
+if node.graphite[:whisper_dev_shm]
+
+  link "#{node.graphite.directory}/storage/whisper" do
+    to "/dev/shm/whisper"
+  end
+
+end
+
 
 directory_recurse_chmod_chown "#{node.graphite.directory}/lib/twisted/plugins" do
   owner "www-data"

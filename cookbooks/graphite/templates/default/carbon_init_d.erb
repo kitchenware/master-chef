@@ -10,6 +10,12 @@
 ### END INIT INFO
 
 cd <%= @graphite_directory %>
+
+<% if @whisper_dev_shm %>
+mkdir -p /dev/shm/whisper
+chown -R www-data /dev/shm/whisper
+<% end %>
+
 sudo -u www-data ./bin/carbon-cache.py $*
 
 if [ "$1" = "stop" ]; then
