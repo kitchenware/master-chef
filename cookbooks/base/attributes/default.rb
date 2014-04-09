@@ -30,3 +30,7 @@ default[:apt] = {
 default[:apt_keys] = []
 
 default[:purge_sudoers] = true
+
+default[:purge_limits] = true
+
+

@@ -70,7 +70,16 @@ define :nodejs_app, {
 
   code = "export REDIRECT_OUTPUT=true\n"
   if nodejs_app_params[:ulimit]
+
     code += "ulimit -n #{nodejs_app_params[:ulimit]}"
+
+    limits_d "nodejs_#{nodejs_app_params[:name]}_#{nodejs_app_params[:user]}" do
+      content <<-EOF
+#{nodejs_app_params[:user]} hard nofile #{nodejs_app_params[:ulimit]}
+#{nodejs_app_params[:user]} soft nofile #{nodejs_app_params[:ulimit]}
+EOF
+    end
+
   end
 
   basic_init_d nodejs_app_params[:name] do
