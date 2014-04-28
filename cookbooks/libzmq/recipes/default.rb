@@ -1,3 +1,4 @@
+
 if node.lsb.codename == "lucid" && node.apt.master_chef_add_apt_repo
 
   add_apt_repository "ppa_pgm" do
@@ -24,4 +25,14 @@ if node.lsb.codename == "squeeze" && node.apt.master_chef_add_apt_repo
 
 end
 
-package "libzmq1"
+if node.libzmq[:zmq_version]
+
+  package_fixed_version "libzmq1" do
+    version node.libzmq.zmq_version
+  end
+
+else
+
+  package "libzmq1"
+
+end
