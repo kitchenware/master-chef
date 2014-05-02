@@ -15,8 +15,8 @@ default[:ssh] = {
   :allow_ssh_root_login => false,
   :max_startups => "10:30:60",
   :use_dns => false,
-  :client_alive_interval => 60,
-  :client_alive_count_max => 3,
+  :client_alive_interval => 30,
+  :client_alive_count_max => 10,
   :gateway_ports => false,
 }
 
