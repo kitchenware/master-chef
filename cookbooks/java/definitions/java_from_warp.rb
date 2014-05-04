@@ -14,12 +14,13 @@ define :java_from_warp, {
     not_if "[ -d /usr/lib/jvm/#{jdk} ]"
   end
 
-  execute "update alternative #{jdk}" do
-    command <<-EOF
-    update-alternatives --install /usr/bin/java java /usr/lib/jvm/#{jdk}/bin/java 1 &&
-    update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/#{jdk}/bin/javac 1
-    EOF
-    not_if "update-alternatives --list java | grep #{jdk}"
+  ["java", "javac", "jstat", "jps"].each do |x|
+
+    execute "update alternative #{jdk} for #{x}" do
+      command "update-alternatives --install /usr/bin/#{x} #{x} /usr/lib/jvm/#{jdk}/bin/#{x} 1"
+      not_if "update-alternatives --list #{x} | grep #{jdk}"
+    end
+
   end
 
 end
