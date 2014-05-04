@@ -37,11 +37,22 @@ end
 incremental_template node.collectd.python_plugin.file do
   mode '0755'
   header <<-EOF
-<LoadPlugin python>
+<LoadPlugin "python">
   Globals true
 </LoadPlugin>
 EOF
-  header_if_block "<Plugin python>"
+  header_if_block "<Plugin \"python\">"
+  footer_if_block "</Plugin>"
+  indentation 2
+  notifies :restart, "service[collectd]"
+end
+
+incremental_template node.collectd.exec_plugin.file do
+  mode '0755'
+  header <<-EOF
+LoadPlugin "exec"
+EOF
+  header_if_block "<Plugin \"exec\">"
   footer_if_block "</Plugin>"
   indentation 2
   notifies :restart, "service[collectd]"

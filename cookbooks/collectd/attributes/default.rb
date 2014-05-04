@@ -18,3 +18,7 @@ default[:collectd][:python_plugin] = {
   :directory => "/opt/collectd/lib/collectd/plugins/python",
   :file => "/etc/collectd/collectd.d/python.conf"
 }
+
+default[:collectd][:exec_plugin] = {
+  :file => "/etc/collectd/collectd.d/exec.conf"
+}
