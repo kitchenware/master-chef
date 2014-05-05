@@ -108,6 +108,7 @@ end
 
 directory_recurse_chmod_chown "#{node.graphite.directory}/storage" do
   owner "www-data"
+  mode '0755'
 end
 
 if node.graphite[:whisper_dev_shm]
