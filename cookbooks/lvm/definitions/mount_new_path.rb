@@ -4,9 +4,6 @@ define :mount_new_path, {
   :fstype => 'ext4',
   :format => true,
   :options => 'defaults',
-  :owner => 'root',
-  :group => 'root',
-  :mode => '0700',
   :mkfs_options => ''
 } do
 
@@ -21,7 +18,7 @@ define :mount_new_path, {
     end
   end
 
-  # not using directory resource to avoir conflicts
+  # not using directory resource to avoid conflicts
   execute "create fake folder to allow mount on #{mount_new_path_params[:target]}" do
     command "mkdir #{mount_new_path_params[:target]}"
     not_if "[ -d #{mount_new_path_params[:target]} ]"
@@ -35,9 +32,9 @@ define :mount_new_path, {
   end
 
   directory mount_new_path_params[:target] do
-    owner mount_new_path_params[:owner]
-    group mount_new_path_params[:group]
-    mode mount_new_path_params[:mode]
+    owner mount_new_path_params[:owner] if mount_new_path_params[:owner]
+    group mount_new_path_params[:group] if mount_new_path_params[:group]
+    mode mount_new_path_params[:mode] if mount_new_path_params[:mode]
   end
 
 end
