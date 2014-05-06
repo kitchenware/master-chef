@@ -14,6 +14,7 @@ end
 
 directory node.elasticsearch.directory_data do
   owner node.elasticsearch.user
+  mode '0755'
   recursive true
 end
 
