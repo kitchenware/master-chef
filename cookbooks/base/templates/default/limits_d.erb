@@ -1,0 +1,5 @@
+<% node.user_limits[@user].each do |k, v| %>
+<% ['soft', 'hard'].each do |x| %>
+<%= @user %> <%= x %> <%= k %> <%= v %>
+<% end %>
+<% end %>

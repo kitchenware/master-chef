@@ -73,11 +73,10 @@ define :nodejs_app, {
 
     code += "ulimit -n #{nodejs_app_params[:ulimit]}"
 
-    limits_d "nodejs_#{nodejs_app_params[:name]}_#{nodejs_app_params[:user]}" do
-      content <<-EOF
-#{nodejs_app_params[:user]} hard nofile #{nodejs_app_params[:ulimit]}
-#{nodejs_app_params[:user]} soft nofile #{nodejs_app_params[:ulimit]}
-EOF
+    limits_d "nofile for app #{nodejs_app_params[:name]}" do
+      limit "nofile"
+      user nodejs_app_params[:user]
+      value nodejs_app_params[:ulimit]
     end
 
   end

@@ -33,4 +33,4 @@ default[:purge_sudoers] = true
 
 default[:purge_limits] = true
 
-
+default[:user_limits] = {}
