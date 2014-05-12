@@ -10,8 +10,8 @@ define :limits_d, {
   raise "Please specify limit with limits_d" unless limits_d_params[:limit]
   raise "Please specify value with limits_d" unless limits_d_params[:value]
 
-  if find_resources_by_name("/etc/security/limits.d/#{limits_d_params[:user]}").empty?
-    template "/etc/security/limits.d/#{limits_d_params[:user]}" do
+  if find_resources_by_name("/etc/security/limits.d/#{limits_d_params[:user]}.conf").empty?
+    template "/etc/security/limits.d/#{limits_d_params[:user]}.conf" do
       variables :user => limits_d_params[:user]
       source "limits_d.erb"
       cookbook "base"
@@ -25,7 +25,7 @@ define :limits_d, {
   ruby_block "update limits for #{limits_d_params[:user]} #{limits_d_params[:name]}" do
     block do
     end
-    notifies :create, "template[/etc/security/limits.d/#{limits_d_params[:user]}]"
+    notifies :create, "template[/etc/security/limits.d/#{limits_d_params[:user]}.conf]"
   end
 
 end
