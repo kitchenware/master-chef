@@ -2,8 +2,12 @@ include_recipe "java"
 
 package "libapr1"
 
-base_user node.tomcat.user do
-  home node.tomcat.home
+unless find_resources_by_class_pattern(/^Chef::Resource::User/).find{|u| u.name == node.tomcat.user}
+
+  base_user node.tomcat.user do
+    home node.tomcat.home
+  end
+
 end
 
 execute "install tomcat via warp" do

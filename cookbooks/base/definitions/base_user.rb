@@ -18,7 +18,6 @@ define :base_user, {
 
   end
 
-
   if node[:bash_users]
     node.set[:bash_users] = node.bash_users + [base_user_params[:name]]
   end
