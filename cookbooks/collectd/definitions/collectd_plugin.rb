@@ -11,7 +11,6 @@ define :collectd_plugin, {
     source "plugin.conf.erb"
     mode '0755'
     variables({
-    	:name => collectd_plugin_params[:name],
     	:plugin_name => collectd_plugin_params[:plugin_name] || collectd_plugin_params[:name],
     	:config => collectd_plugin_params[:config],
     })
