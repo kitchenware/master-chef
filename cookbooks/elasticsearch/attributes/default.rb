@@ -21,6 +21,10 @@ default[:elasticsearch] = {
       :enable => true,
       :id => 'mobz/elasticsearch-head'
     },
+    :hq => {
+      :enable => true,
+      :id => 'royrusso/elasticsearch-HQ'
+    },
     :zeromq_river => {
       :enable => true,
       :id => 'bpaquet/elasticsearch-river-zeromq/0.0.2',
