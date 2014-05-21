@@ -5,6 +5,5 @@ template "/etc/hosts" do
   variables({
     :hostname => node.hostname,
     :fqdn => node[:fqdn] || "",
-    :extended_hosts => node[:extended_hosts] || {},
   })
 end
