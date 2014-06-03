@@ -138,7 +138,12 @@ execute "configure wsgi" do
 end
 
 apache2_vhost "graphite:graphite" do
-  options :graphite_directory => node.graphite.directory, :wsgi_socket_prefix => "#{node.apache2.server_root}/wsgi"
+  options({
+    :graphite_directory => node.graphite.directory,
+    :wsgi_socket_prefix => "#{node.apache2.server_root}/wsgi",
+    :grafana_directory => "#{node.grafana.directory}/current",
+    :grafana_location => node.grafana.location,
+  })
 end
 
 template "#{node.graphite.directory}/conf/carbon.conf" do

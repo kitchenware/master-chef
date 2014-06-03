@@ -33,4 +33,6 @@ WSGIImportScript <%= @graphite_directory %>/conf/graphite.wsgi process-group=gra
     Allow from all
   </Directory>
 
+  Alias <%= @grafana_location %> <%= @grafana_directory %>
+
 </VirtualHost>

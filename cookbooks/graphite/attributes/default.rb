@@ -46,3 +46,10 @@ default[:graphite][:statsd] = {
   :graphite_port => '2003',
   :flush_interval => 10000,
 }
+
+default[:grafana] = {
+  :url => 'http://grafanarel.s3.amazonaws.com/grafana-',
+  :version => '1.5.4',
+  :directory => '/opt/grafana',
+  :location => '/grafana',
+}

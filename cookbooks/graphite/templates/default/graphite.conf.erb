@@ -33,4 +33,6 @@ WSGISocketPrefix <%= @wsgi_socket_prefix %>
     Allow from all
   </Directory>
 
+  Alias /grafana <%= @grafana_directory %>
+
 </VirtualHost>
