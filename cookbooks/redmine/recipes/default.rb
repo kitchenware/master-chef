@@ -74,7 +74,7 @@ cp_command = deployed_files.map{|f| "cp #{node.redmine.directory}/shared/files/#
 ruby_rbenv_command "initialize redmine" do
   user node.redmine.user
   directory "#{node.redmine.directory}/current"
-  code "rm -f .warped && #{cp_command} && rbenv warp install && rake generate_secret_token && RAILS_ENV=production rake db:migrate && RAILS_ENV=production REDMINE_LANG=fr rake redmine:load_default_data"
+  code "rm -f .warped && #{cp_command} && rbenv warp install && bundle exec rake generate_secret_token && RAILS_ENV=production bundle exec rake db:migrate && RAILS_ENV=production REDMINE_LANG=fr bundle exec rake redmine:load_default_data"
   environment get_proxy_environment
   file_storage "#{node.redmine.directory}/current/.redmine_ready"
   version node.redmine.version
