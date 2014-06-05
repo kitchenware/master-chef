@@ -11,6 +11,7 @@ define :nodejs_app, {
   :check_start => nil,
   :logrotate_files => [],
   :ulimit => nil,
+  :nice => nil,
   :no_capistrano_app => false,
 } do
 
@@ -54,6 +55,7 @@ define :nodejs_app, {
       :name => nodejs_app_params[:name],
       :extended_options => extended_options,
       :node_env => nodejs_app_params[:node_env],
+      :nice => nodejs_app_params[:nice],
       :stdout_log_file => "#{directory}/shared/log/#{nodejs_app_params[:name]}_stdout.log",
     })
     mode '0755'

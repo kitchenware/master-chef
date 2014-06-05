@@ -23,7 +23,7 @@ if [ "`which node | grep $NVM_DIR`" = "" ]; then
 fi
 
 if [ "$REDIRECT_OUTPUT" = "" ]; then
-  exec node $* $NODE_OPTS
+  exec <% if @nice %>nice -n <%= @nice %> <%end %>node $* $NODE_OPTS
 else
-  exec node $* $NODE_OPTS >> <%= @stdout_log_file %> 2>&1
+  exec <% if @nice %>nice -n <%= @nice %> <%end %>node $* $NODE_OPTS >> <%= @stdout_log_file %> 2>&1
 fi

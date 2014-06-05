@@ -8,4 +8,5 @@ default[:node_logstash] = {
   :node_version => '0.10.24',
   :log_level => 'info',
   :patterns_directories => [],
+  :nice => 10,
 }
