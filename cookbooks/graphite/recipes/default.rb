@@ -5,6 +5,9 @@ package "python-twisted"
 
 include_recipe "apache2"
 
+apache2_enable_module "proxy"
+apache2_enable_module "proxy_http"
+
 apache2_enable_module "wsgi" do
   install true
 end
@@ -141,8 +144,7 @@ apache2_vhost "graphite:graphite" do
   options({
     :graphite_directory => node.graphite.directory,
     :wsgi_socket_prefix => "#{node.apache2.server_root}/wsgi",
-    :grafana_directory => "#{node.grafana.directory}/current",
-    :grafana_location => node.grafana.location,
+    :grafana => node.grafana,
   })
 end
 

@@ -33,6 +33,12 @@ WSGIImportScript <%= @graphite_directory %>/conf/graphite.wsgi process-group=gra
     Allow from all
   </Directory>
 
-  Alias <%= @grafana_location %> <%= @grafana_directory %>
+  <% if @grafana['elasticsearch'] %>
+
+  Alias <%= @grafana['location'] %> <%= @grafana['directory'] %>
+
+  ProxyPass /<%= @grafana['elasticsearch_index'] %> http://<%= @grafana['elasticsearch'] %>/<%= @grafana['elasticsearch_index'] %>
+
+  <% end %>
 
 </VirtualHost>

@@ -52,4 +52,5 @@ default[:grafana] = {
   :version => '1.5.4',
   :directory => '/opt/grafana',
   :location => '/grafana',
+  :elasticsearch_index => 'grafana-dash',
 }

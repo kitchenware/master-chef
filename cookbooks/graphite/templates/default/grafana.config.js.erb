@@ -61,7 +61,7 @@ function (Settings) {
      * Elasticsearch index for storing dashboards
      *
      */
-    grafana_index: "grafana-dash",
+    grafana_index: "<%= @grafana['elasticsearch_index'] %>",
 
     /**
      * set to false to disable unsaved changes warning

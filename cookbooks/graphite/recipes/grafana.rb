@@ -11,5 +11,6 @@ execute_version "install grafana" do
 end
 
 template "#{node.grafana.directory}/current/config.js" do
+	variables :grafana => node.grafana
 	source "grafana.config.js.erb"
 end
