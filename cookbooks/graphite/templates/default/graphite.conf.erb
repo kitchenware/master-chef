@@ -35,7 +35,7 @@ WSGISocketPrefix <%= @wsgi_socket_prefix %>
 
   <% if @grafana['elasticsearch'] %>
 
-  Alias <%= @grafana['location'] %> <%= @grafana['directory'] %>
+  Alias <%= @grafana['location'] %> <%= @grafana['directory'] %>/current
 
   ProxyPass /<%= @grafana['elasticsearch_index'] %> http://<%= @grafana['elasticsearch'] %>/<%= @grafana['elasticsearch_index'] %>
 
