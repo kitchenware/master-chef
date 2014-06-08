@@ -28,6 +28,8 @@ http {
 
   log_format main '$remote_addr - $host - [$time_local] ' '"$request" $status $body_bytes_sent $request_time "$http_referer" ' '"$http_user_agent"';
 
+  include /etc/nginx/conf.d/*.conf;
+
   access_log /var/log/nginx/access.log <%= node.nginx[:config][:default_log_format] %>;
 
   include /etc/nginx/mime.types;
@@ -36,7 +38,6 @@ http {
 
   default_type application/octet-stream;
 
-  include /etc/nginx/conf.d/*.conf;
   include /etc/nginx/sites-enabled/*;
 
 <% if node.nginx[:config][:server_names_hash_bucket_size] %>
