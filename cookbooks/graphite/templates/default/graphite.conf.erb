@@ -4,8 +4,6 @@ WSGISocketPrefix <%= @wsgi_socket_prefix %>
 <VirtualHost <%= @listen %>>
 
   DocumentRoot "<%= @graphite_directory %>/webapp"
-  ErrorLog <%= @graphite_directory %>/storage/log/webapp/error.log
-  CustomLog <%= @graphite_directory %>/storage/log/webapp/access.log common
 
   WSGIDaemonProcess graphite processes=5 threads=5 display-name='%{GROUP}' inactivity-timeout=120
   WSGIProcessGroup graphite
