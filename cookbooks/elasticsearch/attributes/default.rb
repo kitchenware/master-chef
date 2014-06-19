@@ -12,6 +12,7 @@ default[:elasticsearch] = {
   :tcp_port => 9300,
   :cluster_name => 'elasticsearch',
   :one_node_mode => true,
+  :allow_dynamic_scripts => true,
   :configure_zeromq_river => {
     :enable => true,
     :address => 'tcp://127.0.0.1:9700',
