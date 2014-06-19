@@ -383,4 +383,8 @@ discovery.zen.ping.unicast.hosts: [<%= @config['peers'].map{|x| "\"#{x}\""}.join
 #monitor.jvm.gc.old.info: 5s
 #monitor.jvm.gc.old.debug: 2s
 
+# Allow function_score in queries
+script.disable_dynamic: false
+
 <%= @optional_config %>
+

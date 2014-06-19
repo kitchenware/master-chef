@@ -27,8 +27,8 @@ default[:elasticsearch] = {
     },
     :zeromq_river => {
       :enable => true,
-      :id => 'bpaquet/elasticsearch-river-zeromq/0.0.2',
-      :url => 'http://github.com/bpaquet/elasticsearch-river-zeromq/releases/download/v0.0.2/elasticsearch-river-zeromq-0.0.2.zip',
+      :id => 'bpaquet/elasticsearch-river-zeromq/0.0.5',
+      :url => ' https://github.com/bpaquet/elasticsearch-river-zeromq/releases/download/elasticsearch-river-zeromq-0.0.5/elasticsearch-river-zeromq-0.0.5.zip',
     }
   }
 }
