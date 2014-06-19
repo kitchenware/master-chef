@@ -1,7 +1,7 @@
 
 default[:elasticsearch] = {
   :user => 'elastic',
-  :url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.0.0.tar.gz',
+  :url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.tar.gz',
   :directory => '/opt/elasticsearch',
   :directory_data => '/opt/elasticsearch_data',
   :java_opts => '',
@@ -12,6 +12,7 @@ default[:elasticsearch] = {
   :tcp_port => 9300,
   :cluster_name => 'elasticsearch',
   :one_node_mode => true,
+  :allow_dynamic_scripts => true,
   :configure_zeromq_river => {
     :enable => true,
     :address => 'tcp://127.0.0.1:9700',
@@ -27,8 +28,8 @@ default[:elasticsearch] = {
     },
     :zeromq_river => {
       :enable => true,
-      :id => 'bpaquet/elasticsearch-river-zeromq/0.0.2',
-      :url => 'http://github.com/bpaquet/elasticsearch-river-zeromq/releases/download/v0.0.2/elasticsearch-river-zeromq-0.0.2.zip',
+      :id => 'bpaquet/elasticsearch-river-zeromq/0.0.5',
+      :url => ' https://github.com/bpaquet/elasticsearch-river-zeromq/releases/download/elasticsearch-river-zeromq-0.0.5/elasticsearch-river-zeromq-0.0.5.zip',
     }
   }
 }

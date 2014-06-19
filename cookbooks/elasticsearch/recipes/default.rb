@@ -67,7 +67,8 @@ node.elasticsearch.plugins.each do |k, v|
 
   next unless v[:enable]
 
-  command = "bin/plugin -install #{v[:id]}"
+  command = "(bin/plugin --remove #{v[:id]} || true) && "
+  command += "bin/plugin --install #{v[:id]}"
   command += " --url #{v[:url]}" if v[:url]
 
   execute_version "install elasticsearch plugin #{k}" do
