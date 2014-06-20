@@ -85,7 +85,7 @@ if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zer
 
   delayed_exec "configure zeromq river" do
     block do
-      Chef::Log.info("Creating river " + zeromq_river_name + "into elasticsearch")
+      Chef::Log.info("Creating river " + zeromq_river_name + " into elasticsearch")
       driver = ElasticsearchDriver.new('localhost', node.elasticsearch.http_port)
       driver.wait_ready
       code, body = driver.get "/_river/#{zeromq_river_name}/_meta"
