@@ -27,7 +27,7 @@ nodejs_app "logstash" do
   user node.node_logstash.user
   directory node.node_logstash.directory
   script "bin/node-logstash-agent"
-  opts "--db_file #{node.node_logstash.directory}/shared/files.json --config_dir #{node.node_logstash.config_directory} --log_level #{node.node_logstash.log_level} #{patterns_directories} --alarm_file #{node.node_logstash.config_directory}/shared/on_alarm"
+  opts "--db_file #{node.node_logstash.directory}/shared/files.json --config_dir #{node.node_logstash.config_directory} --log_level #{node.node_logstash.log_level} #{patterns_directories} --alarm_file #{node.node_logstash.alarm_file}"
   directory_check ["#{node.node_logstash.directory}/current/node_modules"]
   check_start :max_delay => 10
   nice node.node_logstash.nice
