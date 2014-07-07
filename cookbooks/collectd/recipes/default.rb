@@ -47,6 +47,29 @@ EOF
   notifies :restart, "service[collectd]"
 end
 
+directory "#{node.collectd.perl_plugin.directory}/Collectd/Plugins" do
+  owner 'root'
+  group 'root'
+  recursive true
+end
+
+incremental_template node.collectd.perl_plugin.file do
+  mode '0755'
+  header <<-EOF
+<LoadPlugin "perl">
+  Globals true
+</LoadPlugin>
+EOF
+  header_if_block <<-EOF
+<Plugin "perl">
+  IncludeDir "#{node.collectd.perl_plugin.directory}"
+  BaseName "Collectd::Plugins"
+EOF
+  footer_if_block "</Plugin>"
+  indentation 2
+  notifies :restart, "service[collectd]"
+end
+
 incremental_template node.collectd.exec_plugin.file do
   mode '0755'
   header <<-EOF
