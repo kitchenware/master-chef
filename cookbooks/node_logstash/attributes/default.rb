@@ -2,6 +2,7 @@ default[:node_logstash] = {
   :user => 'logstash',
   :groups => ['adm'],
   :directory => '/opt/logstash',
+  :no_warp => false,
   :alarm_file => '/opt/logstash/shared/on_alarm',
   :config_directory => '/etc/logstash.d',
   :git => 'git://github.com/bpaquet/node-logstash.git',

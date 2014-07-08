@@ -45,9 +45,8 @@ file "#{node.node_logstash.directory}/current/.node_version" do
   content node.node_logstash.node_version
 end
 
-
 warp_script = "install.sh"
-if node[:kernel][:machine] == "i686"
+if node.node_logstash.no_warp
   warp_script = "install_npm_modules_without_warp.sh"
 end
 
