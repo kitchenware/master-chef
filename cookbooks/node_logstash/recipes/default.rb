@@ -45,9 +45,15 @@ file "#{node.node_logstash.directory}/current/.node_version" do
   content node.node_logstash.node_version
 end
 
+
+warp_script = "install.sh"
+if node[:kernel][:machine] == "i686"
+  warp_script = "install_npm_modules_without_warp.sh"
+end
+
 execute_version "install node-logstash dependencies" do
   user node.node_logstash.user
-  command "export HOME=#{get_home node.node_logstash.user} && cd #{node.node_logstash.directory}/current && rm -rf node_modules && $HOME/.warp/client/node/install.sh"
+  command "export HOME=#{get_home node.node_logstash.user} && cd #{node.node_logstash.directory}/current && rm -rf node_modules && $HOME/.warp/client/node/#{warp_script}"
   version node.node_logstash.node_version + '_' + node.node_logstash.version
   environment get_proxy_environment
   file_storage "#{node.node_logstash.directory}/current/.npm_ready"
