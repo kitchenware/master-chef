@@ -4,6 +4,7 @@ default[:elasticsearch] = {
   :url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.tar.gz',
   :directory => '/opt/elasticsearch',
   :directory_data => '/opt/elasticsearch_data',
+  :directory_data => '/var/log/elasticsearch',
   :java_opts => '',
   :env_vars => {},
   :command_line_options => '',

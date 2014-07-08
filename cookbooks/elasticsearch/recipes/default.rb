@@ -18,6 +18,12 @@ directory node.elasticsearch.directory_data do
   recursive true
 end
 
+directory node.elasticsearch.directory_logs do
+  owner node.elasticsearch.user
+  mode '0755'
+  recursive true
+end
+
 node.elasticsearch.env_vars.each do |k, v|
   init_d_code << "export #{k}=\"#{v}\""
 end
