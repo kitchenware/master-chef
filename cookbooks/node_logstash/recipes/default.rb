@@ -46,9 +46,8 @@ file "#{node.node_logstash.directory}/current/.node_version" do
 end
 
 warp_script = "install.sh"
-if node.node_logstash.no_warp
-  warp_script = "install_npm_modules_without_warp.sh"
-end
+warp_script = "install_npm_modules_without_warp.sh" if node.node_logstash.no_warp
+
 
 execute_version "install node-logstash dependencies" do
   user node.node_logstash.user
