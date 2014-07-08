@@ -18,6 +18,12 @@ directory node.elasticsearch.directory_data do
   recursive true
 end
 
+directory node.elasticsearch.directory_logs do
+  owner node.elasticsearch.user
+  mode '0755'
+  recursive true
+end
+
 node.elasticsearch.env_vars.each do |k, v|
   init_d_code << "export #{k}=\"#{v}\""
 end
@@ -67,7 +73,8 @@ node.elasticsearch.plugins.each do |k, v|
 
   next unless v[:enable]
 
-  command = "bin/plugin -install #{v[:id]}"
+  command = "(bin/plugin --remove #{v[:id]} || true) && "
+  command += "bin/plugin --install #{v[:id]}"
   command += " --url #{v[:url]}" if v[:url]
 
   execute_version "install elasticsearch plugin #{k}" do
@@ -84,7 +91,7 @@ if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zer
 
   delayed_exec "configure zeromq river" do
     block do
-      Chef::Log.info("Creating river " + zeromq_river_name + "into elasticsearch")
+      Chef::Log.info("Creating river " + zeromq_river_name + " into elasticsearch")
       driver = ElasticsearchDriver.new('localhost', node.elasticsearch.http_port)
       driver.wait_ready
       code, body = driver.get "/_river/#{zeromq_river_name}/_meta"
