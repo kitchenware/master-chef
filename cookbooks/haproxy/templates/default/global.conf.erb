@@ -7,4 +7,9 @@ global
   group haproxy
   daemon
   stats socket <%= @config[:socket] %> user haproxy level admin
+  <% if @config[:global][:custom_params] %>
+  <% @config[:global][:custom_params].each do |k, v| %>
+  <%= k %> <%= v %>
+  <% end %>
+  <% end %>
 
