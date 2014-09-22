@@ -49,7 +49,7 @@ default[:graphite][:statsd] = {
 
 default[:grafana] = {
   :url => 'http://grafanarel.s3.amazonaws.com/grafana-',
-  :version => '1.7.0',
+  :version => '1.8.0',
   :directory => '/opt/grafana',
   :location => '/grafana',
   :elasticsearch_index => 'grafana-dash',
