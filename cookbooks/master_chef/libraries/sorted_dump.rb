@@ -190,12 +190,26 @@ module SortedJsonDump
     end
   end
 
+  def self.my_deep_merge(a, b)
+    target = a.dup
+    b.each do |k, v|
+      tv = a[k]
+      if tv.is_a?(Hash) && v.is_a?(Hash)
+        target[k] = my_deep_merge(tv, v)
+      else
+        target[k] = v
+      end
+    end
+    target
+  end
+
   def self.recurse_merge map
     target = {}
     map.each do |k, v|
-      k = k.to_s if k.is_a? Symbol
+      k = k.to_s
       if v.is_a? Hash
-        target[k] = (target[k] || {}).merge(SortedJsonDump.recurse_merge(v))
+        merged = SortedJsonDump.recurse_merge(v)
+        target[k] = my_deep_merge(target[k] || {}, merged)
       else
         target[k] = v
       end
