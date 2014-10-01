@@ -1,6 +1,12 @@
 
 package "lvm2"
 
+if node[:lvm][:fs_packages]
+  node[:lvm][:fs_packages].each do |x|
+    package x
+  end
+end
+
 node[:lvm][:physical_volumes].each do |dev|
   lvm_physical_volume dev
 end
