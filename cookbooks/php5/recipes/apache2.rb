@@ -21,15 +21,8 @@ if node.apache2.mpm == "event"
     notifies :enable, "service[php5-fpm]"
     notifies :start, "service[php5-fpm]"
   end
-  #apache2_disable_module "php5"
   apache2_enable_module "fastcgi"
-  # Ensure it's started
-#  service "php5-fpm" do
-#    action [ :enable, :restart ]
-#  end
 else
-  # Apache shout at start if fastcgi was uninstalled be not disabled
-  apache2_disable_module "fastcgi"
   package "libapache2-mod-fastcgi" do
     action :remove
   end
@@ -38,9 +31,6 @@ else
     notifies :restart, "service[apache2]"
     notifies :disable, "service[php5-fpm]"
   end
-#  service "php5-fpm" do
-#    action :stop
-#  end
   apache2_enable_module "php5"
   template "/etc/php5/apache2/php.ini" do
     mode '0644'
