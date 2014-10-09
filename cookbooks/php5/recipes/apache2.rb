@@ -3,11 +3,6 @@ include_recipe "apache2"
 
 include_recipe "php5"
 
-# By default, does not do anything, as it depends on the mpm
-service "php5-fpm" do
-  supports :status => true, :restart => true, :reload => true
-  action :nothing
-end
 
 if node.apache2.mpm == "event"
   # Ensure it's uninstalled. In case of switch from prefork, it's cleaner
@@ -22,6 +17,10 @@ if node.apache2.mpm == "event"
     notifies :start, "service[php5-fpm]"
   end
   apache2_enable_module "fastcgi"
+  apache2_enable_module "actions"
+  service "php5-fpm" do
+    action :start
+  end
 else
   package "libapache2-mod-fastcgi" do
     action :remove
@@ -38,7 +37,10 @@ else
     source "php5.ini.erb"
     variables node.php5.php_ini
     notifies :reload, "service[apache2]"
-end
+  end
+  service "php5-fpm" do
+    action :stop
+  end
 end
 
 apache2_enable_module "setenvif"
