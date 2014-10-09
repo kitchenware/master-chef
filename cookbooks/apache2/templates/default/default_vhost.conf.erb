@@ -16,5 +16,27 @@
   </Directory>
 
 <% end %>
+<% if node.apache2.mpm == 'event' %>
+    <IfModule mod_fastcgi.c>
+        # all .php files will be pushed to a php5-fcgi handler
+        AddHandler php5-fcgi .php
+        #action module will let us run a cgi script based on handler php5-fcgi
+        Action php5-fcgi /php5.external
+        # and we add an Alias to the fcgi location
+        Alias /php5.external /php5.external
+        # now we catch this cgi script which in fact does not exists on filesystem
+        # we catch it on the url (Location)
+        <Location /php5.external>
+            # here we prevent direct access to this Location url,
+            # env=REDIRECT_STATUS will let us use this fcgi-bin url
+            # only after an internal redirect (by Action upper)
+            Order Deny,Allow
+            Deny from All
+            Allow from env=REDIRECT_STATUS
+        </Location>
+        FastCgiExternalServer /php5.external -host 127.0.0.1:9000 -appConnTimeout 30 -idle-timeout 60
+        #FastCgiExternalServer /php5.external -socket /var/run/fpm.socket -appConnTimeout 30 -idle-timeout 60
+    </IfModule>
+<% end %>
 
 </VirtualHost>

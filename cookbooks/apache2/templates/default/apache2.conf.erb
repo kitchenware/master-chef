@@ -106,7 +106,7 @@ ListenBacklog <%= @tuning[:listen_backlog] %>
 # MaxSpareServers: maximum number of server processes which are kept spare
 # MaxClients: maximum number of server processes allowed to start
 # MaxRequestsPerChild: maximum number of requests a server process serves
-<IfModule mpm_prefork_module>
+<IfModule mpm_prefork_module.c>
     StartServers          <%= @mpm[:prefork][:start] %>
     MinSpareServers       <%= @mpm[:prefork][:min_spare] %>
     MaxSpareServers       <%= @mpm[:prefork][:max_spare] %>
@@ -125,7 +125,7 @@ ListenBacklog <%= @tuning[:listen_backlog] %>
 #              and starting Apache.
 # ThreadsPerChild: constant number of worker threads in each server process
 # MaxRequestsPerChild: maximum number of requests a server process serves
-<IfModule mpm_worker_module>
+<IfModule mpm_worker_module.c>
     StartServers         <%= @mpm[:worker][:start_servers] %>
     MinSpareThreads      <%= @mpm[:worker][:min_spare_threads] %>
     MaxSpareThreads      <%= @mpm[:worker][:max_spare_threads] %>
@@ -142,14 +142,15 @@ ListenBacklog <%= @tuning[:listen_backlog] %>
 # MaxSpareThreads: maximum number of worker threads which are kept spare
 # ThreadsPerChild: constant number of worker threads in each server process
 # MaxRequestsPerChild: maximum number of requests a server process serves
-<IfModule mpm_event_module>
-    StartServers          2
-    MaxClients          150
-    MinSpareThreads      25
-    MaxSpareThreads      75 
-    ThreadLimit          64
-    ThreadsPerChild      25
-    MaxRequestsPerChild   0
+<IfModule mpm_event_module.c>
+    StartServers        <%= @mpm[:event][:start_servers] %>
+    ServerLimit         <%= @mpm[:event][:server_limit] %>
+    MaxClients          <%= @mpm[:event][:max_clients] %>
+    MinSpareThreads     <%= @mpm[:event][:min_spare_threads] %>
+    MaxSpareThreads     <%= @mpm[:event][:max_spare_threads] %> 
+    ThreadLimit         <%= @mpm[:event][:thread_limit] %>
+    ThreadsPerChild     <%= @mpm[:event][:thread_per_child] %>
+    MaxRequestsPerChild <%= @mpm[:event][:max_resquests_per_child] %>
 </IfModule>
 
 # These need to be set in /etc/apache2/envvars

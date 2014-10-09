@@ -18,6 +18,15 @@ default[:apache2][:mpm_config][:worker] = {
   :max_clients => 150,
   :max_requests_per_child => 0,
 }
+default[:apache2][:mpm_config][:event] = {
+  :start_servers => 2,
+  :max_clients => 150,
+  :min_spare_threads => 25,
+  :max_spare_threads => 75,
+  :thread_limit	=> 64,
+  :thread_per_child => 25,
+  :max_resquests_per_child => 0
+}
 
 default[:apache2][:tuning] = {
   :server_signature => 'Off',
