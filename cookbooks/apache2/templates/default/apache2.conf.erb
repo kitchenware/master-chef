@@ -8,7 +8,7 @@
 #
 # Do NOT simply read the instructions in here without understanding
 # what they do.  They're here only as hints or reminders.  If you are unsure
-# consult the online docs. You have been warned.  
+# consult the online docs. You have been warned.
 #
 # The configuration directives are grouped into three basic sections:
 #  1. Directives that control the operation of the Apache server process as a
@@ -87,7 +87,7 @@ PidFile ${APACHE_PID_FILE}
 
 ##
 ## Server-Pool Size Regulation (MPM specific)
-## 
+##
 
 ServerTokens <%= @tuning[:tokens] %>
 ServerSignature <%= @tuning[:server_signature] %>
@@ -146,7 +146,7 @@ ListenBacklog <%= @tuning[:listen_backlog] %>
     StartServers          2
     MaxClients          150
     MinSpareThreads      25
-    MaxSpareThreads      75 
+    MaxSpareThreads      75
     ThreadLimit          64
     ThreadsPerChild      25
     MaxRequestsPerChild   0
@@ -158,8 +158,8 @@ Group ${APACHE_RUN_GROUP}
 
 
 #
-# The following lines prevent .htaccess and .htpasswd files from being 
-# viewed by Web clients. 
+# The following lines prevent .htaccess and .htpasswd files from being
+# viewed by Web clients.
 #
 <Files ~ "^\.ht">
     Order allow,deny
@@ -236,8 +236,8 @@ Include ports.conf
 # a CustomLog directive (see below).
 # If you are behind a reverse proxy, you might want to change %h into %{X-Forwarded-For}i
 #
-LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
-LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
+LogFormat "%h - %v - %t \"%r\" %>s %O %D \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
+LogFormat "%h - %l - %t \"%r\" %>s %O %D \"%{Referer}i\" \"%{User-Agent}i\"" combined
 LogFormat "%h %l %u %t \"%r\" %>s %O" common
 LogFormat "%{Referer}i -> %U" referer
 LogFormat "%{User-agent}i" agent
