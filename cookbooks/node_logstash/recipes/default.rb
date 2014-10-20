@@ -27,7 +27,7 @@ nodejs_app "logstash" do
   user node.node_logstash.user
   directory node.node_logstash.directory
   script "bin/node-logstash-agent"
-  opts "--db_file #{node.node_logstash.directory}/shared/files.json --config_dir #{node.node_logstash.config_directory} --log_level #{node.node_logstash.log_level} #{patterns_directories}"
+  opts "--db_file #{node.node_logstash.directory}/shared/files.json --config_dir #{node.node_logstash.config_directory} --log_level #{node.node_logstash.log_level} #{patterns_directories} --alarm_file #{node.node_logstash.alarm_file}"
   directory_check ["#{node.node_logstash.directory}/current/node_modules"]
   check_start :max_delay => 10
   nice node.node_logstash.nice
@@ -45,9 +45,13 @@ file "#{node.node_logstash.directory}/current/.node_version" do
   content node.node_logstash.node_version
 end
 
+warp_script = "install.sh"
+warp_script = "install_npm_modules_without_warp.sh" if node.node_logstash.no_warp
+
+
 execute_version "install node-logstash dependencies" do
   user node.node_logstash.user
-  command "export HOME=#{get_home node.node_logstash.user} && cd #{node.node_logstash.directory}/current && rm -rf node_modules && $HOME/.warp/client/node/install.sh"
+  command "export HOME=#{get_home node.node_logstash.user} && cd #{node.node_logstash.directory}/current && rm -rf node_modules && $HOME/.warp/client/node/#{warp_script}"
   version node.node_logstash.node_version + '_' + node.node_logstash.version
   environment get_proxy_environment
   file_storage "#{node.node_logstash.directory}/current/.npm_ready"

@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'rake/testtask'
 require "bundler/setup"
 
 task :foodcritic do
@@ -7,4 +8,10 @@ task :foodcritic do
   sh "foodcritic cookbooks -t #{tags_list} -f #{tags_list}"
 end
 
-task :default => [:foodcritic]
+Rake::TestTask.new do |t|
+  t.libs << "."
+  t.test_files = FileList['tests/*_test.rb']
+  t.verbose = true
+end
+
+task :default => [:test, :foodcritic]
