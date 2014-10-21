@@ -17,4 +17,10 @@
 
 <% end %>
 
+<% if @config[:custom_config] %>
+<% @config[:custom_config].each do |l| %>
+<%= l %>
+<% end %>
+<% end %>
+
 </VirtualHost>
