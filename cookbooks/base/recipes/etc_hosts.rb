@@ -4,6 +4,6 @@ template "/etc/hosts" do
   source "hosts.erb"
   variables({
     :hostname => node.hostname,
-    :fqdn => node[:fqdn] || "",
+    :fqdn => node[:forced_fqdn] || node[:fqdn] || "",
   })
 end
