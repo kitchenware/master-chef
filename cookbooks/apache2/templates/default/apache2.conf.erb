@@ -236,7 +236,7 @@ Include ports.conf
 # a CustomLog directive (see below).
 # If you are behind a reverse proxy, you might want to change %h into %{X-Forwarded-For}i
 #
-LogFormat "%h - %v - %t \"%r\" %>s %O %D \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
+LogFormat "%h - %{Host}i - %t \"%r\" %>s %O %D \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
 LogFormat "%h - %l - %t \"%r\" %>s %O %D \"%{Referer}i\" \"%{User-Agent}i\"" combined
 LogFormat "%h %l %u %t \"%r\" %>s %O" common
 LogFormat "%{Referer}i -> %U" referer
