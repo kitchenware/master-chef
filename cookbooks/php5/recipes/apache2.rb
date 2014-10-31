@@ -40,3 +40,16 @@ if node.apache2.default_vhost.enabled
   end
 
 end
+
+
+if node.logrotate[:auto_deploy]
+
+  logrotate_file "php_error" do
+    files [
+      "/var/log/php/error.log"
+    ]
+    variables :copytruncate => true, :user => "www-data", :group => "www-data"
+  end
+
+end
+
