@@ -1,5 +1,7 @@
 default[:nginx][:deploy_default_config] = true
 
+default[:nginx][:ubuntu_ppa_channel] = 'stable'
+
 default[:nginx][:default_root] = "/var/www/nginx-default"
 
 default[:nginx][:default_vhost] = {
