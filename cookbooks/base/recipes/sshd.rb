@@ -6,6 +6,7 @@ unless node[:no_sshd_config]
   service "ssh" do
     supports :status => true, :restart => true, :reload => true
     action [ :enable, :start ]
+    provider Chef::Provider::Service::Upstart if node.lsb.codename == "trusty"
   end
 
   execute "Configure sshd - allow root login" do
