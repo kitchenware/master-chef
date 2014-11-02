@@ -25,6 +25,17 @@ service "apache2" do
   action auto_compute_action
 end
 
+if node.apache2[:v2_4]
+
+  apache2_enable_module "mpm_#{node.apache2.mpm}"
+  apache2_enable_module "access_compat"
+
+  link "/etc/apache2/conf.d" do
+    to "/etc/apache2/conf-enabled"
+  end
+
+end
+
 template "#{node.apache2.server_root}/apache2.conf" do
   if node.apache2.mpm_config.prefork == "auto"
     mpm_auto = {
@@ -37,9 +48,9 @@ template "#{node.apache2.server_root}/apache2.conf" do
         :max_request_per_child => node.cpu.total * 1024,
       }
     }
-    variables :mpm => mpm_auto, :tuning => node.apache2.tuning, :server_root => node.apache2.server_root, :log_directory => node.apache2.log_directory
+    variables :mpm => mpm_auto, :tuning => node.apache2.tuning, :server_root => node.apache2.server_root, :log_directory => node.apache2.log_directory, :v2_4 => node.apache2.v2_4
   else
-    variables :mpm => node.apache2.mpm_config, :tuning => node.apache2.tuning, :server_root => node.apache2.server_root, :log_directory => node.apache2.log_directory
+    variables :mpm => node.apache2.mpm_config, :tuning => node.apache2.tuning, :server_root => node.apache2.server_root, :log_directory => node.apache2.log_directory, :v2_4 => node.apache2.v2_4
   end
   source "apache2.conf.erb"
   mode '0644'

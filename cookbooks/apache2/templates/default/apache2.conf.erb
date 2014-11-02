@@ -49,10 +49,12 @@
 #
 ServerRoot "<%= @server_root %>"
 
+<% unless @v2_4 %>
 #
 # The accept serialization lock file MUST BE STORED ON A LOCAL DISK.
 #
 LockFile ${APACHE_LOCK_DIR}/accept.lock
+<% end %>
 
 #
 # PidFile: The file in which the server should record its process
@@ -111,8 +113,8 @@ ListenBacklog <%= @tuning[:listen_backlog] %>
     MinSpareServers       <%= @mpm[:prefork][:min_spare] %>
     MaxSpareServers       <%= @mpm[:prefork][:max_spare] %>
     ServerLimit           <%= @mpm[:prefork][:server_limit] %>
-    MaxClients            <%= @mpm[:prefork][:max_clients] %>
-    MaxRequestsPerChild   <%= @mpm[:prefork][:max_requests_per_child] %>
+    <%= @v2_4 ? 'MaxRequestWorkers' : 'MaxClients' %>            <%= @mpm[:prefork][:max_clients] %>
+    <%= @v2_4 ? 'MaxConnectionsPerChild' : 'MaxRequestsPerChild' %>   <%= @mpm[:prefork][:max_requests_per_child] %>
 </IfModule>
 
 # worker MPM
@@ -131,8 +133,8 @@ ListenBacklog <%= @tuning[:listen_backlog] %>
     MaxSpareThreads      <%= @mpm[:worker][:max_spare_threads] %>
     ThreadLimit          <%= @mpm[:worker][:thread_limit] %>
     ThreadsPerChild      <%= @mpm[:worker][:threads_per_child] %>
-    MaxClients           <%= @mpm[:worker][:max_clients] %>
-    MaxRequestsPerChild  <%= @mpm[:worker][:max_requests_per_child] %>
+    <%= @v2_4 ? 'MaxRequestWorkers' : 'MaxClients' %>           <%= @mpm[:worker][:max_clients] %>
+    <%= @v2_4 ? 'MaxConnectionsPerChild' : 'MaxRequestsPerChild' %>  <%= @mpm[:worker][:max_requests_per_child] %>
 </IfModule>
 
 # event MPM
@@ -144,12 +146,12 @@ ListenBacklog <%= @tuning[:listen_backlog] %>
 # MaxRequestsPerChild: maximum number of requests a server process serves
 <IfModule mpm_event_module>
     StartServers          2
-    MaxClients          150
+    <%= @v2_4 ? 'MaxRequestWorkers' : 'MaxClients' %>          150
     MinSpareThreads      25
     MaxSpareThreads      75
     ThreadLimit          64
     ThreadsPerChild      25
-    MaxRequestsPerChild   0
+    <%= @v2_4 ? 'MaxConnectionsPerChild' : 'MaxRequestsPerChild' %>   0
 </IfModule>
 
 # These need to be set in /etc/apache2/envvars
@@ -185,6 +187,7 @@ AccessFileName .do_not_exists_htaccess
 </Directory>
 <% end %>
 
+<% unless @v2_4 %>
 #
 # DefaultType is the default MIME type the server will use for a document
 # if it cannot otherwise determine one, such as from filename extensions.
@@ -195,6 +198,7 @@ AccessFileName .do_not_exists_htaccess
 # text.
 #
 DefaultType text/plain
+<% end %>
 
 
 #
