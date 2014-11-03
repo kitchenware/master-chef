@@ -53,6 +53,7 @@ default[:php5][:cli_php_ini] = default_php_ini.merge({
 })
 
 default[:php5][:apc] = {
+  :stat => 1,
   :shm_size => 30,
   :slam_defense => 0,
 }
