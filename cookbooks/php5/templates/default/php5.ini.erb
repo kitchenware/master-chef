@@ -1465,7 +1465,7 @@ session.auto_start = 0
 
 ; Lifetime in seconds of cookie or, if 0, until browser is restarted.
 ; http://php.net/session.cookie-lifetime
-session.cookie_lifetime = 0
+session.cookie_lifetime = <%= @session_cookie_lifetime %>
 
 ; The path for which the cookie is valid.
 ; http://php.net/session.cookie-path
@@ -1493,7 +1493,7 @@ session.serialize_handler = php
 ; Development Value: 1
 ; Production Value: 1
 ; http://php.net/session.gc-probability
-session.gc_probability = 0
+session.gc_probability = <%= @session_gc_probability %>
 
 ; Defines the probability that the 'garbage collection' process is started on every
 ; session initialization. The probability is calculated by using the following equation:
@@ -1507,13 +1507,12 @@ session.gc_probability = 0
 ; Development Value: 1000
 ; Production Value: 1000
 ; http://php.net/session.gc-divisor
-session.gc_divisor = 1000
+session.gc_divisor = <%= @session_gc_divisor %>
 
 ; After this number of seconds, stored data will be seen as 'garbage' and
 ; cleaned up by the garbage collection process.
 ; http://php.net/session.gc-maxlifetime
-session.gc_maxlifetime = 1440
-
+session.gc_maxlifetime = <%= @session_gc_maxlifetime %>
 ; NOTE: If you are using the subdirectory option for storing session files
 ;       (see session.save_path above), then garbage collection does *not*
 ;       happen automatically.  You will need to do your own garbage
@@ -1571,7 +1570,7 @@ session.cache_limiter = nocache
 
 ; Document expires after n minutes.
 ; http://php.net/session.cache-expire
-session.cache_expire = 180
+session.cache_expire = <%= @session_cache_expire %>
 
 ; trans sid support is disabled by default.
 ; Use of trans sid may risk your users security.
