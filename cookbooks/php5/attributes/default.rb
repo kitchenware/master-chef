@@ -42,7 +42,9 @@ default_php_ini = {
     "pcntl_exec" => true,
     "pcntl_getpriority" => true,
     "pcntl_setpriority" => true,
-  }
+  },
+  :session_save_handler => 'files',
+  :session_save_path => '/tmp',
 }
 
 default[:php5][:php_ini] = default_php_ini.merge({
