@@ -223,7 +223,7 @@ engine = On
 ; Development Value: Off
 ; Production Value: Off
 ; http://php.net/short-open-tag
-short_open_tag = On
+short_open_tag = <%= @short_open_tag ? "On" : "Off" %>
 
 ; Allow ASP-style <% %> tags.
 ; http://php.net/asp-tags
@@ -259,7 +259,7 @@ y2k_compliance = On
 ; Development Value: 4096
 ; Production Value: 4096
 ; http://php.net/output-buffering
-output_buffering = 4096
+output_buffering = <%= @output_buffering %>
 
 ; You can redirect all of the output of your scripts to a function.  For
 ; example, if you set output_handler to "mb_output_handler", character
@@ -824,7 +824,7 @@ user_dir =
 ; properly in multithreaded servers, such as IIS or Zeus, and is automatically
 ; disabled on them.
 ; http://php.net/enable-dl
-enable_dl = Off
+enable_dl = <%= @enable_dl ? "On" : "Off" %>
 
 ; cgi.force_redirect is necessary to provide security running PHP as a CGI under
 ; most web servers.  Left undefined, PHP turns this on by default.  You can
@@ -899,11 +899,11 @@ max_file_uploads = <%= @max_file_uploads %>
 
 ; Whether to allow the treatment of URLs (like http:// or ftp://) as files.
 ; http://php.net/allow-url-fopen
-allow_url_fopen = On
+allow_url_fopen = <%= @allow_url_fopen ? "On" : "Off" %>
 
 ; Whether to allow include/require to open URLs (like http:// or ftp://) as files.
 ; http://php.net/allow-url-include
-allow_url_include = Off
+allow_url_include = <%= @allow_url_include ? "On" : "Off" %>
 
 ; Define the anonymous ftp password (your email address). PHP's default setting
 ; for this is empty.
@@ -916,7 +916,7 @@ allow_url_include = Off
 
 ; Default timeout for socket based streams (seconds)
 ; http://php.net/default-socket-timeout
-default_socket_timeout = 60
+default_socket_timeout = <%= @default_socket_timeout %>
 
 ; If your scripts have to deal with files from Macintosh systems,
 ; or you are running on a Mac and need to deal with files from
