@@ -137,6 +137,9 @@ json_attribs json_file
 cookbook_path cookbooks
 role_path roles
 
+ssl_verify_mode :verify_peer
+verify_api_cert true
+
 var_chef = ENV["VAR_CHEF"] || "<%= @var_chef %>"
 file_cache_path "#{var_chef}/cache"
 file_backup_path "#{var_chef}/backup"
