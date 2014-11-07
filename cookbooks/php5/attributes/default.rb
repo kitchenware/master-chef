@@ -51,6 +51,7 @@ default_php_ini = {
   },
   :session_save_handler => 'files',
   :session_save_path => '/tmp',
+  :error_reporting => 'E_ALL & ~E_DEPRECATED',
 }
 
 default[:php5][:php_ini] = default_php_ini.merge({

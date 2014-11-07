@@ -517,7 +517,7 @@ memory_limit = <%= @memory_limit %>
 ; Development Value: E_ALL | E_STRICT
 ; Production Value: E_ALL & ~E_DEPRECATED
 ; http://php.net/error-reporting
-error_reporting = E_ALL & ~E_DEPRECATED
+error_reporting = <%= @error_reporting %>
 
 ; This directive controls whether or not and where PHP will output errors,
 ; notices and warnings too. Error output is very useful during development, but
