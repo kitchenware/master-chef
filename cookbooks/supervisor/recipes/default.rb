@@ -40,6 +40,11 @@ if node.logrotate[:auto_deploy]
 
 end
 
+execute "reload supervisor" do
+  command "supervisorctl reload"
+  action :nothing
+end
+
 delayed_exec "Remove useless supervisor config" do
   after_block_notifies :restart, resources(:service => node.supervisor.service_name)
   block do
