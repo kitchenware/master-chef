@@ -41,7 +41,7 @@ if node.logrotate[:auto_deploy]
 end
 
 execute "reload supervisor" do
-  command "supervisorctl reload"
+  command "supervisorctl update"
   action :nothing
 end
 
