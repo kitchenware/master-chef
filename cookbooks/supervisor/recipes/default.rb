@@ -46,7 +46,7 @@ execute "reload supervisor" do
 end
 
 delayed_exec "Remove useless supervisor config" do
-  after_block_notifies :restart, resources(:service => node.supervisor.service_name)
+  after_block_notifies :run, resources(:execute => 'reload supervisor')
   block do
     updated = false
     vhosts = find_resources_by_name_pattern(/^\/etc\/supervisor\/conf.d\/.*\.conf$/).map{|r| r.name}
