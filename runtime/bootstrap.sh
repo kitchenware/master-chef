@@ -124,7 +124,7 @@ if which apt-get > /dev/null; then
       ;;
     trusty)
       exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2 unzip"
-      OMNIBUS_DEB="https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/13.04/${opscode_dir}/chef_11.12.0-1_amd64.deb"
+      OMNIBUS_DEB="https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/13.04/${opscode_dir}/chef_11.16.4-1_amd64.deb"
       ;;
     *)
       echo "Unknown distro"
