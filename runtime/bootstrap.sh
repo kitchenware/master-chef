@@ -111,8 +111,7 @@ if which apt-get > /dev/null; then
       ;;
     wheezy)
       exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2 unzip sudo file"
-      # for now we use the package for squeeze
-      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.8.0-1.debian.6.0.5_${arch}.deb"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.16.4-1.debian.6.0.5_${arch}.deb"
       ;;
     lucid)
       exec_command "$SUDO $APT_PROXY apt-get install -y git-core curl bzip2 unzip"
