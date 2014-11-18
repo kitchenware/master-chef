@@ -6,7 +6,4 @@ default[:tomcat] = {
 	:user => "tomcat",
 }
 
-default[:tomcat][:catalina_home] = "/opt/tomcat/apache-tomcat-#{default[:tomcat][:version]}"
-default[:tomcat][:warp_file] = "apache-tomcat-#{default[:tomcat][:version]}_`lsb_release -cs`_`arch`.warp"
-
 default[:tomcat][:instances] = {}

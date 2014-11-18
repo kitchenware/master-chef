@@ -10,6 +10,9 @@ unless find_resources_by_class_pattern(/^Chef::Resource::User/).find{|u| u.name 
 
 end
 
+node.set[:tomcat][:warp_file] = "apache-tomcat-#{node.tomcat.version}_`lsb_release -cs`_`arch`.warp" unless node.tomcat[:warp_file]
+node.set[:tomcat][:catalina_home] = "/opt/tomcat/apache-tomcat-#{node.tomcat.version}" unless node.tomcat[:catalina_home]
+
 execute "install tomcat via warp" do
   user node.tomcat.user
   command "cd #{node.tomcat.home} && curl --location #{node.warp.warp_src}/#{node.tomcat.warp_file} -o #{node.tomcat.warp_file} && sh #{node.tomcat.warp_file} && rm #{node.tomcat.warp_file}"

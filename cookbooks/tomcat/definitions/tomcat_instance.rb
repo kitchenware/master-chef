@@ -68,9 +68,11 @@ define :tomcat_instance, {
     notifies :restart, "service[#{config[:name]}]"
   end
 
+  major_version = node.tomcat.version.split('.').first
+
   template "#{catalina_base}/conf/server.xml" do
     cookbook "tomcat"
-    source "server.xml.erb"
+    source "server_#{major_version}.xml.erb"
     owner node.tomcat.user
     variables :config => config
     notifies :restart, "service[#{config[:name]}]"
