@@ -25,6 +25,20 @@ define :postgresql_database, {
       not_if "sudo -u #{node.postgresql.user} psql --command=\"select datname from pg_catalog.pg_database;\" --tuples-only | grep #{config[:database]}"
     end
 
+    if config[:extensions]
+
+      config[:extensions].each do |k, v|
+        if v
+          execute "add extension #{k} to #{config[:database]}" do
+            user node.postgresql.user
+            command "psql --command \"CREATE EXTENSION \\\"#{k}\\\";\" #{config[:database]}"
+            not_if "sudo -u #{node.postgresql.user} psql --command=\"\\\\dx\" #{config[:database]} | grep #{k}"
+          end
+        end
+      end
+
+    end
+
   end
 
   if config[:postgresql_wrapper]

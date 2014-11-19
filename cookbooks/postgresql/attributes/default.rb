@@ -7,4 +7,5 @@ default[:postgresql] = {
   :listen_addresses => '127.0.0.1',
   :databases => {},
   :service_name => 'postgresql',
+  :contrib => false,
 }

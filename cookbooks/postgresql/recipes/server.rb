@@ -3,6 +3,8 @@ include_recipe "postgresql"
 
 package "postgresql"
 
+package "postgresql-contrib" if node.postgresql.contrib
+
 if node.postgresql.version == node.default[:postgresql][:version]
   node.set[:postgresql][:version] = '8.4' if node.lsb.codename == "lucid" || node.lsb.codename == "squeeze"
 end
