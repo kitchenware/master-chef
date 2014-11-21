@@ -13,6 +13,7 @@ default[:nginx][:default_vhost] = {
     :gzip => true,
     :gzip_comp_level => 3,
     :gzip_types => [
+      "text/html",
       "text/plain",
       "text/css",
       "application/x-javascript",
