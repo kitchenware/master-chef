@@ -99,6 +99,9 @@ local   all             root                                    md5
 #host    replication     postgres        127.0.0.1/32            md5
 #host    replication     postgres        ::1/128                 md5
 
+<% @extended_pg_hba_lines.values.sort.each do |l| %>
+<%= l %>
+<% end %>
 <% @databases.each do |k, v| %>
 local <%= v['database'] %> <%= v['username'] %> md5
 <% @user_filters.each do |f| %>

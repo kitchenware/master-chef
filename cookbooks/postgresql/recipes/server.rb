@@ -18,6 +18,8 @@ service node.postgresql.service_name do
   action auto_compute_action
 end
 
+Chef::Config.exception_handlers << ServiceErrorHandler.new(node.postgresql.service_name, ".*postgresql.*")
+
 directory "/etc/postgresql/#{node.postgresql.version}/main/conf.d"
 
 template "/etc/postgresql/#{node.postgresql.version}/main/pg_hba.conf" do
@@ -53,9 +55,22 @@ execute "change postgresql root password" do
   not_if "PGPASSWORD=#{root_postgresql_password} psql postgres --username=#{node.postgresql.root_account} --command=\"select 1;\""
 end
 
-execute "add include chef.conf postgresql config file" do
-  command "echo \"include '/etc/postgresql/#{node.postgresql.version}/main/conf.d/chef.conf'\" >> /etc/postgresql/#{node.postgresql.version}/main/postgresql.conf"
-  not_if "grep conf.d/chef.conf /etc/postgresql/#{node.postgresql.version}/main/postgresql.conf"
+if node.postgresql.version.to_f >= 9.3
+
+  execute "add include confd postgresql config file" do
+    command "echo \"include_dir '/etc/postgresql/#{node.postgresql.version}/main/conf.d'\" >> /etc/postgresql/#{node.postgresql.version}/main/postgresql.conf"
+    not_if "grep include_dir /etc/postgresql/#{node.postgresql.version}/main/postgresql.conf | grep -v '#'"
+    notifies :restart, "service[#{node.postgresql.service_name}]", :immediately
+  end
+
+else
+
+  execute "add include chef.conf postgresql config file" do
+    command "echo \"include '/etc/postgresql/#{node.postgresql.version}/main/conf.d/chef.conf'\" >> /etc/postgresql/#{node.postgresql.version}/main/postgresql.conf"
+    not_if "grep conf.d/chef.conf /etc/postgresql/#{node.postgresql.version}/main/postgresql.conf"
+    notifies :restart, "service[#{node.postgresql.service_name}]", :immediately
+  end
+
 end
 
 template "/etc/postgresql/#{node.postgresql.version}/main/conf.d/chef.conf" do

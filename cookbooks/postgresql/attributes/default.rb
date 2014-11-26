@@ -8,4 +8,5 @@ default[:postgresql] = {
   :databases => {},
   :service_name => 'postgresql',
   :contrib => false,
+  :extended_pg_hba_lines => {},
 }
