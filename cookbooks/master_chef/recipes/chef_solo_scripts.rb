@@ -11,6 +11,11 @@ end
   end
 end
 
+directory "/opt/master-chef/secured_roles" do
+  owner "root"
+  mode '0700'
+end
+
 template "#{install_path}/bin/master-chef.sh" do
   source "bootstrap.sh.erb"
   mode '0755'

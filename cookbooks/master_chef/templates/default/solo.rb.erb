@@ -120,6 +120,10 @@ if ENV['https_proxy']
   ENV.delete 'https_proxy'
 end
 
+if ENV['SECURED_ROLES_PATH'] && Dir["#{ENV['SECURED_ROLES_PATH']}/*"].size > 0
+  roles << ENV['SECURED_ROLES_PATH']
+end
+
 puts "************************* Master chef SOLO *************************"
 puts "Hostname : #{`hostname`}"
 puts "Repos : #{config["repos"].inspect}"
