@@ -43,6 +43,6 @@ execute_version "nodejs version statsd" do
   command "cd #{node.graphite.statsd.directory}/current && echo $HOME && $HOME/.warp/client/node/install_node.sh"
   environment get_proxy_environment #("HOME" => get_home(node.graphite.statsd.user))
   version node.graphite.statsd.node_version
-  file_storage "#{node.graphite.directory}/.statsd"
+  file_storage "#{node.graphite.statsd.directory}/.statsd"
   notifies :restart, "service[statsd]"
 end
