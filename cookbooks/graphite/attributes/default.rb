@@ -39,6 +39,7 @@ default[:graphite][:statsd] = {
   :user => 'statsd',
   :directory => '/opt/statsd',
   :port => 8125,
+  :address => '0.0.0.0',
   :version => 'v0.7.0',
   :node_version => '0.10.4',
   :git => 'git://github.com/etsy/statsd.git',
