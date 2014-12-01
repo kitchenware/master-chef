@@ -12,6 +12,7 @@ define :capistrano_app, {
   directories << "#{capistrano_app_params[:name]}/shared"
   directories << "#{capistrano_app_params[:name]}/releases"
   directories << "#{capistrano_app_params[:name]}/shared/log"
+  directories << "#{capistrano_app_params[:name]}/shared/tmp"
 
   directories.each do |dir|
     directory dir do
