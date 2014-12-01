@@ -28,6 +28,8 @@ http {
 
   log_format main '$remote_addr - $host - [$time_local] ' '"$request" $status $body_bytes_sent $request_time "$http_referer" ' '"$http_user_agent"';
 
+  log_format main_x_forwarded_for '$remote_addr - $http_x_forwarded_for - $host - [$time_local] ' '"$request" $status $body_bytes_sent $request_time "$http_referer" ' '"$http_user_agent"';
+
   include /etc/nginx/conf.d/*.conf;
 
   access_log /var/log/nginx/access.log <%= node.nginx[:config][:default_log_format] %>;
