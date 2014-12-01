@@ -27,12 +27,12 @@ end
 
 if node.libzmq[:zmq_version]
 
-  package_fixed_version "libzmq1" do
+  package_fixed_version node.libzmq.package_name do
     version node.libzmq.zmq_version
   end
 
 else
 
-  package "libzmq1"
+  package node.libzmq.package_name
 
 end
