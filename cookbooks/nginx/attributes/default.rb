@@ -32,6 +32,9 @@ default[:nginx][:config] = {
   :worker_connections => 100000,
   :max_upload_size => '50m',
   :default_log_format => 'combined',
+  :log_formats => {
+    :main => "'$remote_addr - $host - [$time_local] ' '\"$request\" $status $body_bytes_sent $request_time \"$http_referer\" ' '\"$http_user_agent\"'"
+  },
 }
 
 default[:nginx][:package_name] = "nginx"
