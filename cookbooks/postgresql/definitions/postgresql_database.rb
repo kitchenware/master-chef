@@ -15,7 +15,7 @@ define :postgresql_database, {
 
     execute "create user #{config[:username]}" do
       user node.postgresql.user
-      command "psql --command \"CREATE USER \\\"#{config[:username]}\\\" WITH NOCREATEDB NOCREATEUSER NOCREATEROLE PASSWORD \\\"#{config[:password]}\\\";\""
+      command "psql --command \"CREATE USER \\\"#{config[:username]}\\\" WITH NOCREATEDB NOCREATEUSER NOCREATEROLE PASSWORD '#{config[:password]}';\""
       not_if "sudo -u #{node.postgresql.user} psql --command=\"select usename from pg_catalog.pg_user;\" --tuples-only | grep #{config[:username]}"
     end
 
