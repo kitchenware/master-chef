@@ -36,6 +36,7 @@ file "#{node.graphite.statsd.directory}/current/.node_version" do
   owner node.graphite.statsd.user
   mode '0644'
   content node.graphite.statsd.node_version
+  notifies :restart, "service[statsd]"
 end
 
 execute_version "nodejs version statsd" do
