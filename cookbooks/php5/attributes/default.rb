@@ -50,7 +50,7 @@ default_php_ini = {
     "pcntl_setpriority" => true,
   },
   :session_save_handler => 'files',
-  :session_save_path => '/tmp',
+  :session_save_path => '/var/lib/php5',
   :error_reporting => 'E_ALL & ~E_DEPRECATED',
 }
 
