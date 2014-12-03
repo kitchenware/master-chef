@@ -15,13 +15,13 @@ define :postgresql_database, {
 
     execute "create user #{config[:username]}" do
       user node.postgresql.user
-      command "psql --command \"CREATE USER #{config[:username]} WITH NOCREATEDB NOCREATEUSER NOCREATEROLE PASSWORD '#{config[:password]}';\""
+      command "psql --command \"CREATE USER \\\"#{config[:username]}\\\" WITH NOCREATEDB NOCREATEUSER NOCREATEROLE PASSWORD \\\"#{config[:password]}\\\";\""
       not_if "sudo -u #{node.postgresql.user} psql --command=\"select usename from pg_catalog.pg_user;\" --tuples-only | grep #{config[:username]}"
     end
 
     execute "create database #{config[:database]}" do
       user node.postgresql.user
-      command "psql --command \"CREATE DATABASE #{config[:database]} OWNER #{config[:username]};\""
+      command "psql --command \"CREATE DATABASE \\\"#{config[:database]}\\\" OWNER \\\"#{config[:username]}\\\";\""
       not_if "sudo -u #{node.postgresql.user} psql --command=\"select datname from pg_catalog.pg_database;\" --tuples-only | grep #{config[:database]}"
     end
 
@@ -31,7 +31,7 @@ define :postgresql_database, {
         if v
           execute "add extension #{k} to #{config[:database]}" do
             user node.postgresql.user
-            command "psql --command \"CREATE EXTENSION \\\"#{k}\\\";\" #{config[:database]}"
+            command "psql --command \"CREATE EXTENSION \\\"#{k}\\\";\" \"#{config[:database]}\""
             not_if "sudo -u #{node.postgresql.user} psql --command=\"\\\\dx\" #{config[:database]} | grep #{k}"
           end
         end
