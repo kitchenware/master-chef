@@ -1,7 +1,7 @@
 listen_addresses = '<%= @listen_addresses %>'
 
 <% if @params %>
-<% @params.each do |k, v| %>
-<%= k %> = <%= v %>
+<% @params.keys.sort.each do |k| %>
+<%= k %> = <%= @params[k] %>
 <% end %>
 <% end %>
