@@ -35,6 +35,8 @@ else
 
 end
 
+directory "etc/nginx/sites-enabled"
+
 [
   "/etc/nginx/sites-enabled/default",
   "/etc/nginx/sites-available/default",
