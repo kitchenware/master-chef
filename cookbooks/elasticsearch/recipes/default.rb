@@ -74,12 +74,16 @@ node.elasticsearch.plugins.each do |k, v|
   next unless v[:enable]
 
   command = "(bin/plugin --remove #{v[:id]} || true) && "
-  command += "bin/plugin --install #{v[:id]}"
-  command += " --url #{v[:url]}" if v[:url]
+  command += "bin/plugin "
+  if ENV['BACKUP_http_proxy']
+    parsed = URI.parse(ENV['BACKUP_http_proxy'])
+    command += "-DproxyHost=#{parsed.host} -DproxyPort=#{parsed.port} "
+  end
+  command += " --install #{v[:id]} "
+  command += " --url #{v[:url]} " if v[:url]
 
   execute_version "install elasticsearch plugin #{k}" do
     command "cd #{node.elasticsearch.directory} && #{command}"
-    environment get_proxy_environment
     version "#{k}_#{v[:id]}"
     file_storage "#{node.elasticsearch.directory}/.plugin_install_#{k}"
     notifies :restart, "service[elasticsearch]"
