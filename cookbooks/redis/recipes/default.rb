@@ -34,7 +34,7 @@ if node.lsb.codename == "lucid"
 
 end
 
-redis_config_file = "redis-2.6.conf.erb" if node.redis.version_config == "2.6"
+redis_config_file = "redis-#{node.redis.version_config}.conf.erb"
 
 if node.redis[:redis_version]
 
