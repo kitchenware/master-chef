@@ -14,8 +14,7 @@ if node.lsb.codename == "squeeze" && node.apt.master_chef_add_apt_repo
     distrib "squeeze-backports"
   end
 
-  # awfull, cf http://tickets.opscode.com/browse/CHEF-1547
-  redis_package_version = "2:2.4.15-1~bpo60+2"
+  node.set[:redis][:redis_version] = "2:2.4.15-1~bpo60+2"
 
 end
 
@@ -35,11 +34,20 @@ if node.lsb.codename == "lucid"
 
 end
 
-redis_config_file = "redis-2.6.conf.erb" if node.redis.version_config == "2.6"
+redis_config_file = "redis-#{node.redis.version_config}.conf.erb"
 
-package "redis-server" do
-  version redis_package_version if redis_package_version
+if node.redis[:redis_version]
+
+  package_fixed_version "redis-server" do
+    version node.redis[:redis_version]
+  end
+
+else
+
+  package "redis-server"
+
 end
+
 
 service "redis-server" do
 	supports :restart => true, :reload => true
