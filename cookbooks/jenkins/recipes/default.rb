@@ -29,7 +29,7 @@ nginx_add_default_location "jenkins" do
 EOF
   upstream <<-EOF
   upstream tomcat_jenkins_upstream {
-  server 127.0.0.1:#{tomcat_jenkins_http_port} fail_timeout=0;
+  server 127.0.0.1:#{node.jenkins[:nginx_upstream_port] || tomcat_jenkins_http_port} fail_timeout=0;
 }
   EOF
 end
