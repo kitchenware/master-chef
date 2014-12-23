@@ -70,6 +70,20 @@ install_master_chef_shell_file() {
   exec_command "$SUDO chmod +x $2"
 }
 
+setup_keys (){
+  if [ "$USER" != "chef" ]; then
+    KEYS="$HOME/.ssh/authorized_keys"
+    if [ -f $KEYS ]; then
+      print "Installing credentials to chef account from $KEYS"
+      exec_command "$SUDO cp $KEYS /home/chef/.ssh/authorized_keys"
+    else
+      echo "File not found $KEYS"
+    fi
+  fi
+
+  exec_command "$SUDO chown -R chef /home/chef/.ssh"
+}
+
 while ps axu | grep cloud-init | grep -v grep; do
   echo "Wait end of cloud-init"
   sleep 2
@@ -134,18 +148,42 @@ if which apt-get > /dev/null; then
   exec_command "$SUDO cat /etc/sudoers | grep ^chef > /dev/null || $SUDO /bin/sh -c 'echo \"chef   ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers'"
   exec_command "$SUDO mkdir -p /home/chef/.ssh/"
 
-  if [ "$USER" != "chef" ]; then
-    KEYS="$HOME/.ssh/authorized_keys"
-    if [ -f $KEYS ]; then
-      print "Installing credentials to chef account from $KEYS"
-      exec_command "$SUDO cp $KEYS /home/chef/.ssh/authorized_keys"
-    else
-      echo "File not found $KEYS"
-    fi
+  setup_keys
+  print "Installing chef from Omnibus"
+
+  if [ "$OMNIBUS_DEB" = "" ]; then
+    echo "Omnibus url not set for this distro : $distro"
+    exit 42
   fi
 
-  exec_command "$SUDO chown -R chef /home/chef/.ssh"
+  exec_command_chef "[ -f `basename $OMNIBUS_DEB` ] || $PROXY curl -f -s -L \"$OMNIBUS_DEB\" -o `basename $OMNIBUS_DEB`"
+  exec_command_chef "sudo dpkg -i `basename $OMNIBUS_DEB`"
+elif which yum > /dev/null; then
+  distro=$(cat /etc/issue | head -1)
+  print "Detected distro : $distro"
+  if ! cat /etc/group | grep admin  > /dev/null; then
+    exec_command "groupadd admin"
+  fi
 
+  if ! which git > /dev/null; then
+    exec_command "$SUDO $PROXY yum install -y git"
+  fi
+  exec_command "$SUDO $PROXY yum install -y rsync curl wget bzip2 unzip"
+  OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chef-11.16.4-1.el6.x86_64.rpm"
+
+  exec_command "cat /etc/passwd | grep ^chef > /dev/null || $SUDO useradd -m -g admin -s /bin/bash chef"
+  exec_command "$SUDO cat /etc/sudoers | grep ^chef > /dev/null || $SUDO /bin/sh -c 'echo \"chef   ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers'"
+  exec_command "$SUDO mkdir -p /home/chef/.ssh/"
+  setup_keys
+
+  print "Installing chef from Omnibus"
+  if [ "$OMNIBUS_DEB" = "" ]; then
+    echo "Omnibus url not set for this distro : $distro"
+    exit 42
+  fi
+
+  exec_command_chef "[ -f `basename $OMNIBUS_DEB` ] || $PROXY curl -f -s -L \"$OMNIBUS_DEB\" -o `basename $OMNIBUS_DEB`"
+  exec_command_chef "sudo rpm -ivh `basename $OMNIBUS_DEB`"
 fi
 
 if [ "$distro" = "" ]; then
@@ -153,16 +191,6 @@ if [ "$distro" = "" ]; then
   exit 78
 fi
 
-
-print "Installing chef from Omnibus"
-
-if [ "$OMNIBUS_DEB" = "" ]; then
-  echo "Omnibus url not set for this distro : $distro"
-  exit 42
-fi
-
-exec_command_chef "[ -f `basename $OMNIBUS_DEB` ] || $PROXY curl -f -s -L \"$OMNIBUS_DEB\" -o `basename $OMNIBUS_DEB`"
-exec_command_chef "sudo dpkg -i `basename $OMNIBUS_DEB`"
 
 exec_command "$SUDO mkdir -p /opt/master-chef/etc"
 install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/opt/master-chef/etc/solo.rb"
