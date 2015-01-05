@@ -1,4 +1,8 @@
 
+base_user "collectd" do
+  home node.collectd.home_directory
+end
+
 package node.collectd.package_name do
   options "--no-install-recommends"
   version node.collectd[:package_version] if node.collectd[:package_version]
@@ -12,17 +16,32 @@ service "collectd" do
 end
 
 directory node.collectd.config_directory do
+  owner "collectd"
   mode '0755'
 end
 
 template "/etc/collectd/collectd.conf" do
   mode '0644'
+  owner "collectd"
   source "collectd.conf.erb"
-  variables :interval => node.collectd.interval
+  variables :interval => node.collectd.interval, :directory => node.collectd.config_directory
   notifies :restart, "service[collectd]"
 end
 
-directory node.collectd.bin
+[
+  "#{node.collectd.home_directory}/bin",
+  "#{node.collectd.home_directory}/lib/",
+  "#{node.collectd.home_directory}/lib/collectd",
+  "#{node.collectd.home_directory}/lib/collectd/plugins",
+  "#{node.collectd.home_directory}/lib/collectd/plugins/python",
+  "#{node.collectd.home_directory}/lib/collectd/plugins/perl",
+  "#{node.collectd.home_directory}/lib/collectd/plugins/perl/Collectd",
+  "#{node.collectd.home_directory}/lib/collectd/plugins/perl/Collectd/Plugins",
+].each do |x|
+  directory x do
+    owner "collectd"
+  end
+end
 
 node.collectd.plugins.each do |name, config|
   collectd_plugin name do
@@ -30,13 +49,7 @@ node.collectd.plugins.each do |name, config|
   end
 end
 
-directory node.collectd.python_plugin.directory do
-  owner 'root'
-  group 'root'
-  recursive true
-end
-
-incremental_template node.collectd.python_plugin.file do
+incremental_template "#{node.collectd.config_directory}/python.conf" do
   mode '0755'
   header <<-EOF
 <LoadPlugin "python">
@@ -46,16 +59,11 @@ EOF
   header_if_block "<Plugin \"python\">"
   footer_if_block "</Plugin>"
   indentation 2
+  owner "collectd"
   notifies :restart, "service[collectd]"
 end
 
-directory "#{node.collectd.perl_plugin.directory}/Collectd/Plugins" do
-  owner 'root'
-  group 'root'
-  recursive true
-end
-
-incremental_template node.collectd.perl_plugin.file do
+incremental_template "#{node.collectd.config_directory}/perl.conf" do
   mode '0755'
   header <<-EOF
 <LoadPlugin "perl">
@@ -64,15 +72,16 @@ incremental_template node.collectd.perl_plugin.file do
 EOF
   header_if_block <<-EOF
 <Plugin "perl">
-  IncludeDir "#{node.collectd.perl_plugin.directory}"
+  IncludeDir "#{node.collectd.home_directory}/lib/collectd/plugins/perl"
   BaseName "Collectd::Plugins"
 EOF
   footer_if_block "</Plugin>"
   indentation 2
+  owner "collectd"
   notifies :restart, "service[collectd]"
 end
 
-incremental_template node.collectd.exec_plugin.file do
+incremental_template "#{node.collectd.config_directory}/exec.conf" do
   mode '0755'
   header <<-EOF
 LoadPlugin "exec"
@@ -80,6 +89,7 @@ EOF
   header_if_block "<Plugin \"exec\">"
   footer_if_block "</Plugin>"
   indentation 2
+  owner "collectd"
   notifies :restart, "service[collectd]"
 end
 

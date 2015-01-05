@@ -9,6 +9,7 @@ define :collectd_plugin, {
   template "#{node.collectd.config_directory}/#{collectd_plugin_params[:name]}.conf" do
     cookbook "collectd"
     source "plugin.conf.erb"
+    owner "collectd"
     mode '0755'
     variables({
     	:plugin_name => collectd_plugin_params[:plugin_name] || collectd_plugin_params[:name],
