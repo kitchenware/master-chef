@@ -20,7 +20,10 @@ end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new(node.postgresql.service_name, ".*postgresql.*")
 
-directory "/etc/postgresql/#{node.postgresql.version}/main/conf.d"
+directory "/etc/postgresql/#{node.postgresql.version}/main/conf.d" do
+  owner node.postgresql.user
+  group node.postgresql.user
+end
 
 template "/etc/postgresql/#{node.postgresql.version}/main/pg_hba.conf" do
   source "pg_hba.conf.erb"
@@ -78,6 +81,7 @@ template "/etc/postgresql/#{node.postgresql.version}/main/conf.d/chef.conf" do
   variables node.postgresql
   mode '0644'
   owner node.postgresql.user
+  group node.postgresql.user
   notifies :restart, "service[#{node.postgresql.service_name}]", :immediately
 end
 
