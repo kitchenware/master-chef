@@ -14,6 +14,7 @@ default[:collectd][:plugins] = {
 default[:collectd][:package_name] = "collectd-core"
 default[:collectd][:interval] = 10
 default[:collectd][:config_directory] = "/etc/collectd/collectd.d"
+default[:collectd][:bin] = "/opt/collectd/bin"
 
 default[:collectd][:python_plugin] = {
   :directory => "/opt/collectd/lib/collectd/plugins/python",

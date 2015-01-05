@@ -22,6 +22,8 @@ template "/etc/collectd/collectd.conf" do
   notifies :restart, "service[collectd]"
 end
 
+directory node.collectd.bin
+
 node.collectd.plugins.each do |name, config|
   collectd_plugin name do
     config config[:config] if config[:config]
