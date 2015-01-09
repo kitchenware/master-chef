@@ -105,3 +105,19 @@ if node[:postgresql] && node.postgresql[:databases]
   end
 
 end
+
+delayed_exec "Remove useless postgresql config files" do
+  after_block_notifies :restart, resources(:service => "postgresql")
+  block do
+    updated = false
+    confs = find_resources_by_name_pattern(/^\/etc\/postgresql\/#{node.postgresql.version}\/main\/conf.d\/.*$/).map{|r| r.name}
+    Dir["/etc/postgresql/#{node.postgresql.version}/main/conf.d/*"].each do |n|
+      unless confs.include?(n)
+        Chef::Log.info "Removing useless postgresql config #{n}"
+        File.unlink n
+        updated = true
+      end
+    end
+    updated
+  end
+end
