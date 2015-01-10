@@ -85,7 +85,7 @@ template "/etc/postgresql/#{node.postgresql.version}/main/conf.d/chef.conf" do
   notifies :restart, "service[#{node.postgresql.service_name}]", :immediately
 end
 
-if node[:postgresql] && node.postgresql[:databases]
+if node[:postgresql] && node.postgresql[:databases] && !node.postgresql[:no_databases]
 
   node.postgresql.databases.keys.each do |k|
 
