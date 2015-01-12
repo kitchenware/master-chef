@@ -34,6 +34,10 @@ if node.lsb.codename == "lucid"
 
 end
 
+if node.lsb.codename == "trusty"
+  node.set[:redis][:version_config] = "2.8_trusty"
+end
+
 redis_config_file = "redis-#{node.redis.version_config}.conf.erb"
 
 if node.redis[:redis_version]
@@ -47,7 +51,6 @@ else
   package "redis-server"
 
 end
-
 
 service "redis-server" do
 	supports :restart => true, :reload => true
