@@ -12,4 +12,5 @@ default[:redis] = {
   :appendonly => 'no',
   :appendfsync => 'everysec',
   :version_config => '2.2',
+  :requirepass => false,
 }

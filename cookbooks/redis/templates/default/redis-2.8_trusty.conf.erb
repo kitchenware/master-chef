@@ -311,7 +311,9 @@ slave-priority 100
 #
 # For example to require at least 3 slaves with a lag <= 10 seconds use:
 #
-# min-slaves-to-write 3
+<% if @min_slave_to_write %>
+min-slaves-to-write <%= @min_slave_to_write %>
+<% end %>
 # min-slaves-max-lag 10
 #
 # Setting one or the other to 0 disables the feature.
@@ -332,7 +334,9 @@ slave-priority 100
 # 150k passwords per second against a good box. This means that you should
 # use a very strong password otherwise it will be very easy to break.
 #
-# requirepass foobared
+<% if @requirepass %>
+requirepass <%= @master_password %>
+<% end %>
 
 # Command renaming.
 #
