@@ -172,3 +172,15 @@ template "#{node.graphite.directory}/conf/storage-schemas.conf" do
   notifies :restart, "service[carbon]"
 end
 
+if node.graphite.log_days_retention > 0
+
+  include_recipe 'cron'
+
+  cron_file "graphite_purge_log" do
+    content <<-EOF
+6 4 * * * root find #{node.graphite.directory}/storage/log -type f -mtime +#{node.graphite.log_days_retention} -delete
+EOF
+  end
+
+end
+
