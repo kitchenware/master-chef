@@ -22,7 +22,7 @@ end
 
 git_clone "#{node.offline_proxy.app_directory}/current" do
   user node.offline_proxy.user
-  repository "https://github.com/bpaquet/offline-proxy.git"
+  repository node.offline_proxy.repo
   reference "master"
   notifies :restart, "service[offline_proxy]"
 end
