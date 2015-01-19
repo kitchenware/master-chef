@@ -10,3 +10,10 @@ fudge 127.127.1.0 stratum <%= @local_stratum %>
 restrict -4 default nomodify nopeer noquery notrap
 restrict -6 default nomodify nopeer noquery notrap
 disable monitor
+
+<% if @interfaces %>
+interface ignore wildcard
+<% @interfaces.each do |x| %>
+interface listen <%= x %>
+<% end %>
+<% end %>
