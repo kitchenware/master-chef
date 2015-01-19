@@ -9,6 +9,8 @@ fudge 127.127.1.0 stratum <%= @local_stratum %>
 
 restrict -4 default nomodify nopeer noquery notrap
 restrict -6 default nomodify nopeer noquery notrap
+restrict 127.0.0.1
+restrict ::1
 disable monitor
 
 <% if @interfaces %>
