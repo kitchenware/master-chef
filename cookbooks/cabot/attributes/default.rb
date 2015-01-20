@@ -1,0 +1,26 @@
+default[:cabot][:root] = "/opt/cabot"
+default[:cabot][:path] = "#{node.cabot.root}/cabot"
+default[:cabot][:git_url] = "https://github.com/arachnys/cabot.git"
+default[:cabot][:log_dir] = "/var/log/cabot/"
+default[:cabot][:user] = "cabot"
+default[:cabot][:port] = 5000
+default[:cabot][:extra_config] = {
+  :admin_email => "you@example.com",
+  :cabot_from_email => "noreply@cabot.com",
+  :google_calendar_url => "http://www.google.com/calendar/ical/example.ics",
+  :graphite_server => "http://graphite.example.com/",
+  :graphite_user => "username",
+  :graphite_password => "password",
+  :graphite_from => "-10minute",
+  :hipchat_room => "48052",
+  :hipchat_api_key => "your_hipchat_api_key",
+  :jenkins_api => "https://jenkins.example.com/",
+  :jenkins_user => "username",
+  :jenkins_password => "password",
+  :smtp_server => "smtp.example.com",
+  :smtp_user => "user",
+  :smtp_password => "password",
+  :smtp_port => 123,
+  :cabot_host => "http://cabot.example.com",
+  :schme => "http"
+}

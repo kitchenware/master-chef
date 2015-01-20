@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ $1 == "start" ]; then
+  su - cabot -c 'cd <%= node.cabot.path %> && <%= node["cabot"]["path"] %>/run.sh'
+elif [ $1 == "stop" ]; then
+  ps ax | grep -i "cabot" | grep -v grep | awk '{print $1}' | xargs kill -9
+  exit 0
+fi
