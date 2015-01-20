@@ -4,6 +4,7 @@ define :logrotate_file, {
   :source => 'logrotate.erb',
   :variables => {},
   :files => nil,
+  :su => false,
 } do
   logrotate_file_params = params
 
