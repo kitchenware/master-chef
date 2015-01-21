@@ -44,7 +44,7 @@ execute "link nodejs execute to node" do
   not_if "[ -f /usr/bin/node ]"
 end
 
-git_clone "#{node.cabot.path}" do
+git_clone node.cabot.path do
   repository node.cabot.git_url
   reference "master"
   user node.cabot.user
