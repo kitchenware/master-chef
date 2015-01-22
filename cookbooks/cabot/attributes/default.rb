@@ -1,6 +1,7 @@
 default[:cabot][:root] = "/opt/cabot"
 default[:cabot][:path] = "#{node.cabot.root}/cabot"
 default[:cabot][:git_url] = "https://github.com/arachnys/cabot.git"
+default[:cabot][:git_refrence] = "master"
 default[:cabot][:log_dir] = "/var/log/cabot/"
 default[:cabot][:user] = "cabot"
 default[:cabot][:port] = 5000

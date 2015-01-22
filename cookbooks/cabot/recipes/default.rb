@@ -46,7 +46,7 @@ end
 
 git_clone node.cabot.path do
   repository node.cabot.git_url
-  reference "master"
+  reference node.cabot.git_reference
   user node.cabot.user
 end
 
