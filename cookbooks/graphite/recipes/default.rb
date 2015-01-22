@@ -41,6 +41,19 @@ if node.lsb.codename == "lucid"
 
 end
 
+if node.lsb.codename == "trusty"
+  execute "install daemonize" do
+    command "pip install daemonize"
+    environment get_proxy_environment
+    not_if "pip show daemonize | grep Version"
+  end
+
+  execute "clean up carbon util.py" do
+    command "sed -ie 's/from\stwisted.scripts._twistd_unix //g' /opt/graphite/lib/carbon/util.py"
+    only_if "cat /opt/graphite/lib/carbon/util.py | egrep 'from\stwisted.scripts._twistd_unix'"
+  end
+end
+
 execute "install django" do
   command "pip install django==#{node.graphite.django_version}"
   environment get_proxy_environment
