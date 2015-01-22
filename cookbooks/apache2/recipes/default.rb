@@ -27,6 +27,7 @@ end
 
 if node.apache2[:v2_4]
 
+  apache2_disable_module "mpm_event"
   apache2_enable_module "mpm_#{node.apache2.mpm}"
   apache2_enable_module "authn_core"
   apache2_enable_module "authz_core"
