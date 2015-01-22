@@ -34,6 +34,7 @@ default[:graphite][:bucky] = {
 default[:graphite][:carbon] = {
   :port => 2003,
   :interface => '127.0.0.1',
+  :enable_udp => "False"
 }
 
 default[:graphite][:statsd] = {

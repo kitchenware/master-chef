@@ -167,7 +167,7 @@ end
 template "#{node.graphite.directory}/conf/carbon.conf" do
   source "carbon.conf.erb"
   mode '0644'
-  variables :carbon_receiver_port => node.graphite.carbon.port, :carbon_receiver_interface => node.graphite.carbon.interface
+  variables :carbon_receiver_port => node.graphite.carbon.port, :carbon_receiver_interface => node.graphite.carbon.interface, :carbon_enable_udp => node.graphite.carbon.enable_udp
   notifies :restart, "service[carbon]"
 end
 

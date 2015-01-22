@@ -74,7 +74,7 @@ LINE_RECEIVER_PORT = <%= @carbon_receiver_port %>
 # Set this to True to enable the UDP listener. By default this is off
 # because it is very common to run multiple carbon daemons and managing
 # another (rarely used) port for every carbon instance is not fun.
-ENABLE_UDP_LISTENER = False
+ENABLE_UDP_LISTENER = <%= @carbon_enable_udp %>
 UDP_RECEIVER_INTERFACE = <%= @carbon_receiver_interface %>
 UDP_RECEIVER_PORT = <%= @carbon_receiver_port %>
 
