@@ -34,16 +34,6 @@ if node.lsb.codename == "lucid"
 
 end
 
-if node.lsb.codename == "trusty"
-  node.set[:redis][:version_config] = "2.8_trusty"
-
-  add_apt_repository "ppa_redis" do
-    url "http://ppa.launchpad.net/chris-lea/redis-server/ubuntu/"
-    key "C7917B12 "
-    key_server "keyserver.ubuntu.com"
-  end
-end
-
 redis_config_file = "redis-#{node.redis.version_config}.conf.erb"
 
 if node.redis[:redis_version]
@@ -57,6 +47,7 @@ else
   package "redis-server"
 
 end
+
 
 service "redis-server" do
 	supports :restart => true, :reload => true
