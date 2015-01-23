@@ -34,6 +34,12 @@ if node.lsb.codename == "lucid"
 
 end
 
+if node.lsb.codename == "trusty"
+
+  node.set[:redis][:version_config] = "2.8_before_5"
+
+end
+
 redis_config_file = "redis-#{node.redis.version_config}.conf.erb"
 
 if node.redis[:redis_version]
