@@ -166,7 +166,7 @@ if node.graphite.log_days_retention > 0
 
   cron_file "graphite_purge_log" do
     content <<-EOF
-6 4 * * * root find #{node.graphite.directory}/storage/log -type f -mtime +#{node.graphite.log_days_retention} -delete
+6 4 * * * root find #{node.graphite.directory}/storage/log -type f -name '*_*' -mtime +#{node.graphite.log_days_retention} -delete
 EOF
   end
 
