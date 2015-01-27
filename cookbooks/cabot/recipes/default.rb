@@ -64,7 +64,7 @@ template "#{node.cabot.root}/shared/production.env" do
   source "production.env.erb"
   variables ({
     :database => node.postgresql.databases.cabot,
-    :password => postgresql_password(node.postgresql.databases.cabot.username),
+    :password => node.postgresql.databases.cabot.password || postgresql_password(node.postgresql.databases.cabot.username),
     :log_file => "#{node.cabot.root}/shared/logs/cabot.log",
     :port => node.cabot.port,
     :extra_config => node.cabot.extra_config,
