@@ -44,7 +44,7 @@ end
 template "/etc/init.d/carbon" do
   source "carbon_init_d.erb"
   mode '0755'
-  variables :graphite_directory => node.graphite.directory, :whisper_dev_shm => node.graphite[:whisper_dev_shm]
+  variables :graphite_directory => node.graphite.directory, :whisper_dev_shm_size => node.graphite[:whisper_dev_shm_size]
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("carbon", "\\/opt\\/graphite\\/conf\\/.*")
@@ -94,7 +94,8 @@ template "#{node.graphite.directory}/webapp/graphite/local_settings.py" do
   mode '0644'
   variables({
     :timezone => node.graphite.timezone,
-    :db_file => "#{node.graphite.directory}/storage/graphite.db",
+    :db_file => "graphite.db",
+    :storage_dir => "#{node.graphite.directory}/storage",
     :secret_key => secret_key,
   })
   notifies :restart, "service[apache2]"
@@ -160,15 +161,16 @@ template "#{node.graphite.directory}/conf/storage-schemas.conf" do
   notifies :restart, "service[carbon]"
 end
 
-if node.graphite.log_days_retention > 0
+if node.logrotate[:auto_deploy]
 
-  include_recipe 'cron'
+  logrotate_file "carbon" do
+    files ["#{node.graphite.directory}/storage/log/carbon-cache/carbon-cache-a/*.log"]
+    variables :user => 'www-data', :copytruncate => true
+  end
 
-  cron_file "graphite_purge_log" do
-    content <<-EOF
-6 4 * * * root find #{node.graphite.directory}/storage/log -type f -name '*_*' -mtime +#{node.graphite.log_days_retention} -delete
-EOF
+  logrotate_file "graphite" do
+    files ["#{node.graphite.directory}/storage/log/webapp/*.log"]
+    variables :user => 'www-data', :copytruncate => true
   end
 
 end
-

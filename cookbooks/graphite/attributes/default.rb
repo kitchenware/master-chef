@@ -8,7 +8,6 @@ default[:graphite] = {
   :directory => '/opt/graphite',
   :directory_install => '/opt/graphite/install',
   :django_version => '1.4.10',
-  :log_days_retention => 5,
 }
 
 default[:graphite][:graphite] = {
