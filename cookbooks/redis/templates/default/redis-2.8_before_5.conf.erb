@@ -1,5 +1,4 @@
 # Redis configuration file example
-# 2.8.4
 
 # Note on units: when memory size is needed, it is possible to specify
 # it in the usual form of 1k 5GB 4M and so forth:
@@ -185,6 +184,8 @@ dir <%= @directory %>
 # so for example it is possible to configure the slave to save the DB with a
 # different interval, or to listen to another port, and so on.
 #
+# slaveof <masterip> <masterport>
+
 <% if @master_ip && @master_port %>
 slaveof <%= @master_ip %> <%= @master_port %>
 <% end %>
@@ -194,6 +195,8 @@ slaveof <%= @master_ip %> <%= @master_port %>
 # starting the replication synchronization process, otherwise the master will
 # refuse the slave request.
 #
+# masterauth <master-password>
+
 <% if @master_password %>
 masterauth <%= @master_password %>
 <% end %>
@@ -311,9 +314,7 @@ slave-priority 100
 #
 # For example to require at least 3 slaves with a lag <= 10 seconds use:
 #
-<% if @min_slave_to_write %>
-min-slaves-to-write <%= @min_slave_to_write %>
-<% end %>
+# min-slaves-to-write 3
 # min-slaves-max-lag 10
 #
 # Setting one or the other to 0 disables the feature.
@@ -334,9 +335,7 @@ min-slaves-to-write <%= @min_slave_to_write %>
 # 150k passwords per second against a good box. This means that you should
 # use a very strong password otherwise it will be very easy to break.
 #
-<% if @requirepass %>
-requirepass <%= @master_password %>
-<% end %>
+# requirepass foobared
 
 # Command renaming.
 #
@@ -369,6 +368,7 @@ requirepass <%= @master_password %>
 # an error 'max number of clients reached'.
 #
 # maxclients 10000
+
 maxclients <%= @maxclients %>
 
 # Don't use more memory than the specified amount of bytes.
@@ -395,6 +395,7 @@ maxclients <%= @maxclients %>
 # output buffers (but this is not needed if the policy is 'noeviction').
 #
 # maxmemory <bytes>
+
 <% if @maxmemory %>
   maxmemory <%= @maxmemory %>
 <% end %>

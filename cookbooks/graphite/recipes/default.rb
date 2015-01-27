@@ -16,19 +16,7 @@ directory node.graphite.directory_install do
   recursive true
 end
 
-execute_version "update pip" do
-  command "pip install --upgrade pip"
-  environment get_proxy_environment
-  version "1"
-  file_storage "/.pip_updated"
-end
-
-execute_version "upgrade setuptools" do
-  command "pip install setuptools --no-use-wheel --upgrade"
-  environment get_proxy_environment
-  version "1"
-  file_storage "/.pip_setupstools"
-end
+include_recipe "base::python"
 
 if node.lsb.codename == "lucid"
 
@@ -191,7 +179,7 @@ if node.graphite.log_days_retention > 0
 
   cron_file "graphite_purge_log" do
     content <<-EOF
-6 4 * * * root find #{node.graphite.directory}/storage/log -type f -mtime +#{node.graphite.log_days_retention} -delete
+6 4 * * * root find #{node.graphite.directory}/storage/log -type f -name '*_*' -mtime +#{node.graphite.log_days_retention} -delete
 EOF
   end
 

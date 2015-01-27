@@ -1,35 +1,23 @@
+
+node.set[:postgresql][:databases][:cabot] = {
+  :host => 'localhost',
+  :database => 'cabot',
+  :username => 'cabot',
+}
+
 include_recipe "postgresql::server"
 include_recipe "redis"
-include_recipe "nginx"
 include_recipe "supervisor"
 
 base_user node.cabot.user
 
-[node.cabot.log_dir, node.cabot.root].each do |dir|
-  directory  dir do
-    owner "cabot"
-    recursive true
-    mode 0755
-  end
-end
+package "python-pip"
+package "python-dev"
+package "libpq-dev"
+package "node-less"
+package "coffeescript"
 
-%w(build-essential libpq-dev python-dev nodejs npm python-pip python-virtualenv virtualenvwrapper).each do |p|
-  package p
-end
-
-execute_version "update pip" do
-  command "pip install --upgrade pip"
-  environment get_proxy_environment
-  version "1"
-  file_storage "/.pip_updated"
-end
-
-execute_version "upgrade setuptools" do
-  command "pip install setuptools --no-use-wheel --upgrade"
-  environment get_proxy_environment
-  version "1"
-  file_storage "/.pip_setupstools"
-end
+include_recipe "base::python"
 
 execute_version "upgrade virtualenv" do
   command "pip install virtualenv --upgrade"
@@ -38,87 +26,110 @@ execute_version "upgrade virtualenv" do
   file_storage "/.pip_virtualenv"
 end
 
-execute "link nodejs execute to node" do
-  command "ln -s /usr/bin/nodejs /usr/bin/node"
-  user "root"
-  not_if "[ -f /usr/bin/node ]"
-end
-
-git_clone node.cabot.path do
-  repository node.cabot.git_url
-  reference node.cabot.git_reference
-  user node.cabot.user
-end
-
-%w(migrate.sh run_celery.sh run_gunicorn.sh).each do |f|
-  template "#{node.cabot.path}/#{f}" do
-    source "#{f}.erb"
-    owner node.cabot.user
-    variables ({
-      :database => node.postgresql.databases.cabot,
-      :log_file => "#{node.cabot.log_dir}/cabot.log",
-      :port => node.cabot.port,
-      :extra_config => node.cabot.extra_config
-    })
-    mode 0755
+[
+  node.cabot.root,
+  "#{node.cabot.root}/shared",
+  "#{node.cabot.root}/shared/logs",
+].each do |x|
+  directory x do
+    owner "cabot"
   end
 end
 
-execute "remove distribute from python dependencies" do
-  command "sed -i -e '/distribute==0.6.24/d' #{node.cabot.path}/setup.py"
-  #not_if "cat #{node.cabot.path}/setup.py | grep distribute"
-  subscribes :run, "execute[git clone #{node.cabot.git_url} to #{node.cabot.path}]"
+git_clone "#{node.cabot.root}/current" do
+  repository node.cabot.git
+  reference node.cabot.version
+  user node.cabot.user
 end
 
-template "#{node.cabot.path}/fixture.json" do
-  source "fixture.json.erb"
-  owner node.cabot.user
-  mode 0755
+execute "create cabot virtual env" do
+  command "cd #{node.cabot.root} && virtualenv venv"
+  user "cabot"
+  not_if "[ -d #{node.cabot.root}/venv ]"
 end
 
-execute "install cabot dependencies with pip" do
-  command "virtualenv venv --distribute && pip install -e #{node.cabot.path}"
-  user "root"
+execute_version "install cabot dependencies" do
+  command "cd #{node.cabot.root}/current && . #{node.cabot.root}/venv/bin/activate && pip install -e ."
+  user "cabot"
+  file_storage "#{node.cabot.root}/.dependencies"
+  version node.cabot.version
 end
 
-execute "install nodejs and dependencies" do
-  command "npm install --no-color -g coffee-script less@1.3 --registry http://registry.npmjs.org/"
-  user "root"
+django_secret_key = local_storage_read("cabot:django_secret_key") do
+  PasswordGenerator.generate 64
 end
 
-execute_version "cabot database migration" do
-  command "cd #{node.cabot.path} && sh migrate.sh"
-  environment get_proxy_environment
-  version "1"
-  file_storage "/.cabot_migration"
-end
-
-nginx_vhost "cabot:http" do
-  options({
-    :protocol => 'http',
-    :source => 'nginx.conf.erb',
+template "#{node.cabot.root}/shared/production.env" do
+  owner "cabot"
+  source "production.env.erb"
+  variables ({
+    :database => node.postgresql.databases.cabot,
+    :password => postgresql_password(node.postgresql.databases.cabot.username),
+    :log_file => "#{node.cabot.root}/shared/logs/cabot.log",
+    :port => node.cabot.port,
+    :extra_config => node.cabot.extra_config,
+    :django_secret_key => django_secret_key,
   })
+  notifies :restart, "service[#{node.supervisor.service_name}]"
+end
+
+template "#{node.cabot.root}/shared/run.sh" do
+  owner "cabot"
+  source "run.sh.erb"
+  mode "0755"
+  variables :root => node.cabot.root, :virtual_env => "#{node.cabot.root}/venv"
+end
+
+[
+  "syncdb --noinput",
+  "migrate cabotapp --noinput",
+  "migrate djcelery --noinput",
+  "collectstatic --noinput",
+  "compress",
+].each_with_index do |x, k|
+  execute_version "cabot database migrations #{k}" do
+    command "#{node.cabot.root}/shared/run.sh python manage.py #{x}"
+    user node.cabot.user
+    environment get_proxy_environment
+    version node.cabot.version
+    file_storage "#{node.cabot.root}/.cabot_migration_#{k}"
+  end
+end
+
+execute "create django admin" do
+  command <<-EOF
+. #{node.cabot.root}/venv/bin/activate &&
+. #{node.cabot.root}/shared/production.env &&
+cd #{node.cabot.root}/current &&
+echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | python manage.py shell &&
+touch #{node.cabot.root}/.admin
+EOF
+  user node.cabot.user
+  not_if "[ -f #{node.cabot.root}/.admin ]"
 end
 
 supervisor_worker "cabot_gunicorn" do
   workers 1
-  command "#{node.cabot.path}/run_gunicorn.sh"
+  command "#{node.cabot.root}/shared/run.sh gunicorn cabot.wsgi:application --config gunicorn.conf"
   user node.cabot.user
   autorestart true
 end
 
 supervisor_worker "cabot_celery" do
   workers 1
-  command "#{node.cabot.path}/run_celery.sh"
+  command "#{node.cabot.root}/shared/run.sh celery worker -B -A cabot --loglevel=INFO --concurrency=16 -Ofair"
   user node.cabot.user
   autorestart true
 end
 
-execute "change permissions on logs files" do
-  command "touch /var/log/cabot/cabot.log && chown -R cabot /var/log/cabot"
-  notifies :restart, "service[#{node.supervisor.service_name}]"
+if node.logrotate[:auto_deploy]
+
+  logrotate_file "cabot" do
+    files [
+      "#{node.cabot.root}/shared/logs/cabot.log"
+    ]
+    variables :copytruncate => true, :user => "cabot"
+  end
+
 end
-
-
-
 

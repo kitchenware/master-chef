@@ -1,10 +1,12 @@
 default[:cabot][:root] = "/opt/cabot"
-default[:cabot][:path] = "#{node.cabot.root}/cabot"
-default[:cabot][:git_url] = "https://github.com/arachnys/cabot.git"
-default[:cabot][:git_refrence] = "master"
-default[:cabot][:log_dir] = "/var/log/cabot/"
+
+default[:cabot][:git] = "https://github.com/arachnys/cabot.git"
+default[:cabot][:version] = "b3ca47808cc3ca0b7b32b2ce5f9a21ee3dc63a8f"
+
 default[:cabot][:user] = "cabot"
+
 default[:cabot][:port] = 5000
+
 default[:cabot][:extra_config] = {
   :admin_email => "you@example.com",
   :cabot_from_email => "noreply@cabot.com",
@@ -23,5 +25,10 @@ default[:cabot][:extra_config] = {
   :smtp_password => "password",
   :smtp_port => 123,
   :cabot_host => "http://cabot.example.com",
-  :schme => "http"
+  :scheme => "http",
+}
+
+default[:cabot][:nginx][:cabot] = {
+  :listen => '0.0.0.0:80',
+  :cabot_port => 5000,
 }

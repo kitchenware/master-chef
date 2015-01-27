@@ -1,0 +1,9 @@
+#!/bin/bash
+
+trap 'kill $(jobs -p) 2> /dev/null' EXIT
+
+source <%= @virtual_env %>/bin/activate
+cd <%= @root %>/current
+source <%= @root %>/shared/production.env
+
+$@
