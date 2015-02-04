@@ -13,4 +13,5 @@ default[:redis] = {
   :appendfsync => 'everysec',
   :version_config => '2.2',
   :requirepass => false,
+  :auto_aof_rewrite_percentage => 100,
 }
