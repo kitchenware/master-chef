@@ -5,13 +5,6 @@ capistrano_app node.kibana4.directory do
   user "kibana"
 end
 
-execute_version "install kibana 4" do
-	command "cd #{node.kibana4.directory} && rm -rf current && curl -L -f -s #{node.kibana4.url}#{node.kibana4.version}.tar.gz -o kibana.tar.gz && tar xvzf kibana.tar.gz && rm kibana.tar.gz && mv kibana-* current"
-	environment get_proxy_environment
-	version node.kibana4.version
-	file_storage "#{node.kibana4.directory}/.kibana_version"
-end
-
 file "#{node.kibana4.directory}/shared/run.sh" do
 	mode '0755'
 	owner "kibana"
@@ -31,6 +24,15 @@ basic_init_d "kibana" do
 	user "kibana"
 	make_pidfile true
 	background true
+  directory_check ["#{node.kibana4.directory}/current"]
+end
+
+execute_version "install kibana 4" do
+  command "cd #{node.kibana4.directory} && rm -rf current && curl -L -f -s #{node.kibana4.url}#{node.kibana4.version}.tar.gz -o kibana.tar.gz && tar xvzf kibana.tar.gz && rm kibana.tar.gz && mv kibana-* current"
+  environment get_proxy_environment
+  version node.kibana4.version
+  file_storage "#{node.kibana4.directory}/.kibana_version"
+  notifies :restart, "service[kibana]"
 end
 
 if node.logrotate[:auto_deploy]
