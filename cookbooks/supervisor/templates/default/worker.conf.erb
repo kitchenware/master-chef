@@ -5,8 +5,8 @@ autostart = <%= @autostart %>
 autorestart = <%= @autorestart %>
 process_name = <%= @name %>_%(process_num)s
 stdout_logfile = <%= @log_dir %>/<%= @name %>_%(process_num)s_stdout.log
-stdout_logfile_maxbytes = <%= @log_maxbytest %>
+stdout_logfile_maxbytes = <%= @log_maxbytes %>
 stdout_logfile_backups = <%= @log_maxfiles %>
 stderr_logfile = <%= @log_dir %>/<%= @name %>_%(process_num)s_stderr.log
-stderr_logfile_maxbytes = <%= @log_maxbytest %>
+stderr_logfile_maxbytes = <%= @log_maxbytes %>
 stderr_logfile_backups = <%= @log_maxfiles %>
