@@ -5,6 +5,10 @@ directory node.jenkins.home do
   owner node.tomcat.user
 end
 
+if node[:jenkins][:jelly_timezone]
+  node.set[:jenkins][:tomcat][:env]['JAVA_OPTS'] = node.jenkins.tomcat.env['JAVA_OPTS'] + " -Dorg.apache.commons.jelly.tags.fmt.timeZone=#{node[:jenkins][:jelly_timezone]}"
+end
+
 tomcat_instance "jenkins:tomcat" do
   war_url node.jenkins.url
   war_location node.jenkins.location
