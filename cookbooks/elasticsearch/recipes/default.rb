@@ -5,7 +5,9 @@ base_user node.elasticsearch.user
 
 optional_config = node.elasticsearch[:config] || ""
 init_d_code = []
-init_d_code << "ulimit -n 65000\nexport JAVA_OPTS=\"#{node.elasticsearch.java_opts}\""
+init_d_code << "ulimit -n 65000"
+init_d_code << "ulimit -l #{node.elasticsearch[:memlock_limit_kb]}" if node.elasticsearch[:memlock_limit_kb]
+init_d_code << "export JAVA_OPTS=\"#{node.elasticsearch.java_opts}\""
 
 if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zeromq_river.enable
   zeromq_river_name = "zeromq_river_" + node.hostname
