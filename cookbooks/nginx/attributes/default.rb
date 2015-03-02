@@ -29,7 +29,8 @@ default[:nginx][:default_vhost] = {
 }
 
 default[:nginx][:config] = {
-  :worker_connections => 100000,
+  :worker_rlimit_nofile => 30_000,
+  :worker_connections => 100_000,
   :max_upload_size => '50m',
   :default_log_format => 'combined',
   :log_formats => {
