@@ -4,6 +4,8 @@ define :supervisor_worker, {
   :workers => nil,
   :user => nil,
   :autostart => true,
+  :log_maxbytes => '10MB',
+  :log_maxfiles => 10,
   :autorestart => 'unexpected',
   } do
 
@@ -23,6 +25,8 @@ define :supervisor_worker, {
       :autostart => supervisor_worker_params[:autostart],
       :autorestart => supervisor_worker_params[:autorestart],
       :name => supervisor_worker_params[:name],
+      :log_maxbytes => supervisor_worker_params[:log_maxbytes],
+      :log_maxfiles => supervisor_worker_params[:log_maxfiles],
       :log_dir => node.supervisor.log_dir,
       })
     notifies :run, "execute[reload supervisor]"
