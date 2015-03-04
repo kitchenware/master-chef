@@ -14,7 +14,6 @@ default[:elasticsearch] = {
   :cluster_name => 'elasticsearch',
   :one_node_mode => true,
   :allow_dynamic_scripts => true,
-  :heap_size => '256m',
   :mlockall => true,
   :enable_logs => false,
   :enable_gc_logs => false,
