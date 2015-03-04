@@ -28,6 +28,7 @@ end
 
 node.elasticsearch.env_vars.each do |k, v|
   init_d_code << "export #{k}=\"#{v}\""
+  init_d_code << "export ES_HEAP_SIZE=#{node.elasticsearch[:heap_size]}" if node.elasticsearch[:heap_size]
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("elasticsearch", ".*elasticsearch.*")
