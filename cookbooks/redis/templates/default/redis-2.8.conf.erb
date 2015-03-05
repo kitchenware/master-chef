@@ -354,6 +354,9 @@ slave-priority 100
 # use a very strong password otherwise it will be very easy to break.
 #
 # requirepass foobared
+<% if @master_password %>
+  requirepass <%= @master_password %>
+<% end %>
 
 # Command renaming.
 #
