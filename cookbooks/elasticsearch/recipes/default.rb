@@ -124,9 +124,9 @@ if node.logrotate[:auto_deploy]
 
   logrotate_file "elasticsearch" do
     files [
-      "#{node.elasticsearch.directory}/logs/#{node.elasticsearch.cluster_name}.log",
-      "#{node.elasticsearch.directory}/logs/#{node.elasticsearch.cluster_name}_index_indexing_slowlog.log",
-      "#{node.elasticsearch.directory}/logs/#{node.elasticsearch.cluster_name}_index_search_slowlog.log",
+      "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.logs.general}",
+      "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.logs.indexing_slowlog}",
+      "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.logs.search_slowlog}",
     ]
     variables :copytruncate => true, :user => node.elasticsearch.user
   end
