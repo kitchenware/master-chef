@@ -128,7 +128,7 @@ end
 
 cp_command = deployed_files.map{|f| "cp #{node.gitlab.gitlab.path}/shared/files/#{f} #{node.gitlab.gitlab.path}/current/#{f}"}.join(" &&\n")
 
-ruby_rbenv_command "gitlab db:migrate" do
+ruby_rbenv_command "gitlab ruby and gemset installation" do
   user node.gitlab.gitlab.user
   directory "#{node.gitlab.gitlab.path}/current"
   code <<-EOF
@@ -138,9 +138,8 @@ rbenv warp install &&
 rm -rf log &&
 ln -s #{node.gitlab.gitlab.path}/shared/log . &&
 rm -rf tmp &&
-ln -s #{node.gitlab.gitlab.path}/shared/tmp . &&
-RAILS_ENV=production rake db:migrate
-EOF
+ln -s #{node.gitlab.gitlab.path}/shared/tmp .
+  EOF
   environment get_proxy_environment
   version node.gitlab.gitlab.reference
 end
@@ -151,6 +150,14 @@ ruby_rbenv_command "initialize gitlab" do
   code "echo yes | RAILS_ENV=production rake gitlab:setup"
   file_storage "#{node.gitlab.gitlab.path}/shared/.initialized"
   version 1
+end
+
+ruby_rbenv_command "gitlab db:migrate" do
+  user node.gitlab.gitlab.user
+  directory "#{node.gitlab.gitlab.path}/current"
+  code 'RAILS_ENV=production rake db:migrate'
+  environment get_proxy_environment
+  version node.gitlab.gitlab.reference
 end
 
 # charlock_holmes does not support moving after install
