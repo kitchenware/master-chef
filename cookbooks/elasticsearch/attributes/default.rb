@@ -5,6 +5,11 @@ default[:elasticsearch] = {
   :directory => '/opt/elasticsearch',
   :directory_data => '/opt/elasticsearch_data',
   :directory_logs => '/opt/elasticsearch/logs',
+  :logs => {
+    :general => 'elastic.log',
+    :indexing_slowlog => 'elastic_index_indexing_slowlog.log',
+    :search_slowlog => 'elastic_index_search_slowlog.log',
+  },
   :java_opts => '',
   :env_vars => {},
   :command_line_options => '',
