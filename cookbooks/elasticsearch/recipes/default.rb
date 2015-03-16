@@ -119,6 +119,20 @@ if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zer
 
 end
 
+if node.elasticsearch.enable_logs
+  default[:elasticsearch][:logs][:general] = "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.cluster_name}.log"
+  default[:elasticsearch][:logs][:indexing_slowlog] = "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.cluster_name}_indexing_slowlog.log}"
+  default[:elasticsearch][:logs][:search_slowlog] = "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.cluster_name}_search_slowlog.log"
+
+  node_logstash_files "elasticsearch_logs" do
+    files [
+      "#{node.elasticsearch.logs.general}",
+      "#{node.elasticsearch.logs.indexing_slowlog}",
+      "#{node.elasticsearch.logs.search_slowlog}",
+    ]
+    log_type "elasticsearch_log"
+  end
+end
 
 if node.logrotate[:auto_deploy]
 
