@@ -1,7 +1,7 @@
 default[:cabot][:root] = "/opt/cabot"
 
-default[:cabot][:git] = "https://github.com/arachnys/cabot.git"
-default[:cabot][:version] = "b3ca47808cc3ca0b7b32b2ce5f9a21ee3dc63a8f"
+default[:cabot][:git] = "https://github.com/bonniejools/cabot.git"
+default[:cabot][:version] = "14a6bcc357cd583d95b49e4fa04821dd34897582"
 
 default[:cabot][:user] = "cabot"
 
