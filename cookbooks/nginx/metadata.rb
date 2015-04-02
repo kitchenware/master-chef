@@ -1,2 +1,4 @@
 name 'nginx'
 
+depends "base"
+
