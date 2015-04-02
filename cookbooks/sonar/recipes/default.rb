@@ -1,5 +1,4 @@
 include_recipe "mysql::server"
-include_recipe "nginx"
 
 mysql_database "sonar:database"
 
@@ -47,23 +46,6 @@ EOF
 environment get_proxy_environment
 version node.sonar.zip_url
 file_storage "#{node.sonar.path}/.sonar_deployed"
-end
-
-nginx_add_default_location "sonar" do
-  content <<-EOF
-
-  location #{node.sonar.location} {
-    proxy_pass http://tomcat_sonar_upstream;
-    proxy_read_timeout 600s;
-    break;
-  }
-
-EOF
-  upstream <<-EOF
-  upstream tomcat_sonar_upstream {
-  server 127.0.0.1:9000 fail_timeout=0;
-}
-  EOF
 end
 
 service "sonar" do
