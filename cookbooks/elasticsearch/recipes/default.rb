@@ -132,17 +132,16 @@ if node.elasticsearch.enable_logs
     ]
     log_type "elasticsearch_log"
   end
-end
 
-if node.logrotate[:auto_deploy]
+  if node.logrotate[:auto_deploy]
 
-  logrotate_file "elasticsearch" do
-    files [
-      "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.logs.general}",
-      "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.logs.indexing_slowlog}",
-      "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.logs.search_slowlog}",
-    ]
-    variables :copytruncate => true, :user => node.elasticsearch.user
+    logrotate_file "elasticsearch" do
+      files [
+        "#{node.elasticsearch.logs.general}",
+        "#{node.elasticsearch.logs.indexing_slowlog}",
+        "#{node.elasticsearch.logs.search_slowlog}"
+      ]
+      variables :copytruncate => true, :user => node.elasticsearch.user
+    end
   end
-
 end
