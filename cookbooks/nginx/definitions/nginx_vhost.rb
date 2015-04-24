@@ -1,4 +1,5 @@
 define :nginx_vhost, {
+  :cookbook => nil,
   :options => {}
 } do
   nginx_vhost_params = params
@@ -76,6 +77,7 @@ define :nginx_vhost, {
   nginx_listen += config[:extended_listen] if config[:extended_listen]
 
   template "/etc/nginx/sites-enabled/#{vhost_sym.to_s}.conf" do
+    cookbook nginx_vhost_params[:cookbook]
     source nginx_vhost_params[:options][:source] || "#{vhost_sym.to_s}.conf.erb"
     mode '0644'
     variables({
