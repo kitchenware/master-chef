@@ -6,4 +6,4 @@ if [ "$PG_DUMP" != "" ]; then
   EXEC=pg_dump
 fi
 
-PGPASSWORD=<%= @config[:password] %> $EXEC --username=<%= @config[:username] %> --host=<%= @config[:host] %> <%= @config[:database] %> "$@"
+PGPASSWORD='<%= @config[:password] %>' $EXEC --username=<%= @config[:username] %> --host=<%= @config[:host] %> <%= @config[:database] %> "$@"
