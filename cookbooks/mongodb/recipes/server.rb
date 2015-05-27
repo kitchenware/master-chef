@@ -31,6 +31,8 @@ service "mongodb" do
 	action auto_compute_action
 end
 
+Chef::Config.exception_handlers << ServiceErrorHandler.new("mongodb", "mongodb")
+
 template "/etc/mongodb.conf" do
 	mode 0644
 	variables node.mongodb.to_hash
