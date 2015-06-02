@@ -2,7 +2,7 @@
 define :mount_new_path, {
   :target => nil,
   :fstype => 'ext4',
-  :format => true,
+  :format_fs => true,
   :options => 'defaults',
   :mkfs_options => ''
 } do
@@ -11,7 +11,7 @@ define :mount_new_path, {
 
   raise "Please specify target with mount_new_path" unless mount_new_path_params[:target]
 
-  if mount_new_path_params[:format]
+  if mount_new_path_params[:format_fs]
     format_fs mount_new_path_params[:name] do
       fstype mount_new_path_params[:fstype]
       mkfs_options mount_new_path_params[:mkfs_options]

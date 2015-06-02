@@ -1,7 +1,7 @@
 define :mount_existing_path, {
   :target => nil,
   :fstype => 'ext4',
-  :format => true,
+  :format_fs => true,
   :impacted_services => [],
   :options => 'defaults',
   :mkfs_options => '',
@@ -11,7 +11,7 @@ define :mount_existing_path, {
 
   raise "Please specify target with mount_existing_path" unless mount_existing_path_params[:target]
 
-  if mount_existing_path_params[:format]
+  if mount_existing_path_params[:format_fs]
 
     format_fs mount_existing_path_params[:name] do
       fstype mount_existing_path_params[:fstype]
