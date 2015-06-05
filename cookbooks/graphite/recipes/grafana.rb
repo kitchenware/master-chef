@@ -1,16 +1,26 @@
-
-capistrano_app node.grafana.directory do
-  user "root"
+add_apt_repository "grafana_official" do
+  url "https://packagecloud.io/grafana/testing/debian/"
+  distrib "wheezy"
+  components ["main"]
+  key "D59097AB"
+  key_server "keyserver.ubuntu.com"
 end
 
-execute_version "install grafana" do
-	command "cd #{node.grafana.directory} && rm -rf current && curl -L -f -s #{node.grafana.url}#{node.grafana.version}.tar.gz -o grafana.tar.gz && tar xvzf grafana.tar.gz && rm grafana.tar.gz && mv grafana-* current"
-	environment get_proxy_environment
-	version node.grafana.version
-	file_storage "#{node.grafana.directory}/.grafana_version"
+package "grafana"
+
+service "grafana-server" do
+  supports :status => true, :restart => true
+  action auto_compute_action
 end
 
-template "#{node.grafana.directory}/current/config.js" do
-	variables :grafana => node.grafana
-	source "grafana.config.js.erb"
+template "/etc/grafana/grafana.ini" do
+  source 'grafana.ini.erb'
+  variables ({
+    :grafana_base_url => node.grafana.base_url,
+    :grafana_location => node.grafana.location
+  })
+  owner 'root'
+  group 'root'
+  mode '0644'
+  notifies :restart, "service[grafana-server]"
 end

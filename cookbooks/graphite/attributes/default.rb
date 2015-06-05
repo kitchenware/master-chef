@@ -51,9 +51,6 @@ default[:graphite][:statsd] = {
 }
 
 default[:grafana] = {
-  :url => 'http://grafanarel.s3.amazonaws.com/grafana-',
-  :version => '1.9.0',
-  :directory => '/opt/grafana',
   :location => '/grafana',
-  :elasticsearch_index => 'grafana-dash',
+  :base_url => "localhost" # set your grafana domain name here
 }
