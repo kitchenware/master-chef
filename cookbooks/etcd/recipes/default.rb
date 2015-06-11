@@ -17,7 +17,7 @@ basic_init_d "etcd" do
   user node.etcd.user
   directory_check [node.etcd.path]
   working_directory node.etcd.path
-  options "--data-dir #{node.etcd.data_dir}"
+  options "--data-dir #{node["etcd"]["data_dir"]} #{node["etcd"]["options"]}"
 end
 
 
