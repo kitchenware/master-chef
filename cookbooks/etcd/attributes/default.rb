@@ -3,5 +3,5 @@ default[:etcd][:download_url] = "https://github.com/coreos/etcd/releases/downloa
 default[:etcd][:home] = "/opt/etcd"
 default[:etcd][:user] = "etcd"
 default[:etcd][:path] = "#{node.etcd.home}/etcd-v#{node.etcd.version}-linux-amd64"
-default[:etcd][:data_dir] = "/opt/etcd//opt/etcd/default.etcd"
+default[:etcd][:data_dir] = "/opt/etcd/default.etcd"
 default[:etcd][:options] = ""
