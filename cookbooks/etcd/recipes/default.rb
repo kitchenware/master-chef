@@ -1,9 +1,10 @@
 base_user node.etcd.user
-
-directory node.etcd.home do
-  owner node.etcd.user
-  group node.etcd.user
-  mode 0755
+[node.etcd.home, node.etcd.data_dir, node.etcd.log_dir].each do |dir|
+  directory  dir do
+    owner node.etcd.user
+    group node.etcd.user
+    mode 0755
+  end
 end
 
 execute "download etcd #{node.etcd.version} and uncompress it" do
@@ -18,6 +19,7 @@ basic_init_d "etcd" do
   directory_check [node.etcd.path]
   working_directory node.etcd.path
   options "--data-dir #{node["etcd"]["data_dir"]} #{node["etcd"]["options"]}"
+  log_file "#{node.etcd.log_dir}/etcd.log"
 end
 
 
