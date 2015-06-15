@@ -103,6 +103,8 @@ elif [ "$arch" = "ppc64le" ]; then
   arch="ppc64le"
 elif [ "$arch" = "armv7l" ]; then
   arch="armv7l"
+elif [ "$arch" = "armv6l" ]; then
+  arch="armv6l"
 else
   echo "Unknown arch $arch"
   exit 2
@@ -146,6 +148,9 @@ if which apt-get > /dev/null; then
         OMNIBUS_DEB="https://github.com/bpaquet/ppc64le/raw/master/chef_11.16.4+20150329005250-1_ppc64el.deb"
       fi
       if [ "$arch" = "armv7l" ]; then
+        OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armhf.deb"
+      fi
+      if [ "$arch" = "armv6l" ]; then
         OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armhf.deb"
       fi
       ;;
