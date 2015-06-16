@@ -132,7 +132,13 @@ if which apt-get > /dev/null; then
     wheezy)
       exec_command "$SUDO $APT_PROXY apt-get install -y rsync git-core curl bzip2 unzip sudo file"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.16.4-1_${arch}.deb"
-      ;;
+      if [ "$arch" = "armv7l" ]; then
+        OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armhf.deb"
+      fi
+      if [ "$arch" = "armv6l" ]; then
+        OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armv6l.deb"
+      fi
+     ;;
     lucid)
       exec_command "$SUDO $APT_PROXY apt-get install -y rsync git-core curl bzip2 unzip"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/10.04/${opscode_dir}/chef_11.8.0-1.ubuntu.10.04_${arch}.deb"
