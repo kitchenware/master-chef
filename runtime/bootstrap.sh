@@ -151,7 +151,7 @@ if which apt-get > /dev/null; then
         OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armhf.deb"
       fi
       if [ "$arch" = "armv6l" ]; then
-        OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armhf.deb"
+        OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/0cd64b7a40b346d72393d5c79150e3a1262ce207/chef_11.16.4-1_armhf.deb"
       fi
       ;;
     *)
