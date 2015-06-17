@@ -77,6 +77,7 @@ define :nginx_vhost, {
 
   template "/etc/nginx/sites-enabled/#{vhost_sym.to_s}.conf" do
     source nginx_vhost_params[:options][:source] || "#{vhost_sym.to_s}.conf.erb"
+    cookbook nginx_vhost_params[:options][:cookbook].to_s if nginx_vhost_params[:options][:cookbook]
     mode '0644'
     variables({
       :listen => nginx_listen + auth,

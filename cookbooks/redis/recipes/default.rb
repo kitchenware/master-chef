@@ -50,7 +50,9 @@ if node.redis[:redis_version]
 
 else
 
-  package "redis-server"
+  package "redis-server" do
+    options node.redis.redis_package_options if node.redis[:redis_package_options]
+  end
 
 end
 
