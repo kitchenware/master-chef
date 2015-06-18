@@ -1,4 +1,4 @@
-default[:etcd][:version] = "2.0.11"
+default[:etcd][:version] = "2.0.12"
 default[:etcd][:download_url] = "https://github.com/coreos/etcd/releases/download/v#{node.etcd.version}/etcd-v#{node.etcd.version}-linux-amd64.tar.gz"
 default[:etcd][:home] = "/opt/etcd"
 default[:etcd][:user] = "etcd"
