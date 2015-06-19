@@ -34,7 +34,7 @@ define :supervisor_worker, {
 
   sudo_sudoers_file "supervisor_#{supervisor_worker_params[:name]}" do
     content <<-EOF
-#{supervisor_worker_params[:user]} ALL = (root) NOPASSWD: /usr/bin/supervisorctl restart #{supervisor_worker_params[:name]}*
+#{supervisor_worker_params[:user]} ALL = (root) NOPASSWD: /usr/bin/supervisorctl restart all
 EOF
   end
 
