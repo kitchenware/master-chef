@@ -30,16 +30,17 @@ def exec_local cmd
 end
 
 ssh_opts = ENV["SSH_OPTS"] || ""
-ssh_opts += " -o StrictHostKeyChecking=no"
+ssh_opts += " -o StrictHostKeyChecking=no "
+ssh_opts += " -o ProxyCommand='#{ENV['PROXY_COMMAND']}' " if ENV['PROXY_COMMAND']
 
 require 'tempfile'
 
 unless ENV["NO_CONTROL_MASTER"]
   control_master_path = "/tmp/master_chef_socket_#{server}"
 
-  Kernel.system("ssh -nNf -o StrictHostKeyChecking=no -o ControlMaster=yes -o ControlPath=\"#{control_master_path}\" #{user}@#{server}")
+  Kernel.system("ssh -nNf #{ssh_opts} -o ControlMaster=yes -o ControlPath=\"#{control_master_path}\" #{user}@#{server}")
   Kernel.at_exit do
-    Kernel.system("ssh -O exit -o StrictHostKeyChecking=no -o ControlPath=\"#{control_master_path}\" #{user}@#{server} 2> /dev/null")
+    Kernel.system("ssh -O exit #{ssh_opts} -o ControlPath=\"#{control_master_path}\" #{user}@#{server} 2> /dev/null")
     Kernel.system("rm -f #{control_master_path}")
   end
   ssh_opts += " -o ControlPath='#{control_master_path}'"
