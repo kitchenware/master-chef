@@ -6,11 +6,12 @@ default[:redmine] = {
 	:location => "/redmine",
 	:configure_nginx => true,
 	:google_apps => false,
-	:google_apps_plugin_git => "https://github.com/zumbrunnen/redmine_omniauth_google.git",
-  :google_apps_plugin_branch => "zumbrunnen-redmine-3x-fix",
+	:google_apps_plugin_git => "https://github.com/doctolib/redmine_omniauth_google.git",
+  :google_apps_plugin_branch => "master",
 	:database => {
   	:host => "localhost",
   	:username => "redmine",
   	:database => "redmine",
-  }
+  },
+  :smtp_domain => 'example.com'
 }
