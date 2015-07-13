@@ -1,4 +1,6 @@
 
+package "libffi5"
+
 include_recipe "rails"
 include_recipe "mysql::server"
 
