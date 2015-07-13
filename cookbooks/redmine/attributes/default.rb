@@ -1,6 +1,6 @@
 default[:redmine] = {
 	:user => "redmine",
-	:directory => "/home/redmine/redmine",
+	:directory => "/opt/redmine",
 	:version => "2.3.3",
 	:git_url => "git://github.com/edavis10/redmine.git",
 	:location => "/redmine",
