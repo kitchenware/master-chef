@@ -45,10 +45,8 @@ set -e
 kill_unicorn() {
   SIGNAL=$1
 
-	if [ ! "$PID_FILE" = "" ]; then
-		if [ -f $PID_FILE ]; then
-			kill $SIGNAL `cat $PID_FILE` || true
-		fi
+	if [ -f $PID_FILE ]; then
+		kill $SIGNAL `cat $PID_FILE` || true
 	fi
 }
 
@@ -59,7 +57,7 @@ start_unicorn() {
 }
 
 reload_unicorn() {
-	echo -n "Reloading $DESC: "
+	echo -n "Reloading $NAME: "
 	old_pid=$(cat $PID_FILE)
 	kill_unicorn "-USR2"
 	i=0
