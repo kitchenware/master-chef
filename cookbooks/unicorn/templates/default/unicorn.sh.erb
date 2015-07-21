@@ -1,0 +1,9 @@
+#!/bin/bash
+
+unset LD_LIBRARY_PATH
+
+export HOME=<%= @home %>
+source $HOME/.warp/common/ruby/include
+cd <%= @app_directory %>
+export RAILS_ENV=production
+exec <%= @unicorn_cmd %> -E production -D -c <%= @config_file %>

@@ -12,31 +12,20 @@
 
 NAME="<%= @name %>"
 USER="<%= @user %>"
-DAEMON="/bin/bash"
+DAEMON="<%= @cmd %>"
 APP_DIRECTORY="<%= @app_directory %>"
 PID_FILE="<%= @pid_file %>"
-CONFIG_FILE="<%= @config_file %>"
-UNICORN_CMD="<%= @unicorn_cmd %>"
 START_STOP_DAEMON="/sbin/start-stop-daemon"
+UNICORN_CMD="<%= @unicorn_cmd %>"
 
 test -x $DAEMON || exit 0
 test -d "$APP_DIRECTORY" || exit 0
-test -f "$CONFIG_FILE" || exit 0
 
 <%= @code_for_initd %>
 
 <% @vars_to_unset.each do |v| %>
 unset <%= v %>
 <% end %>
-
-unset RBENV_DIR
-unset RBENV_HOOK_PATH
-unset RBENV_ROOT
-unset RUBYLIB
-unset LD_LIBRARY_PATH
-
-USER_HOME=`cat /etc/passwd | grep $USER | awk -F: '{print $6}'`
-CMD="cd $APP_DIRECTORY && export HOME=$USER_HOME && export PATH=\"$USER_HOME/.rbenv/bin:$USER_HOME/.rbenv/shims:$PATH\" && bundle exec $UNICORN_CMD -E production -D -c $CONFIG_FILE"
 
 set -e
 
@@ -52,7 +41,7 @@ kill_unicorn() {
 
 start_unicorn() {
 	echo -n "Starting $NAME: "
-	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$CMD" || exit 1
+	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$DAEMON" || exit 1
 	echo "$NAME."
 }
 
@@ -95,7 +84,7 @@ case "$1" in
 	echo -n "Restarting $NAME: "
 	kill_unicorn
 	sleep 1
-	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$CMD" || exit 1
+	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$DAEMON" || exit 1
 	echo "$NAME."
 	;;
   reopen_log)
