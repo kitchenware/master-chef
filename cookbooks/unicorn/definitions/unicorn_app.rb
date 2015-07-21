@@ -5,6 +5,7 @@ define :unicorn_app, {
   :user => nil,
   :code_for_initd => "",
   :location => '/',
+  :bind => nil,
   :configure_nginx => true,
   :extended_nginx_config => "",
   :vars_to_unset => [],
@@ -12,6 +13,7 @@ define :unicorn_app, {
   :unicorn_timeout => 600,
   :nb_workers => nil,
   :create_capistrano_app => true,
+  :worker_boot_code => nil,
 } do
 
   unicorn_app_params = params
@@ -48,7 +50,7 @@ define :unicorn_app, {
   end
 
   service unicorn_app_params[:name] do
-    supports :status => true, :restart => true, :reload => true, :graceful_restart => true
+    supports :status => true, :restart => true, :reload => true, :reload => true
     action auto_compute_action
   end
 
@@ -59,13 +61,14 @@ define :unicorn_app, {
     mode '0644'
     variables({
       :app_directory => "#{unicorn_app_params[:app_directory]}/current",
-      :unicorn_socket => unicorn_socket_file,
+      :unicorn_socket => unicorn_app_params[:bind] || unicorn_socket_file,
       :unicorn_timeout =>  unicorn_app_params[:unicorn_timeout],
       :log_prefix => unicorn_log_prefix,
       :pid_file => unicorn_pid_file,
       :nb_workers => unicorn_app_params[:nb_workers] || node.cpu.total,
+      :worker_boot_code => unicorn_app_params[:worker_boot_code],
     })
-    notifies :restart, "service[#{unicorn_app_params[:name]}]"
+    notifies :reload, "service[#{unicorn_app_params[:name]}]"
   end
 
   node.set[:unicorn][:apps][unicorn_app_params[:name]] = {

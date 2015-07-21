@@ -38,8 +38,6 @@ after_fork do |server, worker|
   if defined?(ActiveRecord::Base)
     ActiveRecord::Base.establish_connection
   end
-  if defined?(Resque)
-    Resque.redis.client.reconnect
-  end
+  <%= @worker_boot_code %>
 end
 
