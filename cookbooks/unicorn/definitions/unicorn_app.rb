@@ -43,7 +43,6 @@ define :unicorn_app, {
       :app_directory => "#{unicorn_app_params[:app_directory]}/current",
       :cmd => unicorn_run_file,
       :unicorn_cmd => unicorn_app_params[:unicorn_cmd],
-      :config_file => unicorn_config_file,
       :pid_file => unicorn_pid_file,
       :user => unicorn_app_params[:user],
       :code_for_initd => unicorn_app_params[:code_for_initd],
