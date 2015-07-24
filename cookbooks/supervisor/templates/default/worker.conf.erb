@@ -1,5 +1,11 @@
 [program:<%= @name %>]
-command = sudo -H -u <%= @user %> <%= @command %>
+command = <%= @command %>
+user = <%= @user %>
+environment = <%= @env.map{|k, v| "#{k}=\"#{v}\""}.join(',') %>
+<% if @stopsignal %>
+stopsignal = <%= @stopsignal %>
+stopwaitsecs = <%= @stopwaitsecs %>
+<% end %>
 numprocs = <%= @numprocs %>
 autostart = <%= @autostart %>
 autorestart = <%= @autorestart %>

@@ -5,12 +5,18 @@ define :supervisor_worker, {
   :user => nil,
   :autostart => true,
   :autorestart => 'unexpected',
+  :stopsignal => nil,
+  :stopwaitsecs => nil,
+  :env => {}
   } do
 
   supervisor_worker_params = params
 
   raise "Please specify files in workers" unless supervisor_worker_params[:workers]
   raise "Please specify files in command" unless supervisor_worker_params[:command]
+
+  supervisor_worker_params[:env]['HOME'] = get_home supervisor_worker_params[:user]
+  supervisor_worker_params[:env]['USER'] = supervisor_worker_params[:user]
 
   template "/etc/supervisor/conf.d/#{supervisor_worker_params[:name]}.conf" do
     mode '0644'
@@ -23,7 +29,10 @@ define :supervisor_worker, {
       :autostart => supervisor_worker_params[:autostart],
       :autorestart => supervisor_worker_params[:autorestart],
       :name => supervisor_worker_params[:name],
+      :stopsignal => supervisor_worker_params[:stopsignal],
+      :stopwaitsecs => supervisor_worker_params[:stopwaitsecs],
       :log_dir => node.supervisor.log_dir,
+      :env => supervisor_worker_params[:env],
       })
     notifies :run, "execute[reload supervisor]"
   end
