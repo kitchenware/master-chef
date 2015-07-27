@@ -7,14 +7,17 @@ define :supervisor_worker, {
   :autorestart => 'unexpected',
   :stopsignal => nil,
   :stopwaitsecs => nil,
-  :env => {}
+  :env => nil
   } do
 
   supervisor_worker_params = params
 
+  p supervisor_worker_params
+
   raise "Please specify files in workers" unless supervisor_worker_params[:workers]
   raise "Please specify files in command" unless supervisor_worker_params[:command]
 
+  supervisor_worker_params[:env] = {} unless supervisor_worker_params[:env]
   supervisor_worker_params[:env]['HOME'] = get_home supervisor_worker_params[:user]
   supervisor_worker_params[:env]['USER'] = supervisor_worker_params[:user]
 
