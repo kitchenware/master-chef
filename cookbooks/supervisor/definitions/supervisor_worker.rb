@@ -12,8 +12,6 @@ define :supervisor_worker, {
 
   supervisor_worker_params = params
 
-  p supervisor_worker_params
-
   raise "Please specify files in workers" unless supervisor_worker_params[:workers]
   raise "Please specify files in command" unless supervisor_worker_params[:command]
 
