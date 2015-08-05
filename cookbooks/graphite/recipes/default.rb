@@ -106,7 +106,7 @@ directory_recurse_chmod_chown "#{node.graphite.directory}/storage" do
   mode '0755'
 end
 
-if node.graphite[:whisper_dev_shm]
+if node.graphite[:whisper_dev_shm_size]
 
   execute "symlink whisper" do
     command "rm -rf #{node.graphite.directory}/storage/whisper && ln -s /dev/shm/whisper #{node.graphite.directory}/storage/whisper"
