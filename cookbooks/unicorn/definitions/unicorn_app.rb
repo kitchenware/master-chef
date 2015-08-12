@@ -122,4 +122,17 @@ define :unicorn_app, {
 
   end
 
+  if node.logrotate[:auto_deploy]
+
+    logrotate_file "#{unicorn_app_params[:name]}_unicorn" do
+      files [
+        "#{unicorn_app_params[:app_directory]}/shared/log/unicorn.stdout.log",
+        "#{unicorn_app_params[:app_directory]}/shared/log/unicorn.stderr.log",
+      ]
+      variables :user => "deploy", :copytruncate => true
+    end
+
+  end
+
+
 end
