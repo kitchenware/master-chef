@@ -14,6 +14,8 @@ define :unicorn_app, {
   :nb_workers => nil,
   :create_capistrano_app => true,
   :worker_boot_code => nil,
+  :reload_files => [],
+  :reload_cmd => nil,
 } do
 
   unicorn_app_params = params
@@ -66,6 +68,10 @@ define :unicorn_app, {
   service unicorn_app_params[:name] do
     supports :status => true, :restart => true, :reload => true, :reload => true
     action auto_compute_action
+    unicorn_app_params[:reload_files].each do |x|
+      subscribes :reload, "template[#{x}]"
+    end
+    reload_cmd unicorn_app_params[:reload_cmd] if unicorn_app_params[:reload_cmd]
   end
 
   template unicorn_config_file do
