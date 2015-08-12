@@ -71,7 +71,7 @@ define :unicorn_app, {
     unicorn_app_params[:reload_files].each do |x|
       subscribes :reload, "template[#{x}]"
     end
-    reload_cmd unicorn_app_params[:reload_cmd] if unicorn_app_params[:reload_cmd]
+    reload_command unicorn_app_params[:reload_cmd] if unicorn_app_params[:reload_cmd]
   end
 
   template unicorn_config_file do
