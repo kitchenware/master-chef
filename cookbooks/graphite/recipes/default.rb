@@ -165,7 +165,7 @@ if node.logrotate[:auto_deploy]
 
   logrotate_file "carbon" do
     files ["#{node.graphite.directory}/storage/log/carbon-cache/carbon-cache-a/*.log"]
-    variables :user => 'www-data', :copytruncate => true
+    variables :user => 'www-data', :nocreate => true
   end
 
   logrotate_file "graphite" do
