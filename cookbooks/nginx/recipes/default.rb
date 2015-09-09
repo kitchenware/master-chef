@@ -31,7 +31,9 @@ if node.nginx[:nginx_version]
 
 else
 
-  package node.nginx.package_name
+  package node.nginx.package_name do
+    options node.nginx.nginx_package_options if node.nginx[:nginx_package_options]
+  end
 
 end
 

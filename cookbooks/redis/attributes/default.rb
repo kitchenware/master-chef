@@ -12,7 +12,7 @@ default[:redis] = {
   :maxmemory => nil,
   :appendonly => 'no',
   :appendfsync => 'everysec',
-  :version_config => '2.2',
+  :version_config => '2.8',
   :requirepass => false,
   :auto_aof_rewrite_percentage => 100,
 }
