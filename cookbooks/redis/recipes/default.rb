@@ -48,6 +48,12 @@ if node.redis[:redis_version]
     version node.redis[:redis_version]
   end
 
+elsif node.redis[:apt_default_release]
+
+  apt_package "redis-server" do
+    default_release node.redis.apt_default_release
+  end
+
 else
 
   package "redis-server" do
