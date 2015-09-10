@@ -170,7 +170,7 @@ if node.logrotate[:auto_deploy]
 
   logrotate_file "graphite" do
     files ["#{node.graphite.directory}/storage/log/webapp/*.log"]
-    variables :user => 'www-data', :copytruncate => true
+    variables :user => 'www-data', :nocreate => true, :post_rotate => "/etc/init.d/apache2 reload > /dev/null"
   end
 
 end
