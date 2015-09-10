@@ -36,7 +36,7 @@ execute "install django" do
 end
 
 execute "install django-tagging" do
-  command "pip install django-tagging"
+  command "pip install django-tagging==0.3.6"
   environment get_proxy_environment
   not_if "pip show django-tagging | grep Version"
 end
