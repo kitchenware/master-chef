@@ -11,9 +11,15 @@ if node.timezone =~ /^([^\/]+)\/([^\/]+)$/
     to target
   end
 
+  execute "restart rsyslog after timezone change" do
+    command "if [ -x /etc/init.d/rsyslog ]; then /etc/init.d/rsyslog restart; fi"
+    action :nothing
+  end
+
   file "/etc/timezone" do
     content node.timezone
     mode '0644'
+    notifies :run, "execute[restart rsyslog after timezone change]"
   end
 
 else
