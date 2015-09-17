@@ -12,6 +12,7 @@ end
 
 define :package_fixed_version, {
   :version => nil,
+  :notifies => nil,
 } do
   package_fixed_version_params = params
 
@@ -20,6 +21,7 @@ define :package_fixed_version, {
   package package_fixed_version_params[:name] do
     version package_fixed_version_params[:version]
     options "--force-yes"
+    notifies *package_fixed_version_params[:notifies] if package_fixed_version_params[:notifies]
   end
 
   hold_package_version package_fixed_version_params[:name]
