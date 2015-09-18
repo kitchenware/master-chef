@@ -56,8 +56,12 @@ end
 
 [:whisper, :carbon, :web_app].each do |app|
 
+  version = node.graphite.git["#{app}_version"]
+  version = node.graphite.git.version if version.nil? || version == ""
+
+  p app, version
   git_clone "#{node.graphite.directory_install}/#{app}" do
-    reference node.graphite.git.version
+    reference version
     repository node.graphite.git[app]
     user 'root'
     notifies :restart, "service[carbon]" if app == :carbon
@@ -66,7 +70,7 @@ end
 
   execute_version "install_#{app}" do
     command "cd #{node.graphite.directory_install}/#{app} && python setup.py install"
-    version "#{app}_#{node.graphite.git.version}"
+    version "#{app}_#{version}"
     file_storage "#{node.graphite.directory}/.#{app}"
     notifies :restart, "service[carbon]" if app == :carbon
     notifies :restart, "service[apache2]" if app == :web_app
