@@ -49,6 +49,7 @@ define :unicorn_app, {
       :user => unicorn_app_params[:user],
       :code_for_initd => unicorn_app_params[:code_for_initd],
       :vars_to_unset => unicorn_app_params[:vars_to_unset],
+      :config_file => unicorn_config_file,
     })
   end
 
