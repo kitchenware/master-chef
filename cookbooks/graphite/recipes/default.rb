@@ -59,7 +59,6 @@ end
   version = node.graphite.git["#{app}_version"]
   version = node.graphite.git.version if version.nil? || version == ""
 
-  p app, version
   git_clone "#{node.graphite.directory_install}/#{app}" do
     reference version
     repository node.graphite.git[app]
