@@ -13,12 +13,12 @@
 	<% else %>
 	create <%= @mode %> <%= @user %> <%= @group %>
 	<% end %>
-  <% if @sharedscripts %>
-    sharedscripts
-  <% end %>
+	<% if @sharedscripts %>
+	sharedscripts
+	<% end %>
 	<% if @post_rotate %>
 	postrotate
-	  <%= @post_rotate %>
+		<%= @post_rotate %>
 	endscript
 	<% end %>
 	<% if @su %>
