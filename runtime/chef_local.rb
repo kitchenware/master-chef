@@ -68,7 +68,7 @@ repos += additionnal_paths
 repos.each do |dir|
   if dir
     target = "#{git_cache_directory}/local_#{File.basename(dir)}"
-    exec_local "rsync -e \"ssh #{ssh_opts}\" --delete --rsync-path='sudo rsync' -rlptDv --chmod=go-rwx --exclude=.git --exclude=runtime/sockets #{dir}/ #{user}@#{server}:#{target}/"
+    exec_local "rsync #{ENV['RSYNC_OPTS']} -e \"ssh #{ssh_opts}\" --delete --rsync-path='sudo rsync' -rlptDv --chmod=go-rwx --exclude=.git --exclude=runtime/sockets #{dir}/ #{user}@#{server}:#{target}/"
     json["repos"][:local_path].push(target)
   end
 end
