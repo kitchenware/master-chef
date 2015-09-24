@@ -21,7 +21,7 @@ log() {
 run_hooks() {
   for i in $(ls $HOOK_DIR/$1 || true); do
     log "Running hook $i/$i"
-    $HOOK_DIR/$1/$i
+    sudo $HOOK_DIR/$1/$i
     if [ "$?" != 0 ]; then
       log "WARN : Hook failed $i"
     fi
@@ -31,7 +31,7 @@ run_hooks() {
 log "Starting chef using omnibus at `date`"
 
 (
-  HOOK_USER=$USER HOOK_DIR="$HOOK_DIR" REPOS_STATUS_FILE="$REPOS_STATUS_FILE" MASTER_CHEF_CONFIG="$MASTER_CHEF_CONFIG" sudo -E /opt/chef/bin/chef-solo -c /opt/master-chef/etc/solo.rb <%= @logging[:command_line] %>
+  HOOK_DIR="$HOOK_DIR" REPOS_STATUS_FILE="$REPOS_STATUS_FILE" MASTER_CHEF_CONFIG="$MASTER_CHEF_CONFIG" sudo -E /opt/chef/bin/chef-solo -c /opt/master-chef/etc/solo.rb <%= @logging[:command_line] %>
   if [ "$?" = 0 ]; then
     run_hooks ok
     run_hooks all

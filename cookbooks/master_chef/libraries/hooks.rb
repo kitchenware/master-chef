@@ -22,7 +22,7 @@ module MasterChefHooks
     end
     file = "#{ENV['HOOK_DIR']}/#{dir}/#{name}"
     File.write(file, code)
-    %x{chown #{ENV['HOOK_USER']} #{file} && chmod 0755 #{file}}
+    %x{chmod 0755 #{file}}
   end
 
 end
