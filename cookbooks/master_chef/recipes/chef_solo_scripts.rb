@@ -35,6 +35,7 @@ template "#{install_path}/bin/update.impl.sh" do
   action :create_if_missing
 end
 
+no_git_dir = "/tmp/master_chef_repos"
 template "#{install_path}/etc/solo.rb" do
   source "solo.rb.erb"
   mode '0644'
@@ -42,7 +43,17 @@ template "#{install_path}/etc/solo.rb" do
     :cache_directory => "#{install_path}/var",
     :var_chef => "/opt/chef/var",
     :logging => node.master_chef.chef_solo_scripts.logging,
+    :no_git_cache => node.master_chef.chef_solo_scripts.no_git_cache,
+    :no_git_dir => no_git_dir
   })
+end
+
+if node.master_chef.chef_solo_scripts.no_git_cache
+  MasterChefHooks.add_all "remove_git_cache", <<-EOF
+#!/bin/bash
+
+rm -rf #{no_git_dir}
+EOF
 end
 
 Chef::Log.info "File for local storage : #{node.local_storage.file}"
