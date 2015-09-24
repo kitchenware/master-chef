@@ -83,5 +83,4 @@ exec_local "ssh #{ssh_opts} #{user}@#{server} 'sudo mv /tmp/local_tmp_json #{tmp
 envs = "MASTER_CHEF_CONFIG=#{tmp_file}"
 envs += " http_proxy=#{ENV["PROXY"]} https_proxy=#{ENV["PROXY"]}" if ENV["PROXY"]
 envs += " CHEF_LOG_LEVEL=#{ENV["CHEF_LOG_LEVEL"]}" if ENV["CHEF_LOG_LEVEL"]
-envs += " SECURED_ROLES_PATH=#{ENV["SECURED_ROLES_PATH"]}" if ENV["SECURED_ROLES_PATH"]
 exec_local "ssh #{ssh_opts} #{user}@#{server} #{envs} #{launch_cmd}"
