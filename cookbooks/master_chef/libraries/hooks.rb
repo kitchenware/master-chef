@@ -16,6 +16,10 @@ module MasterChefHooks
   private
 
   def self.add_hook dir, name, code
+    if ! ENV["HOOK_DIR"] || ! Dir.exists?(ENV["HOOK_DIR"])
+      Chef::Logger.warn("Unable to create hook #{name}")
+      return
+    end
     file = "#{ENV['HOOK_DIR']}/#{dir}/#{name}"
     File.write(file, code)
     %x{chown #{ENV['HOOK_USER']} #{file} && chmod 0755 #{file}}
