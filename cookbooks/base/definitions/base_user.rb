@@ -8,6 +8,7 @@ define :base_user, {
   user base_user_params[:name] do
     shell "/bin/bash"
     home base_user_params[:home] if base_user_params[:home]
+    uid node.users_uid[base_user_params[:name]] if node[:users_uid] && node.users_uid[base_user_params[:name]]
   end
 
   if base_user_params[:group]
