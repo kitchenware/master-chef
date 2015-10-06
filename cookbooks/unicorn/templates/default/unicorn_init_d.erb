@@ -31,7 +31,16 @@ unset <%= v %>
 
 set -e
 
-. /lib/lsb/init-functions
+status_<%= @name %>() {
+  if [ -f "$PID_FILE" ]; then
+    if [ -d "/proc/$(cat $PID_FILE)" ]; then
+      echo "<%= @name %> is running."
+      exit 0
+    fi
+  fi
+  echo "<%= @name %> is not running."
+  exit 1
+}
 
 kill_unicorn() {
   SIGNAL=$1
@@ -95,7 +104,7 @@ case "$1" in
 	echo "$NAME."
 	;;
   status)
-	status_of_proc -p $PID_FILE $UNICORN_CMD $UNICORN_CMD && exit 0 || exit $?
+	status_<%= @name %>
 	;;
   *)
 	echo "Usage: $NAME {start|stop|restart|status|reload|reopen_log}" >&2

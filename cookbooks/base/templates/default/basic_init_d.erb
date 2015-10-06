@@ -38,10 +38,15 @@ unset <%= v %>
 
 umask 022
 
-. /lib/lsb/init-functions
-
 status_<%= @name %>() {
-  status_of_proc -p "$PID_FILE" "<%= @name %>" "$NAME"
+  if [ -f "$PID_FILE" ]; then
+    if [ -d "/proc/$(cat $PID_FILE)" ]; then
+      echo "<%= @name %> is running."
+      exit 0
+    fi
+  fi
+  echo "<%= @name %> is not running."
+  exit 1
 }
 
 stop_<%= @name %>() {
