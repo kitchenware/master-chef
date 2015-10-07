@@ -77,7 +77,13 @@ setup_keys (){
       print "Installing credentials to chef account from $KEYS"
       exec_command "$SUDO cp $KEYS /home/chef/.ssh/authorized_keys"
     else
-      echo "File not found $KEYS"
+      KEYS="$HOME/.ssh/authorized_keys2"
+      if [ -f $KEYS ]; then
+        print "Installing credentials to chef account from $KEYS"
+        exec_command "$SUDO cp $KEYS /home/chef/.ssh/authorized_keys"
+      else
+        echo "File not found $KEYS"
+      fi
     fi
   fi
 
