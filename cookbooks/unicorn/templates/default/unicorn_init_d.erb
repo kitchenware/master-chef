@@ -64,7 +64,7 @@ reload_unicorn() {
   while [ true ]; do
     sleep 2
     i=$(expr $i + 1)
-    if [ "$(cat $PID_FILE)" != "$old_pid" -a ! -f $PID_FILE.oldbin ]; then
+    if [ -f $PID_FILE -a "$(cat $PID_FILE)" != "$old_pid" -a ! -f $PID_FILE.oldbin ]; then
     	echo "$NAME."
     	break
     fi
