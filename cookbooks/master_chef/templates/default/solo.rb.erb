@@ -45,8 +45,8 @@ folders = {}
 if config["repos"]["git"]
 
 <% if @no_git_cache %>
-  git_cache_directory = "<%= @no_git_dir %>" <% %>
-  exec_local "rm -rf <%= @cache_directory %>/git_repos" <% %>
+  git_cache_directory = "<%= @no_git_dir %>" # REMOVE_DURING_BOOSTRAP
+  exec_local "rm -rf <%= @cache_directory %>/git_repos" <% %> # REMOVE_DURING_BOOSTRAP
 <% else %>
   git_cache_directory = ENV["GIT_CACHE_DIRECTORY"] || "<%= @cache_directory %>/git_repos"
 <% end %>

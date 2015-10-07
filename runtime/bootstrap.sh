@@ -220,6 +220,8 @@ fi
 exec_command "$SUDO mkdir -p /opt/master-chef/etc"
 install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/opt/master-chef/etc/solo.rb"
 $SUDO sed -i '/^<%/d' "/opt/master-chef/etc/solo.rb"
+$SUDO sed -i '/REMOVE_DURING_BOOSTRAP/d' "/opt/master-chef/etc/solo.rb"
+
 exec_command_chef "echo '{\\\"repos\\\":{\\\"git\\\":[\\\"$MASTER_CHEF_URL\\\"]},\\\"run_list\\\":[\\\"recipe[master_chef::chef_solo_scripts]\\\"],\\\"node_config\\\":{}}' | sudo tee /opt/master-chef/etc/local.json > /dev/null"
 
 print "Bootstraping master-chef, using url $MASTER_CHEF_URL"
