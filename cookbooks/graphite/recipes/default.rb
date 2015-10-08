@@ -49,7 +49,7 @@ execute "install django" do
 end
 
 execute "install django-tagging" do
-  command "pip install django-tagging==#{node.graphite.django_tags_version}"
+  command "pip install django-tagging"
   environment get_proxy_environment
   not_if "pip show django-tagging | grep Version"
 end
