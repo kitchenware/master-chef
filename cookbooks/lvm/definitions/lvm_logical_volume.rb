@@ -2,6 +2,7 @@
 define :lvm_logical_volume, {
   :size => nil,
   :volume_group => nil,
+  :disk => '',
 } do
 
   lvm_logical_volume_params = params
@@ -13,7 +14,7 @@ define :lvm_logical_volume, {
   size_option = (size =~ /^[+-]/ || size =~ /%/) ? "-l#{size}" : "-L#{size}"
 
   execute "create volume group #{lvm_logical_volume_params[:name]}" do
-    command "lvcreate #{size_option} -n #{lvm_logical_volume_params[:name]} #{lvm_logical_volume_params[:volume_group]}"
+    command "lvcreate #{size_option} -n #{lvm_logical_volume_params[:name]} #{lvm_logical_volume_params[:volume_group]} #{lvm_logical_volume_params[:disk]}"
     not_if "lvdisplay /dev/#{lvm_logical_volume_params[:volume_group]}/#{lvm_logical_volume_params[:name]}"
   end
 
