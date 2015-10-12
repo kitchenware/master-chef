@@ -45,28 +45,28 @@ status_<%= @name %>() {
 kill_unicorn() {
   SIGNAL=$1
 
-	if [ -f $PID_FILE ]; then
-		kill $SIGNAL `cat $PID_FILE` || true
-	fi
+  if [ -f $PID_FILE ]; then
+    kill $SIGNAL $(cat $PID_FILE) || true
+  fi
 }
 
 start_unicorn() {
-	echo -n "Starting $NAME: "
-	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$DAEMON" || exit 1
-	echo "$NAME."
+  echo -n "Starting $NAME: "
+  $START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$DAEMON" || exit 1
+  echo "$NAME."
 }
 
 reload_unicorn() {
-	echo -n "Reloading $NAME: "
-	old_pid=$(cat $PID_FILE)
-	kill_unicorn "-USR2"
-	i=0
+  echo -n "Reloading $NAME: "
+  old_pid=$(cat $PID_FILE)
+  kill_unicorn "-USR2"
+  i=0
   while [ true ]; do
     sleep 2
     i=$(expr $i + 1)
-    if [ -f $PID_FILE -a "$(cat $PID_FILE)" != "$old_pid" -a ! -f $PID_FILE.oldbin ]; then
-    	echo "$NAME."
-    	break
+    if [ "$(cat $PID_FILE 2> /dev/null)" != "$old_pid" -a ! -f $PID_FILE.oldbin ]; then
+      echo "$NAME."
+      break
     fi
     if [ $i -gt 60 ]; then
       echo "Unable to find running process after 60 seconds."
@@ -77,39 +77,41 @@ reload_unicorn() {
 
 case "$1" in
   start)
-  	start_unicorn
-	;;
+  start_unicorn
+  ;;
   stop)
-	echo -n "Stopping $NAME: "
-	kill_unicorn
-	echo "$NAME."
-	;;
+  echo -n "Stopping $NAME: "
+  kill_unicorn
+  echo "$NAME."
+  ;;
   reload)
-  if [ -f $PID_FILE ] && [ -d "/proc/$(cat $PID_FILE)" ]; then
-  	reload_unicorn
-  else
-  	start_unicorn
-	fi
-	;;
+  if [ -f $PID_FILE ]; then
+    if [ -d "/proc/$(cat $PID_FILE)" ]; then
+      reload_unicorn
+      exit 0
+    fi
+  fi
+  start_unicorn
+  ;;
   restart)
-	echo -n "Restarting $NAME: "
-	kill_unicorn
-	sleep 1
-	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$DAEMON" || exit 1
-	echo "$NAME."
-	;;
+  echo -n "Restarting $NAME: "
+  kill_unicorn
+  sleep 1
+  $START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$DAEMON" || exit 1
+  echo "$NAME."
+  ;;
   reopen_log)
-	echo -n "Repoen logs $NAME: "
-	kill_unicorn -USR1
-	echo "$NAME."
-	;;
+  echo -n "Repoen logs $NAME: "
+  kill_unicorn -USR1
+  echo "$NAME."
+  ;;
   status)
-	status_<%= @name %>
-	;;
+  status_<%= @name %>
+  ;;
   *)
-	echo "Usage: $NAME {start|stop|restart|status|reload|reopen_log}" >&2
-	exit 1
-	;;
+  echo "Usage: $NAME {start|stop|restart|status|reload|reopen_log}" >&2
+  exit 1
+  ;;
 esac
 
 exit 0
