@@ -12,6 +12,8 @@ define :lvm_cache, {
   :size => nil,
 } do
 
+  include_recipe 'lvm::lvmcache'
+
   lvm_cache_params = params
 
   [:volume_group, :lv_meta, :lv_cache, :fast_disk, :slow_disk, :size].each do |x|
