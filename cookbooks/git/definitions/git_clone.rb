@@ -13,7 +13,7 @@ define :git_clone, {
   raise "Please specify user for using git_clone" unless git_clone_params[:user]
   raise "Please specify repository for using git_clone" unless git_clone_params[:repository]
 
-  if node.git.auto_use_http_for_github && (ENV['BACKUP_http_proxy'] || node[:no_external_ssh]) && git_clone_params[:repository] =~ /^git:\/\/(github.com.*)/
+  if node.git.auto_use_http_for_github && (ENV['BACKUP_http_proxy'] || node[:no_external_ssh] || node.git[:force_use_http_for_github]) && git_clone_params[:repository] =~ /^git:\/\/(github.com.*)/
     git_clone_params[:repository] = "http://#{$1}"
   end
 
