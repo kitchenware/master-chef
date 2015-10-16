@@ -38,12 +38,16 @@ before_exec do |server|
 end
 
 before_fork do |server, worker|
-  old_pid = "<%= @pid_file %>.oldbin"
-  if File.exists?(old_pid) && server.pid != old_pid
-    begin
-      Process.kill("QUIT", File.read(old_pid).to_i)
-    rescue Errno::ENOENT, Errno::ESRCH
-      # someone else did our job for us
+  old_pid_file = "<%= @pid_file %>.oldbin"
+  if File.exists?(old_pid_file) && server.pid != old_pid_file
+    old_pid = File.read(old_pid_file).to_i
+    Thread.new do
+      sleep <%= @delay_before_kill_old %>
+      begin
+        Process.kill("QUIT", old_pid)
+      rescue Errno::ENOENT, Errno::ESRCH
+        # someone else did our job for us
+      end
     end
   end
   # the following is recomended for Rails + "preload_app true"

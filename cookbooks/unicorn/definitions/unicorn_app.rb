@@ -16,6 +16,7 @@ define :unicorn_app, {
   :worker_boot_code => nil,
   :reload_files => [],
   :reload_cmd => nil,
+  :delay_before_kill_old => 5,
 } do
 
   unicorn_app_params = params
@@ -89,6 +90,7 @@ define :unicorn_app, {
       :nb_workers => unicorn_app_params[:nb_workers] || node.cpu.total,
       :worker_boot_code => unicorn_app_params[:worker_boot_code],
       :cmd => unicorn_run_file,
+      :delay_before_kill_old => unicorn_app_params[:delay_before_kill_old],
     })
     notifies :reload, "service[#{unicorn_app_params[:name]}]"
   end
