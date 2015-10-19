@@ -12,6 +12,13 @@ if node.platform == "ubuntu" && node.apt.master_chef_add_apt_repo
   end
 
   package "oracle-java8-installer"
+  package "oracle-java8-set-default"
+
+  execute "update alternatives for java 8" do
+    user "root"
+    command "update-java-alternatives -s java-8-oracle"
+    not_if "readlink /etc/alternatives/java | grep java-8-oracle"
+  end
 
 else
 
