@@ -22,7 +22,7 @@ define :lvm_cache, {
 
   main_volume = "/dev/#{lvm_cache_params[:volume_group]}/#{lvm_cache_params[:name]}"
   cache_volume = "/dev/#{lvm_cache_params[:volume_group]}/#{lvm_cache_params[:cache_name]}"
-  status = %x{lvs #{cache_volume}}.strip
+  status = %x{lvs #{cache_volume} || true}.strip
 
   unless status.match(/#{lvm_cache_params[:volume_group]} Cwi/)
     lvm_logical_volume lvm_cache_params[:metadata_name] do
