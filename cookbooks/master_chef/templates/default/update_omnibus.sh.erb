@@ -42,11 +42,11 @@ fi
   if [ "$?" = 0 ]; then
     run_hooks ok
     run_hooks all
-    log "Chef run OK at `date`"
+    log "Chef run OK at `date` on `hostname`"
   else
     run_hooks failed
     run_hooks all
-    log "Chef run FAILED at `date`"
+    log "Chef run FAILED at `date` on `hostname`"
   fi
   rm -rf $HOOK_DIR
 ) | tee $LOG_FILE
