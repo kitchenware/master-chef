@@ -1,6 +1,6 @@
 default[:apache2][:mpm] = :prefork
 
-default[:apache2][:v2_4] = false
+default[:apache2][:v2_4] = true
 
 default[:apache2][:mpm_config][:prefork] = {
   :start => 10,

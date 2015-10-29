@@ -23,7 +23,7 @@ file "#{node.kibana4.directory}/shared/run.sh" do
 trap 'kill $(jobs -p) 2> /dev/null' EXIT
 
 cd #{node.kibana4.directory}/current
-bin/kibana  #{node.kibana4.opts} >> #{node.kibana4.directory}/shared/log/kibana.log 2>&1
+bin/kibana #{node.kibana4.opts} >> #{node.kibana4.directory}/shared/log/kibana.log 2>&1
 
 EOF
 end

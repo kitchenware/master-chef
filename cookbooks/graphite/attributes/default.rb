@@ -1,9 +1,10 @@
 default[:graphite] = {
   :git => {
     :whisper => "git://github.com/graphite-project/whisper.git",
-    :carbon => "git://github.com/graphite-project/carbon.git",
+    :carbon => "git://github.com/bpaquet/carbon.git",
     :web_app => "git://github.com/bpaquet/graphite-web.git",
     :version => "0.9.12",
+    :carbon_version => "6449af7801e6b2d0a95c3e14624c823db1230df5",
     :web_app_version => "c0ec555981783e7f89ee64b225e811cfcfcca1e2",
   },
   :directory => '/opt/graphite',

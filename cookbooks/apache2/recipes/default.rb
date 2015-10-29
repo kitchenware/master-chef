@@ -1,3 +1,6 @@
+if node.lsb.codename == "precise" || node.lsb.codename == "wheezy"
+  node.set[:apache2][:v2_4] = false
+end
 
 package "apache2-mpm-#{node.apache2.mpm}"
 
@@ -27,7 +30,9 @@ end
 
 if node.apache2[:v2_4]
 
-  apache2_enable_module "mpm_#{node.apache2.mpm}"
+  apache2_enable_module "mpm_#{node.apache2.mpm}" do
+    disable_pattern "mpm_*"
+  end
   apache2_enable_module "authn_core"
   apache2_enable_module "authz_core"
   apache2_enable_module "access_compat"
@@ -95,7 +100,7 @@ delayed_exec "Remove useless apache2 modules" do
       name = n.match(/\/([^\/]+).load$/)[1]
       unless modules.include? name
         Chef::Log.info "Disabling module #{name}"
-        %x{a2dismod #{name}}
+        %x{a2dismod -f #{name}}
         updated = true
       end
     end

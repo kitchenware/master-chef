@@ -119,7 +119,6 @@ if node.graphite[:whisper_dev_shm_size]
 
 end
 
-
 directory_recurse_chmod_chown "#{node.graphite.directory}/lib/twisted/plugins" do
   owner "www-data"
 end
