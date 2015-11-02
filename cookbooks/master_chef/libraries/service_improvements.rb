@@ -27,7 +27,7 @@ end
 
 module ServiceHelper
 
-  @@service_before_start = Dir.entries('/etc/init.d').reject{|x| x == '.' || x == '..'} + %x{systemctl | sed 1d | awk '{print $1}'}.split("\n")
+  @@service_before_start = Dir.entries('/etc/init.d').reject{|x| x == '.' || x == '..'} + %x{which systemctl && systemctl | sed 1d | sed 1d | awk '{print $1}'}.split("\n")
 
   def auto_compute_action
     # why stop on new service : because the default configuration of a service can lock some resources
