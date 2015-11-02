@@ -11,7 +11,7 @@ class Chef
 
         def load_current_resource
           super
-          status = popen4("apt-cache -o APT::Default-Release=#{main_release}-backports policy #{@new_resource.package_name}") do |pid, stdin, stdout, stderr|
+          status = popen4("apt-cache -o APT::Default-Release=#{main_release}-backports policy #{@new_resource.package_name} && apt-cache -o APT::Default-Release=#{main_release}-backports-sloppy policy #{@new_resource.package_name}") do |pid, stdin, stdout, stderr|
             stdout.each do |line|
               case line
               when /^\s{2}Candidate: (.+)$/

@@ -3,9 +3,13 @@ base_user "collectd" do
   home node.collectd.home_directory
 end
 
-package node.collectd.package_name do
-  options "--no-install-recommends"
-  version node.collectd[:package_version] if node.collectd[:package_version]
+unless node.collectd[:no_install_package]
+
+  package node.collectd.package_name do
+    options "--no-install-recommends"
+    version node.collectd[:package_version] if node.collectd[:package_version]
+  end
+
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("collectd", ".*collectd.*")
