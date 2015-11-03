@@ -15,6 +15,7 @@ define :apache2_enable_module, {
       block do
         Dir["#{node.apache2.server_root}/mods-enabled/#{apache2_enable_module_params[:disable_pattern]}.load"].each do |x|
           m = File.basename(x).match(/(.*)\.load/)[1]
+          next if m == apache2_enable_module_params[:name]
           Chef::Log.info("Disabling #{m}")
           %x{a2dismod -f #{m}}
         end
