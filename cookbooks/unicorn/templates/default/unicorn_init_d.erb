@@ -68,8 +68,8 @@ reload_unicorn() {
       echo "$NAME."
       break
     fi
-    if [ $i -gt 60 ]; then
-      echo "Unable to find running process after 60 seconds."
+    if [ $i -gt 120 ]; then
+      echo "Unable to find running process after 240 seconds."
       exit 1
     fi
   done
