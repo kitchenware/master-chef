@@ -12,7 +12,7 @@ end
 
 if node.node_logstash[:version]
   package_fixed_version "node-logstash" do
-    version node.node_logstash.version
+    version "#{node.node_logstash.version}.#{node.lsb.codename}"
   end
 else
   package "node-logstash"
