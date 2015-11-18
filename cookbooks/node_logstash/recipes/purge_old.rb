@@ -12,6 +12,11 @@ execute "purge old logstash install" do
   only_if "[ -d /opt/logstash/shared ]"
 end
 
+execute "purge old logstash config" do
+  command "rm -rf /etc/logstash.d"
+  only_if "[ -d /etc/logstash.d ]"
+end
+
 execute "purge old logstash user" do
   command "userdel logstash && rm -rf /home/logstash"
   only_if "[ -d /home/logstash ]"
