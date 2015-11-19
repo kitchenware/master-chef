@@ -22,3 +22,11 @@ service "node-logstash" do
   supports :status => true, :restart => true
   action auto_compute_action
 end
+
+node.node_logstash.groups.each do |g|
+
+  add_user_in_group node.node_logstash.user do
+    group g
+  end
+
+end
