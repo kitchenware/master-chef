@@ -37,8 +37,6 @@ if [ -r /etc/default/locale ]; then
   TO_BE_SOURCED="$TO_BE_SOURCED source \"/etc/default/locale\";"
 fi
 
-. /lib/lsb/init-functions
-
 if [ -r /etc/default/rcS ]; then
   TO_BE_SOURCED="$TO_BE_SOURCED source \"/etc/default/rcS\";"
 fi
@@ -80,6 +78,26 @@ if [ -z "$JAVA_OPTS" ]; then
 fi
 
 # End of variables that can be overwritten in $DEFAULT
+
+log_failure_msg() {
+  echo $1 1>&2
+}
+
+log_progress_msg() {
+  echo $1
+}
+
+log_end_msg() {
+  return 0
+}
+
+log_success_msg() {
+  echo $1
+}
+
+log_daemon_msg() {
+  echo $1
+}
 
 # overwrite settings from default file
 if [ -f "$CATALINA_BASE/conf/env" ]; then
