@@ -30,3 +30,19 @@ node.node_logstash.groups.each do |g|
   end
 
 end
+
+delayed_exec "Remove useless logstash config files" do
+  after_block_notifies :restart, "service[node-logstash]"
+  block do
+    updated = false
+    confs = find_resources_by_name_pattern(/^#{node.node_logstash.config_directory.gsub('/', "\/")}.*$/).map{|r| r.name}
+    Dir["#{node.node_logstash.config_directory}/*"].each do |n|
+      unless confs.include? n
+        Chef::Log.info "Removing config files #{n}"
+        File.unlink n
+        updated = true
+      end
+    end
+    updated
+  end
+end
