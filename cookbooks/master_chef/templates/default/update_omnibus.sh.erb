@@ -13,11 +13,6 @@ mkdir $HOOK_DIR/all
 mkdir $HOOK_DIR/ok
 mkdir $HOOK_DIR/failed
 
-if [ -f /opt/master-chef/etc/http_proxy ]; then
-  export http_proxy=$(cat /opt/master-chef/etc/http_proxy)
-  export https_proxy=$(cat /opt/master-chef/etc/http_proxy)
-fi
-
 OPTS="-c /opt/master-chef/etc/solo.rb <%= @logging[:command_line] %>"
 
 log() {
@@ -40,6 +35,12 @@ log "Starting chef using omnibus at `date`"
 if [ "$DRY_RUN" = 1 ]; then
   echo "Running in dry run mode"
   OPTS="$OPTS --why-run"
+fi
+
+if [ -f /opt/master-chef/etc/http_proxy ]; then
+  log "Using proxy $(cat /opt/master-chef/etc/http_proxy)"
+  export http_proxy=$(cat /opt/master-chef/etc/http_proxy)
+  export https_proxy=$(cat /opt/master-chef/etc/http_proxy)
 fi
 
 (
