@@ -38,9 +38,10 @@ if [ "$DRY_RUN" = 1 ]; then
 fi
 
 if [ -f /opt/master-chef/etc/http_proxy ]; then
-  log "Using proxy $(cat /opt/master-chef/etc/http_proxy)"
-  export http_proxy=$(cat /opt/master-chef/etc/http_proxy)
-  export https_proxy=$(cat /opt/master-chef/etc/http_proxy)
+  proxy=$(cat /opt/master-chef/etc/http_proxy)
+  log "Using proxy $proxy"
+  export http_proxy=$proxy
+  export https_proxy=$proxy
 fi
 
 (
