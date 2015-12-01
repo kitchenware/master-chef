@@ -14,28 +14,32 @@ tomcat_instance "jenkins:tomcat" do
   war_location node.jenkins.location
 end
 
-tomcat_jenkins_http_port = tomcat_config("jenkins:tomcat")[:connectors][:http][:port]
+unless node.jenkins[:no_nginx]
 
-nginx_add_default_location "jenkins" do
-  content <<-EOF
+  tomcat_jenkins_http_port = tomcat_config("jenkins:tomcat")[:connectors][:http][:port]
 
-  set $my_protocol http;
-  if ($http_x_forwarded_proto = "https") {
-    set $my_protocol https;
-  }
+  nginx_add_default_location "jenkins" do
+    content <<-EOF
 
-  location #{node.jenkins.location} {
-    proxy_pass http://tomcat_jenkins_upstream;
-    proxy_redirect http://tomcat_jenkins_upstream $my_protocol://$http_host;
-    break;
-  }
+    set $my_protocol http;
+    if ($http_x_forwarded_proto = "https") {
+      set $my_protocol https;
+    }
 
-EOF
-  upstream <<-EOF
-  upstream tomcat_jenkins_upstream {
-  server 127.0.0.1:#{node.jenkins[:nginx_upstream_port] || tomcat_jenkins_http_port} fail_timeout=0;
-}
+    location #{node.jenkins.location} {
+      proxy_pass http://tomcat_jenkins_upstream;
+      proxy_redirect http://tomcat_jenkins_upstream $my_protocol://$http_host;
+      break;
+    }
+
   EOF
+    upstream <<-EOF
+    upstream tomcat_jenkins_upstream {
+    server 127.0.0.1:#{tomcat_jenkins_http_port} fail_timeout=0;
+  }
+    EOF
+  end
+
 end
 
 if node.jenkins.plugins.size > 0
