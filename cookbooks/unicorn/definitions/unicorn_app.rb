@@ -74,6 +74,7 @@ define :unicorn_app, {
       subscribes :reload, "template[#{x}]"
     end
     reload_command unicorn_app_params[:reload_cmd] if unicorn_app_params[:reload_cmd]
+    provider Chef::Provider::Service::Init::Debian if node.init_package == "systemd"
   end
 
   template unicorn_config_file do
