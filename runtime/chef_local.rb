@@ -81,6 +81,7 @@ exec_local "scp #{ssh_opts} #{f.path} #{user}@#{server}:/tmp/local_tmp_json"
 exec_local "ssh #{ssh_opts} #{user}@#{server} 'sudo mv /tmp/local_tmp_json #{tmp_file}'"
 
 envs = "MASTER_CHEF_CONFIG=#{tmp_file}"
+envs += " DRY_RUN=1" if ENV["DRY_RUN"]
 envs += " http_proxy=#{ENV["PROXY"]} https_proxy=#{ENV["PROXY"]}" if ENV["PROXY"]
 envs += " CHEF_LOG_LEVEL=#{ENV["CHEF_LOG_LEVEL"]}" if ENV["CHEF_LOG_LEVEL"]
 exec_local "ssh #{ssh_opts} #{user}@#{server} #{envs} #{launch_cmd}"
