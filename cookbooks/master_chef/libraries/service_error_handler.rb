@@ -28,6 +28,7 @@ class ServiceErrorHandler < Chef::Handler
       end
     end
     puts "*********************************************************"
+    return if node['no_restart_' +  @service_name]
     result = restart
     return if result == 0
     return if node['no_kill_' +  @service_name]
