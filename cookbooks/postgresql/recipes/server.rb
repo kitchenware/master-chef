@@ -34,29 +34,31 @@ template "/etc/postgresql/#{node.postgresql.version}/main/pg_hba.conf" do
   notifies :restart, "service[#{node.postgresql.service_name}]", :immediately
 end
 
-root_postgresql_password = node.postgresql[:root_password]
+unless node.postgresql[:no_sql]
+  root_postgresql_password = node.postgresql[:root_password]
 
-if root_postgresql_password
-  local_storage_write("postgresql_password:root", root_postgresql_password)
-else
-  root_postgresql_password = local_storage_read("postgresql_password:root") do
-    password = PasswordGenerator.generate 32
-    Chef::Log.info "Postgresql : new root password generated"
-    password
+  if root_postgresql_password
+    local_storage_write("postgresql_password:root", root_postgresql_password)
+  else
+    root_postgresql_password = local_storage_read("postgresql_password:root") do
+      password = PasswordGenerator.generate 32
+      Chef::Log.info "Postgresql : new root password generated"
+      password
+    end
   end
-end
 
-file "/root/.pgpass" do
-  content <<-EOF
-*:5432:*:#{node.postgresql.root_account}:#{root_postgresql_password}
-EOF
-  mode '0400'
-end
+  file "/root/.pgpass" do
+    content <<-EOF
+  *:5432:*:#{node.postgresql.root_account}:#{root_postgresql_password}
+  EOF
+    mode '0400'
+  end
 
-execute "change postgresql root password" do
-  user node.postgresql.user
-  command "psql --command \"CREATE USER #{node.postgresql.root_account} WITH CREATEDB NOCREATEUSER NOCREATEROLE PASSWORD '#{root_postgresql_password}';\""
-  not_if "PGPASSWORD=#{root_postgresql_password} psql postgres --username=#{node.postgresql.root_account} --command=\"select 1;\""
+  execute "change postgresql root password" do
+    user node.postgresql.user
+    command "psql --command \"CREATE USER #{node.postgresql.root_account} WITH CREATEDB NOCREATEUSER NOCREATEROLE PASSWORD '#{root_postgresql_password}';\""
+    not_if "PGPASSWORD=#{root_postgresql_password} psql postgres --username=#{node.postgresql.root_account} --command=\"select 1;\""
+  end
 end
 
 if node.postgresql.version.to_f >= 9.3
