@@ -49,8 +49,8 @@ unless node.postgresql[:no_sql]
 
   file "/root/.pgpass" do
     content <<-EOF
-  *:5432:*:#{node.postgresql.root_account}:#{root_postgresql_password}
-  EOF
+*:5432:*:#{node.postgresql.root_account}:#{root_postgresql_password}
+EOF
     mode '0400'
   end
 
