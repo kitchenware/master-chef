@@ -41,6 +41,7 @@ umask 022
 . /lib/lsb/init-functions
 
 status_<%= @name %>() {
+  PID_FILE="$(ls `dirname $PID_FILE`/*.pid | grep $NAME | grep -v $PID_FILE || echo $PID_FILE)"
   status_of_proc -p "$PID_FILE" "<%= @name %>" "$NAME"
 }
 

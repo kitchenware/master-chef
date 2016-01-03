@@ -181,7 +181,7 @@ path.logs: <%= @config['directory_logs'] %>
 #
 # Set this property to true to lock the memory:
 #
-#bootstrap.mlockall: true
+bootstrap.mlockall: <%= @config['mlockall'] ? 'true' : 'false' %>
 
 # Make sure that the ES_MIN_MEM and ES_MAX_MEM environment variables are set
 # to the same value, and that the machine has enough memory to allocate
@@ -357,31 +357,33 @@ discovery.zen.ping.unicast.hosts: [<%= @config['peers'].map{|x| "\"#{x}\""}.join
 ################################## Slow Log ##################################
 
 # Shard level query and fetch threshold logging.
+<% if @config['enable_logs'] %>
+index.search.slowlog.threshold.query.warn: 10s
+index.search.slowlog.threshold.query.info: 5s
+index.search.slowlog.threshold.query.debug: 2s
+index.search.slowlog.threshold.query.trace: 500ms
 
-#index.search.slowlog.threshold.query.warn: 10s
-#index.search.slowlog.threshold.query.info: 5s
-#index.search.slowlog.threshold.query.debug: 2s
-#index.search.slowlog.threshold.query.trace: 500ms
+index.search.slowlog.threshold.fetch.warn: 1s
+index.search.slowlog.threshold.fetch.info: 800ms
+index.search.slowlog.threshold.fetch.debug: 500ms
+index.search.slowlog.threshold.fetch.trace: 200ms
 
-#index.search.slowlog.threshold.fetch.warn: 1s
-#index.search.slowlog.threshold.fetch.info: 800ms
-#index.search.slowlog.threshold.fetch.debug: 500ms
-#index.search.slowlog.threshold.fetch.trace: 200ms
-
-#index.indexing.slowlog.threshold.index.warn: 10s
-#index.indexing.slowlog.threshold.index.info: 5s
-#index.indexing.slowlog.threshold.index.debug: 2s
-#index.indexing.slowlog.threshold.index.trace: 500ms
-
+index.indexing.slowlog.threshold.index.warn: 10s
+index.indexing.slowlog.threshold.index.info: 5s
+index.indexing.slowlog.threshold.index.debug: 2s
+index.indexing.slowlog.threshold.index.trace: 500ms
+<% end %>
 ################################## GC Logging ################################
 
-#monitor.jvm.gc.young.warn: 1000ms
-#monitor.jvm.gc.young.info: 700ms
-#monitor.jvm.gc.young.debug: 400ms
+<% if @config['enable_gc_logs'] %>
+monitor.jvm.gc.young.warn: 1000ms
+monitor.jvm.gc.young.info: 700ms
+monitor.jvm.gc.young.debug: 400ms
 
-#monitor.jvm.gc.old.warn: 10s
-#monitor.jvm.gc.old.info: 5s
-#monitor.jvm.gc.old.debug: 2s
+monitor.jvm.gc.old.warn: 10s
+monitor.jvm.gc.old.info: 5s
+monitor.jvm.gc.old.debug: 2s
+<% end %>
 
 # Allow function_score in queries
 script.disable_dynamic: <%= @config['allow_dynamic_scripts'] ? 'false' : 'true' %>

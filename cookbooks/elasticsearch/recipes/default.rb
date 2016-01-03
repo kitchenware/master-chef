@@ -5,7 +5,9 @@ base_user node.elasticsearch.user
 
 optional_config = node.elasticsearch[:config] || ""
 init_d_code = []
-init_d_code << "ulimit -n 65000\nexport JAVA_OPTS=\"#{node.elasticsearch.java_opts}\""
+init_d_code << "ulimit -n 65000"
+init_d_code << "ulimit -l unlimited" if node.elasticsearch[:heap_size]
+init_d_code << "export JAVA_OPTS=\"#{node.elasticsearch.java_opts}\""
 
 if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zeromq_river.enable
   zeromq_river_name = "zeromq_river_" + node.hostname
@@ -26,6 +28,7 @@ end
 
 node.elasticsearch.env_vars.each do |k, v|
   init_d_code << "export #{k}=\"#{v}\""
+  init_d_code << "export ES_HEAP_SIZE=#{node.elasticsearch[:heap_size]}" if node.elasticsearch[:heap_size]
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("elasticsearch", ".*elasticsearch.*")
@@ -116,16 +119,29 @@ if node.elasticsearch.configure_zeromq_river && node.elasticsearch.configure_zer
 
 end
 
+if node.elasticsearch.enable_logs
+  node.default[:elasticsearch][:logs][:general] = "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.cluster_name}.log"
+  node.default[:elasticsearch][:logs][:indexing_slowlog] = "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.cluster_name}_indexing_slowlog.log}"
+  node.default[:elasticsearch][:logs][:search_slowlog] = "#{node.elasticsearch.directory_logs}/#{node.elasticsearch.cluster_name}_search_slowlog.log"
 
-if node.logrotate[:auto_deploy]
-
-  logrotate_file "elasticsearch" do
+  node_logstash_files "elasticsearch_logs" do
     files [
-      "#{node.elasticsearch.directory}/logs/#{node.elasticsearch.cluster_name}.log",
-      "#{node.elasticsearch.directory}/logs/#{node.elasticsearch.cluster_name}_index_indexing_slowlog.log",
-      "#{node.elasticsearch.directory}/logs/#{node.elasticsearch.cluster_name}_index_search_slowlog.log",
+      "#{node.elasticsearch.logs.general}",
+      "#{node.elasticsearch.logs.indexing_slowlog}",
+      "#{node.elasticsearch.logs.search_slowlog}",
     ]
-    variables :copytruncate => true, :user => node.elasticsearch.user
+    log_type "elasticsearch_log"
   end
 
+  if node.logrotate[:auto_deploy]
+
+    logrotate_file "elasticsearch" do
+      files [
+        "#{node.elasticsearch.logs.general}",
+        "#{node.elasticsearch.logs.indexing_slowlog}",
+        "#{node.elasticsearch.logs.search_slowlog}"
+      ]
+      variables :copytruncate => true, :user => node.elasticsearch.user
+    end
+  end
 end
