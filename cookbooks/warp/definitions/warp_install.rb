@@ -37,10 +37,15 @@ define :warp_install, {
 
   if warp_install_params[:rbenv]
 
+    rbenv_env = install_env.dup
+    if node.warp[:rbenv]
+      rbenv_env['RBENV_TAG'] = node.warp.rbenv.tag if node.warp.rbenv[:tag]
+      rbenv_env['RBENV_RUBY_BUILD_TAG'] = node.warp.rbenv.ruby_build_tag if node.warp.rbenv[:ruby_build_tag]
+    end
     home = get_home warp_install_params[:name]
     execute "install rbenv for user #{warp_install_params[:name]}" do
       user warp_install_params[:name]
-      environment install_env
+      environment rbenv_env
       command "#{home}/.warp/common/ruby/install_rbenv.sh"
     end
 
