@@ -1,12 +1,8 @@
 
 default[:elasticsearch] = {
-  :user => 'elastic',
-  :url => 'http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.7.1.tar.gz',
-  :directory => '/opt/elasticsearch',
   :directory_data => '/opt/elasticsearch_data',
-  :directory_logs => '/opt/elasticsearch/logs',
-  :java_opts => '',
-  :env_vars => {},
+  :java_opts => nil,
+  :heap_size => nil,
   :command_line_options => '',
   :host => '127.0.0.1',
   :http_port => 9200,
@@ -28,10 +24,15 @@ default[:elasticsearch] = {
       :enable => true,
       :id => 'royrusso/elasticsearch-HQ'
     },
-    :zeromq_river => {
+    :kopf => {
       :enable => true,
-      :id => 'bpaquet/elasticsearch-river-zeromq/0.0.5',
-      :url => ' https://github.com/bpaquet/elasticsearch-river-zeromq/releases/download/elasticsearch-river-zeromq-0.0.5/elasticsearch-river-zeromq-0.0.5.zip',
+      :id => 'lmenezes/elasticsearch-kopf',
+    },
+    :zeromq_torrent => {
+      :enable => true,
+      :restart => true,
+      :id => 'bpaquet/elasticsearch-zeromq-torrent/0.3',
+      :url => 'https://github.com/bpaquet/elasticsearch-zeromq-torrent/releases/download/0.3/elasticsearch-zeromq-torrent-0.3.zip',
     }
   }
 }

@@ -26,7 +26,7 @@ end
 if node.nginx[:nginx_version]
 
   package_fixed_version node.nginx.package_name do
-    version version node.nginx[:nginx_version]
+    version node.nginx.nginx_version
   end
 
 else
