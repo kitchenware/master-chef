@@ -1,14 +1,7 @@
 
 include_recipe "java"
 
-add_apt_repository "elasticsearch" do
-  url "http://packages.elastic.co/elasticsearch/2.x/debian"
-  distrib "stable"
-  components ["main"]
-  key "D88E42B4"
-  key_url "https://packages.elastic.co/GPG-KEY-elasticsearch"
-end
-
+include_recipe "elasticsearch::repo"
 if node.elasticsearch[:elasticsearch_version]
 
   package_fixed_version "elasticsearch" do
@@ -78,10 +71,9 @@ node.elasticsearch.plugins.each do |k, v|
   end
   command += " install #{v[:url] || v[:id]}"
 
-  execute_version "install elasticsearch plugin #{k}" do
+  execute "install elasticsearch plugin #{k}" do
     command command
-    version "#{k}_#{v[:id]}"
-    file_storage "/usr/share/elasticsearch/.plugin_install_#{k}"
+    not_if "[ -d /usr/share/elasticsearch/plugins/#{k} ]"
     notifies :restart, "service[elasticsearch]" if v[:restart]
   end
 

@@ -28,7 +28,7 @@ default[:elasticsearch] = {
       :enable => true,
       :id => 'lmenezes/elasticsearch-kopf',
     },
-    :zeromq_torrent => {
+    :'elasticsearch-zeromq-torrent' => {
       :enable => true,
       :restart => true,
       :id => 'bpaquet/elasticsearch-zeromq-torrent/0.3',
