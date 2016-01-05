@@ -28,12 +28,8 @@ bin/kibana #{node.kibana.opts} >> #{node.kibana.directory}/shared/log/kibana.log
 EOF
 end
 
-directory "#{node.kibana.directory}/current/optimize" do
-  owner "kibana"
-end
-
 execute_version "install kibana 4" do
-  command "cd #{node.kibana.directory} && rm -rf current && curl -L -f -s #{node.kibana.url}#{node.kibana.version}.tar.gz -o kibana.tar.gz && tar xvzf kibana.tar.gz && rm kibana.tar.gz && mv kibana-* current"
+  command "cd #{node.kibana.directory} && rm -rf current && curl -L -f -s #{node.kibana.url}#{node.kibana.version}.tar.gz -o kibana.tar.gz && tar xvzf kibana.tar.gz && rm kibana.tar.gz && mv kibana-* current && chown -R kibana #{node.kibana.directory}/current/optimize"
   environment get_proxy_environment
   version node.kibana.version
   file_storage "#{node.kibana.directory}/.kibana_version"
