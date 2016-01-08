@@ -2,6 +2,7 @@
 include_recipe "java"
 
 include_recipe "elasticsearch::repo"
+
 if node.elasticsearch[:elasticsearch_version]
 
   package_fixed_version "elasticsearch" do

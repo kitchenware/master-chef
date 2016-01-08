@@ -1,8 +1,6 @@
 
 include_recipe "node_logstash::purge_old"
 
-package "apt-transport-https" if node.lsb.id == 'Debian'
-
 add_apt_repository "node-logstash" do
   url "https://deb.packager.io/gh/nodelogstashpackager/node-logstash"
   key "BD33EEB8"

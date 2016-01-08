@@ -1,0 +1,7 @@
+
+<% @ini.keys.sort.each do |k| %>
+[<%= k %>]
+<% @ini[k].keys.sort.each do |kk| %>
+<%= kk %> = <%= @ini[k][kk] %>
+<% end %>
+<% end %>

@@ -20,3 +20,6 @@ include_recipe "base::ubuntu_force_confold"
 include_recipe "base::add_user_in_group"
 include_recipe "base::symlink_folders"
 include_recipe "base::purge_limits"
+
+package "apt-transport-https" if node.lsb.id == 'Debian'
+

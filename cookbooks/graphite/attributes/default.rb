@@ -50,10 +50,20 @@ default[:graphite][:statsd] = {
   :flush_interval => 10000,
 }
 
-default[:grafana] = {
-  :url => 'http://grafanarel.s3.amazonaws.com/grafana-',
-  :version => '1.9.0',
-  :directory => '/opt/grafana',
-  :location => '/grafana',
-  :elasticsearch_index => 'grafana-dash',
+default[:grafana][:ini] = {
+  :database => {
+    :type => 'sqlite3'
+  },
+  :'log.file' => {
+    :daily_rotate => false,
+    :log_rotate => false,
+  },
+  :users => {
+    :allow_sign_up => false,
+    :allow_org_create => false,
+    :auto_assign_org_role => 'Viewer',
+  },
+  :emails => {
+    :welcome_email_on_sign_up => false,
+  }
 }
