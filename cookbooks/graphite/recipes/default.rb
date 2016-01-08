@@ -145,7 +145,11 @@ end
 template "#{node.graphite.directory}/conf/carbon.conf" do
   source "carbon.conf.erb"
   mode '0644'
-  variables :carbon_receiver_port => node.graphite.carbon.port, :carbon_receiver_interface => node.graphite.carbon.interface
+  variables({
+    :carbon_receiver_port => node.graphite.carbon.port,
+    :carbon_receiver_interface => node.graphite.carbon.interface,
+    :max_updates_per_second => node.graphite.carbon.max_updates_per_second,
+  })
   notifies :restart, "service[carbon]"
 end
 

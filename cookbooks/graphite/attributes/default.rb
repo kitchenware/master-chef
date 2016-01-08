@@ -27,14 +27,10 @@ default[:graphite][:xFilesFactor] = 0.5
 
 default[:graphite][:timezone] = "Europe/Paris"
 
-default[:graphite][:bucky] = {
-  :version => "0.2.6",
-  :collectd_port => 25826,
-}
-
 default[:graphite][:carbon] = {
   :port => 2003,
   :interface => '127.0.0.1',
+  :max_updates_per_second => 500,
 }
 
 default[:graphite][:statsd] = {

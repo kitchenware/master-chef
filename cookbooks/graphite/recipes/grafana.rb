@@ -11,7 +11,7 @@ end
 
 execute "purge old grafana" do
   command "rm -rf /opt/grafana"
-  only_if "[ -d /opt/grafana]"
+  only_if "[ -d /opt/grafana ]"
 end
 
 add_apt_repository "grafana" do
@@ -32,7 +32,6 @@ else
 
 end
 
-
 Chef::Config.exception_handlers << ServiceErrorHandler.new("grafana-server", "grafana")
 
 service "grafana-server" do
@@ -40,7 +39,6 @@ service "grafana-server" do
   action auto_compute_action
 end
 
-p node.grafana
 template "/etc/grafana/grafana.ini" do
   source "grafana.ini.erb"
   variables node.grafana
