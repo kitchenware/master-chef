@@ -1,14 +1,15 @@
 #!/bin/bash -e
 
 ### BEGIN INIT INFO
-# Provides: graphite
+# Provides: carbon
 # Required-Start:
 # Required-Stop:
 # Default-Start:  2 3 4 5
 # Default-Stop:
-# Short-Description: graphite
+# Short-Description: carbon
 ### END INIT INFO
 
+PID_FILE="<%= @graphite_directory %>/storage/carbon-cache-a.pid"
 cd <%= @graphite_directory %>
 
 <% if @whisper_dev_shm_size %>
@@ -17,17 +18,25 @@ chown -R www-data /dev/shm/whisper
 mount -o remount,size=<%= @whisper_dev_shm_size %> /dev/shm
 <% end %>
 
+if [ "$1" = "start" ]; then
+  if [ -f "$PID_FILE" ]; then
+    if [ ! -d $(cat $PID_FILE) ]; then
+      rm $PID_FILE
+    fi
+  fi
+fi
+
 sudo -u www-data ./bin/carbon-cache.py $*
 
 if [ "$1" = "stop" ]; then
  count=0
  while true; do
-  if [ "$count" = "10" ]; then
+  if [ "$count" = "60" ]; then
     echo "Unable to stop carbon"
     exit 2
   fi
-  if [ -f "<%= @graphite_directory %>/storage/carbon-cache-a.pid" ]; then
-   pid=`cat <%= @graphite_directory %>/storage/carbon-cache-a.pid`
+  if [ -f "$PID_FILE" ]; then
+   pid=$(cat $PID_FILE)
    if [ -d "/proc/$pid" ]; then
      echo "."
      sleep 1
