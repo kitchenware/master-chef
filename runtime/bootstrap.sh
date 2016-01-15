@@ -169,6 +169,9 @@ if which apt-get > /dev/null; then
       if [ "$arch" = "armv6l" ]; then
         OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armv6l.deb"
       fi
+      if [ "$arch" = "i686" ]; then
+        OMNIBUS_DEB="https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/13.04/i686/chef_11.16.4-1_i386.deb"
+      fi
       ;;
     *)
       echo "Unknown distro"
