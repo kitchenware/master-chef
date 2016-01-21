@@ -1,13 +1,33 @@
-class Chef::Provider::Service
-
-  def action_delayed_restart
-    @new_resource.notifies :restart, @new_resource.resources(:service => @new_resource.name)
-    @new_resource.updated_by_last_action true
-  end
-
-end
 
 unless defined?(CHEF_SERVICE_ALREADY_IMPROVED)
+
+  class Chef::Provider::Service
+
+    alias_method :action_restart_old, :action_restart
+    alias_method :action_reload_old, :action_reload
+
+    @@already_restarted = []
+
+    def action_reload
+      if @@already_restarted.include? @new_resource.name
+        Chef::Log.info "Service #{@new_resource.name} already restarted, skipping reload"
+      else
+        action_reload_old
+      end
+    end
+
+    def action_restart
+      @@already_restarted << @new_resource.name
+      action_restart_old
+    end
+
+    def action_delayed_restart
+      @new_resource.notifies :restart, @new_resource.resources(:service => @new_resource.name)
+      @new_resource.updated_by_last_action true
+    end
+
+  end
+
 
   class Chef::Resource::Service
 
