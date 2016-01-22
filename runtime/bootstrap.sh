@@ -123,6 +123,10 @@ if which apt-get > /dev/null; then
       exec_command "$SUDO $APT_PROXY apt-get install -y rsync git-core curl bzip2 unzip sudo file libreadline5"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.8.0-1.debian.6.0.5_${arch}.deb"
       ;;
+    jessie)
+      exec_command "$SUDO $APT_PROXY apt-get install -y rsync git-core curl bzip2 unzip sudo file"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.16.4-1_${arch}.deb"
+      ;;
     wheezy)
       exec_command "$SUDO $APT_PROXY apt-get install -y rsync git-core curl bzip2 unzip sudo file"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.16.4-1_${arch}.deb"
