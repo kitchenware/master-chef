@@ -6,6 +6,7 @@ This is a quick start guide to use Master-Chef with ec2 instances (only on eu-we
 
 * [Debian 6 squeeze](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-722e2606)
 * [Debian 7 wheezy](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-c90016bd)
+* [Debian 8 jessie](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-e31a6594)
 * [Ubuntu 10 lucid](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-ca1a14be)
 * [Ubuntu 12 precise](https://console.aws.amazon.com/ec2/home?region=eu-west-1#launchAmi=ami-35acbb41)
 
