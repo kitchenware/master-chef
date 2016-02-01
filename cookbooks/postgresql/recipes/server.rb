@@ -1,7 +1,7 @@
 
 include_recipe "postgresql"
 
-package "postgresql"
+package "postgresql-#{node.postgresql.version}"
 
 package "postgresql-contrib" if node.postgresql.contrib
 
