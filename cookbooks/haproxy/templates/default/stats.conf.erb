@@ -1,5 +1,6 @@
 
-listen stats <%= @config[:stats][:port] %>
+frontend stats
+  bind <%= @config[:stats][:port] %>
   mode http
   stats enable
   stats hide-version
