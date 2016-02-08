@@ -1,6 +1,7 @@
 <%
-  @resolv.keys.sort.each do |k|
-    v = @resolv[k]
+  config = node[:force_override_resolv_conf] || node[:override_resolv_conf] || node.resolv_conf
+  config.keys.sort.each do |k|
+    v = config[k]
     if v.is_a? Array
       v.sort.each do |vv|
 %>
