@@ -6,7 +6,7 @@ directory node.jenkins.home do
 end
 
 if node[:jenkins][:jelly_timezone]
-  node.override[:jenkins][:tomcat][:env]['JAVA_OPTS'] = node.jenkins.tomcat.env['JAVA_OPTS'] + " -Dorg.apache.commons.jelly.tags.fmt.timeZone=#{node.jenkins.jelly_timezone}"
+  node.force_override[:jenkins][:tomcat][:env]['JAVA_OPTS'] = node.jenkins.tomcat.env['JAVA_OPTS'] + " -Dorg.apache.commons.jelly.tags.fmt.timeZone=#{node.jenkins.jelly_timezone}"
 end
 
 tomcat_instance "jenkins:tomcat" do
