@@ -11,6 +11,7 @@ Chef::Config.exception_handlers << ServiceErrorHandler.new("mysql", ".*mysql.*")
 service "mysql" do
   supports :status => true, :restart => true, :reload => true
   action [ :enable, :start ]
+  provider Chef::Provider::Service::Upstart if node.lsb.codename == "trusty"
 end
 
 if node.mysql.use_percona
