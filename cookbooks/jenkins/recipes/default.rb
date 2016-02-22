@@ -63,7 +63,7 @@ node.jenkins.plugins.each do |name|
     group node.tomcat.user
     environment get_proxy_environment
     command "cd #{node.jenkins.home}/plugins && curl -f -s -L -o #{name}.hpi #{node.jenkins.update_site}/#{name}/latest/#{name}.hpi"
-    not_if "[ -f #{node.jenkins.home}/plugins/#{name}.?pi ]"
+    not_if "[ -f #{node.jenkins.home}/plugins/#{name}.hpi ] || [ -f #{node.jenkins.home}/plugins/#{name}.jpi ]"
     notifies :restart, "service[jenkins]"
   end
 end
