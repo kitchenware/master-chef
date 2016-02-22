@@ -49,7 +49,7 @@ execute "install django" do
 end
 
 execute "install django-tagging" do
-  command "pip install django-tagging"
+  command "pip install django-tagging==0.3.6"
   environment get_proxy_environment
   not_if "pip show django-tagging | grep Version"
 end
@@ -57,7 +57,7 @@ end
 template "/etc/init.d/carbon" do
   source "carbon_init_d.erb"
   mode '0755'
-  variables :graphite_directory => node.graphite.directory, :whisper_dev_shm => node.graphite[:whisper_dev_shm]
+  variables :graphite_directory => node.graphite.directory, :whisper_dev_shm_size => node.graphite[:whisper_dev_shm_size]
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("carbon", "\\/opt\\/graphite\\/conf\\/.*")
@@ -69,8 +69,11 @@ end
 
 [:whisper, :carbon, :web_app].each do |app|
 
+  version = node.graphite.git["#{app}_version"]
+  version = node.graphite.git.version if version.nil? || version == ""
+
   git_clone "#{node.graphite.directory_install}/#{app}" do
-    reference node.graphite.git.version
+    reference version
     repository node.graphite.git[app]
     user 'root'
     notifies :restart, "service[carbon]" if app == :carbon
@@ -79,7 +82,7 @@ end
 
   execute_version "install_#{app}" do
     command "cd #{node.graphite.directory_install}/#{app} && python setup.py install"
-    version "#{app}_#{node.graphite.git.version}"
+    version "#{app}_#{version}"
     file_storage "#{node.graphite.directory}/.#{app}"
     notifies :restart, "service[carbon]" if app == :carbon
     notifies :restart, "service[apache2]" if app == :web_app
@@ -107,7 +110,8 @@ template "#{node.graphite.directory}/webapp/graphite/local_settings.py" do
   mode '0644'
   variables({
     :timezone => node.graphite.timezone,
-    :db_file => "#{node.graphite.directory}/storage/graphite.db",
+    :db_file => "graphite.db",
+    :storage_dir => "#{node.graphite.directory}/storage",
     :secret_key => secret_key,
   })
   notifies :restart, "service[apache2]"
@@ -118,7 +122,7 @@ directory_recurse_chmod_chown "#{node.graphite.directory}/storage" do
   mode '0755'
 end
 
-if node.graphite[:whisper_dev_shm]
+if node.graphite[:whisper_dev_shm_size]
 
   execute "symlink whisper" do
     command "rm -rf #{node.graphite.directory}/storage/whisper && ln -s /dev/shm/whisper #{node.graphite.directory}/storage/whisper"
@@ -173,15 +177,16 @@ template "#{node.graphite.directory}/conf/storage-schemas.conf" do
   notifies :restart, "service[carbon]"
 end
 
-if node.graphite.log_days_retention > 0
+if node.logrotate[:auto_deploy]
 
-  include_recipe 'cron'
+  logrotate_file "carbon" do
+    files ["#{node.graphite.directory}/storage/log/carbon-cache/carbon-cache-a/*.log"]
+    variables :user => 'www-data', :nocreate => true
+  end
 
-  cron_file "graphite_purge_log" do
-    content <<-EOF
-6 4 * * * root find #{node.graphite.directory}/storage/log -type f -name '*_*' -mtime +#{node.graphite.log_days_retention} -delete
-EOF
+  logrotate_file "graphite" do
+    files ["#{node.graphite.directory}/storage/log/webapp/*.log"]
+    variables :user => 'www-data', :nocreate => true, :post_rotate => "/etc/init.d/apache2 reload > /dev/null"
   end
 
 end
-

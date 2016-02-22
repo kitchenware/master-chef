@@ -1,4 +1,6 @@
 
+require 'digest'
+
 node.set[:postgresql][:databases][:cabot] = {
   :host => 'localhost',
   :database => 'cabot',
@@ -40,6 +42,7 @@ git_clone "#{node.cabot.root}/current" do
   repository node.cabot.git
   reference node.cabot.version
   user node.cabot.user
+  notifies :restart, "service[#{node.supervisor.service_name}]"
 end
 
 execute "create cabot virtual env" do
@@ -48,15 +51,15 @@ execute "create cabot virtual env" do
   not_if "[ -d #{node.cabot.root}/venv ]"
 end
 
-execute_version "install cabot dependencies" do
-  command "cd #{node.cabot.root}/current && . #{node.cabot.root}/venv/bin/activate && pip install -e ."
-  user "cabot"
-  file_storage "#{node.cabot.root}/.dependencies"
-  version node.cabot.version
-end
-
 django_secret_key = local_storage_read("cabot:django_secret_key") do
   PasswordGenerator.generate 64
+end
+
+template "#{node.cabot.root}/shared/run.sh" do
+  owner "cabot"
+  source "run.sh.erb"
+  mode "0755"
+  variables :root => node.cabot.root, :virtual_env => "#{node.cabot.root}/venv"
 end
 
 template "#{node.cabot.root}/shared/production.env" do
@@ -69,15 +72,16 @@ template "#{node.cabot.root}/shared/production.env" do
     :port => node.cabot.port,
     :extra_config => node.cabot.extra_config,
     :django_secret_key => django_secret_key,
+    :plugins => node.cabot.plugins,
   })
   notifies :restart, "service[#{node.supervisor.service_name}]"
 end
 
-template "#{node.cabot.root}/shared/run.sh" do
-  owner "cabot"
-  source "run.sh.erb"
-  mode "0755"
-  variables :root => node.cabot.root, :virtual_env => "#{node.cabot.root}/venv"
+execute_version "install cabot dependencies" do
+  command "cd #{node.cabot.root}/current && . #{node.cabot.root}/venv/bin/activate && /opt/cabot/shared/run.sh pip install --process-dependency-links -e ."
+  user "cabot"
+  file_storage "#{node.cabot.root}/.dependencies"
+  version node.cabot.version + '_' + Digest::MD5.hexdigest(SortedJsonDump.pretty_generate(node.cabot.plugins.to_hash))
 end
 
 [

@@ -11,9 +11,10 @@
 
 cd <%= @graphite_directory %>
 
-<% if @whisper_dev_shm %>
+<% if @whisper_dev_shm_size %>
 mkdir -p /dev/shm/whisper
 chown -R www-data /dev/shm/whisper
+mount -o remount,size=<%= @whisper_dev_shm_size %> /dev/shm
 <% end %>
 
 sudo -u www-data ./bin/carbon-cache.py $*

@@ -31,7 +31,9 @@ if node.nginx[:nginx_version]
 
 else
 
-  package node.nginx.package_name
+  package node.nginx.package_name do
+    options node.nginx.nginx_package_options if node.nginx[:nginx_package_options]
+  end
 
 end
 
@@ -67,7 +69,7 @@ if node.nginx[:deploy_default_config]
     else
       nb_workers = node.cpu.total
     end
-    variables :worker_processes => nb_workers
+    variables :worker_processes => nb_workers, :worker_rlimit_nofile => node.nginx.config.worker_rlimit_nofile
     source "nginx.conf.erb"
     mode '0644'
     notifies :reload, "service[nginx]"

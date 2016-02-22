@@ -5,6 +5,7 @@ define :unicorn_app, {
   :user => nil,
   :code_for_initd => "",
   :location => '/',
+  :bind => nil,
   :configure_nginx => true,
   :extended_nginx_config => "",
   :vars_to_unset => [],
@@ -12,6 +13,9 @@ define :unicorn_app, {
   :unicorn_timeout => 600,
   :nb_workers => nil,
   :create_capistrano_app => true,
+  :worker_boot_code => nil,
+  :reload_files => [],
+  :reload_cmd => nil,
 } do
 
   unicorn_app_params = params
@@ -28,6 +32,7 @@ define :unicorn_app, {
 
   unicorn_pid_file = "#{unicorn_app_params[:app_directory]}/#{unicorn_app_params[:pid_file]}"
   unicorn_config_file = "#{unicorn_app_params[:app_directory]}/shared/unicorn.conf.rb"
+  unicorn_run_file = "#{unicorn_app_params[:app_directory]}/shared/#{unicorn_app_params[:unicorn_cmd]}_#{unicorn_app_params[:name]}"
   unicorn_log_prefix = "#{unicorn_app_params[:app_directory]}/shared/log/unicorn"
   unicorn_socket_file = "unix:#{unicorn_app_params[:app_directory]}/shared/unicorn.sock"
 
@@ -38,18 +43,36 @@ define :unicorn_app, {
     variables({
       :name => unicorn_app_params[:name],
       :app_directory => "#{unicorn_app_params[:app_directory]}/current",
+      :cmd => unicorn_run_file,
       :unicorn_cmd => unicorn_app_params[:unicorn_cmd],
-      :config_file => unicorn_config_file,
       :pid_file => unicorn_pid_file,
       :user => unicorn_app_params[:user],
       :code_for_initd => unicorn_app_params[:code_for_initd],
       :vars_to_unset => unicorn_app_params[:vars_to_unset],
+      :config_file => unicorn_config_file,
+    })
+  end
+
+  template unicorn_run_file do
+    cookbook 'unicorn'
+    source "unicorn.sh.erb"
+    owner unicorn_app_params[:user]
+    mode '0755'
+    variables({
+      :app_directory => "#{unicorn_app_params[:app_directory]}/current",
+      :unicorn_cmd => unicorn_app_params[:unicorn_cmd],
+      :config_file => unicorn_config_file,
+      :home => get_home(unicorn_app_params[:user])
     })
   end
 
   service unicorn_app_params[:name] do
-    supports :status => true, :restart => true, :reload => true, :graceful_restart => true
+    supports :status => true, :restart => true, :reload => true, :reload => true
     action auto_compute_action
+    unicorn_app_params[:reload_files].each do |x|
+      subscribes :reload, "template[#{x}]"
+    end
+    reload_command unicorn_app_params[:reload_cmd] if unicorn_app_params[:reload_cmd]
   end
 
   template unicorn_config_file do
@@ -59,13 +82,15 @@ define :unicorn_app, {
     mode '0644'
     variables({
       :app_directory => "#{unicorn_app_params[:app_directory]}/current",
-      :unicorn_socket => unicorn_socket_file,
+      :unicorn_socket => unicorn_app_params[:bind] || unicorn_socket_file,
       :unicorn_timeout =>  unicorn_app_params[:unicorn_timeout],
       :log_prefix => unicorn_log_prefix,
       :pid_file => unicorn_pid_file,
       :nb_workers => unicorn_app_params[:nb_workers] || node.cpu.total,
+      :worker_boot_code => unicorn_app_params[:worker_boot_code],
+      :cmd => unicorn_run_file,
     })
-    notifies :restart, "service[#{unicorn_app_params[:name]}]"
+    notifies :reload, "service[#{unicorn_app_params[:name]}]"
   end
 
   node.set[:unicorn][:apps][unicorn_app_params[:name]] = {
@@ -103,5 +128,18 @@ define :unicorn_app, {
     end
 
   end
+
+  if node.logrotate[:auto_deploy]
+
+    logrotate_file "#{unicorn_app_params[:name]}_unicorn" do
+      files [
+        "#{unicorn_app_params[:app_directory]}/shared/log/unicorn.stdout.log",
+        "#{unicorn_app_params[:app_directory]}/shared/log/unicorn.stderr.log",
+      ]
+      variables :user => "deploy", :copytruncate => true
+    end
+
+  end
+
 
 end

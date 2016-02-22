@@ -1,7 +1,7 @@
 
 include_recipe "mysql"
 
-server_package_name = node.mysql.use_percona ? node.mysql.percona_server_package_name : node.mysql.server_package_name
+server_package_name = node.mysql[:package_name] || (node.mysql.use_percona ? node.mysql.percona_server_package_name : node.mysql.server_package_name)
 Chef::Log.info "Using mysql server package #{server_package_name}"
 
 package server_package_name

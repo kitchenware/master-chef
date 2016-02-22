@@ -1,7 +1,7 @@
 
 default[:elasticsearch] = {
   :user => 'elastic',
-  :url => 'http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.1.tar.gz',
+  :url => 'http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.7.1.tar.gz',
   :directory => '/opt/elasticsearch',
   :directory_data => '/opt/elasticsearch_data',
   :directory_logs => '/opt/elasticsearch/logs',
@@ -14,6 +14,7 @@ default[:elasticsearch] = {
   :cluster_name => 'elasticsearch',
   :one_node_mode => true,
   :allow_dynamic_scripts => true,
+  :mlockall => true,
   :configure_zeromq_river => {
     :enable => true,
     :address => 'tcp://127.0.0.1:9700',

@@ -22,7 +22,7 @@ define :warp_install, {
   end
 
   install_env = get_proxy_environment("HOME" => get_home(warp_install_params[:name]))
-  install_env.merge!({"GIT_PREFIX" => "http"}) if node.git.auto_use_http_for_github && ENV['BACKUP_http_proxy']
+  install_env.merge!({"git_protocol" => "http"}) if node.git.auto_use_http_for_github && (ENV['BACKUP_http_proxy'] || node[:no_external_ssh])
 
   if warp_install_params[:nvm]
 

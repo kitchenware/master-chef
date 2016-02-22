@@ -1,7 +1,7 @@
 user www-data;
 
-worker_processes <%= @worker_processes  %>;
-worker_rlimit_nofile 30000;
+worker_processes <%= @worker_processes %>;
+worker_rlimit_nofile <%= @worker_rlimit_nofile %>;
 
 error_log /var/log/nginx/error.log;
 

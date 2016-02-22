@@ -1,7 +1,7 @@
 
 install_path = "/opt/master-chef"
 
-["", "bin", "etc", "var", "var/git_repos"].each do |d|
+["", "bin", "etc", "var"].each do |d|
   directory "#{install_path}/#{d}"
 end
 
@@ -9,11 +9,6 @@ end
   directory "#{install_path}/#{d}" do
     owner node.master_chef.chef_solo_scripts.user
   end
-end
-
-directory "/opt/master-chef/secured_roles" do
-  owner "root"
-  mode '0700'
 end
 
 template "#{install_path}/bin/master-chef.sh" do
@@ -40,6 +35,7 @@ template "#{install_path}/bin/update.impl.sh" do
   action :create_if_missing
 end
 
+no_git_dir = "/tmp/master_chef_repos"
 template "#{install_path}/etc/solo.rb" do
   source "solo.rb.erb"
   mode '0644'
@@ -47,7 +43,17 @@ template "#{install_path}/etc/solo.rb" do
     :cache_directory => "#{install_path}/var",
     :var_chef => "/opt/chef/var",
     :logging => node.master_chef.chef_solo_scripts.logging,
+    :no_git_cache => node.master_chef.chef_solo_scripts.no_git_cache,
+    :no_git_dir => no_git_dir
   })
+end
+
+if node.master_chef.chef_solo_scripts.no_git_cache
+  MasterChefHooks.add_all "remove_git_cache", <<-EOF
+#!/bin/bash
+
+rm -rf #{no_git_dir}
+EOF
 end
 
 Chef::Log.info "File for local storage : #{node.local_storage.file}"

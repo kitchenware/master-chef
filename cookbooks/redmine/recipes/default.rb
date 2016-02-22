@@ -1,4 +1,6 @@
 
+package "libffi5"
+
 include_recipe "rails"
 include_recipe "mysql::server"
 
@@ -39,9 +41,10 @@ link "#{node.redmine.directory}/current/config/database.yml" do
 end
 
 template "#{node.redmine.directory}/shared/configuration.yml" do
-    variables :config => node.redmine
-    source 'configuration.yml.erb'
-    mode '0755'
+  variables :config => node.redmine
+  source 'configuration.yml.erb'
+  mode '0755'
+  notifies :restart, "service[redmine]"
 end
 
 link "#{node.redmine.directory}/current/config/configuration.yml" do
@@ -51,6 +54,10 @@ end
 deployed_files = %w{Gemfile.local Gemfile.lock .ruby-version .rbenv-gemsets .bundle-option}
 
 directory "#{node.redmine.directory}/shared/files" do
+  owner node.redmine.user
+end
+
+directory "#{node.redmine.directory}/shared/user_files" do
   owner node.redmine.user
 end
 
@@ -74,37 +81,9 @@ cp_command = deployed_files.map{|f| "cp #{node.redmine.directory}/shared/files/#
 ruby_rbenv_command "initialize redmine" do
   user node.redmine.user
   directory "#{node.redmine.directory}/current"
-  code "rm -f .warped && #{cp_command} && rbenv warp install && bundle exec rake generate_secret_token && RAILS_ENV=production bundle exec rake db:migrate && RAILS_ENV=production REDMINE_LANG=fr bundle exec rake redmine:load_default_data"
+  code "rm -f .warped && #{cp_command} && rbenv warp install && bundle exec rake generate_secret_token && RAILS_ENV=production bundle exec rake db:migrate && RAILS_ENV=production REDMINE_LANG=fr bundle exec rake redmine:load_default_data && rm -rf log files && ln -s #{node.redmine.directory}/shared/log && ln -s #{node.redmine.directory}/shared/user_files files"
   environment get_proxy_environment
   file_storage "#{node.redmine.directory}/current/.redmine_ready"
   version node.redmine.version
   notifies :restart, "service[redmine]"
 end
-
-
-if node.redmine.google_apps
-
-  git_clone "#{node.redmine.directory}/current/plugins/google_apps" do
-    user node.redmine.user
-    repository node.redmine.google_apps_plugin_git
-    reference "master"
-    notifies :restart, "service[redmine]"
-  end
-
-  ruby_rbenv_command "initialize google apps plugin" do
-    user node.redmine.user
-    directory "#{node.redmine.directory}/current"
-    code "RAILS_ENV=production rake redmine:plugins:assets"
-    environment get_proxy_environment
-    file_storage "#{node.redmine.directory}/current/.gapps_ready"
-    version node.redmine.version
-    notifies :restart, "service[redmine]"
-  end
-
-  file "#{node.redmine.directory}/current/config/initializers/openid.rb" do
-    content "OpenIdAuthentication.store = :file"
-    notifies :restart, "service[redmine]"
-  end
-
-end
-

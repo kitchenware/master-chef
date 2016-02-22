@@ -11,9 +11,19 @@ if node.timezone =~ /^([^\/]+)\/([^\/]+)$/
     to target
   end
 
+  rsyslog_present = File.exists? "/etc/init.d/rsyslog"
+
+  if rsyslog_present
+    service "rsyslog" do
+      supports :restart => true
+      action :nothing
+    end
+  end
+
   file "/etc/timezone" do
     content node.timezone
     mode '0644'
+    notifies :restart, "service[rsyslog]" if rsyslog_present
   end
 
 else

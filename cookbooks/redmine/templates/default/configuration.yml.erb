@@ -45,9 +45,9 @@ production:
     email_delivery:
       delivery_method: :smtp
       smtp_settings:
-        address: "<%= @config[:smtp_ip] || "127.0.0.1" %>"
+        address: "<%= @config[:smtp_ip] || "localhost" %>"
         port: 25
-        domain: <%= @config[:smtp_domain] || "" %>
+        domain: <%= @config[:smtp_domain] %>
         authentication: :none
 #       domain: 'example.com'
 #       user_name: 'myaccount'
@@ -87,7 +87,7 @@ default:
     smtp_settings:
       address: "127.0.0.1"
       port: 25
-      domain: octo.com
+      domain: <%= @config[:smtp_domain] %>
       enable_starttls_auto: false
       authentication: :none
 

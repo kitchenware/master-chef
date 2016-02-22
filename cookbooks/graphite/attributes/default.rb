@@ -2,13 +2,13 @@ default[:graphite] = {
   :git => {
     :whisper => "git://github.com/graphite-project/whisper.git",
     :carbon => "git://github.com/graphite-project/carbon.git",
-    :web_app => "git://github.com/graphite-project/graphite-web.git",
+    :web_app => "git://github.com/bpaquet/graphite-web.git",
     :version => "0.9.12",
+    :web_app_version => "c0ec555981783e7f89ee64b225e811cfcfcca1e2",
   },
   :directory => '/opt/graphite',
   :directory_install => '/opt/graphite/install',
   :django_version => '1.4.10',
-  :log_days_retention => 5,
 }
 
 default[:graphite][:graphite] = {

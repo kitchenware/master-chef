@@ -1,7 +1,7 @@
 default[:cabot][:root] = "/opt/cabot"
 
-default[:cabot][:git] = "https://github.com/arachnys/cabot.git"
-default[:cabot][:version] = "b3ca47808cc3ca0b7b32b2ce5f9a21ee3dc63a8f"
+default[:cabot][:git] = "https://github.com/doctolib/cabot.git"
+default[:cabot][:version] = "0539beda938aebd1a3947c42da1322597be99e26"
 
 default[:cabot][:user] = "cabot"
 
@@ -26,6 +26,14 @@ default[:cabot][:extra_config] = {
   :smtp_port => 123,
   :cabot_host => "http://cabot.example.com",
   :scheme => "http",
+  :alert_interval => "60", # minutes
+  :notification_interval => "60", # minutes
+}
+
+default[:cabot][:plugins] = {
+  'cabot_alert_hipchat' => '1.6.1',
+  'cabot_alert_email' => 'git+https://git@github.com/doctolib/cabot-alert-email.git@22f28d9f290e5e161716cc6691f412330a566a19#egg=cabot_alert_email-1.3.166',
+  'cabot_alert_twilio' => '1.1.4',
 }
 
 default[:cabot][:nginx][:cabot] = {

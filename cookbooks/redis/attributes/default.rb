@@ -2,6 +2,7 @@ default[:redis] = {
   :bind_address => '127.0.0.1',
   :port => 6379,
   :timeout => 300,
+  :tcp_keepalive => 0,
   :log_level => 'notice',
   :log_file => '/var/log/redis/redis-server.log',
   :databases => 16,
@@ -11,6 +12,7 @@ default[:redis] = {
   :maxmemory => nil,
   :appendonly => 'no',
   :appendfsync => 'everysec',
-  :version_config => '2.2',
+  :version_config => '2.8',
   :requirepass => false,
+  :auto_aof_rewrite_percentage => 100,
 }

@@ -8,13 +8,17 @@
 	<% if @copytruncate %>
 	copytruncate
 	<% end %>
+	<% if @nocreate %>
+	nocreate
+	<% else %>
 	create <%= @mode %> <%= @user %> <%= @group %>
-  <% if @sharedscripts %>
-    sharedscripts
-  <% end %>
+	<% end %>
+	<% if @sharedscripts %>
+	sharedscripts
+	<% end %>
 	<% if @post_rotate %>
 	postrotate
-	  <%= @post_rotate %>
+		<%= @post_rotate %>
 	endscript
 	<% end %>
 	<% if @su %>

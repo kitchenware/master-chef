@@ -12,16 +12,16 @@
 
 NAME="<%= @name %>"
 USER="<%= @user %>"
-DAEMON="/bin/bash"
+DAEMON="<%= @cmd %>"
 APP_DIRECTORY="<%= @app_directory %>"
 PID_FILE="<%= @pid_file %>"
+START_STOP_DAEMON="/sbin/start-stop-daemon"
 CONFIG_FILE="<%= @config_file %>"
 UNICORN_CMD="<%= @unicorn_cmd %>"
-START_STOP_DAEMON="/sbin/start-stop-daemon"
 
 test -x $DAEMON || exit 0
+test -f $CONFIG_FILE || exit 0
 test -d "$APP_DIRECTORY" || exit 0
-test -f "$CONFIG_FILE" || exit 0
 
 <%= @code_for_initd %>
 
@@ -29,50 +29,73 @@ test -f "$CONFIG_FILE" || exit 0
 unset <%= v %>
 <% end %>
 
-unset RBENV_DIR
-unset RBENV_HOOK_PATH
-unset RBENV_ROOT
-unset RUBYLIB
-unset LD_LIBRARY_PATH
-
-USER_HOME=`cat /etc/passwd | grep $USER | awk -F: '{print $6}'`
-CMD="cd $APP_DIRECTORY && export HOME=$USER_HOME && export PATH=\"$USER_HOME/.rbenv/bin:$USER_HOME/.rbenv/shims:$PATH\" && bundle exec $UNICORN_CMD -E production -D -c $CONFIG_FILE"
-
 set -e
 
-. /lib/lsb/init-functions
+status_<%= @name %>() {
+  if [ -f "$PID_FILE" ]; then
+    if [ -d "/proc/$(cat $PID_FILE)" ]; then
+      echo "<%= @name %> is running."
+      exit 0
+    fi
+  fi
+  echo "<%= @name %> is not running."
+  exit 1
+}
 
 kill_unicorn() {
   SIGNAL=$1
 
-	if [ ! "$PID_FILE" = "" ]; then
-		if [ -f $PID_FILE ]; then
-			kill $SIGNAL `cat $PID_FILE` || true
-		fi
+	if [ -f $PID_FILE ]; then
+		kill $SIGNAL `cat $PID_FILE` || true
 	fi
 }
 
-case "$1" in
-   start)
+start_unicorn() {
 	echo -n "Starting $NAME: "
-	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$CMD" || exit 1
+	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$DAEMON" || exit 1
 	echo "$NAME."
+}
+
+reload_unicorn() {
+	echo -n "Reloading $NAME: "
+	old_pid=$(cat $PID_FILE)
+	kill_unicorn "-USR2"
+	i=0
+  while [ true ]; do
+    sleep 2
+    i=$(expr $i + 1)
+    if [ -f $PID_FILE -a "$(cat $PID_FILE)" != "$old_pid" -a ! -f $PID_FILE.oldbin ]; then
+    	echo "$NAME."
+    	break
+    fi
+    if [ $i -gt 60 ]; then
+      echo "Unable to find running process after 60 seconds."
+      exit 1
+    fi
+  done
+}
+
+case "$1" in
+  start)
+  	start_unicorn
 	;;
   stop)
 	echo -n "Stopping $NAME: "
 	kill_unicorn
 	echo "$NAME."
 	;;
-  graceful_restart)
-	echo -n "Graceful restarting $DESC: "
-	kill_unicorn "-USR2"
-	echo "$NAME."
+  reload)
+  if [ -f $PID_FILE ] && [ -d "/proc/$(cat $PID_FILE)" ]; then
+  	reload_unicorn
+  else
+  	start_unicorn
+	fi
 	;;
   restart)
 	echo -n "Restarting $NAME: "
 	kill_unicorn
 	sleep 1
-	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$CMD" || exit 1
+	$START_STOP_DAEMON -c $USER --start --exec $DAEMON -p $PID_FILE -- -c "$DAEMON" || exit 1
 	echo "$NAME."
 	;;
   reopen_log)
@@ -81,10 +104,10 @@ case "$1" in
 	echo "$NAME."
 	;;
   status)
-	status_of_proc -p $PID_FILE $UNICORN_CMD $UNICORN_CMD && exit 0 || exit $?
+	status_<%= @name %>
 	;;
   *)
-	echo "Usage: $NAME {start|stop|restart|status|graceful_restart|reopen_log}" >&2
+	echo "Usage: $NAME {start|stop|restart|status|reload|reopen_log}" >&2
 	exit 1
 	;;
 esac

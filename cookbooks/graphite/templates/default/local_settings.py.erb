@@ -1,9 +1,10 @@
+STORAGE_DIR='<%= @storage_dir %>'
 TIME_ZONE = '<%= @timezone %>'
 
 DATABASES = {
    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '<%= @db_file %>',
+        'NAME': '<%= @storage_dir + '/' + @db_file %>',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',

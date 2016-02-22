@@ -5,9 +5,20 @@ if node[:ssh_keys]
 
   node.ssh_keys.each do |name, config|
 
-    if config["users"]
+    if config["users"] || config["optional_users"]
       unless config["disabled"]
-        config["users"].each do |user|
+        users = []
+        if config["users"]
+          config["users"].each do |user|
+            users << user
+          end
+        end
+        if config["optional_users"]
+          config["optional_users"].each do |user|
+            users << user if get_home(user, true) && !users.include?(user)
+          end
+        end
+        users.each do |user|
           node.set[:resolved_ssh_keys][user] = [] unless node.resolved_ssh_keys[user]
           node.set[:resolved_ssh_keys][user] = node.resolved_ssh_keys[user] + config["keys"] if config["keys"]
           if config["ref"]

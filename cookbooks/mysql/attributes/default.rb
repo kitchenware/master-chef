@@ -1,5 +1,6 @@
 default[:mysql] = {
   :use_percona => false,
+  :add_percona_repo => false,
   :percona_client_package_name => "percona-xtradb-cluster-client-5.5",
   :percona_server_package_name => "percona-xtradb-cluster-server-5.5",
   :server_package_name => "mysql-server",

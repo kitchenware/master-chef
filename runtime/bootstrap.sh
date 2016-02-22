@@ -77,7 +77,13 @@ setup_keys (){
       print "Installing credentials to chef account from $KEYS"
       exec_command "$SUDO cp $KEYS /home/chef/.ssh/authorized_keys"
     else
-      echo "File not found $KEYS"
+      KEYS="$HOME/.ssh/authorized_keys2"
+      if [ -f $KEYS ]; then
+        print "Installing credentials to chef account from $KEYS"
+        exec_command "$SUDO cp $KEYS /home/chef/.ssh/authorized_keys"
+      else
+        echo "File not found $KEYS"
+      fi
     fi
   fi
 
@@ -99,6 +105,12 @@ if [ "$arch" = "x86_64" ]; then
 elif [ "$arch" = "i686" ]; then
   opscode_dir="i686"
   arch="i386"
+elif [ "$arch" = "ppc64le" ]; then
+  arch="ppc64le"
+elif [ "$arch" = "armv7l" ]; then
+  arch="armv7l"
+elif [ "$arch" = "armv6l" ]; then
+  arch="armv6l"
 else
   echo "Unknown arch $arch"
   exit 2
@@ -130,6 +142,16 @@ if which apt-get > /dev/null; then
     wheezy)
       exec_command "$SUDO $APT_PROXY apt-get install -y rsync git-core curl bzip2 unzip sudo file"
       OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.16.4-1_${arch}.deb"
+      if [ "$arch" = "armv7l" ]; then
+        OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armhf.deb"
+      fi
+      if [ "$arch" = "armv6l" ]; then
+        OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armv6l.deb"
+      fi
+     ;;
+    jessie)
+      exec_command "$SUDO $APT_PROXY apt-get install -y rsync git-core curl bzip2 unzip sudo file"
+      OMNIBUS_DEB="http://opscode-omnibus-packages.s3.amazonaws.com/debian/6/${opscode_dir}/chef_11.16.4-1_${arch}.deb"
       ;;
     lucid)
       exec_command "$SUDO $APT_PROXY apt-get install -y rsync git-core curl bzip2 unzip"
@@ -142,6 +164,15 @@ if which apt-get > /dev/null; then
     trusty)
       exec_command "$SUDO $APT_PROXY apt-get install -y rsync git-core curl bzip2 unzip"
       OMNIBUS_DEB="https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/13.04/${opscode_dir}/chef_11.16.4-1_amd64.deb"
+      if [ "$arch" = "ppc64le" ]; then
+        OMNIBUS_DEB="https://github.com/bpaquet/ppc64le/raw/master/chef_11.16.4+20150329005250-1_ppc64el.deb"
+      fi
+      if [ "$arch" = "armv7l" ]; then
+        OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armhf.deb"
+      fi
+      if [ "$arch" = "armv6l" ]; then
+        OMNIBUS_DEB="https://github.com/bpaquet/chef_for_rasberry_pi/raw/master/chef_11.16.4-1_armv6l.deb"
+      fi
       ;;
     *)
       echo "Unknown distro"
@@ -198,7 +229,9 @@ fi
 
 exec_command "$SUDO mkdir -p /opt/master-chef/etc"
 install_master_chef_file "cookbooks/master_chef/templates/default/solo.rb.erb" "/opt/master-chef/etc/solo.rb"
-$SUDO sed -i '/^<%=/d' "/opt/master-chef/etc/solo.rb"
+$SUDO sed -i '/^<%/d' "/opt/master-chef/etc/solo.rb"
+$SUDO sed -i '/REMOVE_DURING_BOOSTRAP/d' "/opt/master-chef/etc/solo.rb"
+
 exec_command_chef "echo '{\\\"repos\\\":{\\\"git\\\":[\\\"$MASTER_CHEF_URL\\\"]},\\\"run_list\\\":[\\\"recipe[master_chef::chef_solo_scripts]\\\"],\\\"node_config\\\":{}}' | sudo tee /opt/master-chef/etc/local.json > /dev/null"
 
 print "Bootstraping master-chef, using url $MASTER_CHEF_URL"

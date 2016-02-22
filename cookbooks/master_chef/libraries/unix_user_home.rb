@@ -1,11 +1,12 @@
 
 module UnixUserHome
 
-  def get_home user_name
+  def get_home user_name, nil_if_not_found = false
     u = find_resources_by_class_pattern(/^Chef::Resource::User/).find{|u| u.name == user_name}
-    dir = u  && u.home ? u.home : ""
+    dir = u && u.home ? u.home : ""
     dir = %x{cat /etc/passwd | grep "^#{user_name}:" | awk -F: '{print $6}'}.strip if dir.empty?
     dir = node.users[user_name].home if dir.empty? && node[:users] && node[:users][user_name] && node[:users][user_name][:home]
+    return nil if dir.empty? && nil_if_not_found
     dir = "/home/#{user_name}" if dir.empty?
     dir
   end

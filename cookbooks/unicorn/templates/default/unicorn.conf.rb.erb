@@ -1,3 +1,4 @@
+
 worker_processes <%= @nb_workers %>
 
 working_directory "<%= @app_directory %>"
@@ -16,6 +17,24 @@ stdout_path "<%= @log_prefix %>.stdout.log"
 #Make REE use the copy on write GC
 if GC.respond_to?(:copy_on_write_friendly=)
   GC.copy_on_write_friendly = true
+end
+
+Unicorn::HttpServer::START_CTX[:argv] = []
+Unicorn::HttpServer::START_CTX[0] = '<%= @cmd %>'
+
+puts "##{Process.pid} Current ruby version #{RUBY_VERSION}"
+puts "##{Process.pid} Current gem home #{ENV['GEM_HOME']}"
+
+before_exec do |server|
+  ENV['PATH'] = ENV['PATH'].split(':').select{|x| ! (x.match('rbenv') && x.match('versions'))}.join(':')
+  ENV.keys.each do |x|
+    ENV.delete x if x.match(/RUBY/) || x.match(/BUNDLE/) || x.match(/RBENV/) || x.match(/GEM/)
+    if x.match(/_FIGARO_(.*)/)
+      ENV.delete $1
+      ENV.delete x
+    end
+  end
+  server.logger.info("Reloading by launching #{Unicorn::HttpServer::START_CTX[0]}")
 end
 
 before_fork do |server, worker|
@@ -38,8 +57,6 @@ after_fork do |server, worker|
   if defined?(ActiveRecord::Base)
     ActiveRecord::Base.establish_connection
   end
-  if defined?(Resque)
-    Resque.redis.client.reconnect
-  end
+  <%= @worker_boot_code %>
 end
 

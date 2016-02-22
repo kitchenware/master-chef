@@ -15,6 +15,7 @@ end
 
 service node.postgresql.service_name do
   supports :status => true, :restart => true
+  restart_command node.postgresql[:restart_command] if node.postgresql[:restart_command]
   action auto_compute_action
 end
 

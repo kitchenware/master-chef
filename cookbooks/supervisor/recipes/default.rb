@@ -25,6 +25,7 @@ Chef::Config.exception_handlers << ServiceErrorHandler.new("supervisor", ".*supe
 basic_init_d node.supervisor.service_name do
   daemon "/usr/bin/supervisord"
   make_pidfile false
+  code node.supervisor.before_start_code.values.sort.join("\n")
   check_stop({
     :term_time => Proc.new { find_resources_by_name_pattern(/^\/etc\/supervisor\/conf.d\/.*\.conf$/).length * node.supervisor.restart_delay_by_job },
     :kill_time => Proc.new { 5 },

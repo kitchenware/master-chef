@@ -26,7 +26,8 @@ default[:master_chef][:chef_solo_scripts] = {
 verbose_logging false
 Mixlib::Log::Formatter.show_time = false
 EOF
-  }
+  },
+  :no_git_cache => false,
 }
 
 default[:local_storage] = {
