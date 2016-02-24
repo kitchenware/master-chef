@@ -59,6 +59,17 @@ EOF
     command "psql --command \"CREATE USER #{node.postgresql.root_account} WITH CREATEDB NOCREATEUSER NOCREATEROLE PASSWORD '#{root_postgresql_password}';\""
     not_if "PGPASSWORD=#{root_postgresql_password} psql postgres --username=#{node.postgresql.root_account} --command=\"select 1;\""
   end
+
+  if node.postgresql[:postgres_password]
+
+    execute "change postgresql postgres password" do
+      user node.postgresql.user
+      command "psql --command \"ALTER USER postgres WITH PASSWORD '#{node.postgresql[:postgres_password]}';\""
+      not_if "psql postgres --command \"select passwd from pg_shadow where usename = 'postgres';\" | grep #{Digest::MD5.hexdigest(node.postgresql[:postgres_password] + 'postgres')}"
+    end
+
+  end
+
 end
 
 if node.postgresql.version.to_f >= 9.3
