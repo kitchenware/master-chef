@@ -1,9 +1,30 @@
 
 package "lvm2"
+package "parted"
 
 if node[:lvm][:fs_packages]
   node[:lvm][:fs_packages].each do |x|
     package x
+  end
+end
+
+if node[:lvm][:partitions]
+  node[:lvm][:partitions].each do |name, config|
+    partition name do
+      fs_type config[:fs_type]
+    end
+  end
+end
+
+if node[:lvm][:raid]
+
+  package "mdadm"
+
+  node[:lvm][:raid].each do |name, config|
+    raid name do
+      disks config[:disks]
+      level config[:level]
+    end
   end
 end
 
