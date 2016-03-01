@@ -12,7 +12,7 @@ nodejs_app "statsd" do
   user node.graphite.statsd.user
   script "stats.js"
   directory node.graphite.statsd.directory
-  file_check ["#{node.graphite.statsd.directory}/current/.node_version"]
+  file_check ["#{node.graphite.statsd.directory}/current/.nvmrc"]
   opts "/etc/statsd.conf"
   add_log_param false
 end
@@ -32,10 +32,10 @@ git_clone "#{node.graphite.statsd.directory}/current" do
   notifies :restart, "service[statsd]"
 end
 
-file "#{node.graphite.statsd.directory}/current/.node_version" do
+file "#{node.graphite.statsd.directory}/current/.nvmrc" do
   owner node.graphite.statsd.user
   mode '0644'
-  content node.graphite.statsd.node_version
+  content node.graphite.statsd.nvmrc
   notifies :restart, "service[statsd]"
 end
 
@@ -43,7 +43,7 @@ execute_version "nodejs version statsd" do
   user node.graphite.statsd.user
   command "cd #{node.graphite.statsd.directory}/current && echo $HOME && $HOME/.warp/client/node/install_node.sh"
   environment get_proxy_environment #("HOME" => get_home(node.graphite.statsd.user))
-  version node.graphite.statsd.node_version
+  version node.graphite.statsd.nvmrc
   file_storage "#{node.graphite.statsd.directory}/.statsd"
   notifies :restart, "service[statsd]"
 end
