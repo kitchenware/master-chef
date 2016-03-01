@@ -35,7 +35,7 @@ end
 file "#{node.graphite.statsd.directory}/current/.nvmrc" do
   owner node.graphite.statsd.user
   mode '0644'
-  content node.graphite.statsd.nvmrc
+  content node.graphite.statsd.node_version
   notifies :restart, "service[statsd]"
 end
 
