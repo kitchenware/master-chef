@@ -2,6 +2,7 @@
 define :raid, {
   :disks => nil,
   :level => nil,
+  :clean_superblocks => nil,
 } do
 
   raise "Please specify disks" unless params[:disks]
@@ -14,10 +15,16 @@ define :raid, {
         not_if "parted #{root} print | grep raid | awk '{print $1}' | grep #{k}"
       end
     end
+    if params[:clean_superblocks]
+      execute "clean superblocks on #{x}" do
+        command "mdadm --zero-superblock #{x}"
+        not_if "[ -e #{params[:name]} ]"
+      end
+    end
   end
 
   execute "create raid array #{params[:name]}" do
-    command "mdadm --create #{params[:name]} --continue --level=#{params[:level] || '1'} --raid-devices=#{params[:disks].size} --metadata=0.90 #{params[:disks].join(' ')}"
+    command "mdadm --create #{params[:name]} --level=#{params[:level] || '1'} --raid-devices=#{params[:disks].size} --metadata=0.90 #{params[:disks].join(' ')}"
     not_if "[ -e #{params[:name]} ]"
   end
 
