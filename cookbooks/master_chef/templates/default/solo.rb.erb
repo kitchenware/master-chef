@@ -5,6 +5,8 @@ puts "Using config file #{config_file}"
 raise "Please specify config file with env var MASTER_CHEF_CONFIG" unless config_file
 raise "File not found #{config_file}" unless File.exists? config_file
 
+raise "Unable to execute shell command, common root cause: unable to allocate enough memory" unless system("echo -n")
+
 require 'tempfile'
 
 config = JSON.load(File.read(config_file))
