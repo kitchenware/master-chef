@@ -1,2 +1,2 @@
 
-package "postgresql-#{node.postgresql.version}"
+package "postgresql-client-#{node.postgresql.version}"
