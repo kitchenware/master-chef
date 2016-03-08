@@ -31,7 +31,7 @@ template "/etc/postgresql/#{node.postgresql.version}/main/pg_hba.conf" do
   variables node.postgresql
   mode '0640'
   owner node.postgresql.user
-  notifies :restart, "service[#{node.postgresql.service_name}]", :immediately
+  notifies :reload, "service[#{node.postgresql.service_name}]", :immediately
 end
 
 unless node.postgresql[:no_sql]
