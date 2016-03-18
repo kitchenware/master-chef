@@ -17,6 +17,7 @@ if node.timezone =~ /^([^\/]+)\/([^\/]+)$/
     service "rsyslog" do
       supports :restart => true
       action :nothing
+      provider Chef::Provider::Service::Upstart if node.lsb.codename == "trusty"
     end
   end
 
