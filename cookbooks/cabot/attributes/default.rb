@@ -33,7 +33,7 @@ default[:cabot][:extra_config] = {
 default[:cabot][:plugins] = {
   'cabot_alert_hipchat' => '1.6.1',
   'cabot_alert_email' => 'git+https://git@github.com/doctolib/cabot-alert-email.git@22f28d9f290e5e161716cc6691f412330a566a19#egg=cabot_alert_email-1.3.166',
-  'cabot_alert_twilio' => '1.1.4',
+  'cabot_alert_twilio' => 'git+https://git@github.com/doctolib/cabot-alert-twilio.git@d59b006f06f0641bf686b6282ecbd2113d110682#egg=cabot_alert_twilio-1.1.4',
 }
 
 default[:cabot][:nginx][:cabot] = {
