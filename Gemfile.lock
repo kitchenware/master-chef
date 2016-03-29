@@ -17,8 +17,11 @@ GEM
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
     polyglot (0.3.5)
+    power_assert (0.2.2)
     rake (10.1.0)
     rufus-lru (1.0.5)
+    test-unit (3.0.8)
+      power_assert
     treetop (1.6.5)
       polyglot (~> 0.3)
     yajl-ruby (1.2.1)
@@ -29,6 +32,7 @@ PLATFORMS
 DEPENDENCIES
   foodcritic
   rake
+  test-unit
 
 BUNDLED WITH
    1.11.2
