@@ -1,9 +1,9 @@
 
 include_recipe "postgresql"
 
-package "postgresql"
+package "postgresql-#{node.postgresql.version}"
 
-package "postgresql-contrib" if node.postgresql.contrib
+package "postgresql-contrib-#{node.postgresql.version}" if node.postgresql.contrib
 
 if node.postgresql.version == node.default[:postgresql][:version]
   node.set[:postgresql][:version] = '8.4' if node.lsb.codename == "lucid" || node.lsb.codename == "squeeze"
@@ -31,32 +31,45 @@ template "/etc/postgresql/#{node.postgresql.version}/main/pg_hba.conf" do
   variables node.postgresql
   mode '0640'
   owner node.postgresql.user
-  notifies :restart, "service[#{node.postgresql.service_name}]", :immediately
+  notifies :reload, "service[#{node.postgresql.service_name}]", :immediately
 end
 
-root_postgresql_password = node.postgresql[:root_password]
+unless node.postgresql[:no_sql]
+  root_postgresql_password = node.postgresql[:root_password]
 
-if root_postgresql_password
-  local_storage_write("postgresql_password:root", root_postgresql_password)
-else
-  root_postgresql_password = local_storage_read("postgresql_password:root") do
-    password = PasswordGenerator.generate 32
-    Chef::Log.info "Postgresql : new root password generated"
-    password
+  if root_postgresql_password
+    local_storage_write("postgresql_password:root", root_postgresql_password)
+  else
+    root_postgresql_password = local_storage_read("postgresql_password:root") do
+      password = PasswordGenerator.generate 32
+      Chef::Log.info "Postgresql : new root password generated"
+      password
+    end
   end
-end
 
-file "/root/.pgpass" do
-  content <<-EOF
+  file "/root/.pgpass" do
+    content <<-EOF
 *:5432:*:#{node.postgresql.root_account}:#{root_postgresql_password}
 EOF
-  mode '0400'
-end
+    mode '0400'
+  end
 
-execute "change postgresql root password" do
-  user node.postgresql.user
-  command "psql --command \"CREATE USER #{node.postgresql.root_account} WITH CREATEDB NOCREATEUSER NOCREATEROLE PASSWORD '#{root_postgresql_password}';\""
-  not_if "PGPASSWORD=#{root_postgresql_password} psql postgres --username=#{node.postgresql.root_account} --command=\"select 1;\""
+  execute "change postgresql root password" do
+    user node.postgresql.user
+    command "psql --command \"CREATE USER #{node.postgresql.root_account} WITH CREATEDB NOCREATEUSER NOCREATEROLE PASSWORD '#{root_postgresql_password}';\""
+    not_if "PGPASSWORD=#{root_postgresql_password} psql postgres --username=#{node.postgresql.root_account} --command=\"select 1;\""
+  end
+
+  if node.postgresql[:postgres_password]
+
+    execute "change postgresql postgres password" do
+      user node.postgresql.user
+      command "psql --command \"ALTER USER postgres WITH PASSWORD '#{node.postgresql[:postgres_password]}';\""
+      not_if "psql postgres --command \"select passwd from pg_shadow where usename = 'postgres';\" | grep #{Digest::MD5.hexdigest(node.postgresql[:postgres_password] + 'postgres')}"
+    end
+
+  end
+
 end
 
 if node.postgresql.version.to_f >= 9.3
@@ -86,7 +99,7 @@ template "/etc/postgresql/#{node.postgresql.version}/main/conf.d/chef.conf" do
   notifies :restart, "service[#{node.postgresql.service_name}]", :immediately
 end
 
-if node[:postgresql] && node.postgresql[:databases] && !node.postgresql[:no_databases]
+if node[:postgresql] && node.postgresql[:databases] && !node.postgresql[:no_databases] && !node.postgresql[:no_sql]
 
   node.postgresql.databases.keys.each do |k|
 
