@@ -16,6 +16,7 @@ end
 service node.postgresql.service_name do
   supports :status => true, :restart => true
   restart_command node.postgresql[:restart_command] if node.postgresql[:restart_command]
+  provider Chef::Provider::Service::Upstart if node.lsb.codename == "trusty"
   action auto_compute_action
 end
 
