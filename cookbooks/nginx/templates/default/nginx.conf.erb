@@ -1,5 +1,7 @@
 user www-data;
 
+include /etc/nginx/modules.d/*.conf;
+
 worker_processes <%= @worker_processes %>;
 worker_rlimit_nofile <%= @worker_rlimit_nofile %>;
 
