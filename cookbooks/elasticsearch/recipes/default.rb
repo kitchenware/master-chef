@@ -64,17 +64,21 @@ node.elasticsearch.plugins.each do |k, v|
 
   next unless v[:enable]
 
-  command = "(/usr/share/elasticsearch/bin/plugin --remove #{v[:id]} || true) && "
+  command = "(/usr/share/elasticsearch/bin/plugin remove #{k} || true) && "
   command += "/usr/share/elasticsearch/bin/plugin "
+
   if ENV['BACKUP_http_proxy']
     parsed = URI.parse(ENV['BACKUP_http_proxy'])
     command += "-DproxyHost=#{parsed.host} -DproxyPort=#{parsed.port} "
   end
   command += " install #{v[:url] || v[:id]}"
 
+  cond = "[ -d /usr/share/elasticsearch/plugins/#{k} ]"
+  cond += " && cat /usr/share/elasticsearch/plugins/#{k}/plugin-descriptor.properties  | grep ^version | grep #{v[:version]}" if v[:version]
+
   execute "install elasticsearch plugin #{k}" do
     command command
-    not_if "[ -d /usr/share/elasticsearch/plugins/#{k} ]"
+    not_if cond
     notifies :restart, "service[elasticsearch]" if v[:restart]
   end
 
