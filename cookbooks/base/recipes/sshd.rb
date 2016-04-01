@@ -22,10 +22,10 @@ unless node[:no_sshd_config]
   execute "Configure sshd - disallow password" do
     user "root"
     command <<-EOF
-    sed -i 's/^.*PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+    sed -i 's/^.*PasswordAuthentication yes\\s*$/PasswordAuthentication no/' /etc/ssh/sshd_config
     EOF
     notifies :restart, "service[ssh]"
-    only_if "egrep 'PasswordAuthentication yes' /etc/ssh/sshd_config"
+    only_if "egrep 'PasswordAuthentication yes' /etc/ssh/sshd_config | grep -v 'KEEP IT'"
   end
 
   execute "Configure sshd - max startups" do
