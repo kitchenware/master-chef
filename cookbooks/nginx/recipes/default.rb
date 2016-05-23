@@ -59,6 +59,7 @@ Chef::Config.exception_handlers << ServiceErrorHandler.new("nginx", "nginx:.*")
 service "nginx" do
   supports :status => true, :restart => true, :reload => true
   action auto_compute_action
+  provider Chef::Provider::Service::Upstart if node.lsb.codename == "trusty"
 end
 
 if node.nginx[:deploy_default_config]
