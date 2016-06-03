@@ -18,6 +18,7 @@ add_apt_repository "grafana" do
   url "https://packagecloud.io/grafana/stable/debian/"
   key "D59097AB"
   key_url "https://packagecloud.io/gpg.key"
+  distrib "wheezy"
 end
 
 if node.grafana[:grafana_version]
