@@ -97,6 +97,18 @@ EOF
   notifies :restart, "service[collectd]"
 end
 
+incremental_template "#{node.collectd.config_directory}/tail.conf" do
+  mode '0755'
+  header <<-EOF
+LoadPlugin "tail"
+EOF
+  header_if_block "<Plugin \"tail\">"
+  footer_if_block "</Plugin>"
+  indentation 2
+  owner "collectd"
+  notifies :restart, "service[collectd]"
+end
+
 delayed_exec "Remove useless collectd plugin" do
   after_block_notifies :restart, "service[collectd]"
   block do
