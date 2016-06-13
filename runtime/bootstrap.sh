@@ -7,7 +7,7 @@ if [ "$PROXY" != "" ]; then
 fi
 
 if [ "$MASTER_CHEF_URL" = "" ]; then
-  MASTER_CHEF_URL="http://github.com/kitchenware/master-chef.git"
+  MASTER_CHEF_URL="http://github.com/doctolib/master-chef.git"
 fi
 
 if [ "$MASTER_CHEF_DIRECT_ACCESS_URL" = "" ]; then
