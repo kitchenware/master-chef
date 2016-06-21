@@ -13,6 +13,7 @@ define :nodejs_app, {
   :ulimit => nil,
   :nice => nil,
   :no_capistrano_app => false,
+  :reload_command => nil,
 } do
 
   nodejs_app_params = params
@@ -95,6 +96,7 @@ define :nodejs_app, {
     code code
     run_code "unset REDIRECT_OUTPUT"
     check_start nodejs_app_params[:check_start] if nodejs_app_params[:check_start]
+    reload_command nodejs_app_params[:reload_command] if nodejs_app_params[:reload_command]
   end
 
   default_content = "NODE_OPTS=\"#{nodejs_app_params[:opts]}\"\n"
