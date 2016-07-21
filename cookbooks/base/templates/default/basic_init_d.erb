@@ -38,6 +38,12 @@ unset <%= v %>
 
 umask 022
 
+<% unless @pid_file.match('/var/run') %>
+if [ "$UPSTART_JOB" != "" ]; then
+  rm -f $PID_FILE
+fi
+<% fi %>
+
 status_<%= @name %>() {
   if [ -f "$PID_FILE" ]; then
     if [ -d "/proc/$(cat $PID_FILE)" ]; then
