@@ -10,6 +10,7 @@ define :basic_init_d, {
   :directory_check => [],
   :vars_to_unset => [],
   :auto_start => true,
+  :reload_command => nil,
   :working_directory => nil,
   :log_file => nil,
   :pid_directory => "/var/run",
@@ -73,9 +74,21 @@ define :basic_init_d, {
 
   if basic_init_d_params[:auto_start]
 
-    service basic_init_d_params[:name] do
-      supports :status => true, :restart => true
-      action auto_compute_action
+    if basic_init_d_params[:reload_command]
+
+      service basic_init_d_params[:name] do
+        supports :status => true, :restart => true, :reload => true
+        reload_command basic_init_d_params[:name]
+        action auto_compute_action
+      end
+
+    else
+
+      service basic_init_d_params[:name] do
+        supports :status => true, :restart => true
+        action auto_compute_action
+      end
+
     end
 
   end
