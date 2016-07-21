@@ -46,7 +46,7 @@ if [ -f "$PID_FILE" ]; then
     rm -f $PID_FILE
   fi
 fi
-<% fi %>
+<% end %>
 
 status_<%= @name %>() {
   if [ -f "$PID_FILE" ]; then
