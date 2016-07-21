@@ -53,6 +53,9 @@ stop_<%= @name %>() {
   if [ ! "$PID_FILE" = "" ]; then
     if [ -f $PID_FILE ]; then
       $START_STOP_DAEMON --oknodo --retry TERM/<%= @check_stop[:term_time].call() %>/KILL/<%= @check_stop[:kill_time].call() %> --pidfile $PID_FILE --signal TERM --stop
+      <% unless @pid_file.match('/var/run') %>
+      rm -f $PID_FILE
+      <% end %>
     fi
   fi
 }
