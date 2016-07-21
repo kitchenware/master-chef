@@ -39,8 +39,12 @@ unset <%= v %>
 umask 022
 
 <% unless @pid_file.match('/var/run') %>
-if [ "$UPSTART_JOB" != "" ]; then
-  rm -f $PID_FILE
+if [ -f "$PID_FILE" ]; then
+  boot_time=$(date -d "$(uptime -s)" '+%s')
+  current_pid_file_time=$(stat $PID_FILE -c '%Y')
+  if [ $boot_time -ge $current_pid_file_time ]; then
+    rm -f $PID_FILE
+  fi
 fi
 <% fi %>
 
