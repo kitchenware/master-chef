@@ -40,7 +40,7 @@ umask 022
 
 <% unless @pid_file.match('/var/run') %>
 if [ -f "$PID_FILE" ]; then
-  boot_time=$(date -d "$(uptime -s)" '+%s')
+  boot_time=$(($(date '+%s') - $(cat /proc/uptime | awk '{print $1}' | awk -F. '{print $1}')))
   current_pid_file_time=$(stat $PID_FILE -c '%Y')
   if [ $boot_time -ge $current_pid_file_time ]; then
     rm -f $PID_FILE
