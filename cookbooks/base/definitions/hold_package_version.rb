@@ -5,7 +5,7 @@ define :hold_package_version, {
 
   execute "hold #{hold_package_version_params[:name]} version" do
     command "echo #{hold_package_version_params[:name]} hold | dpkg --set-selections"
-    not_if "dpkg --get-selections | grep #{hold_package_version_params[:name]} | grep -q hold"
+    not_if "dpkg --get-selections | grep '#{hold_package_version_params[:name]}\\s' | grep -q hold"
   end
 
 end
