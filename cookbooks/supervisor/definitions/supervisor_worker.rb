@@ -34,13 +34,13 @@ define :supervisor_worker, {
       :stopwaitsecs => supervisor_worker_params[:stopwaitsecs],
       :log_dir => node.supervisor.log_dir,
       :env => supervisor_worker_params[:env],
-      })
+    })
     notifies :run, "execute[reload supervisor]"
   end
 
   sudo_sudoers_file "supervisor_#{supervisor_worker_params[:name]}" do
     content <<-EOF
-#{supervisor_worker_params[:user]} ALL = (root) NOPASSWD: /usr/bin/supervisorctl restart #{supervisor_worker_params[:name]}*
+#{supervisor_worker_params[:sudo_user] || supervisor_worker_params[:user]} ALL = (root) NOPASSWD: /usr/bin/supervisorctl restart #{supervisor_worker_params[:name]}*
 EOF
   end
 
