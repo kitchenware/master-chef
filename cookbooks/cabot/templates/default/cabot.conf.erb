@@ -1,21 +1,57 @@
 
+  <% if @google_auth_proxy_port %>
+  upstream google_auth_proxy_upstream {
+    server 127.0.0.1:<%= @google_auth_proxy_port %> fail_timeout=0;
+  }
+  <% end %>
+
+  upstream cabot_upstream {
+    server 127.0.0.1:<%= @cabot_port %> fail_timeout=0;
+  }
 
 server {
   server_tokens off;
 
   <%= @listen %>
 
-  location / {
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header Host $http_host;
-    proxy_redirect off;
-    proxy_pass http://localhost:<%= @cabot_port %>/;
-   }
+  set $my_protocol http;
+  if ($http_x_forwarded_proto = "https") {
+    set $my_protocol https;
+  }
+
+  set $upstream <%= @google_auth_proxy_port ? "google_auth_proxy_upstream" : "cabot_upstream" %>;
+
+
+  <% if @google_auth_proxy_port %>
+
+    location /oauth2 {
+      proxy_pass http://google_auth_proxy_upstream;
+    }
+    <% if @token %>
+    if ($http_x_auth_token = "<%= @token %>") {
+      set $upstream cabot_upstream;
+    }
+    <% end %>
+  <% else %>
+    location /ping {
+      return 200;
+    }
+  <% end %>
 
   location /static/ {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
     root <%= @path %>;
   }
+
+  location / {
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header Authorization "";
+    proxy_pass http://$upstream;
+    proxy_redirect http://$upstream $my_protocol://$http_host;
+    break;
+   }
+
 }
