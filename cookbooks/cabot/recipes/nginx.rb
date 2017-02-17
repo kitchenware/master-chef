@@ -8,8 +8,10 @@ conf = {
   :cabot_port => node.cabot.nginx.cabot.cabot_port
 }
 
-conf[:google_auth_proxy_port] = node.cabot.google_auth_proxy_port
-conf[:token] = node.cabot.x_auth_token
+if node.cabot.google_auth_proxy_port
+  conf[:google_auth_proxy_port] = node.cabot.google_auth_proxy_port
+  conf[:token] = node.cabot.x_auth_token
+end
 
 nginx_vhost "cabot:nginx:cabot" do
   options conf
