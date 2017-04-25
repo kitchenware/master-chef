@@ -113,6 +113,6 @@ gateway.expected_nodes: 1
 discovery.zen.ping.unicast.hosts: [<%= @config['peers'].map{|x| "\"#{x}\""}.join(", ") %>]
 <% end %>
 
-script.inline: <%= @config['allow_dynamic_scripts'] ? 'on' : 'off' %>
+script.inline: <%= @config['allow_dynamic_scripts'] ? 'true' : 'false' %>
 
 <%= @optional_config %>
