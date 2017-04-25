@@ -98,7 +98,11 @@
 cluster.name: <%= @config['cluster_name'] %>
 node.name: "<%= @config['node_name'] || node.hostname %>"
 path.data: <%= @config['directory_data'] %>
+<% if !@config.key?('branch') || @config['branch'] == '2.x' %>
 bootstrap.mlockall: <%= @config['mlockall'] ? 'true' : 'false' %>
+<% else %>
+bootstrap.memory_lock: <%= @config['mlockall'] ? 'true' : 'false' %>
+<% end %>
 network.host: <%= @config['host'] %>
 transport.tcp.port: <%= @config['tcp_port'] %>
 http.port: <%= @config['http_port'] %>
