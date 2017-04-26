@@ -61,7 +61,7 @@ template "/etc/default/elasticsearch" do
 end
 
 node.elasticsearch.plugins.each do |k, v|
-
+  break if node[:elasticsearch].key?(:branch) && node[:elasticsearch][:branch] != '2.x'
   next unless v[:enable]
 
   command = "(/usr/share/elasticsearch/bin/plugin remove #{k} || true) && "
