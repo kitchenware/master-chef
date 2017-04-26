@@ -101,7 +101,7 @@ path.data: <%= @config['directory_data'] %>
 <% if !@config.key?('branch') || @config['branch'] == '2.x' %>
 bootstrap.mlockall: <%= @config['mlockall'] ? 'true' : 'false' %>
 <% else %>
-bootstrap.memory_lock: <%= @config['mlockall'] ? 'true' : 'false' %>
+bootstrap.memory_lock: <%= @config['mlockall'] ? @config['mlockall'] : 'false' %>
 <% end %>
 network.host: <%= @config['host'] %>
 transport.tcp.port: <%= @config['tcp_port'] %>
