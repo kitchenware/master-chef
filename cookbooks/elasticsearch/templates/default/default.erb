@@ -84,4 +84,3 @@ ES_JAVA_OPTS="<%= @config['java_opts'] %>"
 <% else %>
 ES_JAVA_OPTS="<% if @config['heap_size'] %>-Xms<%=@config['heap_size'] %> -Xmx<%= @config['heap_size'] %><% end %> <%= @config['java_opts'] %>"
 <% end %>
-<% end %>
