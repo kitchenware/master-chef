@@ -10,7 +10,7 @@ define :collectd_plugin, {
     cookbook "collectd"
     source "plugin.conf.erb"
     owner "collectd"
-    mode '0755'
+    mode '0644'
     variables({
     	:plugin_name => collectd_plugin_params[:plugin_name] || collectd_plugin_params[:name],
     	:config => collectd_plugin_params[:config],
