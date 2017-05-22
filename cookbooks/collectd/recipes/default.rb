@@ -54,7 +54,7 @@ node.collectd.plugins.each do |name, config|
 end
 
 incremental_template "#{node.collectd.config_directory}/python.conf" do
-  mode '0755'
+  mode '0644'
   header <<-EOF
 <LoadPlugin "python">
   Globals true
@@ -68,7 +68,7 @@ EOF
 end
 
 incremental_template "#{node.collectd.config_directory}/perl.conf" do
-  mode '0755'
+  mode '0644'
   header <<-EOF
 <LoadPlugin "perl">
   Globals true
@@ -86,7 +86,7 @@ EOF
 end
 
 incremental_template "#{node.collectd.config_directory}/exec.conf" do
-  mode '0755'
+  mode '0644'
   header <<-EOF
 LoadPlugin "exec"
 EOF
@@ -98,7 +98,7 @@ EOF
 end
 
 incremental_template "#{node.collectd.config_directory}/tail.conf" do
-  mode '0755'
+  mode '0644'
   header <<-EOF
 LoadPlugin "tail"
 EOF
