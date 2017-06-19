@@ -46,14 +46,16 @@ node[:lvm][:logical_volumes].each do |name, lv|
   end
 end
 
-node[:lvm][:lvm_cache].each do |name, lv|
-  lvm_cache name do
-    volume_group lv[:volume_group]
-    lv_meta lv[:lv_meta]
-    lv_cache lv[:lv_cache]
-    fast_disk lv[:fast_disk]
-    slow_disk lv[:slow_disk]
-    size lv[:size]
+if node[:lvm][:lvm_cache].is_a? Array
+  node[:lvm][:lvm_cache].each do |name, lv|
+    lvm_cache name do
+      volume_group lv[:volume_group]
+      lv_meta lv[:lv_meta]
+      lv_cache lv[:lv_cache]
+      fast_disk lv[:fast_disk]
+      slow_disk lv[:slow_disk]
+      size lv[:size]
+    end
   end
 end
 
