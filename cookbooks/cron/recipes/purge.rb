@@ -1,6 +1,5 @@
 
 delayed_exec "Remove useless cron" do
-  after_block_notifies :reload, resources(:service => "cron")
   block do
     updated = false
     crons = find_resources_by_name_pattern(/^\/etc\/cron.d\/.*$/).map{|r| r.name}
