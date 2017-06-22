@@ -84,6 +84,7 @@ define :nginx_vhost, {
       :listen_no_auth => nginx_listen,
       :config => config,
       :server_tokens => 'Off',
+      :vhost_sym => vhost_sym,
     }.merge(nginx_vhost_params[:options]).merge(config[:options] || {}))
     notifies :reload, "service[nginx]"
   end
