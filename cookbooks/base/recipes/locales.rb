@@ -27,6 +27,8 @@ if node.locales.configure
       end
     end
 
+    directory "/var/lib/locales/supported.d"
+
     link "/var/lib/locales/supported.d/link" do
       to "/etc/locale.gen"
     end
