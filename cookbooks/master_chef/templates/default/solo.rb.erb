@@ -77,7 +77,7 @@ if config["repos"]["git"]
         exec_local "cd #{target} && git fetch -q origin && git fetch --tags -q origin"
       else
         verb = "Cloning"
-        command = url.match(/^gcloud\/(.*)/) ? "gcloud source repos clone #{$1}" : "git clone -q #{url}"
+        command = url.match(/^gcloud\/(.*)/) ? "umask 0077 && gcloud source repos clone #{$1}" : "git clone -q #{url}"
         exec_local "cd #{git_cache_directory} && #{command} #{name} && cd #{target} && git checkout -q -b deploy"
       end
     end
