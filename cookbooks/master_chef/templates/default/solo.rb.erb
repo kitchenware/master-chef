@@ -67,6 +67,7 @@ if config["repos"]["git"]
   config["repos"]["git"].each do |url|
     name = File.basename(url).gsub(/:/, '_')
     name = "#{$1}_#{name}" if url.match(/^(https?)/)
+    name = "gcloud_#{$1}" if url.match(/^cloud\/(.*)/)
     target = File.join(git_cache_directory, name)
     if ENV["NO_UPDATE"]
       verb = "Using local"
@@ -76,7 +77,8 @@ if config["repos"]["git"]
         exec_local "cd #{target} && git fetch -q origin && git fetch --tags -q origin"
       else
         verb = "Cloning"
-        exec_local "cd #{git_cache_directory} && git clone -q #{url} #{name} && cd #{target} && git checkout -q -b deploy"
+        command = url.match(/^gcloud\/(.*)/) ? "gcloud source repos clone #{$1}" : "git clone -q #{url}"
+        exec_local "cd #{git_cache_directory} && #{command} #{name} && cd #{target} && git checkout -q -b deploy"
       end
     end
     branch_target = git_tag_override[url] || "master"
