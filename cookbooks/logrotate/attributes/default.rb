@@ -7,6 +7,7 @@ default[:logrotate][:default_config] = {
 	:user => 'root',
 	:group => 'root',
 	:mode => '644',
+  :delaycompress => 'yes'
 }
 
 default[:logrotate][:disable_conf_purge] = false

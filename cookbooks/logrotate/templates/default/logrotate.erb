@@ -3,7 +3,9 @@
 	missingok
 	rotate <%= @rotate %>
 	compress
+	<% if @delaycompress == 'yes' %>
 	delaycompress
+	<% end %>
 	notifempty
 	<% if @copytruncate %>
 	copytruncate
