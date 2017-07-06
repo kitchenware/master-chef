@@ -52,7 +52,7 @@ if config["repos"]["git"]
 <% else %>
   git_cache_directory = ENV["GIT_CACHE_DIRECTORY"] || "<%= @cache_directory %>/git_repos"
 <% end %>
-  exec_local "mkdir -p #{git_cache_directory} && chmod -R go-rwx #{git_cache_directory}"
+  exec_local "mkdir -p #{git_cache_directory}"
 
   git_tag_override_file = config_file + ".git_tag_override"
   if ENV["GIT_TAG_OVERRIDE"]
@@ -77,7 +77,7 @@ if config["repos"]["git"]
         exec_local "cd #{target} && git fetch -q origin && git fetch --tags -q origin"
       else
         verb = "Cloning"
-        command = url.match(/^gcloud\/(.*)/) ? "umask 0077 && gcloud source repos clone #{$1}" : "git clone -q #{url}"
+        command = url.match(/^gcloud\/(.*)/) ? "gcloud source repos clone #{$1}" : "git clone -q #{url}"
         exec_local "cd #{git_cache_directory} && #{command} #{name} && cd #{target} && git checkout -q -b deploy"
       end
     end
@@ -100,6 +100,7 @@ if config["repos"]["git"]
     ohai_plugin = File.join(target, "ohai_plugins")
     ohai_plugins << ohai_plugin if File.exists? ohai_plugin
   end
+  exec_local "chmod -R go-rwx #{git_cache_directory}"
 end
 
 if config["repos"]["local_path"]
