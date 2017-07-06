@@ -67,7 +67,7 @@ if config["repos"]["git"]
   config["repos"]["git"].each do |url|
     name = File.basename(url).gsub(/:/, '_')
     name = "#{$1}_#{name}" if url.match(/^(https?)/)
-    name = "gcloud_#{$1}" if url.match(/^cloud\/(.*)/)
+    name = "gcloud_#{$1}" if url.match(/^gcloud\/(.*)/)
     target = File.join(git_cache_directory, name)
     if ENV["NO_UPDATE"]
       verb = "Using local"
