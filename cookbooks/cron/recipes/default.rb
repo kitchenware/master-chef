@@ -3,7 +3,7 @@ package "cron"
 
 service "cron" do
   supports :status => true, :restart => true, :reload => true
-  action [ :enable, :start ]
+  action node.cron.service_action
 end
 
 if node.cron.auto_purge
