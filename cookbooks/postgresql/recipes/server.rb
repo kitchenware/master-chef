@@ -22,6 +22,7 @@ end
 Chef::Config.exception_handlers << ServiceErrorHandler.new(node.postgresql.service_name, ".*postgresql.*")
 
 directory "/etc/postgresql/#{node.postgresql.version}/main/conf.d" do
+  recursive true
   owner node.postgresql.user
   group node.postgresql.user
 end
@@ -56,7 +57,7 @@ EOF
 
   execute "change postgresql root password" do
     user node.postgresql.user
-    command "psql --command \"CREATE USER #{node.postgresql.root_account} WITH CREATEDB NOCREATEUSER NOCREATEROLE PASSWORD '#{root_postgresql_password}';\""
+    command "psql --command \"CREATE USER #{node.postgresql.root_account} WITH CREATEDB PASSWORD '#{root_postgresql_password}';\""
     not_if "PGPASSWORD=#{root_postgresql_password} psql postgres --username=#{node.postgresql.root_account} --command=\"select 1;\""
   end
 
