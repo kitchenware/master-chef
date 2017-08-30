@@ -17,6 +17,7 @@ define :unicorn_app, {
   :reload_files => [],
   :reload_cmd => nil,
   :delay_before_kill_old => 5,
+  logrotate_options: {}
 } do
 
   unicorn_app_params = params
@@ -139,7 +140,7 @@ define :unicorn_app, {
         "#{unicorn_app_params[:app_directory]}/shared/log/unicorn.stdout.log",
         "#{unicorn_app_params[:app_directory]}/shared/log/unicorn.stderr.log",
       ]
-      variables :user => "deploy", :copytruncate => true
+      variables unicorn_app_params[:logrotate_options].merge(:user => "deploy", :copytruncate => true)
     end
 
   end
