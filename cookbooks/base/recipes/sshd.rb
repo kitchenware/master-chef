@@ -118,4 +118,18 @@ hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com' >> /etc/ssh/sshd_config
 hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com' /etc/ssh/sshd_config"
   end
 
+  execute "Configure sshd - HostKey rsa" do
+    user "root"
+    command "sed '/.*ssh_host_rsa_key/d' -i /etc/ssh/sshd_config"
+    notifies :restart, "service[ssh]"
+    not_if "! grep 'HostKey /etc/ssh/ssh_host_rsa_key' /etc/ssh/sshd_config"
+  end
+
+  execute "Configure sshd - HostKey dsa" do
+    user "root"
+    command "sed '/.*ssh_host_dsa_key/d' -i /etc/ssh/sshd_config"
+    notifies :restart, "service[ssh]"
+    not_if "! grep 'HostKey /etc/ssh/ssh_host_dsa_key' /etc/ssh/sshd_config"
+  end
+
 end
