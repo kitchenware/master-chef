@@ -11,7 +11,7 @@ end
 if node.lsb.codename == "squeeze"  && node.apt.master_chef_add_apt_repo
 
   add_apt_repository "nginx" do
-    url "http://nginx.org/packages/debian/"
+    url "http://nginx.org/packages/mainline/debian/"
     components ["nginx"]
     key "7BD9BF62"
     key_server "keyserver.ubuntu.com"
