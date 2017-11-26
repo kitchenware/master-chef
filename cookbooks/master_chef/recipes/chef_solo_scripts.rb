@@ -57,3 +57,7 @@ EOF
 end
 
 Chef::Log.info "File for local storage : #{node.local_storage.file}"
+
+if node.lsb.codename == "xenial"
+  hold_package_version "chef"
+end
