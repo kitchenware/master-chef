@@ -6,7 +6,7 @@ package "supervisor"
 
 if node.supervisor.service_name != "supervisor" && (node.platform == "debian" || node.platform == "ubuntu")
 
-  if File.exist? "/etc/init.d/supervisor"
+  if File.exist?("/etc/init.d/supervisor") or File.exist?("/etc/systemd/system/multi-user.target.wants/supervisor.service")
 
     service "supervisor" do
       action [:disable, :stop]
