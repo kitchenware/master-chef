@@ -124,3 +124,14 @@ delayed_exec "Remove useless collectd plugin" do
     updated
   end
 end
+
+if node.lsb.codename == "xenial"
+
+  package "libpython2.7"
+
+  execute "use LSB for collectd" do
+    command "/etc/init.d/collectd stop && rm /lib/systemd/system/collectd.service && systemctl daemon-reload && /etc/init.d/collectd start"
+    only_if "[ -f /lib/systemd/system/collectd.service ]"
+  end
+
+end
