@@ -129,7 +129,7 @@ if node.lsb.codename == "xenial"
 
   package "libpython2.7"
 
-  execute "use LSB for collectd" do
+  execute "use LSB for collectd" do # ~FC004
     command "/etc/init.d/collectd stop && rm /lib/systemd/system/collectd.service && systemctl daemon-reload && /etc/init.d/collectd start"
     only_if "[ -f /lib/systemd/system/collectd.service ]"
   end
