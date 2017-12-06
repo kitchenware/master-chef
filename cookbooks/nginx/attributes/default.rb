@@ -36,6 +36,7 @@ default[:nginx][:config] = {
   :log_formats => {
     :main => "'$remote_addr - $host - [$time_local] ' '\"$request\" $status $body_bytes_sent $request_time \"$http_referer\" ' '\"$http_user_agent\"'"
   },
+  :proxy_http_version => '1.1',
 }
 
 default[:nginx][:package_name] = "nginx"
