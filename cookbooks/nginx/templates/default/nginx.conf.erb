@@ -20,6 +20,8 @@ http {
   tcp_nopush on;
   tcp_nodelay on;
 
+  proxy_http_version <%= node.nginx[:config][:proxy_http_version] %>;
+
 <% if node.nginx[:config][:proxy_buffer_size] %>
   proxy_buffer_size <%= node.nginx[:config][:proxy_buffer_size] %>;
 <% end %>
