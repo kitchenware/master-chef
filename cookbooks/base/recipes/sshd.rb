@@ -82,4 +82,54 @@ unless node[:no_sshd_config]
     not_if "egrep 'GatewayPorts #{gateway_ports_value}' /etc/ssh/sshd_config"
   end
 
+  execute "Configure sshd - KexAlgorithms" do
+    user "root"
+    command <<-EOF
+    sed '/KexAlgorithms*/d' -i /etc/ssh/sshd_config
+    echo 'KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,\
+diffie-hellman-group-exchange-sha256' >> /etc/ssh/sshd_config
+    EOF
+    notifies :restart, "service[ssh]"
+    not_if "grep 'KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,\
+diffie-hellman-group-exchange-sha256' /etc/ssh/sshd_config"
+  end
+
+  execute "Configure sshd - Ciphers" do
+    user "root"
+    command <<-EOF
+    sed '/Ciphers*/d' -i /etc/ssh/sshd_config
+    echo 'Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,\
+aes192-ctr,aes128-ctr' >> /etc/ssh/sshd_config
+    EOF
+    notifies :restart, "service[ssh]"
+    not_if "grep 'Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,\
+aes192-ctr,aes128-ctr' /etc/ssh/sshd_config"
+  end
+
+  execute "Configure sshd - MACs" do
+    user "root"
+    command <<-EOF
+    sed '/MACs*/d' -i /etc/ssh/sshd_config
+    echo 'MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,\
+hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com' >> /etc/ssh/sshd_config
+    EOF
+    notifies :restart, "service[ssh]"
+    not_if "grep 'MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,\
+hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com' /etc/ssh/sshd_config"
+  end
+
+  execute "Configure sshd - HostKey rsa" do
+    user "root"
+    command "sed '/.*ssh_host_rsa_key/d' -i /etc/ssh/sshd_config"
+    notifies :restart, "service[ssh]"
+    not_if "! grep 'HostKey /etc/ssh/ssh_host_rsa_key' /etc/ssh/sshd_config"
+  end
+
+  execute "Configure sshd - HostKey dsa" do
+    user "root"
+    command "sed '/.*ssh_host_dsa_key/d' -i /etc/ssh/sshd_config"
+    notifies :restart, "service[ssh]"
+    not_if "! grep 'HostKey /etc/ssh/ssh_host_dsa_key' /etc/ssh/sshd_config"
+  end
+
 end
