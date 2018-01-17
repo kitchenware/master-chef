@@ -6,6 +6,9 @@ environment = <%= @env.map{|k, v| "#{k}=\"#{v}\""}.join(',') %>
 stopsignal = <%= @stopsignal %>
 stopwaitsecs = <%= @stopwaitsecs %>
 <% end %>
+<% if @exitcodes %>
+exitcodes = <%= @exitcodes %>
+<% end %>
 numprocs = <%= @numprocs %>
 autostart = <%= @autostart %>
 autorestart = <%= @autorestart %>
