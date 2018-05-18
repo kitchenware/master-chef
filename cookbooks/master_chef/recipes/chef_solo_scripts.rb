@@ -43,9 +43,15 @@ template "#{install_path}/etc/solo.rb" do
     :cache_directory => "#{install_path}/var",
     :var_chef => "/opt/chef/var",
     :logging => node.master_chef.chef_solo_scripts.logging,
+    :http_proxy => "\"http://#{node.proxyweb.host}\"",
+    :https_proxy => "\"http://#{node.proxyweb.host}\"",
     :no_git_cache => node.master_chef.chef_solo_scripts.no_git_cache,
     :no_git_dir => no_git_dir
   })
+end
+
+if node.proxyweb.host
+  Chef::Log.info "HTTP(s) proxy used for external connections: #{node.proxyweb.host}"
 end
 
 if node.master_chef.chef_solo_scripts.no_git_cache

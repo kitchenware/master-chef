@@ -147,6 +147,11 @@ role_path roles
 ssl_verify_mode :verify_peer
 verify_api_cert true
 
+<% if node.proxyweb.host %>
+http_proxy <%= @http_proxy %>
+https_proxy <%= @https_proxy %>
+<% end %>
+
 var_chef = ENV["VAR_CHEF"] || "<%= @var_chef %>"
 file_cache_path "#{var_chef}/cache"
 file_backup_path "#{var_chef}/backup"
