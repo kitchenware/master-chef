@@ -150,6 +150,7 @@ verify_api_cert true
 <% unless node.proxyweb.host.empty? %>
 http_proxy <%= @http_proxy %>
 https_proxy <%= @https_proxy %>
+no_proxy ".doctolib"
 <% end %>
 
 var_chef = ENV["VAR_CHEF"] || "<%= @var_chef %>"
