@@ -52,6 +52,13 @@ end
 
 if node.proxyweb.host
   Chef::Log.info "HTTP(s) proxy used for external connections: #{node.proxyweb.host}"
+
+  file '/opt/master-chef/etc/http_proxy' do
+    owner 'root'
+    group 'root'
+    mode '0644'
+    content "http://#{node.proxyweb.host}:3128"
+  end
 end
 
 if node.master_chef.chef_solo_scripts.no_git_cache
