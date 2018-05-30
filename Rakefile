@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rake/testtask'
 require "bundler/setup"
+require 'enumerator'
 
 task :foodcritic do
   # Delete tags FC001, FC011, FC014, FC015, FC019, FC023, FC041

@@ -3,7 +3,10 @@
 
 <% extended_hosts = node[:extended_hosts] || {} %>
 <% extended_hosts.keys.sort.each do |k| %>
-<%= k %> <%= extended_hosts[k] %>
+<% extended_entries = extended_hosts[k].split %>
+<% extended_entries.each_slice(10) do |extended_entry| %>
+<%= k %> <%= "#{extended_entry.join(" ")} " %>
+<% end %>
 <% end %>
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
