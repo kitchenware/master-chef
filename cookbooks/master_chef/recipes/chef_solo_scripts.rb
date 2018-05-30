@@ -57,7 +57,7 @@ if node.proxyweb.host
     owner 'root'
     group 'root'
     mode '0644'
-    content "http://#{node.proxyweb.host}:3128"
+    content "http://#{node.proxyweb.host}"
   end
 end
 
