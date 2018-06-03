@@ -9,13 +9,19 @@ define :add_apt_key, {
 
   unless node.apt_keys.include? add_apt_key_params[:name]
 
+    id = add_apt_key_params[:name]
+    if node.platform == "ubuntu" && node.lsb.codename == "bionic"
+      id = "'#{$1} #{$2}'" if id =~ /^.*\/(....)(....)$/
+      id = "'#{$1} #{$2}'" if id =~ /^(....)(....)$/
+    end
+
     if add_apt_key_params[:key_server]
       params = ""
       params += "--keyserver-options http-proxy=#{ENV['BACKUP_http_proxy']}" if ENV['BACKUP_http_proxy']
 
       execute "add apt key #{add_apt_key_params[:name]}" do
         command "apt-key adv #{params} --keyserver #{add_apt_key_params[:key_server]} --recv-keys #{add_apt_key_params[:name]}"
-        not_if "apt-key list | grep #{add_apt_key_params[:name]}"
+        not_if "apt-key list | grep #{id}"
       end
     end
 
@@ -23,7 +29,7 @@ define :add_apt_key, {
       execute "add apt key #{add_apt_key_params[:name]} from #{add_apt_key_params[:key_url]}" do
         command "curl #{add_apt_key_params[:key_url]} | apt-key add -"
         environment get_proxy_environment
-        not_if "apt-key list | grep #{add_apt_key_params[:name]}"
+        not_if "apt-key list | grep #{id}"
       end
     end
 
