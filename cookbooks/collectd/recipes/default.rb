@@ -125,7 +125,7 @@ delayed_exec "Remove useless collectd plugin" do
   end
 end
 
-if node.lsb.codename == "xenial"
+if node.platform == "ubuntu" && node.lsb.codename != "trusty"
 
   package "libpython2.7"
 

@@ -11,7 +11,7 @@ if node.locales.configure
     action :nothing
   end
 
-  if node.platform == "ubuntu" && node.lsb.codename != "xenial"
+  if node.platform == "ubuntu" && node.lsb.codename == "trusty"
 
     delayed_exec "Purge useless locales" do
       after_block_notifies :run, resources(:execute => "locale-gen")

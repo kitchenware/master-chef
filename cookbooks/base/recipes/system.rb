@@ -23,7 +23,5 @@ include_recipe "base::purge_limits"
 
 package "apt-transport-https" if node.lsb.id == 'Debian'
 
-if node.lsb.codename == "xenial"
-  hold_package_version "chef"
-end
+hold_package_version "chef"
 
