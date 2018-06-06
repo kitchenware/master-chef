@@ -203,6 +203,24 @@ WHISPER_FALLOCATE_CREATE = True
 # Example: store everything
 # BIND_PATTERNS = #
 
+# Tag support, when enabled carbon will make HTTP calls to graphite-web to update the tag index
+ENABLE_TAGS = False
+
+# Tag update interval, this specifies how frequently updates to existing series will trigger
+# an update to the tag index, the default setting is once every 100 updates
+# TAG_UPDATE_INTERVAL = 100
+
+# Tag hash filenames, this specifies whether tagged metric filenames should use the hash of the metric name
+# or a human-readable name, using hashed names avoids issues with path length when using a large number of tags
+# TAG_HASH_FILENAMES = True
+
+# Tag batch size, this specifies the maximum number of series to be sent to graphite-web in a single batch
+# TAG_BATCH_SIZE = 100
+
+# Tag queue size, this specifies the maximum number of series to be queued for sending to graphite-web
+# There are separate queues for new series and for updates to existing series
+# TAG_QUEUE_SIZE = 10000
+
 # To configure special settings for the carbon-cache instance 'b', uncomment this:
 #[cache:b]
 #LINE_RECEIVER_PORT = 2103
