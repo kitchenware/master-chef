@@ -2,6 +2,7 @@
 package "python-pip"
 package "python-cairo"
 package "python-twisted"
+package "python-virtualenv"
 
 include_recipe "apache2"
 
@@ -41,10 +42,48 @@ execute "install django-tagging" do
   not_if "pip show django-tagging | grep Version"
 end
 
+
+# download pypy
+pypy_archive = node.graphite.pypy.download_url.split('/').last
+pypy_extract_dir = pypy_archive.gsub(/\.tar.*/,"")
+pypy_bin = "#{node.graphite.directory}/virtualenv-carbon-cache/bin/pypy"
+
+remote_file "#{node.graphite.directory}/#{pypy_archive}" do
+  source node.graphite.pypy.download_url
+  user 'root'
+  group 'root'
+  action :create_if_missing
+end
+
+execute 'extract pypy archive' do
+  command "tar xjf #{node.graphite.directory}/#{pypy_archive} -C #{node.graphite.directory}"
+  not_if { ::File.exist?("#{node.graphite.directory}/#{pypy_extract_dir}") }
+end
+
+link '/usr/local/bin/pypy' do
+  to "#{node.graphite.directory}/#{pypy_extract_dir}/bin/pypy"
+  link_type :symbolic
+end
+
+execute 'create virtualenv' do
+  command "virtualenv -p pypy #{node.graphite.directory}/virtualenv-carbon-cache"
+  not_if { ::File.exist?(pypy_bin) }
+end
+
+
+node.graphite.pypy.deps.each do |dep|
+  execute "pip install #{dep}" do
+    command "#{pypy_bin} -m pip install #{dep}"
+    not_if "#{pypy_bin} -m pip freeze | grep -e '^#{dep}$'"
+  end
+end
+
 template "/etc/init.d/carbon" do
   source "carbon_init_d.erb"
   mode '0755'
-  variables :graphite_directory => node.graphite.directory, :whisper_dev_shm_size => node.graphite[:whisper_dev_shm_size]
+  variables :graphite_directory => node.graphite.directory,
+            :whisper_dev_shm_size => node.graphite[:whisper_dev_shm_size],
+            :pypy => "#{pypy_bin}"
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("carbon", "\\/opt\\/graphite\\/conf\\/.*")

@@ -18,15 +18,15 @@ chown -R www-data /dev/shm/whisper
 mount -o remount,size=<%= @whisper_dev_shm_size %> /dev/shm
 <% end %>
 
-if [ "$1" = "start" ]; then
-  if [ -f "$PID_FILE" ]; then
-    if [ ! -d $(cat $PID_FILE) ]; then
-      rm $PID_FILE
-    fi
-  fi
-fi
+#if [ "$1" = "start" ]; then
+#  if [ -f "$PID_FILE" ]; then
+#    if [ ! -d $(cat $PID_FILE) ]; then
+#      rm $PID_FILE
+#    fi
+#  fi
+#fi
 
-sudo -u www-data ./bin/carbon-cache.py $*
+sudo -u www-data <%= @pypy %> ./bin/carbon-cache.py $*
 
 if [ "$1" = "stop" ]; then
  count=0
