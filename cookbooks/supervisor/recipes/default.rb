@@ -18,6 +18,11 @@ if node.supervisor.service_name != "supervisor" && (node.platform == "debian" ||
     action :delete
   end
 
+  execute "remove supervisor from systemd" do
+    command "rm /lib/systemd/system/supervisor.service && systemctl daemon-reload"
+    only_if "[ -f /lib/systemd/system/supervisor.service ]"
+  end
+
 end
 
 Chef::Config.exception_handlers << ServiceErrorHandler.new("supervisor", ".*supervisord.*")
