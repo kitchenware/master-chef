@@ -67,7 +67,7 @@ end
 
 execute 'create virtualenv' do
   command "virtualenv -p pypy #{node.graphite.directory}/virtualenv-carbon-cache"
-  not_if { ::File.exist?("#{node.graphite.directory}/virtualenv-carbon-cache/bin/pypy") }
+  not_if { ::File.exist?(pypy_bin) }
 end
 
 
