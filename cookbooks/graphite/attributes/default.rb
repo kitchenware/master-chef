@@ -63,3 +63,11 @@ default[:grafana][:ini] = {
     :welcome_email_on_sign_up => false,
   }
 }
+
+default[:graphite][:pypy] = {
+  :download_url => 'https://bitbucket.org/pypy/pypy/downloads/pypy2-v6.0.0-linux64.tar.bz2',
+  :deps => [
+    'Twisted==18.4.0',
+    'whisper==1.1.3',
+  ]
+}
