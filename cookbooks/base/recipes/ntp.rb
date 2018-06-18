@@ -11,7 +11,8 @@ if node[:ntp_servers] && ! node[:disable_ntp]
 
   template "/etc/ntp.conf" do
     source "ntp.conf.erb"
-    variables :servers => node.ntp_servers, :local_stratum => node.ntp_local_stratum, :interfaces => node[:ntp_interfaces]
+    variables :servers => node.ntp_servers, :local_stratum => node.ntp_local_stratum, :interfaces => node[:ntp_interfaces],
+              :server => node.ntp.server
     mode '0644'
     notifies :restart, "service[ntp]"
   end

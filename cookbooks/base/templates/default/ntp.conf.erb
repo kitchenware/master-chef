@@ -1,5 +1,5 @@
 <% @servers.each do |s| %>
-<%= "server #{s}\n" %>
+<%  -%>server <%= s %><% if @server.use_iburst -%> iburst<% end -%> minpoll <%= @server.minpoll %> maxpoll <%= @server.maxpoll %>
 <% end %>
 
 <% unless @local_stratum == -1 %>
