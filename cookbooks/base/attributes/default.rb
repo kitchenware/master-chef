@@ -9,6 +9,11 @@ default[:locales] = {
 default[:timezone] = "Etc/GMT"
 default[:ntp_servers] = ["0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org", "3.pool.ntp.org"]
 default[:ntp_local_stratum] = 15
+# default ntp config for remote servers
+default[:ntp][:server][:minpoll] = 6
+default[:ntp][:server][:maxpoll] = 10
+default[:ntp][:server][:use_iburst] = true
+
 default[:bash_users] = ["root"]
 
 default[:ssh] = {
