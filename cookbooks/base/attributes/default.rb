@@ -23,6 +23,7 @@ default[:ssh] = {
   :client_alive_interval => 30,
   :client_alive_count_max => 30,
   :gateway_ports => false,
+  :debian_banner => false,
 }
 
 default[:apt] = {
