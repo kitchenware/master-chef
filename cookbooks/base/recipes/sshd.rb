@@ -81,18 +81,4 @@ unless node[:no_sshd_config]
     notifies :restart, "service[ssh]"
     not_if "egrep 'GatewayPorts #{gateway_ports_value}' /etc/ssh/sshd_config"
   end
-
-  debian_banner_value = node.ssh[:debian_banner] ? "yes" : "no"
-
-  execute "Configure sshd - DebianBanner" do
-    user "root"
-    command <<-EOF
-    sed -i -e '/^DebianBanner.*/d' /etc/ssh/sshd_config
-    echo "DebianBanner #{debian_banner_value}" >> /etc/ssh/sshd_config
-    EOF
-    notifies :restart, "service[ssh]"
-    not_if "egrep 'DebianBanner #{debian_banner_value}' /etc/ssh/sshd_config"
-  end
-
-
 end
