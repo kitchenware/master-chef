@@ -8,8 +8,8 @@ service "exim4" do
   action auto_compute_action
 end
 
-template "/etc/exim4/exim4.conf" do
-  source "exim4.conf.erb"
+template "/etc/exim4/exim4.conf.template" do
+  source "exim4.conf.template.erb"
   owner 'root'
   group 'root'
   mode '0644'
