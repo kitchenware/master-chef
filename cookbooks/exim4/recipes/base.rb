@@ -8,6 +8,14 @@ service "exim4" do
   action auto_compute_action
 end
 
+template "/etc/exim4/exim4.conf" do
+  source "exim4.conf.erb"
+  owner 'root'
+  group 'root'
+  mode '0644'
+  notifies :restart, "service[exim4]"
+end
+
 if node.exim4[:passwd]
 	file "/etc/exim4/passwd.client" do
 		content node.exim4.passwd.join("\n")
