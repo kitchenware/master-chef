@@ -68,6 +68,12 @@ node.graphite.pypy.deps.each do |dep|
   end
 end
 
+execute "install cffi" do
+  command "pip install cffi==1.11.5"
+  environment get_proxy_environment
+  not_if "pip show cffi | grep 'Version: 1.11.5'"
+end
+
 template "/etc/init.d/carbon" do
   source "carbon_init_d.erb"
   mode '0755'
