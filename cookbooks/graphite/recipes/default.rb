@@ -1,8 +1,10 @@
 
 package "python-pip"
+package "python-dev"
 package "python-cairo"
 package "python-twisted"
 package "python-virtualenv"
+package "libffi-dev"
 
 include_recipe "apache2"
 
@@ -28,18 +30,6 @@ if node.lsb.codename == "lucid"
     file_storage "/.fix_pip_install"
   end
 
-end
-
-execute "install django" do
-  command "pip install django==#{node.graphite.django_version}"
-  environment get_proxy_environment
-  not_if "pip show django | grep Version | grep #{node.graphite.django_version}"
-end
-
-execute "install django-tagging" do
-  command "pip install django-tagging==0.3.6"
-  environment get_proxy_environment
-  not_if "pip show django-tagging | grep Version"
 end
 
 
@@ -114,6 +104,13 @@ end
     notifies :restart, "service[apache2]" if app == :web_app
   end
 
+  execute "install graphite-web requirements" do
+    command "pip install -r requirements.txt"
+    cwd "#{node.graphite.directory_install}/#{app}"
+    environment get_proxy_environment
+    only_if {app == :web_app}
+  end
+
 end
 
 execute "configure carbon" do
@@ -168,9 +165,9 @@ execute "create db" do
   not_if "[ -f #{node.graphite.directory}/storage/graphite.db ]"
 end
 
-execute "configure wsgi" do
-  command "cd #{node.graphite.directory}/conf && cp graphite.wsgi.example graphite.wsgi"
-  not_if "[ -f #{node.graphite.directory}/conf/graphite.wsgi ]"
+template "#{node.graphite.directory}/conf/graphite.wsgi" do
+    source "graphite.wsgi.erb"
+    notifies :restart, "service[apache2]"
 end
 
 apache2_vhost "graphite:graphite" do
