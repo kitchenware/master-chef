@@ -7,6 +7,8 @@ package "python-virtualenv"
 package "libffi-dev"
 
 include_recipe "apache2"
+include_recipe "memcached"
+include_recipe "memcached::collectd"
 
 apache2_enable_module "proxy"
 apache2_enable_module "proxy_http"
