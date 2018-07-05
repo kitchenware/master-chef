@@ -5,7 +5,7 @@ WSGISocketPrefix <%= @wsgi_socket_prefix %>
 
   DocumentRoot "<%= @graphite_directory %>/webapp"
 
-  WSGIDaemonProcess graphite processes=5 threads=5 display-name='%{GROUP}' inactivity-timeout=120
+  WSGIDaemonProcess graphite processes=5 threads=5 display-name='%{GROUP}' inactivity-timeout=120 maximum-requests=<%= @wsgi_maximum_requests %>
   WSGIProcessGroup graphite
   WSGIApplicationGroup %{GLOBAL}
   WSGIImportScript <%= @graphite_directory %>/conf/graphite.wsgi process-group=graphite application-group=%{GLOBAL}

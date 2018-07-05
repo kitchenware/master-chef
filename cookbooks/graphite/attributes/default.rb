@@ -16,6 +16,10 @@ default[:graphite][:graphite] = {
   :listen => "0.0.0.0:80"
 }
 
+default[:graphite][:wsgi] = {
+  :maximum_requests => 100,
+}
+
 default[:graphite][:storages] = {
   :default => {
     :pattern => '.*',

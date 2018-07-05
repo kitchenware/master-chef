@@ -183,6 +183,7 @@ apache2_vhost "graphite:graphite" do
     :graphite_directory => node.graphite.directory,
     :wsgi_socket_prefix => "#{node.apache2.server_root}/wsgi",
     :grafana => node.grafana,
+    :wsgi_maximum_requests => node.graphite.wsgi.maximum_requests,
   })
 end
 
