@@ -35,6 +35,7 @@ default[:graphite][:carbon] = {
   :port => 2003,
   :interface => '127.0.0.1',
   :max_updates_per_second => 500,
+  :max_creates_per_minute => 50,
 }
 
 default[:graphite][:statsd] = {
