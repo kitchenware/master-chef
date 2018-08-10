@@ -194,6 +194,7 @@ template "#{node.graphite.directory}/conf/carbon.conf" do
     :carbon_receiver_port => node.graphite.carbon.port,
     :carbon_receiver_interface => node.graphite.carbon.interface,
     :max_updates_per_second => node.graphite.carbon.max_updates_per_second,
+    :max_creates_per_minute => node.graphite.carbon.max_creates_per_minute,
   })
   notifies :restart, "service[carbon]"
 end
