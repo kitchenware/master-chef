@@ -44,8 +44,6 @@ directory "etc/nginx/sites-enabled"
 [
   "/etc/nginx/sites-enabled/default",
   "/etc/nginx/sites-available/default",
-  "/etc/nginx/conf.d/default.conf",
-  "/etc/nginx/conf.d/example_ssl.conf"
   ].each do |f|
   # file is not used, because file provider generates a warning in 11.6,
   # because some of this files can be symlink
@@ -130,6 +128,38 @@ delayed_exec "Remove useless nginx vhost" do
     Dir["/etc/nginx/sites-enabled/*.conf"].each do |n|
       unless vhosts.include? n
         Chef::Log.info "Removing vhost #{n}"
+        File.unlink n
+        updated = true
+      end
+    end
+    updated
+  end
+end
+
+delayed_exec "Remove useless nginx config" do
+  after_block_notifies :restart, resources(:service => "nginx")
+  block do
+    updated = false
+    configs = find_resources_by_name_pattern(/^\/etc\/nginx\/conf.d\/.*\.conf$/).map{|r| r.name}
+    Dir["/etc/nginx/conf.d/*.conf"].each do |n|
+      unless configs.include? n
+        Chef::Log.info "Removing configs #{n}"
+        File.unlink n
+        updated = true
+      end
+    end
+    updated
+  end
+end
+
+delayed_exec "Remove useless nginx modules" do
+  after_block_notifies :restart, resources(:service => "nginx")
+  block do
+    updated = false
+    modules = find_resources_by_name_pattern(/^\/etc\/nginx\/modules.d\/.*\.conf$/).map{|r| r.name}
+    Dir["/etc/nginx/modules.d/*.conf"].each do |n|
+      unless modules.include? n
+        Chef::Log.info "Removing modules #{n}"
         File.unlink n
         updated = true
       end
