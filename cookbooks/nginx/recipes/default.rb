@@ -23,8 +23,6 @@ if node.lsb.codename == "squeeze"  && node.apt.master_chef_add_apt_repo
 
 end
 
-directory "/etc/nginx/modules.d"
-
 if node.nginx[:nginx_version]
 
   package_fixed_version node.nginx.package_name do
@@ -40,6 +38,7 @@ else
 end
 
 directory "etc/nginx/sites-enabled"
+directory "/etc/nginx/modules.d"
 
 [
   "/etc/nginx/sites-enabled/default",
