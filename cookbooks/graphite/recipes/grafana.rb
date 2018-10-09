@@ -45,3 +45,12 @@ template "/etc/grafana/grafana.ini" do
   variables node.grafana
   notifies :restart, "service[grafana-server]"
 end
+
+template "/etc/default/grafana-server" do
+  source "grafana.default.erb"
+  variables node.grafana
+  owner 'root'
+  group 'root'
+  mode '0644'
+  notifies :restart, "service[grafana-server]"
+end
