@@ -100,7 +100,8 @@ end
 
 service "carbon-relay" do
   supports :status => true
-  action auto_compute_action
+  action [:enable, :start] if node.graphite.carbon_relay.service_enabled
+  action [:disable, :stop] if !node.graphite.carbon_relay.service_enabled
 end
 
 [:whisper, :carbon, :web_app].each do |app|
@@ -214,6 +215,7 @@ template "#{node.graphite.directory}/conf/carbon.conf" do
     :carbon_relay_destinations => node.graphite.carbon_relay.carbon_relay_destinations,
   })
   notifies :restart, "service[carbon]"
+  notifies :restart, "service[carbon-relay]" if node.graphite.carbon_relay.service_enabled
 end
 
 template "#{node.graphite.directory}/conf/relay-rules.conf" do
@@ -222,7 +224,7 @@ template "#{node.graphite.directory}/conf/relay-rules.conf" do
   variables({
     :rules => node.graphite.carbon_relay.rules,
   })
-  notifies :restart, "service[carbon-relay]"
+  notifies :restart, "service[carbon-relay]" if node.graphite.carbon_relay.service_enabled
 end
 
 template "#{node.graphite.directory}/conf/storage-aggregation.conf" do
