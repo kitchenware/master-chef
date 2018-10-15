@@ -78,3 +78,13 @@ default[:graphite][:pypy] = {
     'whisper==1.1.3',
   ]
 }
+
+default[:graphite][:carbon_relay] = {
+  :service_enabled => false,
+  :carbon_relay_receiver_interface => "127.0.0.1",
+  :carbon_relay_receiver_port => 2013,
+  :carbon_relay_pickle_interface =>  "127.0.0.1",
+  :carbon_relay_pickle_port =>  2014,
+  :carbon_relay_destinations => "127.0.0.1:2004",
+  :rules => {}
+}

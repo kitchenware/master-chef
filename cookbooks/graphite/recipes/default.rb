@@ -84,9 +84,21 @@ template "/etc/init.d/carbon" do
             :pypy => "#{pypy_bin}"
 end
 
+template "/etc/init.d/carbon-relay" do
+  source "carbon-relay_init_d.erb"
+  mode '0755'
+  variables :graphite_directory => node.graphite.directory,
+            :pypy => "#{pypy_bin}"
+end
+
 Chef::Config.exception_handlers << ServiceErrorHandler.new("carbon", "\\/opt\\/graphite\\/conf\\/.*")
 
 service "carbon" do
+  supports :status => true
+  action auto_compute_action
+end
+
+service "carbon-relay" do
   supports :status => true
   action auto_compute_action
 end
@@ -195,8 +207,22 @@ template "#{node.graphite.directory}/conf/carbon.conf" do
     :carbon_receiver_interface => node.graphite.carbon.interface,
     :max_updates_per_second => node.graphite.carbon.max_updates_per_second,
     :max_creates_per_minute => node.graphite.carbon.max_creates_per_minute,
+    :carbon_relay_receiver_interface => node.graphite.carbon_relay.carbon_relay_receiver_interface,
+    :carbon_relay_receiver_port => node.graphite.carbon_relay.carbon_relay_receiver_port,
+    :carbon_relay_pickle_interface => node.graphite.carbon_relay.carbon_relay_pickle_interface,
+    :carbon_relay_pickle_port => node.graphite.carbon_relay.carbon_relay_pickle_port,
+    :carbon_relay_destinations => node.graphite.carbon_relay.carbon_relay_destinations,
   })
   notifies :restart, "service[carbon]"
+end
+
+template "#{node.graphite.directory}/conf/relay-rules.conf" do
+  source "relay-rules.conf.erb"
+  mode '0644'
+  variables({
+    :rules => node.graphite.carbon_relay.rules,
+  })
+  notifies :restart, "service[carbon-relay]"
 end
 
 template "#{node.graphite.directory}/conf/storage-aggregation.conf" do
