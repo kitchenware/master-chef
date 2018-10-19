@@ -1,7 +1,14 @@
 #!/bin/bash
-# chkconfig:   - 25 75
-# description: carbon-relay
-# processname: carbon-relay
+
+### BEGIN INIT INFO
+# Provides:          carbon-relay
+# Required-Start:
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: Carbon-relay daemon
+# Description:       carbon-relay
+### END INIT INFO
 
 export PYTHONPATH="$GRAPHITE_DIR/lib:$PYTHONPATH"
 
@@ -83,7 +90,7 @@ status(){
 
 case "$1" in
   start)
-    start 
+    start
     ;;
   stop)
     stop
@@ -99,4 +106,3 @@ case "$1" in
     echo $"Usage: $0 {start|stop|restart|status}"
     exit 1
 esac
-
