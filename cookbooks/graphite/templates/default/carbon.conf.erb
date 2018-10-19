@@ -78,8 +78,8 @@ ENABLE_UDP_LISTENER = True
 UDP_RECEIVER_INTERFACE = <%= @carbon_receiver_interface %>
 UDP_RECEIVER_PORT = <%= @carbon_receiver_port %>
 
-PICKLE_RECEIVER_INTERFACE = 127.0.0.1
-PICKLE_RECEIVER_PORT = 2004
+PICKLE_RECEIVER_INTERFACE = <%= @carbon_pickle_receiver_interface %>
+PICKLE_RECEIVER_PORT = <%= @carbon_pickle_receiver_port %>
 
 # Set to false to disable logging of successful connections
 LOG_LISTENER_CONNECTIONS = False

@@ -34,6 +34,8 @@ default[:graphite][:timezone] = "Europe/Paris"
 default[:graphite][:carbon] = {
   :port => 2003,
   :interface => '127.0.0.1',
+  :pickle_port => 2004,
+  :pickle_interface => '127.0.0.1',
   :max_updates_per_second => 500,
   :max_creates_per_minute => 50,
 }

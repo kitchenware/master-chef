@@ -206,6 +206,8 @@ template "#{node.graphite.directory}/conf/carbon.conf" do
   variables({
     :carbon_receiver_port => node.graphite.carbon.port,
     :carbon_receiver_interface => node.graphite.carbon.interface,
+    :carbon_pickle_receiver_port => node.graphite.carbon.pickle_port,
+    :carbon_pickle_receiver_interface => node.graphite.carbon.pickle_interface,
     :max_updates_per_second => node.graphite.carbon.max_updates_per_second,
     :max_creates_per_minute => node.graphite.carbon.max_creates_per_minute,
     :carbon_relay_receiver_interface => node.graphite.carbon_relay.carbon_relay_receiver_interface,
