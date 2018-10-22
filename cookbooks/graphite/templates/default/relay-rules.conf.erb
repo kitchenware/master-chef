@@ -21,7 +21,7 @@
 #default = true
 #destinations = 127.0.0.1:2004:a
 
-<% @rules.each do |name, configs| %>
+<% @rules.sort.each do |name, configs| %>
 [<%= name %>]
 <% configs.each do |k, v| %>
 <%= k %> = <%= v %>
