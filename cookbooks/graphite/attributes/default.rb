@@ -88,5 +88,6 @@ default[:graphite][:carbon_relay] = {
   :carbon_relay_pickle_interface =>  "127.0.0.1",
   :carbon_relay_pickle_port =>  2014,
   :carbon_relay_destinations => "127.0.0.1:2004",
+  :carbon_relay_max_queue_size => 10000,
   :rules => {}
 }

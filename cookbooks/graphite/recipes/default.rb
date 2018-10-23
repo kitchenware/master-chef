@@ -215,6 +215,7 @@ template "#{node.graphite.directory}/conf/carbon.conf" do
     :carbon_relay_pickle_interface => node.graphite.carbon_relay.carbon_relay_pickle_interface,
     :carbon_relay_pickle_port => node.graphite.carbon_relay.carbon_relay_pickle_port,
     :carbon_relay_destinations => node.graphite.carbon_relay.carbon_relay_destinations,
+    :carbon_relay_max_queue_size => node.graphite.carbon_relay.carbon_relay_max_queue_size,
   })
   notifies :restart, "service[carbon]"
   notifies :restart, "service[carbon-relay]" if node.graphite.carbon_relay.service_enabled
