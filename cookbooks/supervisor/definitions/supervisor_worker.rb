@@ -7,7 +7,8 @@ define :supervisor_worker, {
   :autorestart => 'unexpected',
   :stopsignal => nil,
   :stopwaitsecs => nil,
-  :env => nil
+  :env => nil,
+  :directory => nil
   } do
 
   supervisor_worker_params = params
@@ -34,6 +35,7 @@ define :supervisor_worker, {
       :stopwaitsecs => supervisor_worker_params[:stopwaitsecs],
       :log_dir => node.supervisor.log_dir,
       :env => supervisor_worker_params[:env],
+      :directory => supervisor_worker_params[:directory],
       })
     notifies :run, "execute[reload supervisor]"
   end
