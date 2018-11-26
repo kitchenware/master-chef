@@ -27,16 +27,17 @@ mount -o remount,size=<%= @whisper_dev_shm_size %> /dev/shm
 #fi
 
 sudo -u www-data <%= @pypy %> ./bin/carbon-cache.py $*
+pid=$(cat $PID_FILE)
 
 if [ "$1" = "stop" ]; then
  count=0
  while true; do
   if [ "$count" = "60" ]; then
-    echo "Unable to stop carbon"
-    exit 2
+    echo "Unable to stop carbon killing it"
+    kill -9 $pid
+    break
   fi
   if [ -f "$PID_FILE" ]; then
-   pid=$(cat $PID_FILE)
    if [ -d "/proc/$pid" ]; then
      echo "."
      sleep 1
