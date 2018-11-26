@@ -26,8 +26,15 @@ mount -o remount,size=<%= @whisper_dev_shm_size %> /dev/shm
 #  fi
 #fi
 
-sudo -u www-data <%= @pypy %> ./bin/carbon-cache.py $*
 pid=$(cat $PID_FILE)
+
+pid=$(cat $PID_FILE)
+if [[ "$(pidof -x <%= @pypy %>)" == "$pid" ]]; then
+  echo "running"
+else
+  sudo -u www-data <%= @pypy %> ./bin/carbon-cache.py $*
+fi
+
 
 if [ "$1" = "stop" ]; then
  count=0
