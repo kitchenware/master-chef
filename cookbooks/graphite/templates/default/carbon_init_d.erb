@@ -28,8 +28,7 @@ mount -o remount,size=<%= @whisper_dev_shm_size %> /dev/shm
 
 pid=$(cat $PID_FILE)
 
-pid=$(cat $PID_FILE)
-if [[ "$(pidof -x <%= @pypy %>)" == "$pid" ]]; then
+if [[ "$(pgrep -f \"<%= @pypy %>) ./bin/carbon-cache.py start\"" == "$pid" ]]; then
   echo "running"
 else
   sudo -u www-data <%= @pypy %> ./bin/carbon-cache.py $*
