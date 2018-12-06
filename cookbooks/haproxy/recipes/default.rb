@@ -8,6 +8,7 @@ if node.platform == "ubuntu" && node.apt.master_chef_add_apt_repo
     key "1C61B9CD"
     key_server "keyserver.ubuntu.com"
   end
+  package "haproxy"
 
 end
 
@@ -18,10 +19,26 @@ if node.lsb.codename == "wheezy" && node.apt.master_chef_add_apt_repo
     distrib "wheezy-backports"
     components ["main"]
   end
+  package "haproxy"
 
 end
 
-package "haproxy"
+if node.lsb.codename == "jessie" && node.apt.master_chef_add_apt_repo
+  add_apt_repository "haproxy" do
+    url "http://haproxy.debian.net"
+    distrib "jessie-backports-1.8"
+    components ["main"]
+    key "95A42FE8353525F9"
+    key_url "https://haproxy.debian.net/bernat.debian.org.gpg"
+    run_apt_get_update true
+  end
+  apt_package "haproxy" do
+    default_release "jessie-backports"
+    version "1.8.\*"
+  end
+end
+
+
 
 service "haproxy" do
   supports :status => true, :restart => true, :reload => true
