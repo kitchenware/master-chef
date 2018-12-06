@@ -147,12 +147,6 @@ role_path roles
 ssl_verify_mode :verify_peer
 verify_api_cert true
 
-<% unless node.proxyweb.host.empty? || node.proxyweb.host.nil? %>
-http_proxy "http://<%= node.proxyweb.host %>:3128"
-https_proxy "http://<%= node.proxyweb.host %>:3128"
-no_proxy ".doctolib,127.0.0.1,localhost"
-<% end %>
-
 var_chef = ENV["VAR_CHEF"] || "<%= @var_chef %>"
 file_cache_path "#{var_chef}/cache"
 file_backup_path "#{var_chef}/backup"
