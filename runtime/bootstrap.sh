@@ -12,7 +12,7 @@ fi
 
 if [ "$MASTER_CHEF_DIRECT_ACCESS_URL" = "" ]; then
   # non standard url. rawgithub.com support http, raw.github.com does not
-  MASTER_CHEF_DIRECT_ACCESS_URL="http://rawgithub.com/doctolib/master-chef"
+  MASTER_CHEF_DIRECT_ACCESS_URL="http://raw.github.com/doctolib/master-chef"
 fi
 
 if [ "$MASTER_CHEF_HASH_CODE" = "" ]; then
