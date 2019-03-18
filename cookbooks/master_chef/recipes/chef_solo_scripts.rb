@@ -43,8 +43,8 @@ template "#{install_path}/etc/solo.rb" do
     :cache_directory => "#{install_path}/var",
     :var_chef => "/opt/chef/var",
     :logging => node.master_chef.chef_solo_scripts.logging,
-    :http_proxy => "\"http://#{node.proxyweb.host}\"" if node.proxyweb.host,
-    :https_proxy => "\"http://#{node.proxyweb.host}\"" if node.proxyweb.host,
+    :http_proxy => "\"http://#{node.proxyweb.host}\"",
+    :https_proxy => "\"http://#{node.proxyweb.host}\"",
     :no_git_cache => node.master_chef.chef_solo_scripts.no_git_cache,
     :no_git_dir => no_git_dir
   })
