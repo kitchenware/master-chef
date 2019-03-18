@@ -147,11 +147,11 @@ role_path roles
 ssl_verify_mode :verify_peer
 verify_api_cert true
 
-<% unless node.proxyweb.host.empty? %>
-http_proxy ENV["http_proxy"] || "<%= @http_proxy %>"
-https_proxy ENV["http_proxy"] || "<%= @https_proxy %>"
-no_proxy ".doctolib,127.0.0.1,localhost"
-<% end %>
+unless node.proxyweb.host.empty?
+  http_proxy ENV["http_proxy"] || "<%= @http_proxy %>"
+  https_proxy ENV["http_proxy"] || "<%= @https_proxy %>"
+  no_proxy ".doctolib,127.0.0.1,localhost"
+end
 
 var_chef = ENV["VAR_CHEF"] || "<%= @var_chef %>"
 file_cache_path "#{var_chef}/cache"
