@@ -15,10 +15,10 @@ execute "purge old grafana" do
 end
 
 add_apt_repository "grafana" do
-  url "https://packagecloud.io/grafana/stable/debian/"
-  key "D59097AB"
-  key_url "https://packagecloud.io/gpg.key"
-  distrib "wheezy"
+  url "https://packages.grafana.com/oss/deb"
+  key "24098CB6"
+  key_url "https://packages.grafana.com/gpg.key"
+  distrib "stable"
 end
 
 if node.grafana[:grafana_version]
