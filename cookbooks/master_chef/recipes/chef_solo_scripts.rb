@@ -50,7 +50,12 @@ template "#{install_path}/etc/solo.rb" do
   })
 end
 
-unless node.proxyweb.host.empty?
+if node.proxyweb.host.empty?
+  file '/opt/master-chef/etc/http_proxy' do
+    action :delete
+  end
+
+else
   Chef::Log.info "HTTP(s) proxy used for external connections: #{node.proxyweb.host}"
 
   file '/opt/master-chef/etc/http_proxy' do
