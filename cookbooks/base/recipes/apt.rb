@@ -10,10 +10,7 @@ if node.platform == "ubuntu" || node.platform == "debian"
     if node.apt.configure_proxy_from_env && ENV['BACKUP_' + proto + '_proxy']
 
       file "/etc/apt/apt.conf.d/00_#{proto}_proxy" do
-        content <<-EOF
-  Acquire::#{proto}::Proxy "#{ENV['BACKUP_' + proto + '_proxy']}";
-  EOF
-        mode 0644
+        action :delete
       end
 
     else
